@@ -13,14 +13,15 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Depends: 
     R (>= 4.0)
-Suggests: 
-    testthat (>= 3.0.0),
-    duckdb,
-    knitr,
+Imports:
     R6,
     TreatmentPatterns,
     shiny,
     dplyr
+Suggests: 
+    testthat (>= 3.0.0),
+    duckdb,
+    knitr
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Language: en-US
