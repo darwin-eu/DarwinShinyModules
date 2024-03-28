@@ -3,8 +3,6 @@
 #' @description
 #' Module super class
 #'
-#' @field namespace Namespace of the module.
-#'
 #' @export
 Module <- R6::R6Class(
   classname = "Module",
@@ -14,11 +12,13 @@ Module <- R6::R6Class(
     #' @description
     #' Initializer method
     #'
-    #' @param namespace (`character(1)`)
+    #' @param appId (`character(1)`)
     #'
     #' @return (`invisible(self)`)
-    initialize = function(namespace) {
-      private$.namespace <- namespace
+    initialize = function(appId) {
+      private$.appId <- appId
+      private$.moduleName <- class(self)[1]
+      private$.instanceId <- paste0(sample(x = LETTERS, size = 10), collapse = "")
       self$validate()
       return(invisible(self))
     },
@@ -30,28 +30,16 @@ Module <- R6::R6Class(
     validate = function() {
       private$assertDependencies()
       assertions <- checkmate::makeAssertCollection()
-      checkmate::assertCharacter(private$.namespace, len = 1)
+      checkmate::assertCharacter(.var.name = "appId", x = private$.appId, len = 1)
       checkmate::reportAssertions(assertions)
       return(invisible(self))
     },
 
     #' @description
-    #' Method to include a \link[shinydashboard]{menuItem} to link to the body.
+    #' Method to include a \link[shiny]{tagList} to include the body.
     #'
-    #' @param label (`character(1)`)\cr
-    #' Label to show for the `menuItem`.
-    #'
-    #' @param tag (`character(1)`)\cr
-    #' Tag to use internally in `input`.
-    #'
-    #' @return (`menuItem`)
-    uiMenu = function(label, tag) {},
-
-    #' @description
-    #' Method to include a \link[shinydashboard]{tabItem} to include the body.
-    #'
-    #' @return (`tabItem`)
-    uiBody = function() {},
+    #' @return (`tagList`)
+    UI = function() {},
 
     #' @description
     #' Method to handle the back-end.
@@ -72,7 +60,9 @@ Module <- R6::R6Class(
   # Private ----
   private = list(
     ## Fields ----
-    .namespace = "",
+    .appId = "",
+    .moduleName = "",
+    .instanceId = "",
 
     assertDependencies = function() {
       assertions <- checkmate::makeAssertCollection()
@@ -85,11 +75,17 @@ Module <- R6::R6Class(
     },
 
     ## Methods ----
-    finalize = function() {}
+    finalize = function() {},
+
+    id = function(id) {
+      paste(private$.moduleName, private$.instanceId, id, sep = "_")
+    }
   ),
 
   # Active ----
   active = list(
-    namespace = function() return(private$.namespace)
+    appId = function() return(private$.appId),
+    moduleName = function() return(private$.moduleName),
+    instanceId = function() return(private$.instanceId)
   )
 )
