@@ -5,28 +5,25 @@ Table <- R6::R6Class(
   # Public ----
   public = list(
     ## Override ----
-    initialize = function(appId, dataPath = "", data = NULL) {
+    initialize = function(appId, data) {
       super$initialize(appId)
-      private$.dataPath <- dataPath
       private$.data <- data
-      self$validate()
     },
 
     validate = function() {
       assertions <- checkmate::makeAssertCollection()
       checkmate::assertCharacter(
-        .var.name = "dataPath",
-        x = private$.dataPath,
-        len = 1,
-        add = assertions
+        .var.name = "appId",
+        x = private$.appId,
+        len = 1
       )
       checkmate::assertDataFrame(
         .var.name = "data",
         x = private$.data,
-        null.ok = TRUE,
         add = assertions
       )
       checkmate::reportAssertions(assertions)
+      return(invisible(self))
     },
 
     ## Methods ----
@@ -39,7 +36,6 @@ Table <- R6::R6Class(
     },
 
     server = function(input, output, session) {
-      private$readData()
       private$renderTable(output)
       private$downloader(output)
     }
@@ -48,17 +44,9 @@ Table <- R6::R6Class(
   # Private ----
   private = list(
     ## Fields ----
-    .dataPath = "",
     .data = NULL,
 
     ## Methods ----
-    readData = function() {
-      if (!is.null(private$.data) & nchar(private$.dataPath) > 0) {
-        warning(sprintf("Data was read in with `new(appId = %s, data = ...)`. Overwriting data.", private$.appId))
-      }
-      private$.data <- read.csv(private$.dataPath)
-    },
-
     renderTable = function(output) {
       output[[private$id("table")]] <- DT::renderDT(
         expr = private$.data,
@@ -75,7 +63,7 @@ Table <- R6::R6Class(
     },
 
     dlFilename = function() {
-      return(basename(private$.dataPath))
+      return("table.csv")
     },
 
     dlContent = function(file) {

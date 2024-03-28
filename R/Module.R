@@ -19,7 +19,7 @@ Module <- R6::R6Class(
       private$.appId <- appId
       private$.moduleName <- class(self)[1]
       private$.instanceId <- paste0(sample(x = LETTERS, size = 10), collapse = "")
-      self$validate()
+      private$assertDependencies()
       return(invisible(self))
     },
 
@@ -27,13 +27,7 @@ Module <- R6::R6Class(
     #' Validator method
     #'
     #' @return (`invisible(self)`)
-    validate = function() {
-      private$assertDependencies()
-      assertions <- checkmate::makeAssertCollection()
-      checkmate::assertCharacter(.var.name = "appId", x = private$.appId, len = 1)
-      checkmate::reportAssertions(assertions)
-      return(invisible(self))
-    },
+    validate = function() {},
 
     #' @description
     #' Method to include a \link[shiny]{tagList} to include the body.
