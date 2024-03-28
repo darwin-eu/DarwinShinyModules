@@ -1,3 +1,4 @@
 ^DarwinShinyModules\.Rproj$
 ^\.Rproj\.user$
 ^\.github$
+^.\dev$
