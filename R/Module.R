@@ -19,7 +19,6 @@ Module <- R6::R6Class(
       private$.appId <- appId
       private$.moduleName <- class(self)[1]
       private$.instanceId <- paste0(sample(x = LETTERS, size = 10), collapse = "")
-      private$assertDependencies()
       return(invisible(self))
     },
 
@@ -57,16 +56,6 @@ Module <- R6::R6Class(
     .appId = "",
     .moduleName = "",
     .instanceId = "",
-
-    assertDependencies = function() {
-      assertions <- checkmate::makeAssertCollection()
-      checkmate::assertTRUE(require("shiny", quietly = TRUE, mask.ok = TRUE, character.only = TRUE))
-      checkmate::assertTRUE(require("shinydashboard", quietly = TRUE, mask.ok = TRUE, character.only = TRUE))
-      checkmate::assertTRUE(require("ggplot2", quietly = TRUE, mask.ok = TRUE, character.only = TRUE))
-      checkmate::assertTRUE(require("plotly", quietly = TRUE, mask.ok = TRUE, character.only = TRUE))
-      checkmate::assertTRUE(require("dplyr", quietly = TRUE, mask.ok = TRUE, character.only = TRUE))
-      checkmate::reportAssertions(assertions)
-    },
 
     ## Methods ----
     finalize = function() {},
