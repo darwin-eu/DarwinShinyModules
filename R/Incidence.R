@@ -40,6 +40,7 @@ Incidence <- R6::R6Class(
       } else {
         private$.incTable$data
       }
+      shiny::req(incData)
       plotly::ggplotly(IncidencePrevalence::plotIncidence(incData))
     }
   ),
