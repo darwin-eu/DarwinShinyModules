@@ -15,8 +15,8 @@ Incidence <- R6::R6Class(
 
     UI = function(title = "Table") {
       shiny::tagList(
-        private$.incPlot$UI(),
-        private$.incTable$UI()
+        private$.incPlot$UI(title = NULL),
+        private$.incTable$UI(title = NULL)
       )
     },
 
@@ -45,5 +45,8 @@ Incidence <- R6::R6Class(
   ),
 
   # Active ----
-  active = list()
+  active = list(
+    incTable = function() return(private$.incTable),
+    incPlot = function() return(private$.incPlot)
+  )
 )
