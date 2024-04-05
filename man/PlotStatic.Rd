@@ -30,6 +30,7 @@ Static Plot (\code{plot()} or \code{ggplot2}) Module
 \if{html}{\out{<a id="method-PlotStatic-UI"></a>}}
 \if{latex}{\out{\hypertarget{method-PlotStatic-UI}{}}}
 \subsection{Method \code{UI()}}{
+UI
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PlotStatic$UI(title = "Plot")}\if{html}{\out{</div>}}
 }
@@ -43,13 +44,13 @@ Static Plot (\code{plot()} or \code{ggplot2}) Module
 }
 \subsection{Returns}{
 \code{shiny.tag.list}
-server
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PlotStatic-server"></a>}}
 \if{latex}{\out{\hypertarget{method-PlotStatic-server}{}}}
 \subsection{Method \code{server()}}{
+server
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PlotStatic$server(input, output, session)}\if{html}{\out{</div>}}
 }

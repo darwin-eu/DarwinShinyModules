@@ -16,7 +16,7 @@ Table <- R6::R6Class(
   # Public ----
   public = list(
     ## Methods ----
-    #' initialize
+    #' @description initialize
     #'
     #' @param appId (`character(1)`) ID of the app, to use for namespacing.
     #' @param data Data to plot with, usually a `data.frame`-like object.
@@ -29,7 +29,7 @@ Table <- R6::R6Class(
       return(invisible(self))
     },
 
-    #' validate
+    #' @description validate
     #'
     #' @return `self`
     validate = function() {

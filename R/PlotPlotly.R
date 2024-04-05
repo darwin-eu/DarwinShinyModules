@@ -17,7 +17,7 @@ PlotPlotly <- R6::R6Class(
   # Private ----
   public = list(
     ## Methods ----
-    #' initialize
+    #' @description initialize
     #'
     #' @param appId (`character(1)`) ID of the app, to use for namespacing.
     #' @param data Data to plot with, usually a `data.frame`-like object.
@@ -32,7 +32,7 @@ PlotPlotly <- R6::R6Class(
       return(invisible(self))
     },
 
-    #' UI
+    #' @description UI
     #'
     #' @param title (`character(1)`) Title to use for the plot.
     #'

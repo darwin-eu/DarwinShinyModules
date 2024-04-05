@@ -32,6 +32,7 @@ Table Module
 \if{html}{\out{<a id="method-Table-new"></a>}}
 \if{latex}{\out{\hypertarget{method-Table-new}{}}}
 \subsection{Method \code{new()}}{
+initialize
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Table$new(appId, data)}\if{html}{\out{</div>}}
 }
@@ -49,13 +50,13 @@ Table Module
 }
 \subsection{Returns}{
 \code{self}
-validate
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Table-validate"></a>}}
 \if{latex}{\out{\hypertarget{method-Table-validate}{}}}
 \subsection{Method \code{validate()}}{
+validate
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Table$validate()}\if{html}{\out{</div>}}
 }

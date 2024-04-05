@@ -16,7 +16,7 @@ Text <- R6::R6Class(
   public = list(
     ## Methods ----
 
-    #' initialize
+    #' @description initialize
     #'
     #' @param appId (`character(1)`) ID of the app, to use for namespacing.
     #' @param mdFile (`character(1)`) Path to the markdown-file.
@@ -28,7 +28,7 @@ Text <- R6::R6Class(
       return(invisible(self))
     },
 
-    #' UI
+    #' @description UI
     #'
     #' @return `shiny.tag.list`
     UI = function() {

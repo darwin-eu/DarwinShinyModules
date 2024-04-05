@@ -41,6 +41,7 @@ Plotly Module
 \if{html}{\out{<a id="method-PlotPlotly-new"></a>}}
 \if{latex}{\out{\hypertarget{method-PlotPlotly-new}{}}}
 \subsection{Method \code{new()}}{
+initialize
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PlotPlotly$new(appId, data, fun)}\if{html}{\out{</div>}}
 }
@@ -58,13 +59,13 @@ Plotly Module
 }
 \subsection{Returns}{
 \code{self}
-UI
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PlotPlotly-UI"></a>}}
 \if{latex}{\out{\hypertarget{method-PlotPlotly-UI}{}}}
 \subsection{Method \code{UI()}}{
+UI
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PlotPlotly$UI(title = "Plotly")}\if{html}{\out{</div>}}
 }

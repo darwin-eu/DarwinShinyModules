@@ -41,6 +41,7 @@ Plot Interface
 \if{html}{\out{<a id="method-Plot-new"></a>}}
 \if{latex}{\out{\hypertarget{method-Plot-new}{}}}
 \subsection{Method \code{new()}}{
+initialize
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Plot$new(appId, data, fun)}\if{html}{\out{</div>}}
 }
@@ -58,13 +59,13 @@ Plot Interface
 }
 \subsection{Returns}{
 \code{self}
-Update data within reactive context (\code{reactive()} or \code{observe()})
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Plot-updateData"></a>}}
 \if{latex}{\out{\hypertarget{method-Plot-updateData}{}}}
 \subsection{Method \code{updateData()}}{
+Update data within reactive context (\code{reactive()} or \code{observe()})
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Plot$updateData(data)}\if{html}{\out{</div>}}
 }

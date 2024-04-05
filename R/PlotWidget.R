@@ -12,7 +12,7 @@ PlotWidget <- R6::R6Class(
 
   # Public ----
   public = list(
-    #' UI
+    #' @description UI
     #'
     #' @param title (`character(1)`) Title to use for the plot.
     #'
@@ -24,7 +24,7 @@ PlotWidget <- R6::R6Class(
       )
     },
 
-    #' server
+    #' @description server
     #'
     #' @param input (`input`)
     #' @param output (`output`)

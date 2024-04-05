@@ -36,6 +36,7 @@ Text Module
 \if{html}{\out{<a id="method-Text-new"></a>}}
 \if{latex}{\out{\hypertarget{method-Text-new}{}}}
 \subsection{Method \code{new()}}{
+initialize
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Text$new(appId, mdFile)}\if{html}{\out{</div>}}
 }
@@ -51,13 +52,13 @@ Text Module
 }
 \subsection{Returns}{
 \code{self}
-UI
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Text-UI"></a>}}
 \if{latex}{\out{\hypertarget{method-Text-UI}{}}}
 \subsection{Method \code{UI()}}{
+UI
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Text$UI()}\if{html}{\out{</div>}}
 }

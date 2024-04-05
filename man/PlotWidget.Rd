@@ -30,6 +30,7 @@ Widget Module
 \if{html}{\out{<a id="method-PlotWidget-UI"></a>}}
 \if{latex}{\out{\hypertarget{method-PlotWidget-UI}{}}}
 \subsection{Method \code{UI()}}{
+UI
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PlotWidget$UI(title = "Widget")}\if{html}{\out{</div>}}
 }
@@ -43,13 +44,13 @@ Widget Module
 }
 \subsection{Returns}{
 \code{shiny.tag.list}
-server
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PlotWidget-server"></a>}}
 \if{latex}{\out{\hypertarget{method-PlotWidget-server}{}}}
 \subsection{Method \code{server()}}{
+server
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PlotWidget$server(input, output, session)}\if{html}{\out{</div>}}
 }
