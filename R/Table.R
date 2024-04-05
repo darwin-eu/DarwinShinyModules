@@ -1,3 +1,9 @@
+#' @title Table
+#'
+#' @description
+#' Table Module
+#'
+#' @export
 Table <- R6::R6Class(
   classname = "Table",
   inherit = Module,

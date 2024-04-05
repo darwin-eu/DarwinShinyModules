@@ -9,7 +9,11 @@ Module super class
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{namespace}}{Namespace of the module.}
+\item{\code{appId}}{(\code{character(1)}) appId used for namespacing.}
+
+\item{\code{moduleName}}{(\code{character(1)}) Name of the module.}
+
+\item{\code{instanceId}}{(\code{character(1)}) Random ID of 10 capitalized letters.}
 }
 \if{html}{\out{</div>}}
 }
@@ -18,8 +22,7 @@ Module super class
 \itemize{
 \item \href{#method-Module-new}{\code{Module$new()}}
 \item \href{#method-Module-validate}{\code{Module$validate()}}
-\item \href{#method-Module-uiMenu}{\code{Module$uiMenu()}}
-\item \href{#method-Module-uiBody}{\code{Module$uiBody()}}
+\item \href{#method-Module-UI}{\code{Module$UI()}}
 \item \href{#method-Module-server}{\code{Module$server()}}
 \item \href{#method-Module-clone}{\code{Module$clone()}}
 }
@@ -30,13 +33,13 @@ Module super class
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Module$new(namespace)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Module$new(appId)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{namespace}}{(\code{character(1)})}
+\item{\code{appId}}{(\code{character(1)})}
 }
 \if{html}{\out{</div>}}
 }
@@ -58,40 +61,16 @@ Validator method
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Module-uiMenu"></a>}}
-\if{latex}{\out{\hypertarget{method-Module-uiMenu}{}}}
-\subsection{Method \code{uiMenu()}}{
-Method to include a \link[shinydashboard]{menuItem} to link to the body.
+\if{html}{\out{<a id="method-Module-UI"></a>}}
+\if{latex}{\out{\hypertarget{method-Module-UI}{}}}
+\subsection{Method \code{UI()}}{
+Method to include a \link[shiny]{tagList} to include the body.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Module$uiMenu(label, tag)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{label}}{(\code{character(1)})\cr
-Label to show for the \code{menuItem}.}
-
-\item{\code{tag}}{(\code{character(1)})\cr
-Tag to use internally in \code{input}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{menuItem})
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Module-uiBody"></a>}}
-\if{latex}{\out{\hypertarget{method-Module-uiBody}{}}}
-\subsection{Method \code{uiBody()}}{
-Method to include a \link[shinydashboard]{tabItem} to include the body.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Module$uiBody()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Module$UI()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-(\code{tabItem})
+(\code{tagList})
 }
 }
 \if{html}{\out{<hr>}}

@@ -1,3 +1,9 @@
+#' @title Prevalence
+#'
+#' @description
+#' Prevalence Module
+#'
+#' @export
 Prevalence <- R6::R6Class(
   classname = "Prevalence",
   inherit = Module,

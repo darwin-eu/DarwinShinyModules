@@ -1,3 +1,9 @@
+#' @title Incidence
+#'
+#' @description
+#' Incidence Module
+#'
+#' @export
 Incidence <- R6::R6Class(
   classname = "Incidence",
   inherit = Module,
@@ -31,6 +37,19 @@ Incidence <- R6::R6Class(
     .incTable = NULL,
     .incPlot = NULL,
 
+    updateColPlot = function(data) {
+      print(private$.incTable)
+      # observeEvent(private$.incTable$reactiveValues$columns_selected, {
+      #   print(private$.incTable$reactiveValues$columns_selected)
+      #   data <- data %>%
+      #     dplyr::mutate(
+      #       case_when(colour = dplyr::row_number() %in% incPlot) ~ "#0000FF",
+      #       .default = "#000000"
+      #     )
+      # })
+      # return(data)
+    },
+
     plot = function() {
       classes <- c("IncidencePrevalenceResult", "IncidenceResult")
       incData <- if (!any(class(private$.incTable$data) %in% classes)) {
@@ -41,7 +60,10 @@ Incidence <- R6::R6Class(
         private$.incTable$data
       }
       shiny::req(incData)
-      plotly::ggplotly(IncidencePrevalence::plotIncidence(incData))
+      incData <- incData %>%
+        dplyr::mutate(colour = "#000000")
+      private$updateColPlot(incData)
+      plotly::ggplotly(IncidencePrevalence::plotIncidence(incData, colour = "colour"))
     }
   ),
 

@@ -3,6 +3,10 @@
 #' @description
 #' Module super class
 #'
+#' @field appId (`character(1)`) appId used for namespacing.
+#' @field moduleName (`character(1)`) Name of the module.
+#' @field instanceId (`character(1)`) Random ID of 10 capitalized letters.
+#'
 #' @export
 Module <- R6::R6Class(
   classname = "Module",

@@ -32,6 +32,7 @@ reactiveValues class created by \link[shiny]{reactiveValues}.}
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Module" data-id="UI"><a href='../../DarwinShinyModules/html/Module.html#method-Module-UI'><code>DarwinShinyModules::Module$UI()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Module" data-id="initialize"><a href='../../DarwinShinyModules/html/Module.html#method-Module-initialize'><code>DarwinShinyModules::Module$initialize()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Module" data-id="validate"><a href='../../DarwinShinyModules/html/Module.html#method-Module-validate'><code>DarwinShinyModules::Module$validate()</code></a></span></li>
 </ul>

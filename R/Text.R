@@ -1,3 +1,9 @@
+#' @title Text
+#'
+#' @description
+#' Text Module
+#'
+#' @export
 Text <- R6::R6Class(
   classname = "Text",
   inherit = Module,
