@@ -1,13 +1,13 @@
 #' @title PlotPlotly
 #'
+#' @include Plot.R
+#'
 #' @description
 #' Plotly Module
 #'
 #' @field plot (`plotly`) object.
 #' @field source (`character`) Source label for the plotly plot.
 #' @field plotlyBindings (`reactivevalues`) bindings from the plotly object.
-#'
-#' @inherit Plot
 #'
 #' @export
 PlotPlotly <- R6::R6Class(

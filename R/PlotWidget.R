@@ -1,9 +1,9 @@
 #' @title PlotWidget
 #'
+#' @include Plot.R
+#'
 #' @description
 #' Widget Module
-#'
-#' @inherit Plot
 #'
 #' @export
 PlotWidget <- R6::R6Class(

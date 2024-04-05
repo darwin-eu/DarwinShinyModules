@@ -1,9 +1,9 @@
 #' @title Plot
 #'
+#' @include Module.R
+#'
 #' @description
 #' Plot Interface
-#'
-#' @inherit Module
 #'
 #' @field data Data used for plot.
 #' @field fun Plotting function.

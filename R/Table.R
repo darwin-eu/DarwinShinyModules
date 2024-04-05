@@ -1,7 +1,12 @@
 #' @title Table
 #'
+#' @include Module.R
+#'
 #' @description
 #' Table Module
+#'
+#' @field dataTableBindings (`reactivevalues`) Bindings of the DataTable in a reactive environment.
+#' @field data The data to render in the DataTable, usually a `data.frame`-like object.
 #'
 #' @export
 Table <- R6::R6Class(
@@ -10,12 +15,23 @@ Table <- R6::R6Class(
 
   # Public ----
   public = list(
-    ## Override ----
+    ## Methods ----
+    #' initialize
+    #'
+    #' @param appId (`character(1)`) ID of the app, to use for namespacing.
+    #' @param data Data to plot with, usually a `data.frame`-like object.
+    #' @param fun Function to plot with, with one argument: `data`.
+    #'
+    #' @return `self`
     initialize = function(appId, data) {
       super$initialize(appId)
       private$.data <- data
+      return(invisible(self))
     },
 
+    #' validate
+    #'
+    #' @return `self`
     validate = function() {
       assertions <- checkmate::makeAssertCollection()
       checkmate::assertCharacter(
@@ -32,7 +48,11 @@ Table <- R6::R6Class(
       return(invisible(self))
     },
 
-    ## Methods ----
+    #' UI
+    #'
+    #' @param title (`character(1)`) Title to use for the DataTable.
+    #'
+    #' @return `shiny.tag.list`
     UI = function(title = "Table") {
       shiny::tagList(
         shiny::h3(title),
@@ -41,6 +61,13 @@ Table <- R6::R6Class(
       )
     },
 
+    #' server
+    #'
+    #' @param input (`input`)
+    #' @param output (`output`)
+    #' @param session (`session`)
+    #'
+    #' @return `NULL`
     server = function(input, output, session) {
       private$renderTable(output)
       private$downloader(output)
@@ -52,7 +79,7 @@ Table <- R6::R6Class(
   private = list(
     ## Fields ----
     .data = NULL,
-    .reactiveValues = shiny::reactiveValues(
+    .dataTableBindings = shiny::reactiveValues(
       cell_clicked = NULL,
       cells_selected = NULL,
       cell_info = NULL,
@@ -94,17 +121,17 @@ Table <- R6::R6Class(
           input[[searchColumns]],
           input[[state]]
         ), {
-        private$.reactiveValues$cell_clicked <- input[[cellClicked]]
-        private$.reactiveValues$cells_selected <- input[[cellsSelected]]
-        private$.reactiveValues$cell_info <- input[[cellInfo]]
-        private$.reactiveValues$rows_current <- input[[rowsCurrent]]
-        private$.reactiveValues$rows_all <- input[[rowsAll]]
-        private$.reactiveValues$rows_selected <- input[[rowsSelected]]
-        private$.reactiveValues$row_last_clicked <- input[[rowLastClicked]]
-        private$.reactiveValues$columns_selected <- input[[columnsSelected]]
-        private$.reactiveValues$search <- input[[search]]
-        private$.reactiveValues$search_columns <- input[[searchColumns]]
-        private$.reactiveValues$state <- input[[state]]
+        private$.dataTableBindings$cell_clicked <- input[[cellClicked]]
+        private$.dataTableBindings$cells_selected <- input[[cellsSelected]]
+        private$.dataTableBindings$cell_info <- input[[cellInfo]]
+        private$.dataTableBindings$rows_current <- input[[rowsCurrent]]
+        private$.dataTableBindings$rows_all <- input[[rowsAll]]
+        private$.dataTableBindings$rows_selected <- input[[rowsSelected]]
+        private$.dataTableBindings$row_last_clicked <- input[[rowLastClicked]]
+        private$.dataTableBindings$columns_selected <- input[[columnsSelected]]
+        private$.dataTableBindings$search <- input[[search]]
+        private$.dataTableBindings$search_columns <- input[[searchColumns]]
+        private$.dataTableBindings$state <- input[[state]]
       })
     },
 
@@ -135,6 +162,13 @@ Table <- R6::R6Class(
   # Active ----
   active = list(
     data = function() return(private$.data),
-    reactiveValues = function() return(private$.reactiveValues)
+    dataTableBindings = function() return(private$.dataTableBindings)
   )
 )
+#' initialize
+#'
+#' @param appId (`character(1)`) ID of the app, to use for namespacing.
+#' @param data Data to plot with, usually a `data.frame`-like object.
+#' @param fun Function to plot with, with one argument: `data`.
+#'
+#' @return `self`

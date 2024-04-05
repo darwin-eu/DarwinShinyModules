@@ -29,3 +29,16 @@ Suggests:
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Language: en-US
+Collate: 
+    'CharacterizationPlots.R'
+    'Incidence.R'
+    'InputHandler.R'
+    'InteractivePlots.R'
+    'Module.R'
+    'Plot.R'
+    'PlotPlotly.R'
+    'PlotStatic.R'
+    'PlotWidget.R'
+    'Prevalence.R'
+    'Table.R'
+    'Text.R'

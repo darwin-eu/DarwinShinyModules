@@ -9,19 +9,25 @@ Text Module
 \section{Super class}{
 \code{\link[DarwinShinyModules:Module]{DarwinShinyModules::Module}} -> \code{Text}
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{mdText}}{(\code{character(n)}) Lines read from the markdown-file supplied.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-Text-new}{\code{Text$new()}}
-\item \href{#method-Text-server}{\code{Text$server()}}
-\item \href{#method-Text-ui}{\code{Text$ui()}}
+\item \href{#method-Text-UI}{\code{Text$UI()}}
 \item \href{#method-Text-clone}{\code{Text$clone()}}
 }
 }
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Module" data-id="UI"><a href='../../DarwinShinyModules/html/Module.html#method-Module-UI'><code>DarwinShinyModules::Module$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Module" data-id="server"><a href='../../DarwinShinyModules/html/Module.html#method-Module-server'><code>DarwinShinyModules::Module$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Module" data-id="validate"><a href='../../DarwinShinyModules/html/Module.html#method-Module-validate'><code>DarwinShinyModules::Module$validate()</code></a></span></li>
 </ul>
 </details>
@@ -34,24 +40,31 @@ Text Module
 \if{html}{\out{<div class="r">}}\preformatted{Text$new(appId, mdFile)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{appId}}{(\code{character(1)}) ID of the app, to use for namespacing.}
+
+\item{\code{mdFile}}{(\code{character(1)}) Path to the markdown-file.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self}
+UI
+}
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Text-server"></a>}}
-\if{latex}{\out{\hypertarget{method-Text-server}{}}}
-\subsection{Method \code{server()}}{
+\if{html}{\out{<a id="method-Text-UI"></a>}}
+\if{latex}{\out{\hypertarget{method-Text-UI}{}}}
+\subsection{Method \code{UI()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Text$server()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Text$UI()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+\code{shiny.tag.list}
 }
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Text-ui"></a>}}
-\if{latex}{\out{\hypertarget{method-Text-ui}{}}}
-\subsection{Method \code{ui()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Text$ui()}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Text-clone"></a>}}

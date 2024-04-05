@@ -9,6 +9,15 @@ Table Module
 \section{Super class}{
 \code{\link[DarwinShinyModules:Module]{DarwinShinyModules::Module}} -> \code{Table}
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{dataTableBindings}}{(\code{reactivevalues}) Bindings of the DataTable in a reactive environment.}
+
+\item{\code{data}}{The data to render in the DataTable, usually a \code{data.frame}-like object.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -27,6 +36,21 @@ Table Module
 \if{html}{\out{<div class="r">}}\preformatted{Table$new(appId, data)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{appId}}{(\code{character(1)}) ID of the app, to use for namespacing.}
+
+\item{\code{data}}{Data to plot with, usually a \code{data.frame}-like object.}
+
+\item{\code{fun}}{Function to plot with, with one argument: \code{data}.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self}
+validate
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Table-validate"></a>}}
@@ -36,6 +60,10 @@ Table Module
 \if{html}{\out{<div class="r">}}\preformatted{Table$validate()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+\code{self}
+UI
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Table-UI"></a>}}
@@ -45,6 +73,17 @@ Table Module
 \if{html}{\out{<div class="r">}}\preformatted{Table$UI(title = "Table")}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{title}}{(\code{character(1)}) Title to use for the DataTable.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{shiny.tag.list}
+server
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Table-server"></a>}}
@@ -54,6 +93,20 @@ Table Module
 \if{html}{\out{<div class="r">}}\preformatted{Table$server(input, output, session)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{input}}{(\code{input})}
+
+\item{\code{output}}{(\code{output})}
+
+\item{\code{session}}{(\code{session})}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{NULL}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Table-clone"></a>}}

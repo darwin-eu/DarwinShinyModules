@@ -1,9 +1,9 @@
 #' @title PlotStatic
 #'
+#' @include Plot.R
+#'
 #' @description
 #' Static Plot (`plot()` or `ggplot2`) Module
-#'
-#' @inherit Plot
 #'
 #' @export
 PlotStatic <- R6::R6Class(
