@@ -13,8 +13,7 @@ Sankey diagram)
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-InteractivePlots-uiMenu}{\code{InteractivePlots$uiMenu()}}
-\item \href{#method-InteractivePlots-uiBody}{\code{InteractivePlots$uiBody()}}
+\item \href{#method-InteractivePlots-UI}{\code{InteractivePlots$UI()}}
 \item \href{#method-InteractivePlots-server}{\code{InteractivePlots$server()}}
 \item \href{#method-InteractivePlots-clone}{\code{InteractivePlots$clone()}}
 }
@@ -22,43 +21,18 @@ Sankey diagram)
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Module" data-id="UI"><a href='../../DarwinShinyModules/html/Module.html#method-Module-UI'><code>DarwinShinyModules::Module$UI()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Module" data-id="initialize"><a href='../../DarwinShinyModules/html/Module.html#method-Module-initialize'><code>DarwinShinyModules::Module$initialize()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Module" data-id="validate"><a href='../../DarwinShinyModules/html/Module.html#method-Module-validate'><code>DarwinShinyModules::Module$validate()</code></a></span></li>
 </ul>
 </details>
 }}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-InteractivePlots-uiMenu"></a>}}
-\if{latex}{\out{\hypertarget{method-InteractivePlots-uiMenu}{}}}
-\subsection{Method \code{uiMenu()}}{
-Method to include a \link[shinydashboard]{menuItem} to link to the body.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InteractivePlots$uiMenu(label = "Plots", tag = "plots")}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{label}}{(\code{character(1)})\cr
-Label to show for the \code{menuItem}.}
-
-\item{\code{tag}}{(\code{character(1)})\cr
-Tag to use internally in \code{input}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{menuItem})
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-InteractivePlots-uiBody"></a>}}
-\if{latex}{\out{\hypertarget{method-InteractivePlots-uiBody}{}}}
-\subsection{Method \code{uiBody()}}{
+\if{html}{\out{<a id="method-InteractivePlots-UI"></a>}}
+\if{latex}{\out{\hypertarget{method-InteractivePlots-UI}{}}}
+\subsection{Method \code{UI()}}{
 Method to include a \link[shinydashboard]{tabItem} to include the body.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InteractivePlots$uiBody()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{InteractivePlots$UI()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{

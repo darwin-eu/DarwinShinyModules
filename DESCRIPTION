@@ -41,5 +41,7 @@ Collate:
     'PlotStatic.R'
     'PlotWidget.R'
     'Prevalence.R'
+    'TreatmentPatterns.R'
+    'Sunburst.R'
     'Table.R'
     'Text.R'
