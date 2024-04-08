@@ -31,6 +31,7 @@ VignetteBuilder: knitr
 Language: en-US
 Collate: 
     'CharacterizationPlots.R'
+    'IncidencePrevalence.R'
     'Incidence.R'
     'InputHandler.R'
     'InteractivePlots.R'

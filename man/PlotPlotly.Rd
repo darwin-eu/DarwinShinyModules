@@ -33,7 +33,7 @@ Plotly Module
 <details open><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Module" data-id="validate"><a href='../../DarwinShinyModules/html/Module.html#method-Module-validate'><code>DarwinShinyModules::Module$validate()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="updateData"><a href='../../DarwinShinyModules/html/Plot.html#method-Plot-updateData'><code>DarwinShinyModules::Plot$updateData()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="updateDataReactive"><a href='../../DarwinShinyModules/html/Plot.html#method-Plot-updateDataReactive'><code>DarwinShinyModules::Plot$updateDataReactive()</code></a></span></li>
 </ul>
 </details>
 }}

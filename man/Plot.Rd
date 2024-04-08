@@ -24,7 +24,7 @@ Plot Interface
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-Plot-new}{\code{Plot$new()}}
-\item \href{#method-Plot-updateData}{\code{Plot$updateData()}}
+\item \href{#method-Plot-updateDataReactive}{\code{Plot$updateDataReactive()}}
 \item \href{#method-Plot-clone}{\code{Plot$clone()}}
 }
 }
@@ -62,12 +62,12 @@ initialize
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Plot-updateData"></a>}}
-\if{latex}{\out{\hypertarget{method-Plot-updateData}{}}}
-\subsection{Method \code{updateData()}}{
+\if{html}{\out{<a id="method-Plot-updateDataReactive"></a>}}
+\if{latex}{\out{\hypertarget{method-Plot-updateDataReactive}{}}}
+\subsection{Method \code{updateDataReactive()}}{
 Update data within reactive context (\code{reactive()} or \code{observe()})
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Plot$updateData(data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Plot$updateDataReactive(data)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

@@ -33,7 +33,7 @@ PlotWidget <- R6::R6Class(
     #' @return `NULL`
     server = function(input, output, session) {
       output[[private$id("plot")]] <- shiny::renderUI({
-        self$updateData(private$.data)
+        self$updateDataReactive(private$.data)
         do.call(what = private$.fun, args = list(data = private$.reactiveValues$data))
       })
     }

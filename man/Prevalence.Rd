@@ -6,15 +6,12 @@
 \description{
 Prevalence Module
 }
-\section{Super class}{
-\code{\link[DarwinShinyModules:Module]{DarwinShinyModules::Module}} -> \code{Prevalence}
+\section{Super classes}{
+\code{\link[DarwinShinyModules:Module]{DarwinShinyModules::Module}} -> \code{\link[DarwinShinyModules:IncidencePrevalence]{DarwinShinyModules::IncidencePrevalence}} -> \code{Prevalence}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-Prevalence-new}{\code{Prevalence$new()}}
-\item \href{#method-Prevalence-UI}{\code{Prevalence$UI()}}
-\item \href{#method-Prevalence-server}{\code{Prevalence$server()}}
 \item \href{#method-Prevalence-clone}{\code{Prevalence$clone()}}
 }
 }
@@ -22,36 +19,12 @@ Prevalence Module
 <details open><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Module" data-id="validate"><a href='../../DarwinShinyModules/html/Module.html#method-Module-validate'><code>DarwinShinyModules::Module$validate()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="IncidencePrevalence" data-id="UI"><a href='../../DarwinShinyModules/html/IncidencePrevalence.html#method-IncidencePrevalence-UI'><code>DarwinShinyModules::IncidencePrevalence$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="IncidencePrevalence" data-id="initialize"><a href='../../DarwinShinyModules/html/IncidencePrevalence.html#method-IncidencePrevalence-initialize'><code>DarwinShinyModules::IncidencePrevalence$initialize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="IncidencePrevalence" data-id="server"><a href='../../DarwinShinyModules/html/IncidencePrevalence.html#method-IncidencePrevalence-server'><code>DarwinShinyModules::IncidencePrevalence$server()</code></a></span></li>
 </ul>
 </details>
 }}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Prevalence-new"></a>}}
-\if{latex}{\out{\hypertarget{method-Prevalence-new}{}}}
-\subsection{Method \code{new()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Prevalence$new(appId, prevalence)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Prevalence-UI"></a>}}
-\if{latex}{\out{\hypertarget{method-Prevalence-UI}{}}}
-\subsection{Method \code{UI()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Prevalence$UI(title = "Table")}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Prevalence-server"></a>}}
-\if{latex}{\out{\hypertarget{method-Prevalence-server}{}}}
-\subsection{Method \code{server()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Prevalence$server(input, output, session)}\if{html}{\out{</div>}}
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Prevalence-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-Prevalence-clone}{}}}

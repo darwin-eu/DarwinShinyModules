@@ -4,17 +4,14 @@
 \alias{Incidence}
 \title{Incidence}
 \description{
-Incidence Module
+Incidence Module. Composed of the Plot and Table modules.
 }
-\section{Super class}{
-\code{\link[DarwinShinyModules:Module]{DarwinShinyModules::Module}} -> \code{Incidence}
+\section{Super classes}{
+\code{\link[DarwinShinyModules:Module]{DarwinShinyModules::Module}} -> \code{\link[DarwinShinyModules:IncidencePrevalence]{DarwinShinyModules::IncidencePrevalence}} -> \code{Incidence}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-Incidence-new}{\code{Incidence$new()}}
-\item \href{#method-Incidence-UI}{\code{Incidence$UI()}}
-\item \href{#method-Incidence-server}{\code{Incidence$server()}}
 \item \href{#method-Incidence-clone}{\code{Incidence$clone()}}
 }
 }
@@ -22,36 +19,12 @@ Incidence Module
 <details open><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Module" data-id="validate"><a href='../../DarwinShinyModules/html/Module.html#method-Module-validate'><code>DarwinShinyModules::Module$validate()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="IncidencePrevalence" data-id="UI"><a href='../../DarwinShinyModules/html/IncidencePrevalence.html#method-IncidencePrevalence-UI'><code>DarwinShinyModules::IncidencePrevalence$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="IncidencePrevalence" data-id="initialize"><a href='../../DarwinShinyModules/html/IncidencePrevalence.html#method-IncidencePrevalence-initialize'><code>DarwinShinyModules::IncidencePrevalence$initialize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="IncidencePrevalence" data-id="server"><a href='../../DarwinShinyModules/html/IncidencePrevalence.html#method-IncidencePrevalence-server'><code>DarwinShinyModules::IncidencePrevalence$server()</code></a></span></li>
 </ul>
 </details>
 }}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Incidence-new"></a>}}
-\if{latex}{\out{\hypertarget{method-Incidence-new}{}}}
-\subsection{Method \code{new()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Incidence$new(appId, incidence)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Incidence-UI"></a>}}
-\if{latex}{\out{\hypertarget{method-Incidence-UI}{}}}
-\subsection{Method \code{UI()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Incidence$UI(title = "Table")}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Incidence-server"></a>}}
-\if{latex}{\out{\hypertarget{method-Incidence-server}{}}}
-\subsection{Method \code{server()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Incidence$server(input, output, session)}\if{html}{\out{</div>}}
-}
-
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Incidence-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-Incidence-clone}{}}}

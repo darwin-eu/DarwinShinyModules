@@ -2,6 +2,7 @@
 
 export(CharacterizationPlots)
 export(Incidence)
+export(IncidencePrevalence)
 export(InputHandler)
 export(InteractivePlots)
 export(Module)

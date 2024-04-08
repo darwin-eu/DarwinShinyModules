@@ -36,7 +36,7 @@ Plot <- R6::R6Class(
     #' @param data Updated data
     #'
     #' @return `self`
-    updateData = function(data) {
+    updateDataReactive = function(data) {
       private$.reactiveValues$data <- data
       return(invisible(self))
     }
@@ -58,3 +58,14 @@ Plot <- R6::R6Class(
     reactiveValues = function() return(private$.reactiveValues)
   )
 )
+
+plotFactory <- function(appId, data, fun, type) {
+  switch(
+    type,
+    "static" = {
+
+    },
+    "plotly" = {},
+    "widget" = {}
+  )
+}
