@@ -12,28 +12,10 @@ InteractivePlots <- R6::R6Class(
   # Public ----
   public = list(
     #' @description
-    #' Method to include a \link[shinydashboard]{menuItem} to link to the body.
-    #'
-    #' @param label (`character(1)`)\cr
-    #' Label to show for the `menuItem`.
-    #'
-    #' @param tag (`character(1)`)\cr
-    #' Tag to use internally in `input`.
-    #'
-    #' @return (`menuItem`)
-    uiMenu = function(label = "Plots", tag = "plots") {
-      shinydashboard::menuItem(
-        text = label,
-        tabName = tag,
-        icon = shiny::icon(lib = "glyphicon", name = "stats")
-      )
-    },
-
-    #' @description
     #' Method to include a \link[shinydashboard]{tabItem} to include the body.
     #'
     #' @return (`tabItem`)
-    uiBody = function() {
+    UI = function() {
       shinydashboard::tabItem(
         tabName = "plots",
         shiny::fluidRow(
