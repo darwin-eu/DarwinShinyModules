@@ -30,11 +30,8 @@ Config/testthat/edition: 3
 VignetteBuilder: knitr
 Language: en-US
 Collate: 
-    'CharacterizationPlots.R'
     'IncidencePrevalence.R'
     'Incidence.R'
-    'InputHandler.R'
-    'InteractivePlots.R'
     'Module.R'
     'Plot.R'
     'PlotPlotly.R'
@@ -42,6 +39,7 @@ Collate:
     'PlotWidget.R'
     'Prevalence.R'
     'TreatmentPatterns.R'
+    'Sankey.R'
     'Sunburst.R'
     'Table.R'
     'Text.R'

@@ -5,7 +5,7 @@
 #' @description
 #' Table Module
 #'
-#' @field dataTableBindings (`reactivevalues`) Bindings of the DataTable in a reactive environment.
+#' @field bindings (`reactivevalues`) Bindings of the DataTable in a reactive environment.
 #' @field data The data to render in the DataTable, usually a `data.frame`-like object.
 #'
 #' @export
@@ -79,7 +79,7 @@ Table <- R6::R6Class(
   private = list(
     ## Fields ----
     .data = NULL,
-    .dataTableBindings = shiny::reactiveValues(
+    .bindings = shiny::reactiveValues(
       cell_clicked = NULL,
       cells_selected = NULL,
       cell_info = NULL,
@@ -121,17 +121,17 @@ Table <- R6::R6Class(
           input[[searchColumns]],
           input[[state]]
         ), {
-        private$.dataTableBindings$cell_clicked <- input[[cellClicked]]
-        private$.dataTableBindings$cells_selected <- input[[cellsSelected]]
-        private$.dataTableBindings$cell_info <- input[[cellInfo]]
-        private$.dataTableBindings$rows_current <- input[[rowsCurrent]]
-        private$.dataTableBindings$rows_all <- input[[rowsAll]]
-        private$.dataTableBindings$rows_selected <- input[[rowsSelected]]
-        private$.dataTableBindings$row_last_clicked <- input[[rowLastClicked]]
-        private$.dataTableBindings$columns_selected <- input[[columnsSelected]]
-        private$.dataTableBindings$search <- input[[search]]
-        private$.dataTableBindings$search_columns <- input[[searchColumns]]
-        private$.dataTableBindings$state <- input[[state]]
+        private$.bindings$cell_clicked <- input[[cellClicked]]
+        private$.bindings$cells_selected <- input[[cellsSelected]]
+        private$.bindings$cell_info <- input[[cellInfo]]
+        private$.bindings$rows_current <- input[[rowsCurrent]]
+        private$.bindings$rows_all <- input[[rowsAll]]
+        private$.bindings$rows_selected <- input[[rowsSelected]]
+        private$.bindings$row_last_clicked <- input[[rowLastClicked]]
+        private$.bindings$columns_selected <- input[[columnsSelected]]
+        private$.bindings$search <- input[[search]]
+        private$.bindings$search_columns <- input[[searchColumns]]
+        private$.bindings$state <- input[[state]]
       })
     },
 
@@ -139,7 +139,8 @@ Table <- R6::R6Class(
       output[[private$id("table")]] <- DT::renderDT(
         expr = private$.data,
         filter = "top",
-        options = list(scrollX = TRUE)
+        options = list(
+          scrollX = TRUE)
       )
     },
 
@@ -162,13 +163,6 @@ Table <- R6::R6Class(
   # Active ----
   active = list(
     data = function() return(private$.data),
-    dataTableBindings = function() return(private$.dataTableBindings)
+    bindings = function() return(private$.bindings)
   )
 )
-#' initialize
-#'
-#' @param appId (`character(1)`) ID of the app, to use for namespacing.
-#' @param data Data to plot with, usually a `data.frame`-like object.
-#' @param fun Function to plot with, with one argument: `data`.
-#'
-#' @return `self`

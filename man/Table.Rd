@@ -12,7 +12,7 @@ Table Module
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{dataTableBindings}}{(\code{reactivevalues}) Bindings of the DataTable in a reactive environment.}
+\item{\code{bindings}}{(\code{reactivevalues}) Bindings of the DataTable in a reactive environment.}
 
 \item{\code{data}}{The data to render in the DataTable, usually a \code{data.frame}-like object.}
 }

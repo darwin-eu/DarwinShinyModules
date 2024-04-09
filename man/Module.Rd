@@ -4,7 +4,66 @@
 \alias{Module}
 \title{Module}
 \description{
-Module super class
+Module super class. This class is an \code{interface} and is not meant to be
+directly used, but to be inherited.
+}
+\examples{
+library(DarwinShinyModules)
+
+MyModule <- R6::R6Class(
+  classname = "MyModule",
+  inherit = Module,
+
+  public = list(
+    UI = function() {
+      shiny::tagList(
+        shiny::tableOutput(outputId = shiny::NS(private$.appId, private$id("myTable"))),
+        shiny::uiOutput(outputId = shiny::NS(private$.appId, private$id("moduleData")))
+      )
+    },
+
+    server = function(input, output, session) {
+      output[[private$id("myTable")]] <- shiny::renderTable({
+        head(private$.data)
+      })
+
+      output[[private$id("moduleData")]] <- shiny::renderUI({
+        shiny::HTML(paste(
+          sprintf("App ID: \%s", private$.appId),
+          sprintf("Module Name: \%s", private$.moduleName),
+          sprintf("Instance ID: \%s", private$.instanceId),
+          sprintf("Namespace ID myTable: \%s", private$id("myTable")),
+          sprintf("Namespace ID moduleData: \%s", private$id("moduleData")),
+          sep = "<br/>"
+        ))
+      })
+    }
+  ),
+
+  private = list(
+    .data = iris
+  ),
+
+  active = list(
+    data = function() return(private$.data)
+  )
+)
+
+myModule <- MyModule$new(appId = "app")
+
+ui <- shiny::fluidPage(
+  myModule$UI()
+)
+
+server <- function(input, output, session) {
+  shiny::moduleServer(id = "app", module = function(input, output, session) {
+    myModule$server(input, output, session)
+  })
+}
+
+if (interactive()) {
+  shiny::shinyApp(ui, server)
+}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}

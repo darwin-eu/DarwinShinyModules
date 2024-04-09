@@ -5,7 +5,7 @@
 #' @description
 #' Text Module
 #'
-#' @field mdText (`character(n)`) Lines read from the markdown-file supplied.
+#' @field markdown (`character(n)`) Lines read from the markdown-file supplied.
 #'
 #' @export
 Text <- R6::R6Class(
@@ -19,12 +19,12 @@ Text <- R6::R6Class(
     #' @description initialize
     #'
     #' @param appId (`character(1)`) ID of the app, to use for namespacing.
-    #' @param mdFile (`character(1)`) Path to the markdown-file.
+    #' @param markdown (`character(n)`) Markdown.
     #'
     #' @return `self`
-    initialize = function(appId, mdFile) {
+    initialize = function(appId, markdown) {
       super$initialize(appId)
-      private$.mdText <- readLines(mdFile)
+      private$.markdown <- markdown
       return(invisible(self))
     },
 
@@ -41,11 +41,11 @@ Text <- R6::R6Class(
   # Private ----
   private = list(
     ## Fields ----
-    .mdText = ""
+    .markdown = ""
   ),
 
   # Active ----
   active = list(
-    mdText = function() return(private$.mdText)
+    markdown = function() return(private$.markdown)
   )
 )
