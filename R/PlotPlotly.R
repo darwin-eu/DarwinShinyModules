@@ -55,7 +55,6 @@ PlotPlotly <- R6::R6Class(
       plotly::event_register(p = private$.plot, event = "plotly_selected")
 
       output[[private$id("plot")]] <- plotly::renderPlotly({
-        self$updateDataReactive(private$.data)
         private$updateBindings()
         private$.plot
       })

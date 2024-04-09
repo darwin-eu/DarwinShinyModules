@@ -34,7 +34,6 @@ PlotStatic <- R6::R6Class(
     #' @return `NULL`
     server = function(input, output, session) {
       output[[private$id("plot")]] <- shiny::renderPlot({
-        self$updateDataReactive(private$.data)
         do.call(private$.fun, list(data = private$.reactiveValues$data))
       })
     }
