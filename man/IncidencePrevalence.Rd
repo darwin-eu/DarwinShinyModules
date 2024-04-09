@@ -5,6 +5,8 @@
 \title{IncidencePrevalence}
 \description{
 IncidencePrevalence super class. Composed of the Plot and Table modules.
+This class is an \code{interface} and is not meant to be directly used, but to be
+inherited.
 }
 \section{Super class}{
 \code{\link[DarwinShinyModules:Module]{DarwinShinyModules::Module}} -> \code{IncidencePrevalence}

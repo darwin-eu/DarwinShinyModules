@@ -4,6 +4,8 @@
 #'
 #' @description
 #' IncidencePrevalence super class. Composed of the Plot and Table modules.
+#' This class is an `interface` and is not meant to be directly used, but to be
+#' inherited.
 #'
 #' @field table (`Table`) Module.
 #' @field plot (`PlotPlotly`) Module.
