@@ -4,7 +4,9 @@
 \alias{TreatmentPatterns}
 \title{TreatmentPatterns}
 \description{
-TreatmentPatterns super class
+TreatmentPatterns super class. Composed of a PlotWidget and Table modules.
+This class is an \code{interface} and is not meant to be directly used, but to be
+inherited.
 }
 \section{Super class}{
 \code{\link[DarwinShinyModules:Module]{DarwinShinyModules::Module}} -> \code{TreatmentPatterns}
@@ -12,9 +14,11 @@ TreatmentPatterns super class
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{widget}}{(\code{PlotWidget}) Module}
-
 \item{\code{data}}{Data to plot with, usually a \code{data.frame}-like object.}
+
+\item{\code{widget}}{(\link[DarwinShinyModules]{PlotWidget}) Module}
+
+\item{\code{table}}{(\link[DarwinShinyModules]{Table} Module}
 }
 \if{html}{\out{</div>}}
 }
