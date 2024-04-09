@@ -21,7 +21,8 @@ Imports:
     dplyr,
     ggplot2,
     plotly,
-    IncidencePrevalence
+    IncidencePrevalence,
+    magrittr
 Suggests: 
     testthat (>= 3.0.0),
     duckdb,
@@ -44,3 +45,4 @@ Collate:
     'Sunburst.R'
     'Table.R'
     'Text.R'
+    'utils-pipe.R'
