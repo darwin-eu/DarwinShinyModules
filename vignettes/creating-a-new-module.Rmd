@@ -23,7 +23,7 @@ The `Module` class is an interface to be inherited to create modules. The module
 - It enables you to use the private `id()` method for inherited modules. Which uses the `moduleName`, `instanceId` and an `inputId` or `outputId` to create a unique reference within the namespace. This enables multiple (duplicate) modules to use the same short-hand reference. As an example the complete reference for a table would be: `app-Module_ABCDEFGHIJ_table`. Where `app` is the namespace of the entire ShinyApp, `Module` is the name of the module, `ABCDEFGHIJ` is the instance ID of the instance of the module, and `table` is the short hand reference to the table in the `input` or `output`.
 
 ## Overrides
-When inheriting the `Module` class it is expected that you override the `UI()` and / or `server()` methods. The `UI()` method should return something akin to a `shiny::tagList()`. By default they are defined, but do nothing. This allows for just rendering simple text in a module, without any back-end like the `DarwinShinyModules::Text` module. Or a static image.
+When inheriting the `ShinyModule` class it is expected that you override the `UI()` and / or `server()` methods. The `UI()` method should return something akin to a `shiny::tagList()`. By default they are defined, but do nothing. This allows for just rendering simple text in a module, without any back-end like the `DarwinShinyModules::Text` module. Or a static image.
 
 ## Example
 ### Defining a new module
@@ -37,7 +37,7 @@ library(DarwinShinyModules)
 
 MyModule <- R6::R6Class(
   classname = "MyModule",
-  inherit = Module,
+  inherit = ShinyModule,
 
   public = list(
     # Override UI()

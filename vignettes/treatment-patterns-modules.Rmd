@@ -71,7 +71,15 @@ if (interactive()) {
   shiny::shinyApp(ui, server)
 }
 ```
-![](./img/sunburst.png)
-![](./img/sankey.png)
 
-The modules are adjustable by filtering the table underneath.
+By default all paths are shown for all strata.
+![](./img/tp_ex_init.png)
+
+We are able to filter the data in the table for specific strata.
+![](./img/tp_ex_sunburst.png)
+
+It is also possible to search for a specific treatment in the pathways:
+![](./img/tp_ex_filtered.png)
+
+The same is be possible for the Sankey diagram.
+![](./img/tp_ex_sankey.png)
