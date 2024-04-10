@@ -15,26 +15,27 @@ Depends:
     R (>= 4.0)
 Imports:
     R6,
-    TreatmentPatterns,
     shiny,
     shinydashboard,
     dplyr,
     ggplot2,
-    plotly,
+    plotly
+Suggests:
+    TreatmentPatterns,
     IncidencePrevalence,
-    magrittr
-Suggests: 
     testthat (>= 3.0.0),
     duckdb,
     knitr,
     rmarkdown
 Config/testthat/edition: 3
+Config/testthat/parallel: true
 VignetteBuilder: knitr
 Language: en-US
 Collate: 
+    'DarwinShinyModules.R'
+    'ShinyModule.R'
     'IncidencePrevalence.R'
     'Incidence.R'
-    'Module.R'
     'Plot.R'
     'PlotPlotly.R'
     'PlotStatic.R'
@@ -45,4 +46,3 @@ Collate:
     'Sunburst.R'
     'Table.R'
     'Text.R'
-    'utils-pipe.R'
