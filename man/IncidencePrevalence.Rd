@@ -9,7 +9,7 @@ This class is an \code{interface} and is not meant to be directly used, but to b
 inherited.
 }
 \section{Super class}{
-\code{\link[DarwinShinyModules:Module]{DarwinShinyModules::Module}} -> \code{IncidencePrevalence}
+\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{IncidencePrevalence}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
@@ -24,18 +24,12 @@ inherited.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-IncidencePrevalence-new}{\code{IncidencePrevalence$new()}}
+\item \href{#method-IncidencePrevalence-validate}{\code{IncidencePrevalence$validate()}}
 \item \href{#method-IncidencePrevalence-UI}{\code{IncidencePrevalence$UI()}}
 \item \href{#method-IncidencePrevalence-server}{\code{IncidencePrevalence$server()}}
 \item \href{#method-IncidencePrevalence-clone}{\code{IncidencePrevalence$clone()}}
 }
 }
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
-<ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Module" data-id="validate"><a href='../../DarwinShinyModules/html/Module.html#method-Module-validate'><code>DarwinShinyModules::Module$validate()</code></a></span></li>
-</ul>
-</details>
-}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-IncidencePrevalence-new"></a>}}
 \if{latex}{\out{\hypertarget{method-IncidencePrevalence-new}{}}}
@@ -56,6 +50,19 @@ initialize
 }
 \subsection{Returns}{
 \code{self}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-IncidencePrevalence-validate"></a>}}
+\if{latex}{\out{\hypertarget{method-IncidencePrevalence-validate}{}}}
+\subsection{Method \code{validate()}}{
+Validation method
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{IncidencePrevalence$validate()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{self})
 }
 }
 \if{html}{\out{<hr>}}

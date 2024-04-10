@@ -5,10 +5,6 @@
 #' @description
 #' Plotly Module
 #'
-#' @field plot (`plotly`) object.
-#' @field source (`character`) Source label for the plotly plot.
-#' @field plotlyBindings (`reactivevalues`) bindings from the plotly object.
-#'
 #' @export
 PlotPlotly <- R6::R6Class(
   classname = "PlotPlotly",
@@ -61,27 +57,32 @@ PlotPlotly <- R6::R6Class(
     }
   ),
 
+  # Active ----
+  active = list(
+    #' @field plot (`plotly`) object.
+    plot = function() return(private$.plot),
+
+    #' @field source (`character`) Source label for the plotly plot.
+    source = function() return(private$.source),
+
+    #' @field bindingds (`reactivevalues`) bindings from the plotly object.
+    bindingds = function() return(private$.bindingds)
+  ),
+
   # Private ----
   private = list(
     ## Fields ----
     .plot = NULL,
     .source = NULL,
-    .plotlyBindings = shiny::reactiveValues(
+    .bindingds = shiny::reactiveValues(
       selected = NULL
     ),
 
     ## Methods ----
     updateBindings = function() {
       shiny::observeEvent(plotly::event_data("plotly_selected", source = private$.source), {
-        private$.plotlyBindings$selected <- plotly::event_data("plotly_selected", source = private$.source)
+        private$.bindingds$selected <- plotly::event_data("plotly_selected", source = private$.source)
       })
     }
-  ),
-
-  # Active ----
-  active = list(
-    plot = function() return(private$.plot),
-    source = function() return(private$.source),
-    plotlyBindings = function() return(private$.plotlyBindings)
   )
 )

@@ -1,29 +1,25 @@
 #' @title TreatmentPatterns
 #'
-#' @include Module.R
+#' @include ShinyModule.R
 #'
 #' @description
-#' TreatmentPatterns super class. Composed of a PlotWidget and Table modules.
+#' [TreatmentPatterns] super class. Composed of a [PlotWidget] and [Table] modules.
 #' This class is an `interface` and is not meant to be directly used, but to be
 #' inherited.
 #'
-#' @field data Data to plot with, usually a `data.frame`-like object.
-#' @field widget (\link[DarwinShinyModules]{PlotWidget}) Module
-#' @field table (\link[DarwinShinyModules]{Table} Module
+#' @template param_appId
+#' @param data Data to plot with, usually a `data.frame`-like object.
 #'
 #' @export
 TreatmentPatterns <- R6::R6Class(
   classname = "TreatmentPatterns",
-  inherit = Module,
+  inherit = ShinyModule,
 
   # Public ----
   public = list(
     ## Methods ----
     #' @description
     #' Initializer method
-    #'
-    #' @param appId (`character(1)`)
-    #' @param data Data to plot with, usually a `data.frame`-like object.
     #'
     #' @return (`invisible(self)`)
     initialize = function(appId, data) {
@@ -36,6 +32,29 @@ TreatmentPatterns <- R6::R6Class(
         )
       private$.widget <- PlotWidget$new(appId, private$.data, private$plotSunburstSankey)
       private$.table <- Table$new(appId, private$.data)
+    },
+
+    #' @description
+    #' Validation method
+    #'
+    #' @return (`self`)
+    validate = function() {
+      tpInstalled <- require(
+        "TreatmentPatterns",
+        character.only = TRUE,
+        quietly = TRUE
+      )
+
+      if (!tpInstalled) {
+        installTP <- readline("TreatmentPatterns is not installed, would you like to? (y/n)")
+        if (installTP) {
+          install.packages("TreatmentPatterns")
+        } else {
+          stop("TreatmentPatterns is not installed")
+        }
+      }
+
+      return(invisible(self))
     },
 
     #' @description
@@ -74,13 +93,30 @@ TreatmentPatterns <- R6::R6Class(
     #' @param session (`session`)\cr
     #' Session from the server function.
     #'
-    #' @return (`NULL`
+    #' @return (`NULL`)
     server = function(input, output, session) {
+      print(class(input))
+      print(class(output))
+      print(class(session))
       private$updateInputs(input)
       private$updateData(private$.data)
       private$.widget$server(input, output, session)
       private$.table$server(input, output, session)
     }
+  ),
+
+  active = list(
+    #' @field data Data to plot with, usually a `data.frame`-like object.
+    data = function() return(private$.data),
+
+    #' @field widget ([PlotWidget]) Module
+    widget = function() return(private$.widget),
+
+    #' @field table ([Table]) Module
+    table = function() return(private$.table),
+
+    #' @field inputs (`reactiveValues`) environment
+    inputs = function() return(private$.inputs)
   ),
 
   # Private ----
@@ -135,11 +171,5 @@ TreatmentPatterns <- R6::R6Class(
         return(private$.inputs$groupCombinations)
       }
     }
-  ),
-
-  active = list(
-    data = function() return(private$.data),
-    widget = function() return(private$.widget),
-    table = function() return(private$.table)
   )
 )

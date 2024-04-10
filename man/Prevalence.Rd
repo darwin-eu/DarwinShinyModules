@@ -7,7 +7,7 @@
 Prevalence Module
 }
 \section{Super classes}{
-\code{\link[DarwinShinyModules:Module]{DarwinShinyModules::Module}} -> \code{\link[DarwinShinyModules:IncidencePrevalence]{DarwinShinyModules::IncidencePrevalence}} -> \code{Prevalence}
+\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{\link[DarwinShinyModules:IncidencePrevalence]{DarwinShinyModules::IncidencePrevalence}} -> \code{Prevalence}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -18,10 +18,10 @@ Prevalence Module
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Module" data-id="validate"><a href='../../DarwinShinyModules/html/Module.html#method-Module-validate'><code>DarwinShinyModules::Module$validate()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="IncidencePrevalence" data-id="UI"><a href='../../DarwinShinyModules/html/IncidencePrevalence.html#method-IncidencePrevalence-UI'><code>DarwinShinyModules::IncidencePrevalence$UI()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="IncidencePrevalence" data-id="initialize"><a href='../../DarwinShinyModules/html/IncidencePrevalence.html#method-IncidencePrevalence-initialize'><code>DarwinShinyModules::IncidencePrevalence$initialize()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="IncidencePrevalence" data-id="server"><a href='../../DarwinShinyModules/html/IncidencePrevalence.html#method-IncidencePrevalence-server'><code>DarwinShinyModules::IncidencePrevalence$server()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="IncidencePrevalence" data-id="validate"><a href='../../DarwinShinyModules/html/IncidencePrevalence.html#method-IncidencePrevalence-validate'><code>DarwinShinyModules::IncidencePrevalence$validate()</code></a></span></li>
 </ul>
 </details>
 }}

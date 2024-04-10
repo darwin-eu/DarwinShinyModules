@@ -10,8 +10,8 @@ Sankey <- R6::R6Class(
   classname = "Sankey",
   inherit = TreatmentPatterns,
 
-  #' @field colours (`list()`) Named list of hex colour codes i.e.: `list(A = "#FF0000", B = "#00FF00")`
   public = list(
+    #' @field colours (`list()`) Named list of hex colour codes i.e.: `list(A = "#FF0000", B = "#00FF00")`
     colours = NULL
   ),
 

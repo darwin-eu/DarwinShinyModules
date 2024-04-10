@@ -5,9 +5,6 @@
 #' @description
 #' Sunburst Module.
 #'
-#' @field jsShowLegend (`character(1)`) JavaScript function to show legend on
-#' render as text.
-#'
 #' @export
 Sunburst <- R6::R6Class(
   classname = "Sunburst",
@@ -18,6 +15,14 @@ Sunburst <- R6::R6Class(
     #' codes (range):\cr `list(domain = c("A", "B"), range = c("#FF0000", "#00FF00"))`.
     #' See \link[sunburstR]{sunburst}
     colours = NULL
+  ),
+
+  active = list(
+    #' @field jsShowLegend (`character(1)`) JavaScript function to show legend
+    #' on render as text.
+    jsShowLegend = function() {
+      return(private$.jsShowLegend)
+    }
   ),
 
   private = list(
@@ -40,8 +45,5 @@ Sunburst <- R6::R6Class(
         jsCode = private$.jsShowLegend
       )
     }
-  ),
-  active = list(
-    jsShowLegend = function() return(private$.jsShowLegend)
   )
 )

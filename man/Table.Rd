@@ -7,7 +7,7 @@
 Table Module
 }
 \section{Super class}{
-\code{\link[DarwinShinyModules:Module]{DarwinShinyModules::Module}} -> \code{Table}
+\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{Table}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}

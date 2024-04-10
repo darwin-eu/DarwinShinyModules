@@ -1,18 +1,14 @@
 #' @title Plot
 #'
-#' @include Module.R
+#' @include ShinyModule.R
 #'
 #' @description
 #' Plot Interface
 #'
-#' @field data Data used for plot.
-#' @field fun Plotting function.
-#' @field reactiveValues Reactive values.
-#'
 #' @export
 Plot <- R6::R6Class(
   classname = "Plot",
-  inherit = Module,
+  inherit = ShinyModule,
 
   # Public ----
   public = list(
@@ -41,6 +37,19 @@ Plot <- R6::R6Class(
       return(invisible(self))
     }
   ),
+
+  # Active ----
+  active = list(
+    #' @field data Data used for plot.
+    data = function() return(private$.data),
+
+    #' @field fun Plotting function.
+    fun = function() return(private$.fun),
+
+    #' @field reactiveValues Reactive values.
+    reactiveValues = function() return(private$.reactiveValues)
+  ),
+
   # Private ----
   private = list(
     ## Fields ----
@@ -49,23 +58,5 @@ Plot <- R6::R6Class(
     .reactiveValues = shiny::reactiveValues(
       data = NULL,
     )
-  ),
-
-  # Active ----
-  active = list(
-    data = function() return(private$.data),
-    fun = function() return(private$.fun),
-    reactiveValues = function() return(private$.reactiveValues)
   )
 )
-
-plotFactory <- function(appId, data, fun, type) {
-  switch(
-    type,
-    "static" = {
-
-    },
-    "plotly" = {},
-    "widget" = {}
-  )
-}

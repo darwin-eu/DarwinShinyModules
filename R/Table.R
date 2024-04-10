@@ -1,17 +1,14 @@
 #' @title Table
 #'
-#' @include Module.R
+#' @include ShinyModule.R
 #'
 #' @description
 #' Table Module
 #'
-#' @field bindings (`reactivevalues`) Bindings of the DataTable in a reactive environment.
-#' @field data The data to render in the DataTable, usually a `data.frame`-like object.
-#'
 #' @export
 Table <- R6::R6Class(
   classname = "Table",
-  inherit = Module,
+  inherit = ShinyModule,
 
   # Public ----
   public = list(
@@ -72,6 +69,19 @@ Table <- R6::R6Class(
       private$renderTable(output)
       private$downloader(output)
       private$setReactiveValues(input)
+    }
+  ),
+
+  # Active ----
+  active = list(
+    #' @field bindings (`reactivevalues`) Bindings of the DataTable in a reactive environment.
+    data = function() {
+      return(private$.data)
+    },
+
+    #' @field data The data to render in the DataTable, usually a `data.frame`-like object.
+    bindings = function() {
+      return(private$.bindings)
     }
   ),
 
@@ -158,11 +168,5 @@ Table <- R6::R6Class(
     dlContent = function(file) {
       write.csv(private$.data, file)
     }
-  ),
-
-  # Active ----
-  active = list(
-    data = function() return(private$.data),
-    bindings = function() return(private$.bindings)
   )
 )

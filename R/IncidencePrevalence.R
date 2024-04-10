@@ -1,19 +1,16 @@
 #' @title IncidencePrevalence
 #'
-#' @include IncidencePrevalence.R
+#' @include ShinyModule.R
 #'
 #' @description
 #' IncidencePrevalence super class. Composed of the Plot and Table modules.
 #' This class is an `interface` and is not meant to be directly used, but to be
 #' inherited.
 #'
-#' @field table (`Table`) Module.
-#' @field plot (`PlotPlotly`) Module.
-#'
 #' @export
 IncidencePrevalence <- R6::R6Class(
   classname = "IncidencePrevalence",
-  inherit = Module,
+  inherit = ShinyModule,
 
   # Public ----
   public = list(
@@ -31,6 +28,29 @@ IncidencePrevalence <- R6::R6Class(
         data = data,
         fun = private$plotIncidencePrevalence
       )
+      return(invisible(self))
+    },
+
+
+    #' @description
+    #' Validation method
+    #'
+    #' @return (`self`)
+    validate = function() {
+      ipInstalled <- require(
+        "IncidencePrevalence",
+        character.only = TRUE,
+        quietly = TRUE
+      )
+
+      if (!ipInstalled) {
+        installIP <- readline("IncidencePrevalence is not installed, would you like to? (y/n)")
+        if (installIP) {
+          install.packages("IncidencePrevalence")
+        } else {
+          stop("IncidencePrevalence is not installed")
+        }
+      }
       return(invisible(self))
     },
 
@@ -59,6 +79,15 @@ IncidencePrevalence <- R6::R6Class(
     }
   ),
 
+  # Active ----
+  active = list(
+    #' @field table (`Table`) Module.
+    table = function() return(private$.table),
+
+    #' @field plot (`PlotPlotly`) Module.
+    plot = function() return(private$.plot)
+  ),
+
   # Private ----
   private = list(
     ## Fields ----
@@ -67,11 +96,5 @@ IncidencePrevalence <- R6::R6Class(
 
     ## Methods ----
     plotIncidencePrevalence = function(data) {}
-  ),
-
-  # Active ----
-  active = list(
-    table = function() return(private$.table),
-    plot = function() return(private$.plot)
   )
 )

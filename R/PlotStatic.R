@@ -37,6 +37,5 @@ PlotStatic <- R6::R6Class(
         do.call(private$.fun, list(data = private$.reactiveValues$data))
       })
     }
-  ),
-  active = list()
+  )
 )

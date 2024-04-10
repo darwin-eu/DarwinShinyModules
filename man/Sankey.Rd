@@ -7,7 +7,7 @@
 Sankey diagram Module.
 }
 \section{Super classes}{
-\code{\link[DarwinShinyModules:Module]{DarwinShinyModules::Module}} -> \code{\link[DarwinShinyModules:TreatmentPatterns]{DarwinShinyModules::TreatmentPatterns}} -> \code{Sankey}
+\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{\link[DarwinShinyModules:TreatmentPatterns]{DarwinShinyModules::TreatmentPatterns}} -> \code{Sankey}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -25,10 +25,10 @@ Sankey diagram Module.
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Module" data-id="validate"><a href='../../DarwinShinyModules/html/Module.html#method-Module-validate'><code>DarwinShinyModules::Module$validate()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="TreatmentPatterns" data-id="UI"><a href='../../DarwinShinyModules/html/TreatmentPatterns.html#method-TreatmentPatterns-UI'><code>DarwinShinyModules::TreatmentPatterns$UI()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="TreatmentPatterns" data-id="initialize"><a href='../../DarwinShinyModules/html/TreatmentPatterns.html#method-TreatmentPatterns-initialize'><code>DarwinShinyModules::TreatmentPatterns$initialize()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="TreatmentPatterns" data-id="server"><a href='../../DarwinShinyModules/html/TreatmentPatterns.html#method-TreatmentPatterns-server'><code>DarwinShinyModules::TreatmentPatterns$server()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="TreatmentPatterns" data-id="validate"><a href='../../DarwinShinyModules/html/TreatmentPatterns.html#method-TreatmentPatterns-validate'><code>DarwinShinyModules::TreatmentPatterns$validate()</code></a></span></li>
 </ul>
 </details>
 }}

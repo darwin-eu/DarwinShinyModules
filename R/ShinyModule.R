@@ -1,0 +1,88 @@
+#' @title Module Super Class
+#'
+#' @description
+#' This class is an `interface` and is not meant to be directly used, but to be
+#' inherited by other Modules.
+#'
+#' @template param_appId
+#'
+#' @export
+ShinyModule <- R6::R6Class(
+  classname = "ShinyModule",
+
+  public = list(
+    #' @description
+    #' Initializer method
+    #'
+    #' @return
+    #' (`self`)
+    initialize = function(appId) {
+      private$.appId <- appId
+      private$.moduleName <- class(self)[1]
+      private$.instanceId <- paste0(sample(x = LETTERS, size = 10), collapse = "")
+      return(invisible(self))
+    },
+
+    #' @description
+    #' Validator method
+    #'
+    #' @return
+    #' (`self`)
+    validate = function() {
+      return(invisible(self))
+    },
+
+    #' @description
+    #' Method to include a \link[shiny]{tagList} to include the body.
+    #'
+    #' @return
+    #' (`tagList`)
+    UI = function() {
+      return(shiny::tagList())
+    },
+
+    #' @description
+    #' Method to handle the back-end.
+    #'
+    #' @template param_input
+    #' @template param_output
+    #' @template param_session
+    #'
+    #' @return
+    #' (`NULL`)
+    server = function(input, output, session) {
+      return(NULL)
+    }
+  ),
+
+  active = list(
+    #' @field appId (`character(1)`) appId used for namespacing.
+    appId = function(rhs) {
+      return(private$.appId)
+    },
+
+    #' @field moduleName (`character(1)`) Name of the module.
+    moduleName = function(rhs) {
+      return(private$.moduleName)
+    },
+
+    #' @field instanceId (`character(1)`) Random ID of 10 capitalized letters.
+    instanceId = function(rhs) {
+      return(private$.instanceId)
+    }
+  ),
+
+  private = list(
+    .appId = "",
+    .moduleName = "",
+    .instanceId = "",
+
+    finalize = function() {
+      return(NULL)
+    },
+
+    id = function(id) {
+      paste(private$.moduleName, private$.instanceId, id, sep = "_")
+    }
+  )
+)

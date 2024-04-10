@@ -4,21 +4,23 @@
 \alias{TreatmentPatterns}
 \title{TreatmentPatterns}
 \description{
-TreatmentPatterns super class. Composed of a PlotWidget and Table modules.
+\link{TreatmentPatterns} super class. Composed of a \link{PlotWidget} and \link{Table} modules.
 This class is an \code{interface} and is not meant to be directly used, but to be
 inherited.
 }
 \section{Super class}{
-\code{\link[DarwinShinyModules:Module]{DarwinShinyModules::Module}} -> \code{TreatmentPatterns}
+\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{TreatmentPatterns}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{data}}{Data to plot with, usually a \code{data.frame}-like object.}
 
-\item{\code{widget}}{(\link[DarwinShinyModules]{PlotWidget}) Module}
+\item{\code{widget}}{(\link{PlotWidget}) Module}
 
-\item{\code{table}}{(\link[DarwinShinyModules]{Table} Module}
+\item{\code{table}}{(\link{Table}) Module}
+
+\item{\code{inputs}}{(\code{reactiveValues}) environment}
 }
 \if{html}{\out{</div>}}
 }
@@ -26,18 +28,12 @@ inherited.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-TreatmentPatterns-new}{\code{TreatmentPatterns$new()}}
+\item \href{#method-TreatmentPatterns-validate}{\code{TreatmentPatterns$validate()}}
 \item \href{#method-TreatmentPatterns-UI}{\code{TreatmentPatterns$UI()}}
 \item \href{#method-TreatmentPatterns-server}{\code{TreatmentPatterns$server()}}
 \item \href{#method-TreatmentPatterns-clone}{\code{TreatmentPatterns$clone()}}
 }
 }
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
-<ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Module" data-id="validate"><a href='../../DarwinShinyModules/html/Module.html#method-Module-validate'><code>DarwinShinyModules::Module$validate()</code></a></span></li>
-</ul>
-</details>
-}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TreatmentPatterns-new"></a>}}
 \if{latex}{\out{\hypertarget{method-TreatmentPatterns-new}{}}}
@@ -58,6 +54,19 @@ Initializer method
 }
 \subsection{Returns}{
 (\code{invisible(self)})
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-TreatmentPatterns-validate"></a>}}
+\if{latex}{\out{\hypertarget{method-TreatmentPatterns-validate}{}}}
+\subsection{Method \code{validate()}}{
+Validation method
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TreatmentPatterns$validate()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{self})
 }
 }
 \if{html}{\out{<hr>}}
@@ -97,7 +106,7 @@ Session from the server function.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(\code{NULL}
+(\code{NULL})
 }
 }
 \if{html}{\out{<hr>}}

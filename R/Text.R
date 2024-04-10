@@ -1,16 +1,14 @@
 #' @title Text
 #'
-#' @include Module.R
+#' @include ShinyModule.R
 #'
 #' @description
 #' Text Module
 #'
-#' @field markdown (`character(n)`) Lines read from the markdown-file supplied.
-#'
 #' @export
 Text <- R6::R6Class(
   classname = "Text",
-  inherit = Module,
+  inherit = ShinyModule,
 
   # PUblic ----
   public = list(
@@ -38,14 +36,17 @@ Text <- R6::R6Class(
     }
   ),
 
+  # Active ----
+  active = list(
+    #' @field markdown (`character(n)`) Lines read from the markdown-file supplied.
+    markdown = function() {
+      return(private$.markdown)
+    }
+  ),
+
   # Private ----
   private = list(
     ## Fields ----
     .markdown = ""
-  ),
-
-  # Active ----
-  active = list(
-    markdown = function() return(private$.markdown)
   )
 )
