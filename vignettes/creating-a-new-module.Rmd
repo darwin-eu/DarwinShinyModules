@@ -20,13 +20,12 @@ The `Module` class is an interface to be inherited to create modules. The module
 - It stores the `appId` used for `shiny::NS()` or `session$ns()`.
 - It stores the `moduleName` or rather the class name of the module.
 - It stores the `instanceId` of the class.
-- It enables you to use the private `id()` method for inherited modules. Which uses the `moduleName`, `instanceId` and an `inputId` or `outputId` to create a unique reference within the namespace. This enables multiple (duplicate) modules to use the same short-hand reference. As an example the complete reference for a table would be: `app-Module_ABCDEFGHIJ_table`. Where `app` is the namespace of the entire ShinyApp, `Module` is the name of the module, `ABCDEFGHIJ` is the instance ID of the instance of the module, and `table` is the short hand reference to the table in the `input` or `output`.
+- It enables you to use the `id()` method for inherited modules. Which uses the `moduleName`, `instanceId` and an `inputId` or `outputId` to create a unique reference within the namespace. This enables multiple (duplicate) modules to use the same short-hand reference. As an example the complete reference for a table would be: `app-Module_ABCDEFGHIJ_table`. Where `app` is the namespace of the entire ShinyApp, `Module` is the name of the module, `ABCDEFGHIJ` is the instance ID of the instance of the module, and `table` is the short hand reference to the table in the `input` or `output`.
 
 ## Overrides
 When inheriting the `ShinyModule` class it is expected that you override the `UI()` and / or `server()` methods. The `UI()` method should return something akin to a `shiny::tagList()`. By default they are defined, but do nothing. This allows for just rendering simple text in a module, without any back-end like the `DarwinShinyModules::Text` module. Or a static image.
 
-## Example
-### Defining a new module
+## Defining a new module
 Let's define a new module called `MyModule`. In this module I want to:
 
 - Display the `head()` of the `iris` data frame, using `"myTable"` as the `input` / `output` reference.
@@ -44,27 +43,27 @@ MyModule <- R6::R6Class(
     UI = function() {
       shiny::tagList(
         # Output a table "input$app-MyModule_ABCDEFGHIJ__myTable"
-        shiny::tableOutput(outputId = shiny::NS(private$.appId, private$id("myTable"))),
+        shiny::tableOutput(outputId = shiny::NS(private$.appId, self$id("myTable"))),
         # Output HTML "input$app-MyModule_ABCDEFGHIJ_moduleData"
-        shiny::uiOutput(outputId = shiny::NS(private$.appId, private$id("moduleData")))
+        shiny::uiOutput(outputId = shiny::NS(private$.appId, self$id("moduleData")))
       )
     },
 
     # Override server()
     server = function(input, output, session) {
       # Render the table to "MyModule_ABCDEFGHIJ_myTable"
-      output[[private$id("myTable")]] <- shiny::renderTable({
+      output[[self$id("myTable")]] <- shiny::renderTable({
         head(private$.data)
       })
       
       # Render the HTML to "MyModule_ABCDEFGHIJ_moduleData"
-      output[[private$id("moduleData")]] <- shiny::renderUI({
+      output[[self$id("moduleData")]] <- shiny::renderUI({
         shiny::HTML(paste(
           sprintf("App ID: %s", private$.appId),
           sprintf("Module Name: %s", private$.moduleName),
           sprintf("Instance ID: %s", private$.instanceId),
-          sprintf("Namespace ID myTable: %s", private$id("myTable")),
-          sprintf("Namespace ID moduleData: %s", private$id("moduleData")),
+          sprintf("Namespace ID myTable: %s", self$id("myTable")),
+          sprintf("Namespace ID moduleData: %s", self$id("moduleData")),
           sep = "<br/>"
         ))
       })
@@ -94,7 +93,7 @@ print(module)
 ```
 There are several items listed under Public: `appId`, `clone()`, `data`, `initialize()`, `instanceId`, `moduleName`, `server()`, `UI()`, and `validate()`. Note that `appId`, `data`, `instanceId`, and `moduleName` have a Private counter parts: `.appId`, `.data`, `.instanceId`, `moduleName`.
 
-The private method `id()` is also listed. This method is usable in modules inheriting the Module class like so: `private$id("id")`.
+The private method `id()` is also listed. This method is usable in modules inheriting the Module class like so: `self$id("id")`.
 
 We can get the active fields of our module `MyModule` like so:
 ```{r}
@@ -171,3 +170,40 @@ if (interactive()) {
 }
 ```
 ![](./img/app2.png)
+
+## Nesting modules
+Modules may be nested in other modules. For instance the `Sunburst` module, is composed of the `PlotWidget` and `Table` modules.
+
+![](./img/sunburst-mod.png)
+
+The `Sunburst` module displays a `data.frame` result of the `TreatmentPatterns` package. The nested `Table` module displays the `data.frame` as a `DT` DataTable. The nested `PlotWidget` module displays a sunburst plot as a `HtmlWidget`.
+
+```{r}
+tp <- read.csv(system.file(
+  package = "DarwinShinyModules",
+  "dummyData/TreatmentPatterns/csv/treatmentPathways.csv"
+))
+
+sunburst <- Sunburst$new(appId = "app", tp)
+
+ui <- shiny::fluidPage(
+  sunburst$UI()
+)
+
+server <- function(input, output, session) {
+  shiny::moduleServer(id = "app", module = function(input, output, session) {
+    sunburst$server(input, output, session)
+  })
+}
+
+if (interactive()) {
+  shiny::shinyApp(ui, server)
+}
+```
+![](./img/app3.png)
+
+The nested modules do not know what data the other nested modules holds. But the `Sunburst` module does, and thus does all the data management for both modules.
+
+DataTables from the `DT` package come with baked in filters for each column. `DT` provides bindings to the DataTable object to see what rows are shown, or which filters are applied. The `Table` modules exposes these bindings in a reactive context. These bindings can then be used by the `Sunburst` module to change data used for the `PlotWidget` module which manges the sunburst plot.
+
+![](./img/app3-filtered.png)
