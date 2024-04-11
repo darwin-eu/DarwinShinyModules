@@ -7,14 +7,19 @@
 This class is an \code{interface} and is not meant to be directly used, but to be
 inherited by other Modules.
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{instanceId}}{(\code{character(1)}) Random ID of 10 capitalized letters.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{appId}}{(\code{character(1)}) appId used for namespacing.}
 
 \item{\code{moduleName}}{(\code{character(1)}) Name of the module.}
-
-\item{\code{instanceId}}{(\code{character(1)}) Random ID of 10 capitalized letters.}
 }
 \if{html}{\out{</div>}}
 }

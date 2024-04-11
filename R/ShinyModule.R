@@ -10,7 +10,12 @@
 ShinyModule <- R6::R6Class(
   classname = "ShinyModule",
 
+  # Public ----
   public = list(
+    ## Fields ----
+    #' @field instanceId (`character(1)`) Random ID of 10 capitalized letters.
+    instanceId = "",
+    ## Methods ----
     #' @description
     #' Initializer method
     #'
@@ -19,7 +24,7 @@ ShinyModule <- R6::R6Class(
     initialize = function(appId) {
       private$.appId <- appId
       private$.moduleName <- class(self)[1]
-      private$.instanceId <- paste0(sample(x = LETTERS, size = 10), collapse = "")
+      self$instanceId <- paste0(sample(x = LETTERS, size = 10), collapse = "")
       return(invisible(self))
     },
 
@@ -61,10 +66,11 @@ ShinyModule <- R6::R6Class(
     #' @param id (`character(1)`) ID used for `outputId` in output() functions
     #' and to reference in the input environment.
     id = function(id) {
-      paste(private$.moduleName, private$.instanceId, id, sep = "_")
+      paste(private$.moduleName, self$instanceId, id, sep = "_")
     }
   ),
 
+  # Active ----
   active = list(
     #' @field appId (`character(1)`) appId used for namespacing.
     appId = function(rhs) {
@@ -74,19 +80,16 @@ ShinyModule <- R6::R6Class(
     #' @field moduleName (`character(1)`) Name of the module.
     moduleName = function(rhs) {
       return(private$.moduleName)
-    },
-
-    #' @field instanceId (`character(1)`) Random ID of 10 capitalized letters.
-    instanceId = function(rhs) {
-      return(private$.instanceId)
     }
   ),
 
+  # Private ----
   private = list(
+    ## Fields ----
     .appId = "",
     .moduleName = "",
-    .instanceId = "",
 
+    ## Methods ----
     finalize = function() {
       return(NULL)
     }
