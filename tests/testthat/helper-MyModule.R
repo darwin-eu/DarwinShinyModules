@@ -1,3 +1,5 @@
+library(datasets)
+
 MyModule <- R6::R6Class(
   classname = "MyModule",
   inherit = ShinyModule,
