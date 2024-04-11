@@ -3,3 +3,4 @@
 ^\.github$
 ^dev$
 ^man-roxygen$
+^docs$
