@@ -19,7 +19,8 @@ Imports:
     shinydashboard,
     dplyr,
     ggplot2,
-    plotly
+    plotly,
+    DT
 Suggests:
     TreatmentPatterns,
     IncidencePrevalence,
