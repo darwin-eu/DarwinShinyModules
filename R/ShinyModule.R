@@ -52,6 +52,16 @@ ShinyModule <- R6::R6Class(
     #' (`NULL`)
     server = function(input, output, session) {
       return(NULL)
+    },
+
+    #' @description
+    #' Create an instance unique ID for referencing objects in the input and
+    #' output environments.
+    #'
+    #' @param id (`character(1)`) ID used for `outputId` in output() functions
+    #' and to reference in the input environment.
+    id = function(id) {
+      paste(private$.moduleName, private$.instanceId, id, sep = "_")
     }
   ),
 
@@ -79,10 +89,6 @@ ShinyModule <- R6::R6Class(
 
     finalize = function() {
       return(NULL)
-    },
-
-    id = function(id) {
-      paste(private$.moduleName, private$.instanceId, id, sep = "_")
     }
   )
 )

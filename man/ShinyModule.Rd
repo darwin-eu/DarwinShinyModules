@@ -25,6 +25,7 @@ inherited by other Modules.
 \item \href{#method-ShinyModule-validate}{\code{ShinyModule$validate()}}
 \item \href{#method-ShinyModule-UI}{\code{ShinyModule$UI()}}
 \item \href{#method-ShinyModule-server}{\code{ShinyModule$server()}}
+\item \href{#method-ShinyModule-id}{\code{ShinyModule$id()}}
 \item \href{#method-ShinyModule-clone}{\code{ShinyModule$clone()}}
 }
 }
@@ -96,6 +97,25 @@ Method to handle the back-end.
 }
 \subsection{Returns}{
 (\code{NULL})
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ShinyModule-id"></a>}}
+\if{latex}{\out{\hypertarget{method-ShinyModule-id}{}}}
+\subsection{Method \code{id()}}{
+Create an instance unique ID for referencing objects in the input and
+output environments.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ShinyModule$id(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)}) ID used for \code{outputId} in output() functions
+and to reference in the input environment.}
+}
+\if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}

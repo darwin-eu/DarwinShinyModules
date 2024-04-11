@@ -21,7 +21,7 @@ PlotStatic <- R6::R6Class(
     UI = function(title = "Plot") {
       shiny::tagList(
         shiny::h3(title),
-        shiny::plotOutput(shiny::NS(private$.appId, private$id("plot")))
+        shiny::plotOutput(shiny::NS(private$.appId, self$id("plot")))
       )
     },
 
@@ -33,7 +33,7 @@ PlotStatic <- R6::R6Class(
     #'
     #' @return `NULL`
     server = function(input, output, session) {
-      output[[private$id("plot")]] <- shiny::renderPlot({
+      output[[self$id("plot")]] <- shiny::renderPlot({
         do.call(private$.fun, list(data = private$.reactiveValues$data))
       })
     }

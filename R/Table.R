@@ -53,8 +53,8 @@ Table <- R6::R6Class(
     UI = function(title = "Table") {
       shiny::tagList(
         shiny::h3(title),
-        DT::DTOutput(outputId = shiny::NS(private$.appId, private$id("table"))),
-        shiny::downloadButton(outputId = shiny::NS(private$.appId, private$id("dlButton")), label = "csv")
+        DT::DTOutput(outputId = shiny::NS(private$.appId, self$id("table"))),
+        shiny::downloadButton(outputId = shiny::NS(private$.appId, self$id("dlButton")), label = "csv")
       )
     },
 
@@ -105,17 +105,17 @@ Table <- R6::R6Class(
 
     ## Methods ----
     setReactiveValues = function(input) {
-      cellClicked <- sprintf("%s_cell_clicked", private$id("table"))
-      cellsSelected <- sprintf("%s_cells_selected", private$id("table"))
-      cellInfo <- sprintf("%s_cell_info", private$id("table"))
-      rowsCurrent <- sprintf("%s_rows_current", private$id("table"))
-      rowsAll <- sprintf("%s_rows_all", private$id("table"))
-      rowsSelected <- sprintf("%s_rows_selected", private$id("table"))
-      rowLastClicked <- sprintf("%s_row_last_clicked", private$id("table"))
-      columnsSelected <- sprintf("%s_columns_selected", private$id("table"))
-      search <- sprintf("%s_search", private$id("table"))
-      searchColumns <- sprintf("%s_search_columns", private$id("table"))
-      state <- sprintf("%s_state", private$id("table"))
+      cellClicked <- sprintf("%s_cell_clicked", self$id("table"))
+      cellsSelected <- sprintf("%s_cells_selected", self$id("table"))
+      cellInfo <- sprintf("%s_cell_info", self$id("table"))
+      rowsCurrent <- sprintf("%s_rows_current", self$id("table"))
+      rowsAll <- sprintf("%s_rows_all", self$id("table"))
+      rowsSelected <- sprintf("%s_rows_selected", self$id("table"))
+      rowLastClicked <- sprintf("%s_row_last_clicked", self$id("table"))
+      columnsSelected <- sprintf("%s_columns_selected", self$id("table"))
+      search <- sprintf("%s_search", self$id("table"))
+      searchColumns <- sprintf("%s_search_columns", self$id("table"))
+      state <- sprintf("%s_state", self$id("table"))
 
       observeEvent(
         c(
@@ -146,7 +146,7 @@ Table <- R6::R6Class(
     },
 
     renderTable = function(output) {
-      output[[private$id("table")]] <- DT::renderDT(
+      output[[self$id("table")]] <- DT::renderDT(
         expr = private$.data,
         filter = "top",
         options = list(
@@ -155,7 +155,7 @@ Table <- R6::R6Class(
     },
 
     downloader = function(output) {
-      output[[private$id("dlButton")]] <- shiny::downloadHandler(
+      output[[self$id("dlButton")]] <- shiny::downloadHandler(
         filename = private$dlFilename,
         content = private$dlContent
       )

@@ -35,6 +35,7 @@ on render as text.}
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="id"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-id'><code>DarwinShinyModules::ShinyModule$id()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="TreatmentPatterns" data-id="UI"><a href='../../DarwinShinyModules/html/TreatmentPatterns.html#method-TreatmentPatterns-UI'><code>DarwinShinyModules::TreatmentPatterns$UI()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="TreatmentPatterns" data-id="initialize"><a href='../../DarwinShinyModules/html/TreatmentPatterns.html#method-TreatmentPatterns-initialize'><code>DarwinShinyModules::TreatmentPatterns$initialize()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="TreatmentPatterns" data-id="server"><a href='../../DarwinShinyModules/html/TreatmentPatterns.html#method-TreatmentPatterns-server'><code>DarwinShinyModules::TreatmentPatterns$server()</code></a></span></li>

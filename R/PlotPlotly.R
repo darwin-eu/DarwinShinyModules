@@ -23,7 +23,7 @@ PlotPlotly <- R6::R6Class(
     initialize = function(appId, data, fun) {
       super$initialize(appId, data, fun)
       private$.plot <- do.call(what = private$.fun, args = list(data = private$.data))
-      private$.plot$x$source <- private$id("plot")
+      private$.plot$x$source <- self$id("plot")
       private$.source <- private$.plot$x$source
       return(invisible(self))
     },
@@ -36,7 +36,7 @@ PlotPlotly <- R6::R6Class(
     UI = function(title = "Plotly") {
       shiny::tagList(
         shiny::h3(title),
-        plotly::plotlyOutput(shiny::NS(private$.appId, private$id("plot")))
+        plotly::plotlyOutput(shiny::NS(private$.appId, self$id("plot")))
       )
     },
 
@@ -50,7 +50,7 @@ PlotPlotly <- R6::R6Class(
     server = function(input, output, session) {
       plotly::event_register(p = private$.plot, event = "plotly_selected")
 
-      output[[private$id("plot")]] <- plotly::renderPlotly({
+      output[[self$id("plot")]] <- plotly::renderPlotly({
         private$updateBindings()
         private$.plot
       })

@@ -64,18 +64,18 @@ TreatmentPatterns <- R6::R6Class(
     UI = function() {
       shiny::tagList(
         shiny::checkboxInput(
-          inputId = shiny::NS(private$.appId, private$id("inputNone")),
+          inputId = shiny::NS(private$.appId, self$id("inputNone")),
           label = "Show none paths",
           value = TRUE
         ),
         shiny::checkboxInput(
-          inputId = shiny::NS(private$.appId, private$id("inputGroupCombinations")),
+          inputId = shiny::NS(private$.appId, self$id("inputGroupCombinations")),
           label = "Group Combinations",
           value = TRUE
         ),
-        shiny::uiOutput(shiny::NS(private$.appId, private$id("inputSex"))),
-        shiny::uiOutput(shiny::NS(private$.appId, private$id("inputAge"))),
-        shiny::uiOutput(shiny::NS(private$.appId, private$id("inputYear"))),
+        shiny::uiOutput(shiny::NS(private$.appId, self$id("inputSex"))),
+        shiny::uiOutput(shiny::NS(private$.appId, self$id("inputAge"))),
+        shiny::uiOutput(shiny::NS(private$.appId, self$id("inputYear"))),
         private$.widget$UI(title = NULL),
         private$.table$UI(title = NULL)
       )
@@ -95,9 +95,6 @@ TreatmentPatterns <- R6::R6Class(
     #'
     #' @return (`NULL`)
     server = function(input, output, session) {
-      print(class(input))
-      print(class(output))
-      print(class(session))
       private$updateInputs(input)
       private$updateData(private$.data)
       private$.widget$server(input, output, session)
@@ -131,13 +128,13 @@ TreatmentPatterns <- R6::R6Class(
 
     updateInputs = function(input) {
       shiny::observeEvent(
-        input[[private$id("inputNone")]], {
-        private$.inputs$none <- input[[private$id("inputNone")]]
+        input[[self$id("inputNone")]], {
+        private$.inputs$none <- input[[self$id("inputNone")]]
       })
 
       shiny::observeEvent(
-        input[[private$id("inputGroupCombinations")]], {
-          private$.inputs$groupCombinations <- input[[private$id("inputGroupCombinations")]]
+        input[[self$id("inputGroupCombinations")]], {
+          private$.inputs$groupCombinations <- input[[self$id("inputGroupCombinations")]]
       })
     },
 

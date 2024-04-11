@@ -20,7 +20,7 @@ PlotWidget <- R6::R6Class(
     UI = function(title = "Widget") {
       shiny::tagList(
         shiny::h3(title),
-        shiny::uiOutput(shiny::NS(private$.appId, private$id("plot")))
+        shiny::uiOutput(shiny::NS(private$.appId, self$id("plot")))
       )
     },
 
@@ -32,7 +32,7 @@ PlotWidget <- R6::R6Class(
     #'
     #' @return `NULL`
     server = function(input, output, session) {
-      output[[private$id("plot")]] <- shiny::renderUI({
+      output[[self$id("plot")]] <- shiny::renderUI({
         do.call(what = private$.fun, args = list(data = private$.reactiveValues$data))
       })
     }

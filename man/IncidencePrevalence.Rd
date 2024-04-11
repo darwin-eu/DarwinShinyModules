@@ -30,6 +30,13 @@ inherited.
 \item \href{#method-IncidencePrevalence-clone}{\code{IncidencePrevalence$clone()}}
 }
 }
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="id"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-id'><code>DarwinShinyModules::ShinyModule$id()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-IncidencePrevalence-new"></a>}}
 \if{latex}{\out{\hypertarget{method-IncidencePrevalence-new}{}}}
