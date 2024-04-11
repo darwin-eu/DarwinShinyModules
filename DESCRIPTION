@@ -1,5 +1,5 @@
 Package: DarwinShinyModules
-Title:  Repository of Shiny Modules for Darwin Result Viewers
+Title: Repository of Shiny Modules for Darwin Result Viewers
 Version: 0.0.1
 Authors@R: c(
     person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-8993-8748")),
@@ -15,16 +15,36 @@ Depends:
     R (>= 4.0)
 Imports:
     R6,
-    TreatmentPatterns,
     shiny,
     shinydashboard,
     dplyr,
     ggplot2,
-    plotly
-Suggests: 
+    plotly,
+    DT
+Suggests:
+    TreatmentPatterns,
+    IncidencePrevalence,
     testthat (>= 3.0.0),
     duckdb,
-    knitr
+    knitr,
+    rmarkdown,
+    datasets
 Config/testthat/edition: 3
+Config/testthat/parallel: true
 VignetteBuilder: knitr
 Language: en-US
+Collate: 
+    'DarwinShinyModules.R'
+    'ShinyModule.R'
+    'IncidencePrevalence.R'
+    'Incidence.R'
+    'Plot.R'
+    'PlotPlotly.R'
+    'PlotStatic.R'
+    'PlotWidget.R'
+    'Prevalence.R'
+    'TreatmentPatterns.R'
+    'Sankey.R'
+    'Sunburst.R'
+    'Table.R'
+    'Text.R'

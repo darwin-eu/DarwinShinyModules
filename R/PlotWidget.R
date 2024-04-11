@@ -1,0 +1,40 @@
+#' @title PlotWidget
+#'
+#' @include Plot.R
+#'
+#' @description
+#' Widget Module
+#'
+#' @export
+PlotWidget <- R6::R6Class(
+  classname = "PlotWidget",
+  inherit = Plot,
+
+  # Public ----
+  public = list(
+    #' @description UI
+    #'
+    #' @param title (`character(1)`) Title to use for the plot.
+    #'
+    #' @return `shiny.tag.list`
+    UI = function(title = "Widget") {
+      shiny::tagList(
+        shiny::h3(title),
+        shiny::uiOutput(shiny::NS(private$.appId, self$id("plot")))
+      )
+    },
+
+    #' @description server
+    #'
+    #' @param input (`input`)
+    #' @param output (`output`)
+    #' @param session (`session`)
+    #'
+    #' @return `NULL`
+    server = function(input, output, session) {
+      output[[self$id("plot")]] <- shiny::renderUI({
+        do.call(what = private$.fun, args = list(data = private$.reactiveValues$data))
+      })
+    }
+  )
+)

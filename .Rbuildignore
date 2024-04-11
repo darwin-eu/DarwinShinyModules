@@ -1,3 +1,6 @@
 ^DarwinShinyModules\.Rproj$
 ^\.Rproj\.user$
 ^\.github$
+^dev$
+^man-roxygen$
+^docs$
