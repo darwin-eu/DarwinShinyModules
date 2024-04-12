@@ -10,11 +10,12 @@ Description: Install this package to access useful shiny modules for building sh
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Depends: 
     R (>= 4.0)
 Imports:
     R6,
+    checkmate,
     shiny,
     shinydashboard,
     dplyr,
@@ -24,6 +25,7 @@ Imports:
 Suggests:
     TreatmentPatterns,
     IncidencePrevalence,
+    networkD3,
     testthat (>= 3.0.0),
     duckdb,
     knitr,
@@ -48,3 +50,4 @@ Collate:
     'Sunburst.R'
     'Table.R'
     'Text.R'
+    'preview.R'

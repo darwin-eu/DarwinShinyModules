@@ -6,6 +6,23 @@
 \description{
 Plotly Module
 }
+\examples{
+library(DarwinShinyModules)
+
+plotlyFun <- function(data) {
+  plotly::ggplotly(
+    ggplot(data = data, mapping = aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+      geom_point() +
+      theme_bw()
+  )
+}
+
+plotlyModule <- PlotPlotly$new(appId = "app", data = iris, fun = plotlyFun)
+
+if (interactive()) {
+  preview(plotlyModule)
+}
+}
 \section{Super classes}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{\link[DarwinShinyModules:Plot]{DarwinShinyModules::Plot}} -> \code{PlotPlotly}
 }
@@ -33,8 +50,8 @@ Plotly Module
 <details open><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="id"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-id'><code>DarwinShinyModules::ShinyModule$id()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="updateDataReactive"><a href='../../DarwinShinyModules/html/Plot.html#method-Plot-updateDataReactive'><code>DarwinShinyModules::Plot$updateDataReactive()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="validate"><a href='../../DarwinShinyModules/html/Plot.html#method-Plot-validate'><code>DarwinShinyModules::Plot$validate()</code></a></span></li>
 </ul>
 </details>
 }}

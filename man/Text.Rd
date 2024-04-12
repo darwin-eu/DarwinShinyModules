@@ -6,6 +6,77 @@
 \description{
 Text Module
 }
+\examples{
+library(DarwinShinyModules)
+
+md <- c(
+  "# H1
+  ## H2
+  ### H3",
+
+  "**bold text**",
+
+  "*italicized text*",
+
+  "> blockquote",
+
+  "1. First item
+  2. Second item
+  3. Third item",
+
+  "- First item
+  - Second item
+  - Third item",
+
+  "`code`",
+
+  "---",
+
+  "[link](https://www.markdownguide.org/cheat-sheet/)",
+
+  "![alt text](https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=1080)",
+
+  "| Syntax | Description |
+  | ----------- | ----------- |
+  | Header | Title |
+  | Paragraph | Text |",
+
+  "```r
+    foo <- function(bar, baz) {
+      return(bar ** baz)
+    }
+
+    foo(2, 3)
+  ```",
+
+  "	Here's a sentence with a footnote. [^1]
+
+  [^1]: This is the footnote.",
+
+  "### My Great Heading {#custom-id}",
+
+  "term
+  : definition",
+
+  "~~The world is flat.~~",
+
+  "- [x] Write the press release
+  - [ ] Update the website
+  - [ ] Contact the media",
+
+  "That is so funny! :joy:",
+
+  "I need to highlight these ==very important words==.",
+  "H~2~O",
+  "X^2^"
+)
+
+text <- Text$new(appId = "app", markdown = md)
+
+if (interactive()) {
+  preview(module = text)
+}
+}
 \section{Super class}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{Text}
 }
@@ -20,6 +91,7 @@ Text Module
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-Text-new}{\code{Text$new()}}
+\item \href{#method-Text-validate}{\code{Text$validate()}}
 \item \href{#method-Text-UI}{\code{Text$UI()}}
 \item \href{#method-Text-clone}{\code{Text$clone()}}
 }
@@ -29,7 +101,6 @@ Text Module
 <ul>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="id"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-id'><code>DarwinShinyModules::ShinyModule$id()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -53,6 +124,19 @@ initialize
 }
 \subsection{Returns}{
 \code{self}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Text-validate"></a>}}
+\if{latex}{\out{\hypertarget{method-Text-validate}{}}}
+\subsection{Method \code{validate()}}{
+Validator method
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Text$validate()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{self})
 }
 }
 \if{html}{\out{<hr>}}

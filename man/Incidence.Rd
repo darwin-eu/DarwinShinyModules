@@ -6,6 +6,19 @@
 \description{
 Incidence Module. Composed of the Plot and Table modules.
 }
+\examples{
+library(DarwinShinyModules)
+inc <- readRDS(system.file(
+  package = "DarwinShinyModules",
+  "dummyData/IncidencePrevalence/rds/incidence.rds"
+))
+
+incidence <- Incidence$new(appId = "app", data = inc)
+
+if (interactive()) {
+  preview(incidence)
+}
+}
 \section{Super classes}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{\link[DarwinShinyModules:IncidencePrevalence]{DarwinShinyModules::IncidencePrevalence}} -> \code{Incidence}
 }

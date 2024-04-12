@@ -6,6 +6,29 @@
 #' Widget Module
 #'
 #' @export
+#'
+#' @examples
+#' library(DarwinShinyModules)
+#' library(networkD3)
+#' src <- c(
+#'   "A", "A", "A", "A",
+#'   "B", "B", "C", "C", "D"
+#' )
+#' target <- c(
+#'   "B", "C", "D", "J",
+#'   "E", "F", "G", "H", "I"
+#' )
+#'
+#' networkData <- data.frame(src, target)
+#'
+#' widgetFun <- function(data) {
+#'   simpleNetwork(data)
+#' }
+#'
+#' widgetModule <- PlotWidget$new(appId = "app", data = networkData, fun = widgetFun)
+#' if (interactive()) {
+#'   preview(plotWidget)
+#' }
 PlotWidget <- R6::R6Class(
   classname = "PlotWidget",
   inherit = Plot,
@@ -33,7 +56,12 @@ PlotWidget <- R6::R6Class(
     #' @return `NULL`
     server = function(input, output, session) {
       output[[self$id("plot")]] <- shiny::renderUI({
-        do.call(what = private$.fun, args = list(data = private$.reactiveValues$data))
+        data <- if (is.null(private$.reactiveValues$data)) {
+          private$.data
+        } else {
+          private$.reactiveValues$data
+        }
+        do.call(what = private$.fun, args = list(data = data))
       })
     }
   )
