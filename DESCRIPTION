@@ -2,33 +2,37 @@ Package: DarwinShinyModules
 Title: Repository of Shiny Modules for Darwin Result Viewers
 Version: 0.0.1
 Authors@R: c(
-    person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-8993-8748")),
-    person("Maarten", "van Kessel", email = "m.l.vankessel@erasmusmc.nl", role = c("aut"), comment = c(ORCID = "0009-0006-8832-6030")),
+    person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut"), comment = c(ORCID = "0000-0001-8993-8748")),
+    person("Maarten", "van Kessel", email = "m.l.vankessel@erasmusmc.nl", role = c("aut", "cre"), comment = c(ORCID = "0009-0006-8832-6030")),
     person("Erasmus MC", role = c("cph"))
     )
 Description: Install this package to access useful shiny modules for building shiny apps to explore results using the Darwin tools.
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Depends: 
     R (>= 4.0)
 Imports:
     R6,
+    checkmate,
     shiny,
     shinydashboard,
     dplyr,
     ggplot2,
     plotly,
-    DT
+    DT,
+    promises
 Suggests:
     TreatmentPatterns,
     IncidencePrevalence,
+    networkD3,
     testthat (>= 3.0.0),
     duckdb,
     knitr,
     rmarkdown,
-    datasets
+    datasets,
+    future
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr
@@ -48,3 +52,4 @@ Collate:
     'Sunburst.R'
     'Table.R'
     'Text.R'
+    'preview.R'

@@ -34,6 +34,14 @@ ShinyModule <- R6::R6Class(
     #' @return
     #' (`self`)
     validate = function() {
+      assertions <- checkmate::makeAssertCollection()
+      checkmate::assertCharacter(
+        .var.name = "appId",
+        x = private$.appId,
+        len = 1,
+        add = assertions
+      )
+      checkmate::reportAssertions(assertions)
       return(invisible(self))
     },
 

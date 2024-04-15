@@ -32,6 +32,7 @@ TreatmentPatterns <- R6::R6Class(
         )
       private$.widget <- PlotWidget$new(appId, private$.data, private$plotSunburstSankey)
       private$.table <- Table$new(appId, private$.data)
+      self$validate()
     },
 
     #' @description
@@ -39,21 +40,22 @@ TreatmentPatterns <- R6::R6Class(
     #'
     #' @return (`self`)
     validate = function() {
-      tpInstalled <- require(
-        "TreatmentPatterns",
-        character.only = TRUE,
-        quietly = TRUE
+      super$validate()
+      assertions <- checkmate::makeAssertCollection()
+      checkmate::assertNames(
+        .var.name = "data",
+        x = names(private$.data),
+        type = "named",
+        must.include = c("path", "freq", "age", "sex", "indexYear")
       )
-
-      if (!tpInstalled) {
-        installTP <- readline("TreatmentPatterns is not installed, would you like to? (y/n)")
-        if (installTP) {
-          install.packages("TreatmentPatterns")
-        } else {
-          stop("TreatmentPatterns is not installed")
-        }
-      }
-
+      checkmate::assertDataFrame(
+        .var.name = "data",
+        x = private$.data,
+        any.missing = FALSE,
+        min.rows = 1
+      )
+      checkmate::reportAssertions(assertions)
+      private$assertTPInstall()
       return(invisible(self))
     },
 
@@ -97,8 +99,8 @@ TreatmentPatterns <- R6::R6Class(
     server = function(input, output, session) {
       private$updateInputs(input)
       private$updateData(private$.data)
-      private$.widget$server(input, output, session)
-      private$.table$server(input, output, session)
+      promises::future_promise(private$.widget$server(input, output, session))
+      promises::future_promise(private$.table$server(input, output, session))
     }
   ),
 
@@ -125,6 +127,22 @@ TreatmentPatterns <- R6::R6Class(
       none = NULL,
       groupCombinations = NULL
     ),
+
+    assertTPInstall = function() {
+      tpInstalled <- requireNamespace(
+        "TreatmentPatterns",
+        quietly = TRUE
+      )
+
+      if (!tpInstalled) {
+        installTP <- readline("TreatmentPatterns is not installed, would you like to? (y/n)")
+        if (tolower(installTP) == "y") {
+          install.packages("TreatmentPatterns")
+        } else {
+          stop("TreatmentPatterns is not installed")
+        }
+      }
+    },
 
     updateInputs = function(input) {
       shiny::observeEvent(

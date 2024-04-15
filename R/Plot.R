@@ -27,6 +27,28 @@ Plot <- R6::R6Class(
       self$validate()
     },
 
+    #' @description
+    #' Validator method
+    #'
+    #' @return
+    #' (`self`)
+    validate = function() {
+      super$validate()
+      assertions <- checkmate::makeAssertCollection()
+      checkmate::assertFALSE(
+        .var.name = "data",
+        x = is.null(private$.data),
+        add = assertions
+      )
+      checkmate::assertFunction(
+        .var.name = "fun",
+        x = private$.fun,
+        args = "data",
+        add = assertions
+      )
+      checkmate::reportAssertions(assertions)
+    },
+
     #' @description  Update data within reactive context (`reactive()` or `observe()`)
     #'
     #' @param data Updated data

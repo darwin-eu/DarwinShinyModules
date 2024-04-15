@@ -14,8 +14,8 @@ knitr::opts_chunk$set(
 )
 ```
 
-## The `Module` Class
-The `Module` class is an interface to be inherited to create modules. The module class does some simple, yet convenient things:
+## The `ShinyModule` Class
+The `ShinyModule` class is an interface to be inherited to create modules. The module class does some simple, yet convenient things:
 
 - It stores the `appId` used for `shiny::NS()` or `session$ns()`.
 - It stores the `moduleName` or rather the class name of the module.
@@ -91,9 +91,7 @@ To see what the module contains we can simply `print()` the module instance:
 ```{r}
 print(module)
 ```
-There are several items listed under Public: `appId`, `clone()`, `data`, `initialize()`, `instanceId`, `moduleName`, `server()`, `UI()`, and `validate()`. Note that `appId`, `data`, `instanceId`, and `moduleName` have a Private counter parts: `.appId`, `.data`, `.instanceId`, `moduleName`.
-
-The private method `id()` is also listed. This method is usable in modules inheriting the Module class like so: `self$id("id")`.
+There are several items listed under Public: `appId`, `clone()`, `data`, `id()` `initialize()`, `instanceId`, `moduleName`, `server()`, `UI()`, and `validate()`. Note that `appId`, `data`, `instanceId`, and `moduleName` have a Private counter parts: `.appId`, `.data`, `.instanceId`, `moduleName`.
 
 We can get the active fields of our module `MyModule` like so:
 ```{r}

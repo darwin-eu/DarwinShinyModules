@@ -6,6 +6,20 @@
 \description{
 Prevalence Module
 }
+\examples{
+library(DarwinShinyModules)
+
+prev <- readRDS(system.file(
+  package = "DarwinShinyModules",
+  "dummyData/IncidencePrevalence/rds/prevalence.rds"
+))
+
+prevalence <- Prevalence$new(appId = "app", data = prev)
+
+if (interactive()) {
+  preview(prevalence)
+}
+}
 \section{Super classes}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{\link[DarwinShinyModules:IncidencePrevalence]{DarwinShinyModules::IncidencePrevalence}} -> \code{Prevalence}
 }

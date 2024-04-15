@@ -6,6 +6,15 @@
 #' Table Module
 #'
 #' @export
+#'
+#' @examples
+#' library(DarwinShinyModules)
+#'
+#' table <- Table$new(appId = "id", data = mtcars)
+#'
+#' if (interactive()) {
+#'   preview(table)
+#' }
 Table <- R6::R6Class(
   classname = "Table",
   inherit = ShinyModule,
@@ -35,6 +44,7 @@ Table <- R6::R6Class(
     #'
     #' @return `self`
     validate = function() {
+      super$validate()
       assertions <- checkmate::makeAssertCollection()
       checkmate::assertCharacter(
         .var.name = "appId",

@@ -6,6 +6,19 @@
 #' Sankey diagram Module.
 #'
 #' @export
+#'
+#' @examples
+#' library(DarwinShinyModules)
+#' tp <- read.csv(system.file(
+#'   package = "DarwinShinyModules",
+#'   "dummyData/TreatmentPatterns/csv/treatmentPathways.csv"
+#' ))
+#'
+#' sankey <- Sankey$new(appId = "id", data = tp)
+#'
+#' if (interactive()) {
+#'   preview(sankey)
+#' }
 Sankey <- R6::R6Class(
   classname = "Sankey",
   inherit = TreatmentPatterns,

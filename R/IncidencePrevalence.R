@@ -22,12 +22,14 @@ IncidencePrevalence <- R6::R6Class(
     #' @return `self`
     initialize = function(appId, data) {
       super$initialize(appId)
+      private$.data <- data
       private$.table <- Table$new(appId = appId, data = data)
       private$.plot <- PlotPlotly$new(
         appId = appId,
         data = data,
         fun = private$plotIncidencePrevalence
       )
+      self$validate()
       return(invisible(self))
     },
 
@@ -37,20 +39,16 @@ IncidencePrevalence <- R6::R6Class(
     #'
     #' @return (`self`)
     validate = function() {
-      ipInstalled <- require(
-        "IncidencePrevalence",
-        character.only = TRUE,
-        quietly = TRUE
+      super$validate()
+      assertions <- checkmate::makeAssertCollection()
+      checkmate::assertClass(
+        .var.name = "data",
+        x = private$.data,
+        classes = c("IncidencePrevalenceResult"),
+        add = assertions
       )
-
-      if (!ipInstalled) {
-        installIP <- readline("IncidencePrevalence is not installed, would you like to? (y/n)")
-        if (installIP) {
-          install.packages("IncidencePrevalence")
-        } else {
-          stop("IncidencePrevalence is not installed")
-        }
-      }
+      checkmate::reportAssertions(assertions)
+      private$assertIPInstall()
       return(invisible(self))
     },
 
@@ -74,8 +72,8 @@ IncidencePrevalence <- R6::R6Class(
     #'
     #' @return `NULL`
     server = function(input, output, session) {
-      private$.plot$server(input, output, session)
-      private$.table$server(input, output, session)
+      promises::future_promise(private$.plot$server(input, output, session))
+      promises::future_promise(private$.table$server(input, output, session))
     }
   ),
 
@@ -93,6 +91,23 @@ IncidencePrevalence <- R6::R6Class(
     ## Fields ----
     .table = NULL,
     .plot = NULL,
+    .data = NULL,
+
+    assertIPInstall = function() {
+      ipInstalled <- requireNamespace(
+        "IncidencePrevalence",
+        quietly = TRUE
+      )
+
+      if (!ipInstalled) {
+        installIP <- readline("IncidencePrevalence is not installed, would you like to? (y/n)")
+        if (tolower(installIP) == "y") {
+          install.packages("IncidencePrevalence")
+        } else {
+          stop("IncidencePrevalence is not installed")
+        }
+      }
+    },
 
     ## Methods ----
     plotIncidencePrevalence = function(data) {}

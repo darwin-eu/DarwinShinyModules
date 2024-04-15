@@ -6,6 +6,20 @@
 #' Prevalence Module
 #'
 #' @export
+#'
+#' @examples
+#' library(DarwinShinyModules)
+#'
+#' prev <- readRDS(system.file(
+#'   package = "DarwinShinyModules",
+#'   "dummyData/IncidencePrevalence/rds/prevalence.rds"
+#' ))
+#'
+#' prevalence <- Prevalence$new(appId = "app", data = prev)
+#'
+#' if (interactive()) {
+#'   preview(prevalence)
+#' }
 Prevalence <- R6::R6Class(
   classname = "Prevalence",
   inherit = IncidencePrevalence,

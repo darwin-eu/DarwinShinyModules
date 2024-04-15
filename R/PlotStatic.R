@@ -6,6 +6,22 @@
 #' Static Plot (`plot()` or `ggplot2`) Module
 #'
 #' @export
+#'
+#' @examples
+#' library(DarwinShinyModules)
+#' library(ggplot2)
+#'
+#' staticFun <- function(data) {
+#'   ggplot(data = data, mapping = aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+#'     geom_point() +
+#'     theme_bw()
+#' }
+#'
+#' staticModule <- PlotStatic$new(appId = "app", data = iris, fun = staticFun)
+#'
+#' if (interactive()) {
+#'   preview(staticModule)
+#' }
 PlotStatic <- R6::R6Class(
   classname = "PlotStatic",
   inherit = Plot,
@@ -34,7 +50,12 @@ PlotStatic <- R6::R6Class(
     #' @return `NULL`
     server = function(input, output, session) {
       output[[self$id("plot")]] <- shiny::renderPlot({
-        do.call(private$.fun, list(data = private$.reactiveValues$data))
+        data <- if (is.null(private$.reactiveValues$data)) {
+          private$.data
+        } else {
+          private$.reactiveValues$data
+        }
+        do.call(private$.fun, list(data = data))
       })
     }
   )
