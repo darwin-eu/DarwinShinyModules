@@ -9,11 +9,11 @@
 Install this package to access useful shiny modules for building shiny apps to explore results using the Darwin tools.
 }
 \author{
-\strong{Maintainer}: Ger Inberg \email{g.inberg@erasmusmc.nl} (\href{https://orcid.org/0000-0001-8993-8748}{ORCID})
+\strong{Maintainer}: Maarten van Kessel \email{m.l.vankessel@erasmusmc.nl} (\href{https://orcid.org/0009-0006-8832-6030}{ORCID})
 
 Authors:
 \itemize{
-  \item Maarten van Kessel \email{m.l.vankessel@erasmusmc.nl} (\href{https://orcid.org/0009-0006-8832-6030}{ORCID})
+  \item Ger Inberg \email{g.inberg@erasmusmc.nl} (\href{https://orcid.org/0000-0001-8993-8748}{ORCID})
 }
 
 Other contributors:

@@ -68,9 +68,9 @@
 <li><p><a href="#method-PlotWidget-server"><code>PlotWidget$server()</code></a></p></li>
 <li><p><a href="#method-PlotWidget-clone"><code>PlotWidget$clone()</code></a></p></li>
 </ul></div><p><details open><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="id"><a href="ShinyModule.html#method-id"><code>DarwinShinyModules::ShinyModule$id()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href="ShinyModule.html#method-validate"><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="initialize"><a href="Plot.html#method-initialize"><code>DarwinShinyModules::Plot$initialize()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="updateDataReactive"><a href="Plot.html#method-updateDataReactive"><code>DarwinShinyModules::Plot$updateDataReactive()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="validate"><a href="Plot.html#method-validate"><code>DarwinShinyModules::Plot$validate()</code></a></span></li>
 </ul></details></p><hr><a id="method-PlotWidget-UI"></a><div class="section">
 <h3 id="method-ui-">Method <code>UI()</code><a class="anchor" aria-label="anchor" href="#method-ui-"></a></h3>
 <p>UI</p><div class="section">
@@ -139,6 +139,31 @@
 
     </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">DarwinShinyModules</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://CRAN.R-project.org/package=networkD3" class="external-link">networkD3</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">src</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"B"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"C"</span>, <span class="st">"D"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">target</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>, <span class="st">"J"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"E"</span>, <span class="st">"F"</span>, <span class="st">"G"</span>, <span class="st">"H"</span>, <span class="st">"I"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">networkData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">src</span>, <span class="va">target</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">widgetFun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/networkD3/man/simpleNetwork.html" class="external-link">simpleNetwork</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">widgetModule</span> <span class="op">&lt;-</span> <span class="va">PlotWidget</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>appId <span class="op">=</span> <span class="st">"app"</span>, data <span class="op">=</span> <span class="va">networkData</span>, fun <span class="op">=</span> <span class="va">widgetFun</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="preview.html">preview</a></span><span class="op">(</span><span class="va">plotWidget</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

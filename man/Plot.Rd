@@ -24,6 +24,7 @@ Plot Interface
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-Plot-new}{\code{Plot$new()}}
+\item \href{#method-Plot-validate}{\code{Plot$validate()}}
 \item \href{#method-Plot-updateDataReactive}{\code{Plot$updateDataReactive()}}
 \item \href{#method-Plot-clone}{\code{Plot$clone()}}
 }
@@ -34,7 +35,6 @@ Plot Interface
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="id"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-id'><code>DarwinShinyModules::ShinyModule$id()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -60,6 +60,19 @@ initialize
 }
 \subsection{Returns}{
 \code{self}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Plot-validate"></a>}}
+\if{latex}{\out{\hypertarget{method-Plot-validate}{}}}
+\subsection{Method \code{validate()}}{
+Validator method
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Plot$validate()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{self})
 }
 }
 \if{html}{\out{<hr>}}

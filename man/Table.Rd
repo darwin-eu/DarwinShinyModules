@@ -6,6 +6,15 @@
 \description{
 Table Module
 }
+\examples{
+library(DarwinShinyModules)
+
+table <- Table$new(appId = "id", data = mtcars)
+
+if (interactive()) {
+  preview(table)
+}
+}
 \section{Super class}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{Table}
 }

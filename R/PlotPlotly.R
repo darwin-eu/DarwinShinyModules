@@ -6,6 +6,23 @@
 #' Plotly Module
 #'
 #' @export
+#'
+#' @examples
+#' library(DarwinShinyModules)
+#'
+#' plotlyFun <- function(data) {
+#'   plotly::ggplotly(
+#'     ggplot(data = data, mapping = aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+#'       geom_point() +
+#'       theme_bw()
+#'   )
+#' }
+#'
+#' plotlyModule <- PlotPlotly$new(appId = "app", data = iris, fun = plotlyFun)
+#'
+#' if (interactive()) {
+#'   preview(plotlyModule)
+#' }
 PlotPlotly <- R6::R6Class(
   classname = "PlotPlotly",
   inherit = Plot,
@@ -22,9 +39,6 @@ PlotPlotly <- R6::R6Class(
     #' @return `self`
     initialize = function(appId, data, fun) {
       super$initialize(appId, data, fun)
-      private$.plot <- do.call(what = private$.fun, args = list(data = private$.data))
-      private$.plot$x$source <- self$id("plot")
-      private$.source <- private$.plot$x$source
       return(invisible(self))
     },
 
@@ -48,11 +62,16 @@ PlotPlotly <- R6::R6Class(
     #'
     #' @return `NULL`
     server = function(input, output, session) {
-      plotly::event_register(p = private$.plot, event = "plotly_selected")
-
       output[[self$id("plot")]] <- plotly::renderPlotly({
+        data <- if (is.null(private$.reactiveValues$data)) {
+          private$.data
+        } else {
+          private$.reactiveValues$data
+        }
+        p <- do.call(what = private$.fun, args = list(data = data))
+        plotly::event_register(p = p, event = "plotly_selected")
         private$updateBindings()
-        private$.plot
+        p
       })
     }
   ),

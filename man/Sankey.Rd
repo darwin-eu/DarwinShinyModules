@@ -6,6 +6,19 @@
 \description{
 Sankey diagram Module.
 }
+\examples{
+library(DarwinShinyModules)
+tp <- read.csv(system.file(
+  package = "DarwinShinyModules",
+  "dummyData/TreatmentPatterns/csv/treatmentPathways.csv"
+))
+
+sankey <- Sankey$new(appId = "id", data = tp)
+
+if (interactive()) {
+  preview(sankey)
+}
+}
 \section{Super classes}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{\link[DarwinShinyModules:TreatmentPatterns]{DarwinShinyModules::TreatmentPatterns}} -> \code{Sankey}
 }

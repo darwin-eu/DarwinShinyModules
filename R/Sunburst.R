@@ -6,6 +6,19 @@
 #' Sunburst Module.
 #'
 #' @export
+#'
+#' @examples
+#' library(DarwinShinyModules)
+#' tp <- read.csv(system.file(
+#'   package = "DarwinShinyModules",
+#'   "dummyData/TreatmentPatterns/csv/treatmentPathways.csv"
+#' ))
+#'
+#' sunburst <- Sunburst$new(appId = "id", data = tp)
+#'
+#' if (interactive()) {
+#'   preview(sunburst)
+#' }
 Sunburst <- R6::R6Class(
   classname = "Sunburst",
   inherit = TreatmentPatterns,
