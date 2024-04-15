@@ -27,7 +27,7 @@
 #'
 #' widgetModule <- PlotWidget$new(appId = "app", data = networkData, fun = widgetFun)
 #' if (interactive()) {
-#'   preview(plotWidget)
+#'   preview(widgetModule)
 #' }
 PlotWidget <- R6::R6Class(
   classname = "PlotWidget",

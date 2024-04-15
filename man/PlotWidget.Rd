@@ -26,7 +26,7 @@ widgetFun <- function(data) {
 
 widgetModule <- PlotWidget$new(appId = "app", data = networkData, fun = widgetFun)
 if (interactive()) {
-  preview(plotWidget)
+  preview(widgetModule)
 }
 }
 \section{Super classes}{
