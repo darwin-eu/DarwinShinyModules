@@ -46,11 +46,11 @@ Table <- R6::R6Class(
         x = private$.data,
         add = assertions
       )
-      # checkmate::assertList(
-      #   .var.name = "options",
-      #   x = private$.tableOptions,
-      #   add = assertions
-      # )
+      checkmate::assertList(
+        .var.name = "options",
+        x = private$.options,
+        add = assertions
+      )
       checkmate::assertTRUE(
         .var.name = "filter",
         x = private$.filter %in% c("none", "bottom", "top"),
