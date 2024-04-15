@@ -4,10 +4,10 @@
 \alias{preview}
 \title{Preview}
 \usage{
-preview(module)
+preview(modules)
 }
 \arguments{
-\item{module}{(\link{ShinyModule}) A module object.}
+\item{modules}{(\link{ShinyModule}) A vector of module objects.}
 }
 \value{
 \code{NULL}

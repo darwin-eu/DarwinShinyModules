@@ -70,8 +70,8 @@ IncidencePrevalence <- R6::R6Class(
     #'
     #' @return `NULL`
     server = function(input, output, session) {
-      private$.plot$server(input, output, session)
-      private$.table$server(input, output, session)
+      promises::future_promise(private$.plot$server(input, output, session))
+      promises::future_promise(private$.table$server(input, output, session))
     }
   ),
 

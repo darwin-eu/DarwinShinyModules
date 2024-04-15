@@ -98,8 +98,8 @@ TreatmentPatterns <- R6::R6Class(
     server = function(input, output, session) {
       private$updateInputs(input)
       private$updateData(private$.data)
-      private$.widget$server(input, output, session)
-      private$.table$server(input, output, session)
+      promises::future_promise(private$.widget$server(input, output, session))
+      promises::future_promise(private$.table$server(input, output, session))
     }
   ),
 

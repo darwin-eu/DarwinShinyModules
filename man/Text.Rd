@@ -34,7 +34,8 @@ md <- c(
 
   "[link](https://www.markdownguide.org/cheat-sheet/)",
 
-  "![alt text](https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=1080)",
+  "![alt text](https://mdg.imgix.net/assets/images/
+   san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=1080)",
 
   "| Syntax | Description |
   | ----------- | ----------- |
