@@ -32,6 +32,7 @@ TreatmentPatterns <- R6::R6Class(
         )
       private$.widget <- PlotWidget$new(appId, private$.data, private$plotSunburstSankey)
       private$.table <- Table$new(appId, private$.data)
+      self$validate()
     },
 
     #' @description
@@ -135,7 +136,7 @@ TreatmentPatterns <- R6::R6Class(
 
       if (!tpInstalled) {
         installTP <- readline("TreatmentPatterns is not installed, would you like to? (y/n)")
-        if (installTP) {
+        if (tolower(installTP) == "y") {
           install.packages("TreatmentPatterns")
         } else {
           stop("TreatmentPatterns is not installed")

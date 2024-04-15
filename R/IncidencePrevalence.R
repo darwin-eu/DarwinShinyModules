@@ -22,12 +22,14 @@ IncidencePrevalence <- R6::R6Class(
     #' @return `self`
     initialize = function(appId, data) {
       super$initialize(appId)
+      private$.data <- data
       private$.table <- Table$new(appId = appId, data = data)
       private$.plot <- PlotPlotly$new(
         appId = appId,
         data = data,
         fun = private$plotIncidencePrevalence
       )
+      self$validate()
       return(invisible(self))
     },
 
@@ -40,7 +42,7 @@ IncidencePrevalence <- R6::R6Class(
       super$validate()
       assertions <- checkmate::makeAssertCollection()
       checkmate::assertClass(
-        .var.name = private$.data,
+        .var.name = "data",
         x = private$.data,
         classes = c("IncidencePrevalenceResult"),
         add = assertions
@@ -89,6 +91,7 @@ IncidencePrevalence <- R6::R6Class(
     ## Fields ----
     .table = NULL,
     .plot = NULL,
+    .data = NULL,
 
     assertIPInstall = function() {
       ipInstalled <- requireNamespace(
@@ -98,7 +101,7 @@ IncidencePrevalence <- R6::R6Class(
 
       if (!ipInstalled) {
         installIP <- readline("IncidencePrevalence is not installed, would you like to? (y/n)")
-        if (installIP) {
+        if (tolower(installIP) == "y") {
           install.packages("IncidencePrevalence")
         } else {
           stop("IncidencePrevalence is not installed")
