@@ -15,6 +15,12 @@
 #' }
 preview <- function(modules) {
   assertions <- checkmate::makeAssertCollection()
+  modules <- if (all(class(modules) != "list")) {
+    list(modules)
+  } else {
+    modules
+  }
+
   checkmate::assertList(
     .var.name = "modules",
     x = modules,
@@ -22,6 +28,7 @@ preview <- function(modules) {
     min.len = 1,
     add = assertions
   )
+
   checkmate::reportAssertions(assertions)
 
   ui <- shiny::fluidPage(
