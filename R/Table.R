@@ -26,12 +26,17 @@ Table <- R6::R6Class(
     #'
     #' @param appId (`character(1)`) ID of the app, to use for namespacing.
     #' @param data Data to plot with, usually a `data.frame`-like object.
-    #' @param fun Function to plot with, with one argument: `data`.
+    #' @param options table options, by default it shows additional items next to
+    #' the table like search box, pagination, etc. Only display the table using
+    #' list(dom = '')
+    #' @param filter filter option, it can be either "none", "bottom" or "top" (default)
     #'
     #' @return `self`
-    initialize = function(appId, data) {
+    initialize = function(appId, data, options = list(scrollX = TRUE), filter = "top") {
       super$initialize(appId)
       private$.data <- data
+      private$.options <- options
+      private$.filter <- filter
       return(invisible(self))
     },
 
@@ -49,6 +54,16 @@ Table <- R6::R6Class(
       checkmate::assertDataFrame(
         .var.name = "data",
         x = private$.data,
+        add = assertions
+      )
+      checkmate::assertList(
+        .var.name = "options",
+        x = private$.options,
+        add = assertions
+      )
+      checkmate::assertTRUE(
+        .var.name = "filter",
+        x = private$.filter %in% c("none", "bottom", "top"),
         add = assertions
       )
       checkmate::reportAssertions(assertions)
@@ -99,6 +114,8 @@ Table <- R6::R6Class(
   private = list(
     ## Fields ----
     .data = NULL,
+    .options = NULL,
+    .filter = NULL,
     .bindings = shiny::reactiveValues(
       cell_clicked = NULL,
       cells_selected = NULL,
@@ -158,9 +175,8 @@ Table <- R6::R6Class(
     renderTable = function(output) {
       output[[self$id("table")]] <- DT::renderDT(
         expr = private$.data,
-        filter = "top",
-        options = list(
-          scrollX = TRUE)
+        filter = private$.filter,
+        options = private$.options
       )
     },
 

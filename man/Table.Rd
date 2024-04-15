@@ -50,7 +50,7 @@ if (interactive()) {
 \subsection{Method \code{new()}}{
 initialize
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Table$new(appId, data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Table$new(appId, data, options = list(scrollX = TRUE), filter = "top")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -60,7 +60,11 @@ initialize
 
 \item{\code{data}}{Data to plot with, usually a \code{data.frame}-like object.}
 
-\item{\code{fun}}{Function to plot with, with one argument: \code{data}.}
+\item{\code{options}}{table options, by default it shows additional items next to
+the table like search box, pagination, etc. Only display the table using
+list(dom = '')}
+
+\item{\code{filter}}{filter option, it can be either "none", "bottom" or "top" (default)}
 }
 \if{html}{\out{</div>}}
 }
