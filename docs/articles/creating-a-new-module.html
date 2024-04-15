@@ -79,9 +79,9 @@
     
     
 <div class="section level2">
-<h2 id="the-module-class">The <code>Module</code> Class<a class="anchor" aria-label="anchor" href="#the-module-class"></a>
+<h2 id="the-shinymodule-class">The <code>ShinyModule</code> Class<a class="anchor" aria-label="anchor" href="#the-shinymodule-class"></a>
 </h2>
-<p>The <code>Module</code> class is an interface to be inherited to
+<p>The <code>ShinyModule</code> class is an interface to be inherited to
 create modules. The module class does some simple, yet convenient
 things:</p>
 <ul>
@@ -192,7 +192,7 @@ the module instance:</p>
 <span><span class="co">#&gt;     data: active binding</span></span>
 <span><span class="co">#&gt;     id: function (id) </span></span>
 <span><span class="co">#&gt;     initialize: function (appId) </span></span>
-<span><span class="co">#&gt;     instanceId: ZFGHPURECL</span></span>
+<span><span class="co">#&gt;     instanceId: SQWVGRJCKD</span></span>
 <span><span class="co">#&gt;     moduleName: active binding</span></span>
 <span><span class="co">#&gt;     server: function (input, output, session) </span></span>
 <span><span class="co">#&gt;     UI: function () </span></span>
@@ -203,23 +203,20 @@ the module instance:</p>
 <span><span class="co">#&gt;     .moduleName: MyModule</span></span>
 <span><span class="co">#&gt;     finalize: function ()</span></span></code></pre></div>
 <p>There are several items listed under Public: <code>appId</code>,
-<code>clone()</code>, <code>data</code>, <code>initialize()</code>,
-<code>instanceId</code>, <code>moduleName</code>, <code>server()</code>,
-<code>UI()</code>, and <code>validate()</code>. Note that
-<code>appId</code>, <code>data</code>, <code>instanceId</code>, and
-<code>moduleName</code> have a Private counter parts:
-<code>.appId</code>, <code>.data</code>, <code>.instanceId</code>,
-<code>moduleName</code>.</p>
-<p>The private method <code>id()</code> is also listed. This method is
-usable in modules inheriting the Module class like so:
-<code>self$id("id")</code>.</p>
+<code>clone()</code>, <code>data</code>, <code>id()</code>
+<code>initialize()</code>, <code>instanceId</code>,
+<code>moduleName</code>, <code>server()</code>, <code>UI()</code>, and
+<code>validate()</code>. Note that <code>appId</code>,
+<code>data</code>, <code>instanceId</code>, and <code>moduleName</code>
+have a Private counter parts: <code>.appId</code>, <code>.data</code>,
+<code>.instanceId</code>, <code>moduleName</code>.</p>
 <p>We can get the active fields of our module <code>MyModule</code> like
 so:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">module</span><span class="op">$</span><span class="va">appId</span></span>
 <span><span class="co">#&gt; [1] "app"</span></span>
 <span><span class="va">module</span><span class="op">$</span><span class="va">instanceId</span></span>
-<span><span class="co">#&gt; [1] "ZFGHPURECL"</span></span>
+<span><span class="co">#&gt; [1] "SQWVGRJCKD"</span></span>
 <span><span class="va">module</span><span class="op">$</span><span class="va">moduleName</span></span>
 <span><span class="co">#&gt; [1] "MyModule"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">module</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
@@ -238,11 +235,11 @@ module the <code>instanceId</code> is different per instance:</p>
 <span><span class="va">mod3</span> <span class="op">&lt;-</span> <span class="va">MyModule</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"app"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mod1</span><span class="op">$</span><span class="va">instanceId</span></span>
-<span><span class="co">#&gt; [1] "VMPZEWBRSN"</span></span>
+<span><span class="co">#&gt; [1] "ZSUYHTBAOD"</span></span>
 <span><span class="va">mod2</span><span class="op">$</span><span class="va">instanceId</span></span>
-<span><span class="co">#&gt; [1] "VTNSYJDUZC"</span></span>
+<span><span class="co">#&gt; [1] "NQRUZTAWBO"</span></span>
 <span><span class="va">mod3</span><span class="op">$</span><span class="va">instanceId</span></span>
-<span><span class="co">#&gt; [1] "IMHCSABVGX"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "BGLRTEMCNK"</span></span></code></pre></div>
 <p>We can spin up a simple shiny app using our module:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>

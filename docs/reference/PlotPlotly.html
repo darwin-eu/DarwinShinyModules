@@ -85,8 +85,8 @@
 <li><p><a href="#method-PlotPlotly-server"><code>PlotPlotly$server()</code></a></p></li>
 <li><p><a href="#method-PlotPlotly-clone"><code>PlotPlotly$clone()</code></a></p></li>
 </ul></div><p><details open><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="id"><a href="ShinyModule.html#method-id"><code>DarwinShinyModules::ShinyModule$id()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href="ShinyModule.html#method-validate"><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="updateDataReactive"><a href="Plot.html#method-updateDataReactive"><code>DarwinShinyModules::Plot$updateDataReactive()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="validate"><a href="Plot.html#method-validate"><code>DarwinShinyModules::Plot$validate()</code></a></span></li>
 </ul></details></p><hr><a id="method-PlotPlotly-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>initialize</p><div class="section">
@@ -185,6 +185,25 @@ server</p>
 
     </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">DarwinShinyModules</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">plotlyFun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="fu">plotly</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class="external-link">ggplotly</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>, mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Sepal.Length</span>, y <span class="op">=</span> <span class="va">Sepal.Width</span>, color <span class="op">=</span> <span class="va">Species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>      <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>      <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">plotlyModule</span> <span class="op">&lt;-</span> <span class="va">PlotPlotly</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>appId <span class="op">=</span> <span class="st">"app"</span>, data <span class="op">=</span> <span class="va">iris</span>, fun <span class="op">=</span> <span class="va">plotlyFun</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="preview.html">preview</a></span><span class="op">(</span><span class="va">plotlyModule</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
