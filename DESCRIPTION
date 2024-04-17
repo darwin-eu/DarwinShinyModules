@@ -42,6 +42,7 @@ Collate:
     'ShinyModule.R'
     'IncidencePrevalence.R'
     'Incidence.R'
+    'InputPanel.R'
     'Plot.R'
     'PlotPlotly.R'
     'PlotStatic.R'

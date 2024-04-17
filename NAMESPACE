@@ -2,6 +2,7 @@
 
 export(Incidence)
 export(IncidencePrevalence)
+export(InputPanel)
 export(Plot)
 export(PlotPlotly)
 export(PlotStatic)
