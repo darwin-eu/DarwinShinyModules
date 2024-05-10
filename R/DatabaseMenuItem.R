@@ -1,22 +1,22 @@
-#' @title Cohort tab
+#' @title Database menu item
 #'
 #' @include ShinyModule.R
 #'
 #' @description
-#' CohortTab Module
+#' DatabaseMenuItem Module
 #'
 #' @export
 #'
 #' @examples
 #' library(DarwinShinyModules)
 #'
-#' cohortTab <- CohortTab$new(appId = "id", data = mtcars)
+#' DatabaseMenuItem <- DatabaseMenuItem$new(appId = "id", data = mtcars)
 #'
 #' if (interactive()) {
-#'   preview(cohortTab)
+#'   preview(DatabaseMenuItem)
 #' }
-CohortTab <- R6::R6Class(
-  classname = "CohortTab",
+DatabaseMenuItem <- R6::R6Class(
+  classname = "DatabaseMenuItem",
   inherit = ShinyModule,
 
   # Public ----
@@ -25,16 +25,16 @@ CohortTab <- R6::R6Class(
     #' @description initialize
     #'
     #' @param appId (`character(1)`) ID of the app, to use for namespacing.
-    #' @param data Data to plot with, usually a `data.frame`-like object.
+    #' @param data Data to display in the table, usually a `data.frame`-like object.
     #'
     #' @return `self`
     initialize = function(appId, data) {
       super$initialize(appId)
       private$.data <- data
-      private$.cohortTable <- Table$new(appId = appId,
-                                        data = data,
-                                        options = list(scrollX = TRUE, dom = 't'),
-                                        filter = 'top')
+      private$.dbTable <- Table$new(appId = appId,
+                                    data = data,
+                                    options = list(scrollX = TRUE, dom = 't'),
+                                    filter = 'none')
 
       return(invisible(self))
     },
@@ -61,14 +61,31 @@ CohortTab <- R6::R6Class(
 
     #' UI
     #'
-    #' @param tabName (`character(1)`) Title to use for the tab.
+    #' @param text (`character(1)`) Menu item text.
+    #' @param subItemText (`character(1)`) Sub menu item text.
+    #'
+    #' @return `shiny.tag`
+    UI = function(text = "Databases",
+                  subItemText = "Database details") {
+      menuItem(
+        text = text,
+        tabName = "databases",
+        menuSubItem(
+          text = subItemText,
+          tabName = "db_details"
+        )
+      )
+    },
+
+    #' tabItem
+    #'
     #' @param tableTitle (`character(1)`) Title to use for the cohort table.
     #'
-    #' @return `shiny.tag.list`
-    UI = function(tabName = "cohort_attrition", tableTitle = "Cohort attrition") {
+    #' @return `tabItem`
+    tabItem = function(tableTitle = "Study databases") {
       tabItem(
-        tabName = tabName,
-        private$.cohortTable$UI(tableTitle)
+        tabName = "db_details",
+        private$.dbTable$UI(tableTitle)
       )
     },
 
@@ -80,19 +97,19 @@ CohortTab <- R6::R6Class(
     #'
     #' @return `NULL`
     server = function(input, output, session) {
-      promises::future_promise(private$.cohortTable$server(input, output, session))
+      promises::future_promise(private$.dbTable$server(input, output, session))
     }
   ),
 
   # Active ----
   active = list(
-    #' @field cohortTable (`Table`) Module.
-    cohortTable = function() return(private$.cohortTable)
+    #' @field dbTable (`Table`) Module.
+    dbTable = function() return(private$.dbTable)
   ),
 
   # Private ----
   private = list(
     .data = NULL,
-    .cohortTable = NULL
+    .dbTable = NULL
   )
 )

@@ -39,8 +39,9 @@ VignetteBuilder: knitr
 Language: en-US
 Collate: 
     'ShinyModule.R'
-    'CohortTab.R'
+    'CohortMenuItem.R'
     'DarwinShinyModules.R'
+    'DatabaseMenuItem.R'
     'IncidencePrevalence.R'
     'Incidence.R'
     'InputPanel.R'
