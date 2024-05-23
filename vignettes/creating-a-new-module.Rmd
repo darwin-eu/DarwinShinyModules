@@ -26,7 +26,59 @@ The `ShinyModule` class is an interface to be inherited to create modules. The m
 When inheriting the `ShinyModule` class it is expected that you override the `UI()` and / or `server()` methods. The `UI()` method should return something akin to a `shiny::tagList()`. By default they are defined, but do nothing. This allows for just rendering simple text in a module, without any back-end like the `DarwinShinyModules::Text` module. Or a static image.
 
 ## Defining a new module
-Let's define a new module called `MyModule`. In this module I want to:
+The base interface of creating a new module would be this:
+```{r}
+library(DarwinShinyModules)
+
+MyModule <- R6::R6Class(
+  classname = "MyModule",
+  inherit = ShinyModule,
+
+  public = list(
+    # Override UI()
+    UI = function() {},
+
+    # Override server()
+    server = function(input, output, session) {}
+  )
+)
+```
+
+As you can see it is a new `R6` class inheriting from `DarwinShinyModules::ShinyModule` with a `UI` and a `server` method. For a new module you can either directly add functionality to these functions, and use `private` and `active` fields and methods within the `R6` framework. Or if you are more familiar with functions, you may want to call your own `server` and `ui` functions in the module, like so:
+
+```{r}
+library(DarwinShinyModules)
+library(shiny)
+
+myUi <- fluidPage(
+  tableOutput(outputId = shiny::NS("id", "table"))
+)
+
+myServer <- function(input, output, session) {
+  output$table <- renderTable({
+    head(iris)
+  })
+}
+
+MyModule <- R6::R6Class(
+  classname = "MyModule",
+  inherit = ShinyModule,
+
+  public = list(
+    # Override UI()
+    UI = function() {
+      myUi
+    },
+
+    # Override server()
+    server = function(input, output, session) {
+      myServer(input, output, session)
+    }
+  )
+)
+```
+
+Let's remake `MyModule` putting all the functionality directly on the module, and see what extra funcionality and information exists on the module. In this module I want to:
 
 - Display the `head()` of the `iris` data frame, using `"myTable"` as the `input` / `output` reference.
 - Display the `appId`, `moduleName`, and `instanceId`, using `"moduleData"` as the `input` / `output` reference.
