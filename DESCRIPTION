@@ -44,6 +44,7 @@ Collate:
     'DatabaseMenuItem.R'
     'IncidencePrevalence.R'
     'Incidence.R'
+    'IncidenceMenuItem.R'
     'InputPanel.R'
     'Plot.R'
     'PlotPlotly.R'

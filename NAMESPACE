@@ -3,6 +3,7 @@
 export(CohortMenuItem)
 export(DatabaseMenuItem)
 export(Incidence)
+export(IncidenceMenuItem)
 export(IncidencePrevalence)
 export(InputPanel)
 export(Plot)
