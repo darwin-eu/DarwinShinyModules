@@ -42,7 +42,7 @@ if (interactive()) {
 \subsection{Method \code{new()}}{
 initialize
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{IncidenceMenuItem$new(appId, data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{IncidenceMenuItem$new(appId, data, addTreatmentPicker = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -50,7 +50,9 @@ initialize
 \describe{
 \item{\code{appId}}{(\code{character(1)}) ID of the app, to use for namespacing.}
 
-\item{\code{data}}{Data to display, usually a \code{data.frame}-like object.}
+\item{\code{data}}{Incidence data to display. It should be generated from the IncidencePrevalence package.}
+
+\item{\code{addTreatmentPicker}}{if a picker needs to be added containing treatment}
 }
 \if{html}{\out{</div>}}
 }
@@ -110,8 +112,7 @@ tabItem
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IncidenceMenuItem$tabItem(
   tabName = "incidence_estimates",
-  title = "Incidence estimates - general population",
-  addTreatmentPicker = FALSE
+  title = "Incidence estimates - general population"
 )}\if{html}{\out{</div>}}
 }
 

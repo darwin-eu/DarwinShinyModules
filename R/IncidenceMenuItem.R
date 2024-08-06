@@ -25,12 +25,51 @@ IncidenceMenuItem <- R6::R6Class(
     #' @description initialize
     #'
     #' @param appId (`character(1)`) ID of the app, to use for namespacing.
-    #' @param data Data to display, usually a `data.frame`-like object.
+    #' @param data Incidence data to display. It should be generated from the IncidencePrevalence package.
+    #' @param addTreatmentPicker if a picker needs to be added containing treatment
     #'
     #' @return `self`
-    initialize = function(appId, data) {
+    initialize = function(appId, data, addTreatmentPicker = FALSE) {
       super$initialize(appId)
       private$.data <- data
+      private$.addTreatmentPicker = addTreatmentPicker
+
+      private$.cdmPicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_cdm_name"), data = private$.data$cdm_name, label = "CDM name")
+      private$.outcomePicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_outcome_cohort_name"), data = private$.data$outcome_cohort_name, label = "Outcome name")
+      private$.strataPicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_denominator_cohort_name"), data = private$.data$denominator_cohort_name, label = "Strata")
+      private$.denomAgeGroupPicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_denominator_age_group"), data = private$.data$denominator_age_group, label = "Age group")
+      private$.denomSexPicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_denominator_sex"), data = private$.data$denominator_sex, label = "Sex")
+      private$.denomPriorObsPicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_denominator_days_prior_observation"), data = private$.data$denominator_days_prior_observation, label = "Days prior observation")
+      private$.denomStartDatePicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_denominator_start_date"), private$.data$denominator_start_date, label = "Start date")
+      private$.denomEndDatePicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_denominator_end_date"), data = private$.data$denominator_end_date, label = "End date")
+      private$.outcomeWashoutPicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_analysis_outcome_washout"), data = private$.data$analysis_outcome_washout, label = "Outcome washout")
+      private$.repeatedEventsPicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_analysis_repeated_events"), data = private$.data$analysis_repeated_events, label = "Repeated events")
+      private$.completePeriodPicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_analysis_complete_database_intervals"), data = private$.data$analysis_complete_database_intervals, label = "Complete period")
+      private$.minCountsPicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_analysis_min_cell_count"), data = private$.data$analysis_min_cell_count, label = "Minimum counts")
+      private$.intervalPicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_analysis_interval"), data = private$.data$analysis_interval, label = "Interval")
+      private$.incStartDatePicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_incidence_start_date"), data = private$.data$incidence_start_date, label = "Incidence start date")
+
+      if (addTreatmentPicker) {
+        private$.treatmentPicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_treatment_name"), data = private$.data$treatment, label = "Treatment name")
+      }
+
+      # plot picker
+      plotDataChoices <- c("cdm_name", "outcome_cohort_name", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation",
+                           "denominator_start_date", "denominator_end_date", "analysis_outcome_washout", "analysis_repeated_events", "analysis_complete_database_intervals",
+                           "analysis_min_cell_count", "analysis_interval", "incidence_start_date")
+      private$.incXAxisPicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_plot_x"),
+                                            data = plotDataChoices,
+                                            selected = "incidence_start_date",
+                                            label = "Incidence start date",
+                                            multiple = FALSE)
+      private$.incFacetByPicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_plot_facet"),
+                                              data = plotDataChoices,
+                                              selected = c("outcome_cohort_name", "cdm_name"),
+                                              label = "Facet by")
+      private$.incColorByPicker <- Picker$new(appId = shiny::NS(appId, "incidence_estimates_plot_colour"),
+                                              data = plotDataChoices,
+                                              selected = c(),
+                                              label = "Colour by")
       return(invisible(self))
     },
 
@@ -66,14 +105,12 @@ IncidenceMenuItem <- R6::R6Class(
                   tabName = "incidence",
                   subItemText = "incidence estimates",
                   subItemTabName = "incidence_estimates") {
-      menuItem(
+      shinydashboard::menuItem(
         text = text,
         tabName = tabName,
-        menuSubItem(
+        shinydashboard::menuSubItem(
           text = subItemText,
-          tabName = subItemTabName
-        )
-      )
+          tabName = subItemTabName))
     },
 
     #' tabItem
@@ -83,249 +120,72 @@ IncidenceMenuItem <- R6::R6Class(
     #' @param addTreatmentPicker if a picker needs to be added containing treatment
     #'
     #' @return `tabItem`
-    tabItem = function(tabName = "incidence_estimates", title = "Incidence estimates - general population", addTreatmentPicker = FALSE) {
-      tabItem(
+    tabItem = function(tabName = "incidence_estimates", title = "Incidence estimates - general population") {
+
+      shinydashboard::tabItem(
         tabName = tabName,
-        h3(title),
-        p("Incidence estimates are shown below, please select configuration to filter them:"),
-        p("Database and study outcome"),
-        div(
-          style = "display: inline-block;vertical-align:top; width: 150px;",
-          pickerInput(
-            inputId = shiny::NS(private$.appId, "incidence_estimates_cdm_name"),
-            label = "CDM name",
-            choices = unique(private$.data$cdm_name),
-            selected = unique(private$.data$cdm_name),
-            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-            multiple = TRUE
-          )
-        ),
-        if (addTreatmentPicker) {
-          div(
-            style = "display: inline-block;vertical-align:top; width: 150px;",
-            pickerInput(
-              inputId = shiny::NS(private$.appId, "incidence_estimates_treatment_name"),
-              label = "Treatment name",
-              choices = unique(private$.data$treatment),
-              selected = unique(private$.data$treatment),
-              options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-              multiple = TRUE
-            )
-          )
+        shiny::h3(title),
+        shiny::p("Incidence estimates are shown below, please select configuration to filter them:"),
+        shiny::p("Database and study outcome"),
+        private$.cdmPicker$UI(),
+        if (private$.addTreatmentPicker) {
+          private$.treatmentPicker$UI()
         },
-        div(
-          style = "display: inline-block;vertical-align:top; width: 150px;",
-          pickerInput(
-            inputId = shiny::NS(private$.appId, "incidence_estimates_outcome_cohort_name"),
-            label = "Outcome name",
-            choices = unique(private$.data$outcome_cohort_name),
-            selected = unique(private$.data$outcome_cohort_name),
-            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-            multiple = TRUE
-          )
-        ),
+        private$.outcomePicker$UI(),
         p("Denominator population settings"),
-        div(
-          style = "display: inline-block;vertical-align:top; width: 150px;",
-          pickerInput(
-            inputId = shiny::NS(private$.appId, "incidence_estimates_denominator_cohort_name"),
-            label = "Strata",
-            choices = unique(private$.data$denominator_cohort_name),
-            selected = unique(private$.data$denominator_cohort_name),
-            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-            multiple = TRUE
-          )
-        ),
-        div(
-          style = "display: inline-block;vertical-align:top; width: 150px;",
-          pickerInput(
-            inputId = shiny::NS(private$.appId, "incidence_estimates_denominator_age_group"),
-            label = "Age group",
-            choices = unique(private$.data$denominator_age_group),
-            selected = unique(private$.data$denominator_age_group),
-            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-            multiple = TRUE
-          )
-        ),
-        div(
-          style = "display: inline-block;vertical-align:top; width: 150px;",
-          pickerInput(
-            inputId = shiny::NS(private$.appId, "incidence_estimates_denominator_sex"),
-            label = "Sex",
-            choices = unique(private$.data$denominator_sex),
-            selected = unique(private$.data$denominator_sex),
-            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-            multiple = TRUE
-          )
-        ),
-        div(
-          style = "display: inline-block;vertical-align:top; width: 150px;",
-          pickerInput(
-            inputId = shiny::NS(private$.appId, "incidence_estimates_denominator_days_prior_observation"),
-            label = "Days prior observation",
-            choices = unique(private$.data$denominator_days_prior_observation),
-            selected = unique(private$.data$denominator_days_prior_observation),
-            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-            multiple = TRUE
-          )
-        ),
-        div(
-          style = "display: inline-block;vertical-align:top; width: 150px;",
-          pickerInput(
-            inputId = shiny::NS(private$.appId, "incidence_estimates_denominator_start_date"),
-            label = "Start date",
-            choices = unique(private$.data$denominator_start_date),
-            selected = unique(private$.data$denominator_start_date),
-            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-            multiple = TRUE
-          )
-        ),
-        div(
-          style = "display: inline-block;vertical-align:top; width: 150px;",
-          pickerInput(
-            inputId = shiny::NS(private$.appId, "incidence_estimates_denominator_end_date"),
-            label = "End date",
-            choices = unique(private$.data$denominator_end_date),
-            selected = unique(private$.data$denominator_end_date),
-            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-            multiple = TRUE
-          )
-        ),
+        private$.strataPicker$UI(),
+        private$.denomAgeGroupPicker$UI(),
+        private$.denomSexPicker$UI(),
+        private$.denomPriorObsPicker$UI(),
+        private$.denomStartDatePicker$UI(),
+        private$.denomEndDatePicker$UI(),
         p("Analysis settings"),
-        div(
-          style = "display: inline-block;vertical-align:top; width: 150px;",
-          pickerInput(
-            inputId = shiny::NS(private$.appId, "incidence_estimates_analysis_outcome_washout"),
-            label = "Outcome washout",
-            choices = unique(private$.data$analysis_outcome_washout),
-            selected = unique(private$.data$analysis_outcome_washout),
-            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-            multiple = TRUE
-          )
-        ),
-        div(
-          style = "display: inline-block;vertical-align:top; width: 150px;",
-          pickerInput(
-            inputId = shiny::NS(private$.appId, "incidence_estimates_analysis_repeated_events"),
-            label = "Repeated events",
-            choices = unique(private$.data$analysis_repeated_events),
-            selected = unique(private$.data$analysis_repeated_events),
-            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-            multiple = TRUE
-          )
-        ),
-        div(
-          style = "display: inline-block;vertical-align:top; width: 150px;",
-          pickerInput(
-            inputId = shiny::NS(private$.appId, "incidence_estimates_analysis_complete_database_intervals"),
-            label = "Complete period",
-            choices = unique(private$.data$analysis_complete_database_intervals),
-            selected = unique(private$.data$analysis_complete_database_intervals),
-            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-            multiple = TRUE
-          )
-        ),
-        div(
-          style = "display: inline-block;vertical-align:top; width: 150px;",
-          pickerInput(
-            inputId = shiny::NS(private$.appId,"incidence_estimates_analysis_min_cell_count"),
-            label = "Minimum counts",
-            choices = unique(private$.data$analysis_min_cell_count),
-            selected = unique(private$.data$analysis_min_cell_count),
-            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-            multiple = TRUE
-          )
-        ),
+        private$.outcomeWashoutPicker$UI(),
+        private$.repeatedEventsPicker$UI(),
+        private$.completePeriodPicker$UI(),
+        private$.minCountsPicker$UI(),
         p("Dates"),
-        div(
-          style = "display: inline-block;vertical-align:top; width: 150px;",
-          pickerInput(
-            inputId = shiny::NS(private$.appId, "incidence_estimates_analysis_interval"),
-            label = "Interval",
-            choices = unique(private$.data$analysis_interval),
-            selected = unique(private$.data$analysis_interval),
-            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-            multiple = TRUE
-          )
-        ),
-        div(
-          style = "display: inline-block;vertical-align:top; width: 150px;",
-          pickerInput(
-            inputId = shiny::NS(private$.appId, "incidence_estimates_incidence_start_date"),
-            label = "Incidence start date",
-            choices = unique(private$.data$incidence_start_date),
-            selected = unique(private$.data$incidence_start_date),
-            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-            multiple = TRUE
-          )
-        ),
-        tabsetPanel(
+        private$.intervalPicker$UI(),
+        private$.incStartDatePicker$UI(),
+
+        shiny::tabsetPanel(
           id = shiny::NS(private$.appId, "tabsetPanel"),
           type = "tabs",
-          tabPanel(
+          shiny::tabPanel(
             "Table of estimates",
-            downloadButton(shiny::NS(private$.appId, "incidence_estimates_download_table"), "Download current estimates"),
-            DTOutput(shiny::NS(private$.appId, "incidence_estimates_table")) %>% withSpinner()
+            shiny::downloadButton(shiny::NS(private$.appId, "incidence_estimates_download_table"), "Download current estimates"),
+            DT::DTOutput(shiny::NS(private$.appId, "incidence_estimates_table")) %>% withSpinner()
           ),
-          tabPanel(
+          shiny::tabPanel(
             "Plot of estimates",
             p("Plotting options"),
-            div(
-              style = "display: inline-block;vertical-align:top; width: 150px;",
-              pickerInput(
-                inputId = shiny::NS(private$.appId, "incidence_estimates_plot_x"),
-                label = "x axis",
-                choices = c("cdm_name", "outcome_cohort_name", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation", "denominator_start_date", "denominator_end_date", "analysis_outcome_washout", "analysis_repeated_events", "analysis_complete_database_intervals", "analysis_min_cell_count", "analysis_interval", "incidence_start_date"),
-                selected = "incidence_start_date",
-                list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-                multiple = FALSE
-              )
-            ),
-            div(
-              style = "display: inline-block;vertical-align:top; width: 150px;",
-              pickerInput(
-                inputId = shiny::NS(private$.appId, "incidence_estimates_plot_facet"),
-                label = "Facet by",
-                choices = c("cdm_name", "outcome_cohort_name", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation", "denominator_start_date", "denominator_end_date", "analysis_outcome_washout", "analysis_repeated_events", "analysis_complete_database_intervals", "analysis_min_cell_count", "analysis_interval", "incidence_start_date"),
-                selected = c("outcome_cohort_name", "cdm_name"),
-                list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-                multiple = TRUE
-              )
-            ),
-            div(
-              style = "display: inline-block;vertical-align:top; width: 150px;",
-              pickerInput(
-                inputId = shiny::NS(private$.appId, "incidence_estimates_plot_colour"),
-                label = "Colour by",
-                choices = c("cdm_name", "outcome_cohort_name", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation", "denominator_start_date", "denominator_end_date", "analysis_outcome_washout", "analysis_repeated_events", "analysis_complete_database_intervals", "analysis_min_cell_count", "analysis_interval", "incidence_start_date"),
-                list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"),
-                multiple = TRUE
-              )
-            ),
-            plotlyOutput(
+            private$.incXAxisPicker$UI(),
+            private$.incFacetByPicker$UI(),
+            private$.incColorByPicker$UI(),
+            plotly::plotlyOutput(
               shiny::NS(private$.appId, "incidence_estimates_plot"),
               height = "800px"
             ) %>%
-              withSpinner(),
-            h4("Download figure"),
-            div("height:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
-            div(
+              shinycssloaders::withSpinner(),
+            shiny::h4("Download figure"),
+            shiny::div("height:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
+            shiny::div(
               style = "display: inline-block;",
-              textInput(shiny::NS(private$.appId, "incidence_estimates_download_height"), "", 10, width = "50px")
+              shiny::textInput(shiny::NS(private$.appId, "incidence_estimates_download_height"), "", 10, width = "50px")
             ),
-            div("cm", style = "display: inline-block; margin-right: 25px;"),
-            div("width:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
-            div(
+            shiny::div("cm", style = "display: inline-block; margin-right: 25px;"),
+            shiny::div("width:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
+            shiny::div(
               style = "display: inline-block;",
-              textInput(shiny::NS(private$.appId, "incidence_estimates_download_width"), "", 20, width = "50px")
+              shiny::textInput(shiny::NS(private$.appId, "incidence_estimates_download_width"), "", 20, width = "50px")
             ),
-            div("cm", style = "display: inline-block; margin-right: 25px;"),
-            div("dpi:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
-            div(
+            shiny::div("cm", style = "display: inline-block; margin-right: 25px;"),
+            shiny::div("dpi:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
+            shiny::div(
               style = "display: inline-block; margin-right:",
-              textInput(shiny::NS(private$.appId, "incidence_estimates_download_dpi"), "", 300, width = "50px")
+              shiny::textInput(shiny::NS(private$.appId, "incidence_estimates_download_dpi"), "", 300, width = "50px")
             ),
-            downloadButton(shiny::NS(private$.appId, "incidence_estimates_download_plot"), "Download plot")
+            shiny::downloadButton(shiny::NS(private$.appId, "incidence_estimates_download_plot"), "Download plot")
           )
         )
       )
@@ -339,24 +199,23 @@ IncidenceMenuItem <- R6::R6Class(
     #'
     #' @return `NULL`
     server = function(input, output, session) {
-
       getIncidenceEstimates <- reactive({
         result <- private$.data %>%
-          filter(cdm_name %in% input$incidence_estimates_cdm_name) %>%
-          filter(outcome_cohort_name %in% input$incidence_estimates_outcome_cohort_name) %>%
-          filter(denominator_cohort_name %in% input$incidence_estimates_denominator_cohort_name) %>%
-          filter(denominator_age_group %in% input$incidence_estimates_denominator_age_group) %>%
-          filter(denominator_sex %in% input$incidence_estimates_denominator_sex) %>%
-          filter(denominator_days_prior_observation %in% input$incidence_estimates_denominator_days_prior_observation) %>%
-          filter(denominator_start_date %in% input$incidence_estimates_denominator_start_date) %>%
-          filter(denominator_end_date %in% input$incidence_estimates_denominator_end_date) %>%
-          filter(analysis_outcome_washout %in% input$incidence_estimates_analysis_outcome_washout) %>%
-          filter(analysis_repeated_events %in% input$incidence_estimates_analysis_repeated_events) %>%
-          filter(analysis_complete_database_intervals %in% input$incidence_estimates_analysis_complete_database_intervals) %>%
-          filter(analysis_min_cell_count %in% input$incidence_estimates_analysis_min_cell_count) %>%
-          filter(analysis_interval %in% input$incidence_estimates_analysis_interval) %>%
-          filter(incidence_start_date %in% input$incidence_estimates_incidence_start_date) %>%
-          mutate(
+          dplyr::filter(cdm_name %in% input$incidence_estimates_cdm_name) %>%
+          dplyr::filter(outcome_cohort_name %in% input$incidence_estimates_outcome_cohort_name) %>%
+          dplyr::filter(denominator_cohort_name %in% input$incidence_estimates_denominator_cohort_name) %>%
+          dplyr::filter(denominator_age_group %in% input$incidence_estimates_denominator_age_group) %>%
+          dplyr::filter(denominator_sex %in% input$incidence_estimates_denominator_sex) %>%
+          dplyr::filter(denominator_days_prior_observation %in% input$incidence_estimates_denominator_days_prior_observation) %>%
+          dplyr::filter(denominator_start_date %in% input$incidence_estimates_denominator_start_date) %>%
+          dplyr::filter(denominator_end_date %in% input$incidence_estimates_denominator_end_date) %>%
+          dplyr::filter(analysis_outcome_washout %in% input$incidence_estimates_analysis_outcome_washout) %>%
+          dplyr::filter(analysis_repeated_events %in% input$incidence_estimates_analysis_repeated_events) %>%
+          dplyr::filter(analysis_complete_database_intervals %in% input$incidence_estimates_analysis_complete_database_intervals) %>%
+          dplyr::filter(analysis_min_cell_count %in% input$incidence_estimates_analysis_min_cell_count) %>%
+          dplyr::filter(analysis_interval %in% input$incidence_estimates_analysis_interval) %>%
+          dplyr::filter(incidence_start_date %in% input$incidence_estimates_incidence_start_date) %>%
+          dplyr::mutate(
             person_years = round(suppressWarnings(as.numeric(person_years))),
             person_days = round(suppressWarnings(as.numeric(person_days))),
             n_events = round(suppressWarnings(as.numeric(n_events))),
@@ -370,6 +229,7 @@ IncidenceMenuItem <- R6::R6Class(
         }
         return(result)
       })
+
       ### download table ----
       output$incidence_estimates_download_table <- downloadHandler(
         filename = function() {
@@ -379,11 +239,11 @@ IncidenceMenuItem <- R6::R6Class(
           write_csv(getIncidenceEstimates(), file)
         }
       )
+
       ### table estimates ----
       output$incidence_estimates_table <- renderDataTable({
         table <- getIncidenceEstimates()
         shiny::validate(need(nrow(table) > 0, "No results for selected inputs"))
-
 
         table <- table %>%
           mutate(incidence_1000_pys = paste0(
@@ -399,13 +259,14 @@ IncidenceMenuItem <- R6::R6Class(
             select(cdm_name, outcome_cohort_name, denominator_cohort_name, denominator_age_group, denominator_sex, denominator_days_prior_observation, denominator_start_date, denominator_end_date, analysis_outcome_washout, analysis_repeated_events, analysis_complete_database_intervals, analysis_min_cell_count, analysis_interval, incidence_start_date, n_events, n_persons, person_years, incidence_1000_pys)
         }
 
-        datatable(
+        DT::datatable(
           table,
           rownames = FALSE,
           extensions = "Buttons",
           options = list(scrollX = TRUE, scrollCollapse = TRUE)
         )
       })
+
       ### make plot ----
       plotIncidenceEstimates <- reactive({
         table <- getIncidenceEstimates()
@@ -423,17 +284,18 @@ IncidenceMenuItem <- R6::R6Class(
           colour_name = paste0(input$incidence_estimates_plot_colour, collapse = "; "),
           options = list()
         ) +
-          scale_fill_discrete(breaks = ageGroups) +
-          scale_color_discrete(breaks = ageGroups)
+          ggplot2::scale_fill_discrete(breaks = ageGroups) +
+          ggplot2::scale_color_discrete(breaks = ageGroups)
 
       })
+
       ### download plot ----
       output$incidence_estimates_download_plot <- downloadHandler(
         filename = function() {
           "incidenceEstimatesPlot.png"
         },
         content = function(file) {
-          ggsave(
+          ggplot2::ggsave(
             file,
             plotIncidenceEstimates(),
             width = as.numeric(input$incidence_estimates_download_width),
@@ -450,11 +312,27 @@ IncidenceMenuItem <- R6::R6Class(
     }
   ),
 
-  # Active ----
-  active = list(),
-
   # Private ----
   private = list(
-    .data = NULL
+    .data = NULL,
+    .addTreatmentPicker = FALSE,
+    .cdmPicker = NULL,
+    .strataPicker = NULL,
+    .outcomePicker = NULL,
+    .denomAgeGroupPicker = NULL,
+    .denomSexPicker = NULL,
+    .denomPriorObsPicker = NULL,
+    .denomStartDatePicker = NULL,
+    .denomEndDatePicker = NULL,
+    .outcomeWashoutPicker = NULL,
+    .repeatedEventsPicker = NULL,
+    .completePeriodPicker = NULL,
+    .minCountsPicker = NULL,
+    .intervalPicker = NULL,
+    .incStartDatePicker = NULL,
+    .treatmentPicker = NULL,
+    .incXAxisPicker = NULL,
+    .incFacetByPicker = NULL,
+    .incColorByPicker = NULL
   )
 )

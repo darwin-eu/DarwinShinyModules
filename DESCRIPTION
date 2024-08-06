@@ -46,6 +46,7 @@ Collate:
     'Incidence.R'
     'IncidenceMenuItem.R'
     'InputPanel.R'
+    'Picker.R'
     'Plot.R'
     'PlotPlotly.R'
     'PlotStatic.R'
