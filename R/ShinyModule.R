@@ -10,21 +10,52 @@
 ShinyModule <- R6::R6Class(
   classname = "ShinyModule",
 
+  # Active ----
+  active = list(
+    #' @field instanceId (`character(1)`) Random ID of 10 capitalized letters.
+    instanceId = function(instanceId) {
+      if (missing(instanceId)) {
+        return(private$.instanceId)
+      } else {
+        checkmate::assertCharacter(x = instanceId, len = 1)
+        private$.instanceId <- instanceId
+        return(invisible(self))
+      }
+    },
+
+    #' @field parentNamespace (`character(1)`) Namespace of the parent module.
+    parentNamespace = function(parentNamespace) {
+      if (missing(parentNamespace)) {
+        return(private$.parentNamespace)
+      } else {
+        checkmate::assertCharacter(x = parentNamespace, len = 1)
+        private$.parentNamespace <- parentNamespace
+        return(invisible(self))
+      }
+    },
+
+    #' @field moduleName (`character(1)`) Name of the module.
+    moduleName = function() {
+      return(private$.moduleName)
+    },
+
+    moduleId = function() {
+      return(private$.moduleId)
+    }
+  ),
+
   # Public ----
   public = list(
-    ## Fields ----
-    #' @field instanceId (`character(1)`) Random ID of 10 capitalized letters.
-    instanceId = "",
     ## Methods ----
     #' @description
     #' Initializer method
     #'
     #' @return
     #' (`self`)
-    initialize = function(appId) {
-      private$.appId <- appId
+    initialize = function() {
       private$.moduleName <- class(self)[1]
-      self$instanceId <- paste0(sample(x = LETTERS, size = 10), collapse = "")
+      private$.instanceId <- private$makeInstanceId()
+      private$.moduleId <- sprintf("%s-%s", private$.moduleName, private$.instanceId)
       return(invisible(self))
     },
 
@@ -36,11 +67,34 @@ ShinyModule <- R6::R6Class(
     validate = function() {
       assertions <- checkmate::makeAssertCollection()
       checkmate::assertCharacter(
-        .var.name = "appId",
-        x = private$.appId,
+        .var.name = "instanceId",
+        x = private$.instanceId,
         len = 1,
         add = assertions
       )
+
+      checkmate::assertCharacter(
+        .var.name = "parentNamespace",
+        x = private$.parentNamespace,
+        len = 1,
+        null.ok = TRUE,
+        add = assertions
+      )
+
+      checkmate::assertCharacter(
+        .var.name = "moduleName",
+        x = private$.moduleName,
+        len = 1,
+        add = assertions
+      )
+
+      checkmate::assertCharacter(
+        .var.name = "moduleId",
+        x = private$.moduleId,
+        len = 1,
+        add = assertions
+      )
+
       checkmate::reportAssertions(assertions)
       return(invisible(self))
     },
@@ -65,41 +119,26 @@ ShinyModule <- R6::R6Class(
     #' (`NULL`)
     server = function(input, output, session) {
       return(NULL)
-    },
-
-    #' @description
-    #' Create an instance unique ID for referencing objects in the input and
-    #' output environments.
-    #'
-    #' @param id (`character(1)`) ID used for `outputId` in output() functions
-    #' and to reference in the input environment.
-    id = function(id) {
-      paste(private$.moduleName, self$instanceId, id, sep = "_")
-    }
-  ),
-
-  # Active ----
-  active = list(
-    #' @field appId (`character(1)`) appId used for namespacing.
-    appId = function(rhs) {
-      return(private$.appId)
-    },
-
-    #' @field moduleName (`character(1)`) Name of the module.
-    moduleName = function(rhs) {
-      return(private$.moduleName)
     }
   ),
 
   # Private ----
   private = list(
     ## Fields ----
-    .appId = "",
     .moduleName = "",
+    .instanceId = "",
+    .moduleId = "",
+    .parentNamespace = NULL,
+
 
     ## Methods ----
     finalize = function() {
       return(NULL)
+    },
+
+    makeInstanceId = function(n = 20) {
+      items <- c(letters, LETTERS, c(1:9), c("_"))
+      paste0(sample(x = items, size = n), collapse = "")
     }
   )
 )
