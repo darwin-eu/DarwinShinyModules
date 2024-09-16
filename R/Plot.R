@@ -3,12 +3,38 @@
 #' @include ShinyModule.R
 #'
 #' @description
-#' Plot Interface
+#' Plot Decorator class
 #'
 #' @export
 Plot <- R6::R6Class(
   classname = "Plot",
   inherit = ShinyModule,
+
+  # Active ----
+  active = list(
+    #' @field data Data used for plot.
+    data = function(data) {
+      if (missing(data)) {
+        return(isolate(private$.reactiveValues$data))
+      } else {
+        checkmate::assertDataFrame(data)
+        private$.reactiveValues$data <- data
+      }
+    },
+
+    #' @field fun Plotting function.
+    fun = function(fun) {
+      if (missing(fun)) {
+        return(private$.fun)
+      } else {
+        checkmate::assertFunction(fun)
+        private$.fun <- fun
+      }
+    },
+
+    #' @field reactiveValues Reactive values.
+    reactiveValues = function() return(private$.reactiveValues)
+  ),
 
   # Public ----
   public = list(
@@ -20,10 +46,11 @@ Plot <- R6::R6Class(
     #' @param fun Function to plot with, with one argument: `data`.
     #'
     #' @return `self`
-    initialize = function(appId, data, fun) {
-      super$initialize(appId)
-      private$.data <- data
+    initialize = function(data, fun, title = "Plot") {
+      super$initialize()
       private$.fun <- fun
+      private$.reactiveValues$data <- data
+      private$.title <- title
       self$validate()
     },
 
@@ -35,11 +62,6 @@ Plot <- R6::R6Class(
     validate = function() {
       super$validate()
       assertions <- checkmate::makeAssertCollection()
-      checkmate::assertFALSE(
-        .var.name = "data",
-        x = is.null(private$.data),
-        add = assertions
-      )
       checkmate::assertFunction(
         .var.name = "fun",
         x = private$.fun,
@@ -47,36 +69,14 @@ Plot <- R6::R6Class(
         add = assertions
       )
       checkmate::reportAssertions(assertions)
-    },
-
-    #' @description  Update data within reactive context (`reactive()` or `observe()`)
-    #'
-    #' @param data Updated data
-    #'
-    #' @return `self`
-    updateDataReactive = function(data) {
-      private$.reactiveValues$data <- data
-      return(invisible(self))
     }
-  ),
-
-  # Active ----
-  active = list(
-    #' @field data Data used for plot.
-    data = function() return(private$.data),
-
-    #' @field fun Plotting function.
-    fun = function() return(private$.fun),
-
-    #' @field reactiveValues Reactive values.
-    reactiveValues = function() return(private$.reactiveValues)
   ),
 
   # Private ----
   private = list(
     ## Fields ----
-    .data = NULL,
     .fun = NULL,
+    .title = "",
     .reactiveValues = shiny::reactiveValues(
       data = NULL,
     )
