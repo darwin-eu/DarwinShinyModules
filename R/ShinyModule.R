@@ -1,7 +1,7 @@
 #' @title Module Super Class
 #'
 #' @description
-#' This class is an `interface` and is not meant to be directly used, but to be
+#' This class is an `decorator` and is not meant to be directly used, but to be
 #' inherited by other Modules.
 #'
 #' @template param_appId

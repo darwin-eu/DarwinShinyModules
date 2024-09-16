@@ -31,13 +31,11 @@ PlotStatic <- R6::R6Class(
     ## Methods ----
     #' @description UI
     #'
-    #' @param title (`character(1)`) Title to use for the plot.
-    #'
     #' @return `shiny.tag.list`
-    UI = function(title = "Plot") {
+    UI = function() {
       shiny::tagList(
-        shiny::h3(title),
-        shiny::plotOutput(shiny::NS(private$.appId, self$id("plot")))
+        shiny::h3(private$.title),
+        shiny::plotOutput(shiny::NS(private$.namespace, "plot"))
       )
     },
 
@@ -49,13 +47,10 @@ PlotStatic <- R6::R6Class(
     #'
     #' @return `NULL`
     server = function(input, output, session) {
-      output[[self$id("plot")]] <- shiny::renderPlot({
-        data <- if (is.null(private$.reactiveValues$data)) {
-          private$.data
-        } else {
-          private$.reactiveValues$data
-        }
-        do.call(private$.fun, list(data = data))
+      shiny::moduleServer(id = private$.namespace, module = function(input, output, session) {
+        output$plot <- shiny::renderPlot({
+          do.call(private$.fun, list(data = private$.reactiveValues$data))
+        })
       })
     }
   )

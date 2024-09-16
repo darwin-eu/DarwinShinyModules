@@ -37,13 +37,11 @@ PlotWidget <- R6::R6Class(
   public = list(
     #' @description UI
     #'
-    #' @param title (`character(1)`) Title to use for the plot.
-    #'
     #' @return `shiny.tag.list`
-    UI = function(title = "Widget") {
+    UI = function() {
       shiny::tagList(
-        shiny::h3(title),
-        shiny::uiOutput(shiny::NS(private$.appId, self$id("plot")))
+        shiny::h3(private$.title),
+        shiny::uiOutput(shiny::NS(private$.namespace, "plot"))
       )
     },
 
@@ -55,13 +53,10 @@ PlotWidget <- R6::R6Class(
     #'
     #' @return `NULL`
     server = function(input, output, session) {
-      output[[self$id("plot")]] <- shiny::renderUI({
-        data <- if (is.null(private$.reactiveValues$data)) {
-          private$.data
-        } else {
-          private$.reactiveValues$data
-        }
-        do.call(what = private$.fun, args = list(data = data))
+      shiny::moduleServer(id = private$.namespace, module = function(input, output, session) {
+        output$plot <- shiny::renderUI({
+          do.call(private$.fun, list(data = private$.reactiveValues$data))
+        })
       })
     }
   )
