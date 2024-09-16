@@ -30,6 +30,7 @@ ShinyModule <- R6::R6Class(
       } else {
         checkmate::assertCharacter(x = parentNamespace, len = 1)
         private$.parentNamespace <- parentNamespace
+        private$.namespace <- c(private$.parentNamespace, private$.moduleId)
         return(invisible(self))
       }
     },
@@ -41,6 +42,10 @@ ShinyModule <- R6::R6Class(
 
     moduleId = function() {
       return(private$.moduleId)
+    },
+
+    namespace = function() {
+      return(private$.namespace)
     }
   ),
 
@@ -56,6 +61,7 @@ ShinyModule <- R6::R6Class(
       private$.moduleName <- class(self)[1]
       private$.instanceId <- private$makeInstanceId()
       private$.moduleId <- sprintf("%s-%s", private$.moduleName, private$.instanceId)
+      private$.namespace <- c(private$.parentNamespace, private$.moduleId)
       return(invisible(self))
     },
 
@@ -129,6 +135,7 @@ ShinyModule <- R6::R6Class(
     .instanceId = "",
     .moduleId = "",
     .parentNamespace = NULL,
+    .namespace = "",
 
 
     ## Methods ----
