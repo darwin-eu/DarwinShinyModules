@@ -19,22 +19,49 @@ Table <- R6::R6Class(
   classname = "Table",
   inherit = ShinyModule,
 
+  # Active ----
+  active = list(
+    #' @field bindings (`reactivevalues`) Bindings of the DataTable in a reactive environment.
+    data = function(data) {
+      if (missing(data)) {
+        return(private$.data)
+      } else {
+        checkmate::assertDataFrame(data)
+        private$.data <- data
+      }
+    },
+
+    title = function(title) {
+      if (missing(title)) {
+        return(private$.title)
+      } else {
+        checkmate::assertCharacter(title, len = 1)
+        private$.title <- title
+      }
+    },
+
+    #' @field data The data to render in the DataTable, usually a `data.frame`-like object.
+    bindings = function() {
+      return(private$.bindings)
+    }
+  ),
+
   # Public ----
   public = list(
     ## Methods ----
     #' @description initialize
     #'
-    #' @param appId (`character(1)`) ID of the app, to use for namespacing.
-    #' @param data Data to plot with, usually a `data.frame`-like object.
-    #' @param options table options, by default it shows additional items next to
+    #' @param data (`data.frame`) Data to plot with, usually a `data.frame`-like object.
+    #' @param options (`list`) table options, by default it shows additional items next to
     #' the table like search box, pagination, etc. Only display the table using
     #' list(dom = '')
-    #' @param filter filter option, it can be either "none", "bottom" or "top" (default)
+    #' @param filter (`character`: `"top"`) filter option, it can be either `"none"`, `"bottom"` or `"top"` (default)
     #'
     #' @return `self`
-    initialize = function(appId, data, options = list(scrollX = TRUE), filter = "top") {
-      super$initialize(appId)
+    initialize = function(data, title = "Table", options = list(scrollX = TRUE), filter = "top") {
+      super$initialize()
       private$.data <- data
+      private$.title <- title
       private$.options <- options
       private$.filter <- filter
       return(invisible(self))
@@ -46,11 +73,6 @@ Table <- R6::R6Class(
     validate = function() {
       super$validate()
       assertions <- checkmate::makeAssertCollection()
-      checkmate::assertCharacter(
-        .var.name = "appId",
-        x = private$.appId,
-        len = 1
-      )
       checkmate::assertDataFrame(
         .var.name = "data",
         x = private$.data,
@@ -75,11 +97,11 @@ Table <- R6::R6Class(
     #' @param title (`character(1)`) Title to use for the DataTable.
     #'
     #' @return `shiny.tag.list`
-    UI = function(title = "Table") {
+    UI = function() {
       shiny::tagList(
-        shiny::h3(title),
-        DT::DTOutput(outputId = shiny::NS(private$.appId, self$id("table"))),
-        shiny::downloadButton(outputId = shiny::NS(private$.appId, self$id("dlButton")), label = "csv")
+        shiny::h3(private$.title),
+        DT::DTOutput(outputId = shiny::NS(private$.namespace, "table")),
+        shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "csv")
       )
     },
 
@@ -91,22 +113,11 @@ Table <- R6::R6Class(
     #'
     #' @return `NULL`
     server = function(input, output, session) {
-      private$renderTable(output)
-      private$downloader(output)
-      private$setReactiveValues(input)
-    }
-  ),
-
-  # Active ----
-  active = list(
-    #' @field bindings (`reactivevalues`) Bindings of the DataTable in a reactive environment.
-    data = function() {
-      return(private$.data)
-    },
-
-    #' @field data The data to render in the DataTable, usually a `data.frame`-like object.
-    bindings = function() {
-      return(private$.bindings)
+      shiny::moduleServer(id = private$.namespace, module = function(input, output, session) {
+        private$renderTable(output)
+        private$downloader(output)
+        private$setReactiveValues(input)
+      })
     }
   ),
 
@@ -114,6 +125,7 @@ Table <- R6::R6Class(
   private = list(
     ## Fields ----
     .data = NULL,
+    .title = "",
     .options = NULL,
     .filter = NULL,
     .bindings = shiny::reactiveValues(
@@ -132,48 +144,53 @@ Table <- R6::R6Class(
 
     ## Methods ----
     setReactiveValues = function(input) {
-      cellClicked <- sprintf("%s_cell_clicked", self$id("table"))
-      cellsSelected <- sprintf("%s_cells_selected", self$id("table"))
-      cellInfo <- sprintf("%s_cell_info", self$id("table"))
-      rowsCurrent <- sprintf("%s_rows_current", self$id("table"))
-      rowsAll <- sprintf("%s_rows_all", self$id("table"))
-      rowsSelected <- sprintf("%s_rows_selected", self$id("table"))
-      rowLastClicked <- sprintf("%s_row_last_clicked", self$id("table"))
-      columnsSelected <- sprintf("%s_columns_selected", self$id("table"))
-      search <- sprintf("%s_search", self$id("table"))
-      searchColumns <- sprintf("%s_search_columns", self$id("table"))
-      state <- sprintf("%s_state", self$id("table"))
+      shiny::observeEvent(eventExpr = input$table_cells_selected, {
+        private$.bindings$cells_selected <- input$table_cells_selected
+      })
 
-      observeEvent(
-        c(
-          input[[cellClicked]],
-          input[[cellsSelected]],
-          input[[cellInfo]],
-          input[[rowsCurrent]],
-          input[[rowsAll]],
-          input[[rowsSelected]],
-          input[[rowLastClicked]],
-          input[[columnsSelected]],
-          input[[search]],
-          input[[searchColumns]],
-          input[[state]]
-        ), {
-        private$.bindings$cell_clicked <- input[[cellClicked]]
-        private$.bindings$cells_selected <- input[[cellsSelected]]
-        private$.bindings$cell_info <- input[[cellInfo]]
-        private$.bindings$rows_current <- input[[rowsCurrent]]
-        private$.bindings$rows_all <- input[[rowsAll]]
-        private$.bindings$rows_selected <- input[[rowsSelected]]
-        private$.bindings$row_last_clicked <- input[[rowLastClicked]]
-        private$.bindings$columns_selected <- input[[columnsSelected]]
-        private$.bindings$search <- input[[search]]
-        private$.bindings$search_columns <- input[[searchColumns]]
-        private$.bindings$state <- input[[state]]
+      shiny::observeEvent(eventExpr = input$table_cell_clicked, {
+        private$.bindings$cell_clicked <- input$table_cell_clicked
+      })
+
+      shiny::observeEvent(eventExpr = input$table_cell_info, {
+        private$.bindings$cell_info <- input$table_cell_info
+      })
+
+      shiny::observeEvent(eventExpr = input$table_rows_all, {
+        private$.bindings$rows_all <- input$table_rows_all
+      })
+
+      shiny::observeEvent(eventExpr = input$table_rows_current, {
+        private$.bindings$rows_current <- input$table_rows_current
+      })
+
+      shiny::observeEvent(eventExpr = input$table_rows_selected, {
+        private$.bindings$rows_selected <- input$table_rows_selected
+      })
+
+      shiny::observeEvent(eventExpr = input$table_row_last_clicked, {
+        private$.bindings$row_last_clicked <- input$table_row_last_clicked
+      })
+
+      shiny::observeEvent(eventExpr = input$table_columns_selected, {
+        private$.bindings$columns_selected <- input$table_columns_selected
+      })
+
+      shiny::observeEvent(eventExpr = input$table_search, {
+        private$.bindings$search <- input$table_search
+      })
+
+      shiny::observeEvent(eventExpr = input$table_search_columns, {
+        private$.bindings$search_columns <- input$table_search_columns
+      })
+
+      shiny::observeEvent(eventExpr = input$table_state, {
+        private$.bindings$state <- input$table_state
       })
     },
 
     renderTable = function(output) {
-      output[[self$id("table")]] <- DT::renderDT(
+      output$table <- DT::renderDT(
         expr = private$.data,
         filter = private$.filter,
         options = private$.options
@@ -181,14 +198,14 @@ Table <- R6::R6Class(
     },
 
     downloader = function(output) {
-      output[[self$id("dlButton")]] <- shiny::downloadHandler(
+      output$dlButton <- shiny::downloadHandler(
         filename = private$dlFilename,
         content = private$dlContent
       )
     },
 
     dlFilename = function() {
-      return("table.csv")
+      return(sprintf("%s.csv", private$.title))
     },
 
     dlContent = function(file) {
