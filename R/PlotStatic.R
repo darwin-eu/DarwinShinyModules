@@ -17,7 +17,7 @@
 #'     theme_bw()
 #' }
 #'
-#' staticModule <- PlotStatic$new(appId = "app", data = iris, fun = staticFun)
+#' staticModule <- PlotStatic$new(data = iris, fun = staticFun)
 #'
 #' if (interactive()) {
 #'   preview(staticModule)
@@ -47,7 +47,7 @@ PlotStatic <- R6::R6Class(
     #'
     #' @return `NULL`
     server = function(input, output, session) {
-      shiny::moduleServer(id = private$.namespace, module = function(input, output, session) {
+      shiny::moduleServer(id = private$.moduleId, module = function(input, output, session) {
         output$plot <- shiny::renderPlot({
           do.call(private$.fun, list(data = private$.reactiveValues$data))
         })
