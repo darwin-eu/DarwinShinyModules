@@ -29,16 +29,6 @@ PlotPlotly <- R6::R6Class(
 
   # Active ----
   active = list(
-    title = function(title) {
-      if (missing(title)) {
-        return(private$.title)
-      } else {
-        checkmate::assertCharacter(title, len = 1)
-        private$.title <- title
-      }
-      return(invisible(self))
-    },
-
     #' @field plot (`plotly`) object.
     plot = function() return(private$.plot),
 
@@ -65,8 +55,6 @@ PlotPlotly <- R6::R6Class(
     },
 
     #' @description UI
-    #'
-    #' @param title (`character(1)`) Title to use for the plot.
     #'
     #' @return `shiny.tag.list`
     UI = function() {

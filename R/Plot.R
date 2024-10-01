@@ -12,6 +12,17 @@ Plot <- R6::R6Class(
 
   # Active ----
   active = list(
+    #' @param title (`character(1)`) Title to use for the plot.
+    title = function(title) {
+      if (missing(title)) {
+        return(private$.title)
+      } else {
+        checkmate::assertCharacter(title, len = 1)
+        private$.title <- title
+      }
+      return(invisible(self))
+    },
+
     #' @field data Data used for plot.
     data = function(data) {
       if (missing(data)) {
