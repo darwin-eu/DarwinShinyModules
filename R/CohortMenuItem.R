@@ -19,23 +19,51 @@ CohortMenuItem <- R6::R6Class(
   classname = "CohortMenuItem",
   inherit = ShinyModule,
 
+  # Active ----
+  active = list(
+    #' @param text (`character(1)`) Menu item text.
+    text = function(text) {
+      if (missing(text)) {
+        return(private$.text)
+      } else {
+        checkmate::assertCharacter(text, len = 1)
+        private$.text <- text
+      }
+    },
+
+    #' @param subItemText (`character(1)`) Sub menu item text.
+    subItemText = function(subItemText) {
+      if (missing(subItemText)) {
+        return(private$.subItemText)
+      } else {
+        checkmate::assertCharacter(subItemText, len = 1)
+        private$.subItemText <- subItemText
+      }
+    },
+
+    #' @field cohortTable (`Table`) Module.
+    cohortTable = function() return(private$.cohortTable)
+  ),
+
   # Public ----
   public = list(
     ## Methods ----
     #' @description initialize
     #'
-    #' @param appId (`character(1)`) ID of the app, to use for namespacing.
     #' @param data Data to display in the table, usually a `data.frame`-like object.
     #'
     #' @return `self`
-    initialize = function(appId, data) {
-      super$initialize(appId)
-      private$.data <- data
-      private$.cohortTable <- Table$new(appId = appId,
-                                        data = data,
-                                        options = list(scrollX = TRUE, dom = 't'),
-                                        filter = 'top')
+    initialize = function(data, text = "text", subItemText = "subItemText") {
+      super$initialize()
 
+      private$.text <- text
+      private$.subItemText <- subItemText
+
+      private$.cohortTable <- Table$new(
+        data = data,
+        options = list(scrollX = TRUE, dom = "t"),
+        filter = "top"
+      )
       return(invisible(self))
     },
 
@@ -61,17 +89,13 @@ CohortMenuItem <- R6::R6Class(
 
     #' UI
     #'
-    #' @param text (`character(1)`) Menu item text.
-    #' @param subItemText (`character(1)`) Sub menu item text.
-    #'
     #' @return `shiny.tag`
-    UI = function(text = "Cohorts",
-                  subItemText = "Cohort attrition") {
-      menuItem(
-        text = text,
+    UI = function() {
+      shinydashboard::menuItem(
+        text = private$.text,
         tabName = "cohorts",
-        menuSubItem(
-          text = subItemText,
+        shinydashboard::menuSubItem(
+          text = private$.subItemText,
           tabName = "cohort_attrition"
         )
       )
@@ -83,7 +107,7 @@ CohortMenuItem <- R6::R6Class(
     #'
     #' @return `tabItem`
     tabItem = function(tableTitle = "Cohort attrition") {
-      tabItem(
+      shinydashboard::tabItem(
         tabName = "cohort_attrition",
         private$.cohortTable$UI(tableTitle)
       )
@@ -101,15 +125,10 @@ CohortMenuItem <- R6::R6Class(
     }
   ),
 
-  # Active ----
-  active = list(
-    #' @field cohortTable (`Table`) Module.
-    cohortTable = function() return(private$.cohortTable)
-  ),
-
   # Private ----
   private = list(
-    .data = NULL,
+    .text = "",
+    .subItemText = "",
     .cohortTable = NULL
   )
 )
