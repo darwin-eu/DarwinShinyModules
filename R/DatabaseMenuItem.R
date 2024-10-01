@@ -10,7 +10,7 @@
 #' @examples
 #' library(DarwinShinyModules)
 #'
-#' DatabaseMenuItem <- DatabaseMenuItem$new(appId = "id", data = mtcars)
+#' DatabaseMenuItem <- DatabaseMenuItem$new(data = mtcars)
 #'
 #' if (interactive()) {
 #'   preview(DatabaseMenuItem)
@@ -19,6 +19,42 @@ DatabaseMenuItem <- R6::R6Class(
   classname = "DatabaseMenuItem",
   inherit = ShinyModule,
 
+  # Active ----
+  active = list(
+    #' @field dbTable (`Table`) Module.
+    dbTable = function() return(private$.dbTable),
+
+    #' @param text (`character(1)`) Menu item text.
+    text = function(text) {
+      if (missing(text)) {
+        return(private$.text)
+      } else {
+        checkmate::assertCharacter(text, len = 1)
+        private$.text <- text
+      }
+    },
+
+    #' @param subItemText (`character(1)`) Sub menu item text.
+    subItemText = function(subItemText) {
+      if (missing(subItemText)) {
+        return(private$.subItemText)
+      } else {
+        checkmate::assertCharacter(subItemText, len = 1)
+        private$.subItemText <- subItemText
+      }
+    },
+
+    #' @param tableTitle (`character(1)`) Title to use for the cohort table.
+    tableTitle = function(tableTitle) {
+      if (missing(tableTitle)) {
+        return(private$.tableTitle)
+      } else {
+        checkmate::assertCharacter(subItemText, len = 1)
+        private$.tableTitle <- tableTitle
+      }
+    }
+  ),
+
   # Public ----
   public = list(
     ## Methods ----
@@ -26,30 +62,38 @@ DatabaseMenuItem <- R6::R6Class(
     #'
     #' @param appId (`character(1)`) ID of the app, to use for namespacing.
     #' @param data Data to display in the table, usually a `data.frame`-like object.
+    #' @param text (`character(1)`) Menu item text.
+    #' @param subItemText (`character(1)`) Sub menu item text.
+    #' @param tableTitle (`character(1)`) Title to use for the cohort table.
     #'
     #' @return `self`
-    initialize = function(appId, data) {
-      super$initialize(appId)
-      private$.data <- data
-      private$.dbTable <- Table$new(appId = appId,
-                                    data = data,
-                                    options = list(scrollX = TRUE, dom = 't'),
-                                    filter = 'none')
+    initialize = function(
+      data,
+      text = "Databases",
+      subItemText = "Database details",
+      tableTitle = "Study databases"
+    ) {
+      super$initialize()
+      private$.text <- text
+      private$.subItemText <- subItemText
+      private$.tableTitle <- tableTitle
 
+      private$.dbTable <- DarwinShinyModules::Table$new(
+        data = data,
+        options = list(scrollX = TRUE, dom = 't'),
+        filter = 'none'
+      )
+
+      private$.dbTable$parentNamespace <- self$namespace
       return(invisible(self))
     },
 
     #' @description validate
     #'
-    #' @return `self`
+    #' @return `invisible(self)`
     validate = function() {
       super$validate()
       assertions <- checkmate::makeAssertCollection()
-      checkmate::assertCharacter(
-        .var.name = "appId",
-        x = private$.appId,
-        len = 1
-      )
       checkmate::assertDataFrame(
         .var.name = "data",
         x = private$.data,
@@ -61,17 +105,13 @@ DatabaseMenuItem <- R6::R6Class(
 
     #' UI
     #'
-    #' @param text (`character(1)`) Menu item text.
-    #' @param subItemText (`character(1)`) Sub menu item text.
-    #'
     #' @return `shiny.tag`
-    UI = function(text = "Databases",
-                  subItemText = "Database details") {
-      menuItem(
-        text = text,
+    UI = function() {
+      shinydashboard::menuItem(
+        text = private$.text,
         tabName = "databases",
-        menuSubItem(
-          text = subItemText,
+        shinydashboard::menuSubItem(
+          text = private$.subItemText,
           tabName = "db_details"
         )
       )
@@ -79,13 +119,11 @@ DatabaseMenuItem <- R6::R6Class(
 
     #' tabItem
     #'
-    #' @param tableTitle (`character(1)`) Title to use for the cohort table.
-    #'
     #' @return `tabItem`
-    tabItem = function(tableTitle = "Study databases") {
+    tabItem = function() {
       tabItem(
         tabName = "db_details",
-        private$.dbTable$UI(tableTitle)
+        private$.dbTable$UI()
       )
     },
 
@@ -97,19 +135,18 @@ DatabaseMenuItem <- R6::R6Class(
     #'
     #' @return `NULL`
     server = function(input, output, session) {
-      promises::future_promise(private$.dbTable$server(input, output, session))
+      shiny::moduleServer(id = private$.moduleId, module = function(input, output, session) {
+        promises::future_promise(private$.dbTable$server(input, output, session))
+        print(self$dbTable$namespace)
+      })
     }
-  ),
-
-  # Active ----
-  active = list(
-    #' @field dbTable (`Table`) Module.
-    dbTable = function() return(private$.dbTable)
   ),
 
   # Private ----
   private = list(
-    .data = NULL,
-    .dbTable = NULL
+    .dbTable = NULL,
+    .text = "",
+    .subItemText = "",
+    .tableTitle = ""
   )
 )
