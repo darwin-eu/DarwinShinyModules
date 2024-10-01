@@ -30,7 +30,7 @@ ShinyModule <- R6::R6Class(
       } else {
         checkmate::assertCharacter(x = parentNamespace, len = 1)
         private$.parentNamespace <- parentNamespace
-        private$.namespace <- c(private$.parentNamespace, private$.moduleId)
+        private$.namespace <- paste(c(private$.parentNamespace, private$.moduleId), collapse = "-")
         return(invisible(self))
       }
     },
