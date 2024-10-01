@@ -10,7 +10,7 @@
 #' @examples
 #' library(DarwinShinyModules)
 #'
-#' table <- Table$new(appId = "id", data = mtcars)
+#' table <- Table$new(data = mtcars)
 #'
 #' if (interactive()) {
 #'   preview(table)
@@ -113,7 +113,7 @@ Table <- R6::R6Class(
     #'
     #' @return `NULL`
     server = function(input, output, session) {
-      shiny::moduleServer(id = private$.namespace, module = function(input, output, session) {
+      shiny::moduleServer(id = private$.moduleId, module = function(input, output, session) {
         private$renderTable(output)
         private$downloader(output)
         private$setReactiveValues(input)
