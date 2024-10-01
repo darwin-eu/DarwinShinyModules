@@ -27,7 +27,29 @@ PlotPlotly <- R6::R6Class(
   classname = "PlotPlotly",
   inherit = Plot,
 
-  # Private ----
+  # Active ----
+  active = list(
+    title = function(title) {
+      if (missing(title)) {
+        return(private$.title)
+      } else {
+        checkmate::assertCharacter(title, len = 1)
+        private$.title <- title
+      }
+      return(invisible(self))
+    },
+
+    #' @field plot (`plotly`) object.
+    plot = function() return(private$.plot),
+
+    #' @field source (`character`) Source label for the plotly plot.
+    source = function() return(private$.source),
+
+    #' @field bindingds (`reactivevalues`) bindings from the plotly object.
+    bindingds = function() return(private$.bindingds)
+  ),
+
+  # Public ----
   public = list(
     ## Methods ----
     #' @description initialize
@@ -37,8 +59,8 @@ PlotPlotly <- R6::R6Class(
     #' @param fun Function to plot with, with one argument: `data`.
     #'
     #' @return `self`
-    initialize = function(appId, data, fun) {
-      super$initialize(appId, data, fun)
+    initialize = function(data, fun) {
+      super$initialize(data, fun)
       return(invisible(self))
     },
 
@@ -47,10 +69,10 @@ PlotPlotly <- R6::R6Class(
     #' @param title (`character(1)`) Title to use for the plot.
     #'
     #' @return `shiny.tag.list`
-    UI = function(title = "Plotly") {
+    UI = function() {
       shiny::tagList(
-        shiny::h3(title),
-        plotly::plotlyOutput(shiny::NS(private$.appId, self$id("plot")))
+        shiny::h3(private$.title),
+        plotly::plotlyOutput(shiny::NS(private$.namespace, "plot"))
       )
     },
 
@@ -62,30 +84,20 @@ PlotPlotly <- R6::R6Class(
     #'
     #' @return `NULL`
     server = function(input, output, session) {
-      output[[self$id("plot")]] <- plotly::renderPlotly({
-        data <- if (is.null(private$.reactiveValues$data)) {
-          private$.data
-        } else {
-          private$.reactiveValues$data
-        }
-        p <- do.call(what = private$.fun, args = list(data = data))
-        plotly::event_register(p = p, event = "plotly_selected")
-        private$updateBindings()
-        p
+      shiny::moduleServer(id = private$.moduleId, function(input, output, session) {
+        output$plot <- plotly::renderPlotly({
+          data <- if (is.null(private$.reactiveValues$data)) {
+            private$.data
+          } else {
+            private$.reactiveValues$data
+          }
+          p <- do.call(what = private$.fun, args = list(data = data))
+          plotly::event_register(p = p, event = "plotly_selected")
+          private$updateBindings()
+          p
+        })
       })
     }
-  ),
-
-  # Active ----
-  active = list(
-    #' @field plot (`plotly`) object.
-    plot = function() return(private$.plot),
-
-    #' @field source (`character`) Source label for the plotly plot.
-    source = function() return(private$.source),
-
-    #' @field bindingds (`reactivevalues`) bindings from the plotly object.
-    bindingds = function() return(private$.bindingds)
   ),
 
   # Private ----
@@ -93,6 +105,7 @@ PlotPlotly <- R6::R6Class(
     ## Fields ----
     .plot = NULL,
     .source = NULL,
+    .title = "",
     .bindingds = shiny::reactiveValues(
       selected = NULL
     ),
