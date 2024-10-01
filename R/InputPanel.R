@@ -33,6 +33,24 @@ InputPanel <- R6::R6Class(
   classname = "InputPanel",
   inherit = ShinyModule,
 
+  # Active ----
+  active = list(
+    parentNamespace = function(parentNamespace) {
+      super$parentNamespace <- parentNamespace
+      private$updateIds()
+      return(invisible(self))
+    },
+
+    #' @field funs (`list()`) Named list of xInput functions used `list(funA = shiny::selectInput)`.
+    funs = function() return(private$.funs),
+
+    #' @field args (`list()`) Named list of arguments used by xInput functions `list(funA = list(inputId = "name", label = "name"))`.
+    args = function() return(private$.args),
+
+    #' @field inputValues (`reactiveValues`) Values passed from the input fields.
+    inputValues = function() return(private$.inputValues)
+  ),
+
   # Public ----
   public = list(
     ## Methods ----
@@ -40,8 +58,8 @@ InputPanel <- R6::R6Class(
     #' Initializer method
     #'
     #' @return (`invisible(self)`)
-    initialize = function(appId, funs, args) {
-      super$initialize(appId)
+    initialize = function(funs, args) {
+      super$initialize()
       private$.funs <- funs
       private$.args <- args
       private$updateIds()
@@ -68,7 +86,7 @@ InputPanel <- R6::R6Class(
             width = "100%",
             lapply(names(private$.funs), function(name) {
               shiny::column(
-                width = 12L / length(private$.funs),
+                width = 12L,
                 do.call(what = private$.funs[[name]], args = private$.args[[name]])
               )
             })
@@ -91,33 +109,14 @@ InputPanel <- R6::R6Class(
     #'
     #' @return (`NULL`)
     server = function(input, output, session) {
-      shiny::observeEvent({
-        unlist(lapply(names(private$.args), function(name) {
-          input[[private$unNS(private$.args[[name]]$inputId)]]
-        }))
-      }, {
-        unlist(lapply(names(private$.args), function(name) {
-          idComponents <- unlist(strsplit(
-            x = private$unNS(private$.args[[name]]$inputId),
-            split = "_"
-          ))
-          baseId <- idComponents[length(idComponents)]
-          private$.inputValues[[baseId]] <- input[[private$unNS(private$.args[[name]]$inputId)]]
-        }))
+      shiny::moduleServer(id = private$.moduleId, module = function(input, output, session) {
+        lapply(names(private$.args), function(label) {
+          shiny::observeEvent(input[[label]], {
+            private$.inputValues[[label]] <- input[[label]]
+          })
+        })
       })
     }
-  ),
-
-  # Active ----
-  active = list(
-    #' @field funs (`list()`) Named list of xInput functions used `list(funA = shiny::selectInput)`.
-    funs = function() return(private$.funs),
-
-    #' @field args (`list()`) Named list of arguments used by xInput functions `list(funA = list(inputId = "name", label = "name"))`.
-    args = function() return(private$.args),
-
-    #' @field inputValues (`reactiveValues`) Values passed from the input fields.
-    inputValues = function() return(private$.inputValues)
   ),
 
   # Private ----
@@ -127,19 +126,12 @@ InputPanel <- R6::R6Class(
     .args = NULL,
     .inputValues = shiny::reactiveValues(),
 
-    ## Methods ----
-    finalize = function() {},
-
     updateIds = function() {
       for (name in names(private$.args)) {
         if (!is.null(private$.args[[name]]$inputId)) {
-          private$.args[[name]]$inputId <- shiny::NS(private$.appId, self$id(private$.args[[name]]$inputId))
+          private$.args[[name]]$inputId <- shiny::NS(private$.namespace, name)
         }
       }
-    },
-
-    unNS = function(x) {
-      strsplit(x = x, split = "-", fixed = 1)[[1]][[2]]
     }
   )
 )
