@@ -93,7 +93,6 @@ PlotPlotly <- R6::R6Class(
     ## Fields ----
     .plot = NULL,
     .source = NULL,
-    .title = "",
     .bindingds = shiny::reactiveValues(
       selected = NULL
     ),

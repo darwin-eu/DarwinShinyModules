@@ -24,10 +24,10 @@ Table <- R6::R6Class(
     #' @field bindings (`reactivevalues`) Bindings of the DataTable in a reactive environment.
     data = function(data) {
       if (missing(data)) {
-        return(private$.data)
+        return(isolate(private$.reactiveValues$data))
       } else {
         checkmate::assertDataFrame(data)
-        private$.data <- data
+        private$.reactiveValues$data <- data
       }
     },
 
@@ -60,7 +60,7 @@ Table <- R6::R6Class(
     #' @return `self`
     initialize = function(data, title = "Table", options = list(scrollX = TRUE), filter = "top") {
       super$initialize()
-      private$.data <- data
+      private$.reactiveValues$data <- data
       private$.title <- title
       private$.options <- options
       private$.filter <- filter
@@ -75,7 +75,7 @@ Table <- R6::R6Class(
       assertions <- checkmate::makeAssertCollection()
       checkmate::assertDataFrame(
         .var.name = "data",
-        x = private$.data,
+        x = isolate(private$.reactiveValues$data),
         add = assertions
       )
       checkmate::assertList(
@@ -124,10 +124,12 @@ Table <- R6::R6Class(
   # Private ----
   private = list(
     ## Fields ----
-    .data = NULL,
     .title = "",
     .options = NULL,
     .filter = NULL,
+    .reactiveValues = shiny::reactiveValues(
+      data = NULL
+    ),
     .bindings = shiny::reactiveValues(
       cell_clicked = NULL,
       cells_selected = NULL,
@@ -191,7 +193,7 @@ Table <- R6::R6Class(
 
     renderTable = function(output) {
       output$table <- DT::renderDT(
-        expr = private$.data,
+        expr = private$.reactiveValues$data,
         filter = private$.filter,
         options = private$.options
       )
@@ -209,7 +211,7 @@ Table <- R6::R6Class(
     },
 
     dlContent = function(file) {
-      write.csv(private$.data, file)
+      write.csv(isolate(private$.reactiveValues$data), file)
     }
   )
 )
