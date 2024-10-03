@@ -15,7 +15,6 @@
 #' library(DarwinShinyModules)
 #'
 #' inputPanel <- InputPanel$new(
-#'   appId = "id",
 #'   funs = list(
 #'     select = shiny::selectInput,
 #'     text = shiny::textInput

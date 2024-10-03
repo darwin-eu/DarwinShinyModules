@@ -21,16 +21,25 @@ Table <- R6::R6Class(
 
   # Active ----
   active = list(
-    #' @field bindings (`reactivevalues`) Bindings of the DataTable in a reactive environment.
+    ## Reactive ----
+    #' @field data (`data.frame`) Reactive data, use `shiny::isolate()` to get the non-reactive data.
     data = function(data) {
       if (missing(data)) {
-        return(isolate(private$.reactiveValues$data))
+        return(private$.reactiveValues$data)
       } else {
         checkmate::assertDataFrame(data)
         private$.reactiveValues$data <- data
       }
     },
 
+    #' @field reactiveValues (`reactiveValues`) Reactive values used by the `Table` object.
+    reactiveValues = function() return(private$.reactiveValues),
+
+    #' @field bindings (`reactivevalues`) Reactive bindings for `DT::datatable`.
+    bindings = function() return(private$.bindings),
+
+    ## Non-reactive ----
+    #' @field title (`character`) Title of the table.
     title = function(title) {
       if (missing(title)) {
         return(private$.title)
@@ -40,10 +49,11 @@ Table <- R6::R6Class(
       }
     },
 
-    #' @field data The data to render in the DataTable, usually a `data.frame`-like object.
-    bindings = function() {
-      return(private$.bindings)
-    }
+    #' @field options (`list(n)`) List of options used by `DT::datatable`.
+    options = function() return(private$.options),
+
+    #' @field filter (`character(1)`) Filter option used by `DT::datatable`.
+    filter = function() return(private$.filter)
   ),
 
   # Public ----

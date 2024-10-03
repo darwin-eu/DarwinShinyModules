@@ -14,7 +14,7 @@
 #'   "dummyData/TreatmentPatterns/csv/treatmentPathways.csv"
 #' ))
 #'
-#' sankey <- Sankey$new(appId = "id", data = tp)
+#' sankey <- Sankey$new(data = tp)
 #'
 #' if (interactive()) {
 #'   preview(sankey)

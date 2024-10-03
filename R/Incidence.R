@@ -14,7 +14,7 @@
 #'   "dummyData/IncidencePrevalence/rds/incidence.rds"
 #' ))
 #'
-#' incidence <- Incidence$new(appId = "app", data = inc)
+#' incidence <- Incidence$new(data = inc)
 #'
 #' if (interactive()) {
 #'   preview(incidence)

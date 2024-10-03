@@ -14,7 +14,7 @@
 #'   "dummyData/TreatmentPatterns/csv/treatmentPathways.csv"
 #' ))
 #'
-#' sunburst <- Sunburst$new(appId = "id", data = tp)
+#' sunburst <- Sunburst$new(data = tp)
 #'
 #' if (interactive()) {
 #'   preview(sunburst)
@@ -23,19 +23,17 @@ Sunburst <- R6::R6Class(
   classname = "Sunburst",
   inherit = TreatmentPatterns,
 
+  active = list(
+    #' @field jsShowLegend (`character(1)`) JavaScript function to show legend
+    #' on render as text.
+    jsShowLegend = function() return(private$.jsShowLegend)
+  ),
+
   public = list(
     #' @field colours (`list()`) Named list of names (domain) and hex colour
     #' codes (range):\cr `list(domain = c("A", "B"), range = c("#FF0000", "#00FF00"))`.
     #' See \link[sunburstR]{sunburst}
     colours = NULL
-  ),
-
-  active = list(
-    #' @field jsShowLegend (`character(1)`) JavaScript function to show legend
-    #' on render as text.
-    jsShowLegend = function() {
-      return(private$.jsShowLegend)
-    }
   ),
 
   private = list(

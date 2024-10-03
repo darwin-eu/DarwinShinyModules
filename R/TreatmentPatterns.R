@@ -19,14 +19,14 @@ TreatmentPatterns <- R6::R6Class(
     #' @field data Data to plot with, usually a `data.frame`-like object.
     data = function() return(private$.data),
 
+    #' @field inputPanel ([InputPanel]) Module
+    inputPanel = function() return(private$.inputPanel),
+
     #' @field widget ([PlotWidget]) Module
     widget = function() return(private$.widget),
 
     #' @field table ([Table]) Module
-    table = function() return(private$.table),
-
-    #' @field inputs (`reactiveValues`) environment
-    inputs = function() return(private$.inputs)
+    table = function() return(private$.table)
   ),
 
   # Public ----
@@ -124,10 +124,6 @@ TreatmentPatterns <- R6::R6Class(
     .inputPanel = NULL,
     .widget = NULL,
     .table = NULL,
-    .inputs = shiny::reactiveValues(
-      none = NULL,
-      groupCombinations = NULL
-    ),
 
     ## Methods ----
     initInputPanel = function() {
@@ -181,12 +177,20 @@ TreatmentPatterns <- R6::R6Class(
     },
 
     initWidget = function() {
-      private$.widget <- PlotWidget$new(data = private$.data, fun = private$plotSunburstSankey)
+      private$.widget <- PlotWidget$new(
+        data = private$.data,
+        fun = private$plotSunburstSankey,
+        title = NULL
+      )
       private$.widget$parentNamespace <- private$.namespace
     },
 
     initTable = function() {
-      private$.table <- Table$new(private$.data, filter = "none")
+      private$.table <- Table$new(
+        data = private$.data,
+        filter = "none",
+        title = NULL
+      )
       private$.table$parentNamespace <- private$.namespace
     },
 
@@ -258,6 +262,7 @@ TreatmentPatterns <- R6::R6Class(
 
       observeEvent(private$.table$bindings$rows_all, {
         data <- private$.table$data %>%
+          shiny::isolate() %>%
           dplyr::filter(
             dplyr::row_number() %in% private$.table$bindings$rows_all
           )

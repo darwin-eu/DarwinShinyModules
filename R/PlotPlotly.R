@@ -18,7 +18,7 @@
 #'   )
 #' }
 #'
-#' plotlyModule <- PlotPlotly$new(appId = "app", data = iris, fun = plotlyFun)
+#' plotlyModule <- PlotPlotly$new(data = iris, fun = plotlyFun)
 #'
 #' if (interactive()) {
 #'   preview(plotlyModule)
@@ -35,8 +35,8 @@ PlotPlotly <- R6::R6Class(
     #' @field source (`character`) Source label for the plotly plot.
     source = function() return(private$.source),
 
-    #' @field bindingds (`reactivevalues`) bindings from the plotly object.
-    bindingds = function() return(private$.bindingds)
+    #' @field .bindings (`reactivevalues`) bindings from the plotly object.
+    bindingds = function() return(private$.bindings)
   ),
 
   # Public ----
@@ -93,14 +93,14 @@ PlotPlotly <- R6::R6Class(
     ## Fields ----
     .plot = NULL,
     .source = NULL,
-    .bindingds = shiny::reactiveValues(
+    .bindings = shiny::reactiveValues(
       selected = NULL
     ),
 
     ## Methods ----
     updateBindings = function() {
       shiny::observeEvent(plotly::event_data("plotly_selected", source = private$.source), {
-        private$.bindingds$selected <- plotly::event_data("plotly_selected", source = private$.source)
+        private$.bindings$selected <- plotly::event_data("plotly_selected", source = private$.source)
       })
     }
   )
