@@ -79,12 +79,18 @@ TreatmentPatterns <- R6::R6Class(
     #' @return (`tagList`)
     UI = function() {
       shiny::tagList(
-        shiny::uiOutput(shiny::NS(private$.namespace, "inputSex")),
-        shiny::uiOutput(shiny::NS(private$.namespace, "inputAge")),
-        shiny::uiOutput(shiny::NS(private$.namespace, "inputYear")),
-        private$.inputPanel$UI(),
-        private$.widget$UI(),
-        private$.table$UI()
+        shiny::column(
+          width = 12,
+          shinydashboard::box(
+            width = 4,
+            private$.inputPanel$UI(),
+            private$.table$UI()
+          ),
+          shinydashboard::box(
+            width = 8,
+            private$.widget$UI()
+          )
+        )
       )
     },
 
@@ -103,12 +109,10 @@ TreatmentPatterns <- R6::R6Class(
     #' @return (`NULL`)
     server = function(input, output, session) {
       shiny::moduleServer(id = private$.moduleId, function(input, output, session) {
-        private$updateData()
-        # promises::future_promise(private$.widget$server(input, output, session))
-        # promises::future_promise(private$.table$server(input, output, session))
-        promises::future_promise(private$.inputPanel$server(input, output, session))
-        promises::future_promise(private$.widget$server(input, output, session))
-        promises::future_promise(private$.table$server(input, output, session))
+        private$updateData(input)
+        private$.inputPanel$server(input, output, session)
+        private$.widget$server(input, output, session)
+        private$.table$server(input, output, session)
       })
     }
   ),
@@ -133,7 +137,8 @@ TreatmentPatterns <- R6::R6Class(
           groupCombi = shiny::checkboxInput,
           ageGroup = shinyWidgets::pickerInput,
           sexGroup = shinyWidgets::pickerInput,
-          yearGroup = shinyWidgets::pickerInput
+          yearGroup = shinyWidgets::pickerInput,
+          freqSlider = shiny::sliderInput
         ),
         args = list(
           none = list(
@@ -160,6 +165,15 @@ TreatmentPatterns <- R6::R6Class(
             inputId = "yearGroup",
             choices = unique(private$.data$indexYear),
             label = "Index Year"
+          ),
+          freqSlider = list(
+            inputId = "freqSlider",
+            label = "Frequency",
+            min = min(private$.data$freq),
+            max = max(private$.data$freq),
+            value = c(min(private$.data$freq), max(private$.data$freq)),
+            dragRange = TRUE,
+            step = 1
           )
         )
       )
@@ -194,20 +208,50 @@ TreatmentPatterns <- R6::R6Class(
 
     plotSunburstSankey = function(data) {},
 
-    updateData = function() {
-      observeEvent(list(
+    updateData = function(input) {
+      data <- shiny::eventReactive(list(
         private$.inputPanel$inputValues$none,
         private$.inputPanel$inputValues$ageGroup,
         private$.inputPanel$inputValues$sexGroup,
         private$.inputPanel$inputValues$yearGroup
       ), {
-        data <- private$.data %>%
+        private$.data %>%
           dplyr::filter(
             .data$path != private$getNone(),
             .data$age == private$.inputPanel$inputValues$ageGroup,
             .data$sex == private$.inputPanel$inputValues$sexGroup,
             .data$indexYear == private$.inputPanel$inputValues$yearGroup
           )
+      })
+
+      observeEvent(list(
+        private$.inputPanel$inputValues$none,
+        private$.inputPanel$inputValues$ageGroup,
+        private$.inputPanel$inputValues$sexGroup,
+        private$.inputPanel$inputValues$yearGroup
+      ), {
+        data <- data()
+        shiny::updateSliderInput(
+          inputId = shiny::NS(private$.inputPanel$moduleId, "freqSlider"),
+          min = min(data$freq),
+          max = max(data$freq),
+          value = c(min(data$freq), max(data$freq))
+        )
+      })
+
+      observeEvent(list(
+        private$.inputPanel$inputValues$none,
+        private$.inputPanel$inputValues$ageGroup,
+        private$.inputPanel$inputValues$sexGroup,
+        private$.inputPanel$inputValues$yearGroup,
+        private$.inputPanel$inputValues$freqSlider
+      ), {
+        data <- data() %>%
+          dplyr::filter(
+            .data$freq >= min(private$.inputPanel$inputValues$freqSlider) &
+            .data$freq <= max(private$.inputPanel$inputValues$freqSlider)
+          )
+
         private$.widget$data <- data
         private$.table$data <- data
       })
