@@ -14,6 +14,9 @@ IncidencePrevalence <- R6::R6Class(
 
   # Active ----
   active = list(
+    #' @field data (`data.frame`) Incidence or Prevalence data.
+    data = function() return(private$.data),
+
     #' @field table (`Table`) Module.
     table = function() return(private$.table),
 

@@ -4,8 +4,6 @@
 #' This class is an `decorator` and is not meant to be directly used, but to be
 #' inherited by other Modules.
 #'
-#' @template param_appId
-#'
 #' @export
 ShinyModule <- R6::R6Class(
   classname = "ShinyModule",

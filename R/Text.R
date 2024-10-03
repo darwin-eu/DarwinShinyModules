@@ -73,7 +73,7 @@
 #'   "X^2^"
 #' )
 #'
-#' text <- Text$new(appId = "app", markdown = md)
+#' text <- Text$new(markdown = md)
 #'
 #' if (interactive()) {
 #'   preview(module = text)
@@ -81,6 +81,14 @@
 Text <- R6::R6Class(
   classname = "Text",
   inherit = ShinyModule,
+
+  # Active ----
+  active = list(
+    #' @field markdown (`character(n)`) Lines read from the markdown-file supplied.
+    markdown = function() {
+      return(private$.markdown)
+    }
+  ),
 
   # PUblic ----
   public = list(
@@ -121,14 +129,6 @@ Text <- R6::R6Class(
       shiny::tagList(
         shiny::markdown(private$.markdown)
       )
-    }
-  ),
-
-  # Active ----
-  active = list(
-    #' @field markdown (`character(n)`) Lines read from the markdown-file supplied.
-    markdown = function() {
-      return(private$.markdown)
     }
   ),
 

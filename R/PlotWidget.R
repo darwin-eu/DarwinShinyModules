@@ -25,7 +25,7 @@
 #'   simpleNetwork(data)
 #' }
 #'
-#' widgetModule <- PlotWidget$new(appId = "app", data = networkData, fun = widgetFun)
+#' widgetModule <- PlotWidget$new(data = networkData, fun = widgetFun)
 #' if (interactive()) {
 #'   preview(widgetModule)
 #' }
