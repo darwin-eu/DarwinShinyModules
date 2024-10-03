@@ -81,17 +81,12 @@ InputPanel <- R6::R6Class(
     #' @return (`tagList`)
     UI = function() {
       shiny::tagList(
-        shiny::inputPanel(
-          shinydashboard::box(
-            width = "100%",
-            lapply(names(private$.funs), function(name) {
-              shiny::column(
-                width = 12L,
-                do.call(what = private$.funs[[name]], args = private$.args[[name]])
-              )
-            })
-          )
-        )
+        lapply(names(private$.funs), function(name) {
+          # shiny::column(
+          # width = 12L,
+          do.call(what = private$.funs[[name]], args = private$.args[[name]])
+          # )
+        })
       )
     },
 
