@@ -12,23 +12,34 @@ IncidencePrevalence <- R6::R6Class(
   classname = "IncidencePrevalence",
   inherit = ShinyModule,
 
+  # Active ----
+  active = list(
+    #' @field table (`Table`) Module.
+    table = function() return(private$.table),
+
+    #' @field plot (`PlotPlotly`) Module.
+    plot = function() return(private$.plot)
+  ),
+
   # Public ----
   public = list(
     #' @description initialize
     #'
-    #' @param appId (`character(1)`) ID of the app, to use for namespacing.
     #' @param data Data to plot with, usually a `data.frame`-like object.
     #'
     #' @return `self`
-    initialize = function(appId, data) {
-      super$initialize(appId)
+    initialize = function(data) {
+      super$initialize()
       private$.data <- data
-      private$.table <- Table$new(appId = appId, data = data)
+      private$.table <- Table$new(data = data)
       private$.plot <- PlotPlotly$new(
-        appId = appId,
         data = data,
         fun = private$plotIncidencePrevalence
       )
+
+      private$.table$parentNamespace <- private$.namespace
+      private$.plot$parentNamespace <- private$.namespace
+
       self$validate()
       return(invisible(self))
     },
@@ -57,10 +68,10 @@ IncidencePrevalence <- R6::R6Class(
     #' @param title (`character(1)`) Title to use for the plot.
     #'
     #' @return `shiny.tag.list`
-    UI = function(title = "Table") {
+    UI = function() {
       shiny::tagList(
-        private$.plot$UI(title = NULL),
-        private$.table$UI(title = NULL)
+        private$.plot$UI(),
+        private$.table$UI()
       )
     },
 
@@ -72,18 +83,13 @@ IncidencePrevalence <- R6::R6Class(
     #'
     #' @return `NULL`
     server = function(input, output, session) {
-      promises::future_promise(private$.plot$server(input, output, session))
-      promises::future_promise(private$.table$server(input, output, session))
+      shiny::moduleServer(id = private$.moduleId, function(input, output, session) {
+        private$.plot$server(input, output, session)
+        private$.table$server(input, output, session)
+
+        shiny::observe(private$updateData())
+      })
     }
-  ),
-
-  # Active ----
-  active = list(
-    #' @field table (`Table`) Module.
-    table = function() return(private$.table),
-
-    #' @field plot (`PlotPlotly`) Module.
-    plot = function() return(private$.plot)
   ),
 
   # Private ----
@@ -92,6 +98,13 @@ IncidencePrevalence <- R6::R6Class(
     .table = NULL,
     .plot = NULL,
     .data = NULL,
+
+    updateData = function() {
+      private$.plot$data <- private$.data %>%
+        dplyr::filter(
+          dplyr::row_number() %in% private$.table$bindings$rows_all
+        )
+    },
 
     assertIPInstall = function() {
       ipInstalled <- requireNamespace(
