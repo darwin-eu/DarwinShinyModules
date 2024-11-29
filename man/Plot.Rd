@@ -4,7 +4,7 @@
 \alias{Plot}
 \title{Plot}
 \description{
-Plot Interface
+Plot Decorator class
 }
 \section{Super class}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{Plot}
@@ -12,11 +12,11 @@ Plot Interface
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{data}}{Data used for plot.}
+\item{\code{data}}{Reactive data used for the plot. Use \code{shiny::isolate()} to get the non-reactive data.}
+
+\item{\code{reactiveValues}}{(\code{reactiveValues}) Reactive values used by the Plot object.}
 
 \item{\code{fun}}{Plotting function.}
-
-\item{\code{reactiveValues}}{Reactive values.}
 }
 \if{html}{\out{</div>}}
 }
@@ -25,7 +25,6 @@ Plot Interface
 \itemize{
 \item \href{#method-Plot-new}{\code{Plot$new()}}
 \item \href{#method-Plot-validate}{\code{Plot$validate()}}
-\item \href{#method-Plot-updateDataReactive}{\code{Plot$updateDataReactive()}}
 \item \href{#method-Plot-clone}{\code{Plot$clone()}}
 }
 }
@@ -33,7 +32,6 @@ Plot Interface
 <details open><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="id"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-id'><code>DarwinShinyModules::ShinyModule$id()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
 </ul>
 </details>
@@ -44,17 +42,19 @@ Plot Interface
 \subsection{Method \code{new()}}{
 initialize
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Plot$new(appId, data, fun)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Plot$new(data, fun, title = "Plot")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{appId}}{(\code{character(1)}) ID of the app, to use for namespacing.}
-
 \item{\code{data}}{Data to plot with, usually a \code{data.frame}-like object.}
 
 \item{\code{fun}}{Function to plot with, with one argument: \code{data}.}
+
+\item{\code{title}}{(\code{character(1)}) Title to use for the plot.}
+
+\item{\code{appId}}{(\code{character(1)}) ID of the app, to use for namespacing.}
 }
 \if{html}{\out{</div>}}
 }
@@ -73,26 +73,6 @@ Validator method
 
 \subsection{Returns}{
 (\code{self})
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Plot-updateDataReactive"></a>}}
-\if{latex}{\out{\hypertarget{method-Plot-updateDataReactive}{}}}
-\subsection{Method \code{updateDataReactive()}}{
-Update data within reactive context (\code{reactive()} or \code{observe()})
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Plot$updateDataReactive(data)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{data}}{Updated data}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{self}
 }
 }
 \if{html}{\out{<hr>}}

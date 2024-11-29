@@ -9,7 +9,7 @@ Table Module
 \examples{
 library(DarwinShinyModules)
 
-table <- Table$new(appId = "id", data = mtcars)
+table <- Table$new(data = mtcars)
 
 if (interactive()) {
   preview(table)
@@ -21,9 +21,17 @@ if (interactive()) {
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{bindings}}{(\code{reactivevalues}) Bindings of the DataTable in a reactive environment.}
+\item{\code{data}}{(\code{data.frame}) Reactive data, use \code{shiny::isolate()} to get the non-reactive data.}
 
-\item{\code{data}}{The data to render in the DataTable, usually a \code{data.frame}-like object.}
+\item{\code{reactiveValues}}{(\code{reactiveValues}) Reactive values used by the \code{Table} object.}
+
+\item{\code{bindings}}{(\code{reactivevalues}) Reactive bindings for \code{DT::datatable}.}
+
+\item{\code{title}}{(\code{character}) Title of the table.}
+
+\item{\code{options}}{(\code{list(n)}) List of options used by \code{DT::datatable}.}
+
+\item{\code{filter}}{(\code{character(1)}) Filter option used by \code{DT::datatable}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -37,34 +45,30 @@ if (interactive()) {
 \item \href{#method-Table-clone}{\code{Table$clone()}}
 }
 }
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
-<ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="id"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-id'><code>DarwinShinyModules::ShinyModule$id()</code></a></span></li>
-</ul>
-</details>
-}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Table-new"></a>}}
 \if{latex}{\out{\hypertarget{method-Table-new}{}}}
 \subsection{Method \code{new()}}{
 initialize
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Table$new(appId, data, options = list(scrollX = TRUE), filter = "top")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Table$new(
+  data,
+  title = "Table",
+  options = list(scrollX = TRUE),
+  filter = "top"
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{appId}}{(\code{character(1)}) ID of the app, to use for namespacing.}
+\item{\code{data}}{(\code{data.frame}) Data to plot with, usually a \code{data.frame}-like object.}
 
-\item{\code{data}}{Data to plot with, usually a \code{data.frame}-like object.}
-
-\item{\code{options}}{table options, by default it shows additional items next to
+\item{\code{options}}{(\code{list}) table options, by default it shows additional items next to
 the table like search box, pagination, etc. Only display the table using
 list(dom = '')}
 
-\item{\code{filter}}{filter option, it can be either "none", "bottom" or "top" (default)}
+\item{\code{filter}}{(\code{character}: \code{"top"}) filter option, it can be either \code{"none"}, \code{"bottom"} or \code{"top"} (default)}
 }
 \if{html}{\out{</div>}}
 }
@@ -91,7 +95,7 @@ UI
 \if{latex}{\out{\hypertarget{method-Table-UI}{}}}
 \subsection{Method \code{UI()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Table$UI(title = "Table")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Table$UI()}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
