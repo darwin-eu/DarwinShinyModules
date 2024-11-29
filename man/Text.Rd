@@ -72,7 +72,7 @@ md <- c(
   "X^2^"
 )
 
-text <- Text$new(appId = "app", markdown = md)
+text <- Text$new(markdown = md)
 
 if (interactive()) {
   preview(module = text)
@@ -100,7 +100,6 @@ if (interactive()) {
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="id"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-id'><code>DarwinShinyModules::ShinyModule$id()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
 </ul>
 </details>

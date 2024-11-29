@@ -16,11 +16,11 @@ inherited.
 \describe{
 \item{\code{data}}{Data to plot with, usually a \code{data.frame}-like object.}
 
+\item{\code{inputPanel}}{(\link{InputPanel}) Module}
+
 \item{\code{widget}}{(\link{PlotWidget}) Module}
 
 \item{\code{table}}{(\link{Table}) Module}
-
-\item{\code{inputs}}{(\code{reactiveValues}) environment}
 }
 \if{html}{\out{</div>}}
 }
@@ -34,27 +34,18 @@ inherited.
 \item \href{#method-TreatmentPatterns-clone}{\code{TreatmentPatterns$clone()}}
 }
 }
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
-<ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="id"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-id'><code>DarwinShinyModules::ShinyModule$id()</code></a></span></li>
-</ul>
-</details>
-}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TreatmentPatterns-new"></a>}}
 \if{latex}{\out{\hypertarget{method-TreatmentPatterns-new}{}}}
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TreatmentPatterns$new(appId, data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TreatmentPatterns$new(data)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{appId}}{(\code{character(1)})}
-
 \item{\code{data}}{Data to plot with, usually a \code{data.frame}-like object.}
 }
 \if{html}{\out{</div>}}

@@ -10,7 +10,6 @@ InputPanel Module.
 library(DarwinShinyModules)
 
 inputPanel <- InputPanel$new(
-  appId = "id",
   funs = list(
     select = shiny::selectInput,
     text = shiny::textInput
@@ -49,27 +48,18 @@ if (interactive()) {
 \item \href{#method-InputPanel-clone}{\code{InputPanel$clone()}}
 }
 }
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
-<ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="id"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-id'><code>DarwinShinyModules::ShinyModule$id()</code></a></span></li>
-</ul>
-</details>
-}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-InputPanel-new"></a>}}
 \if{latex}{\out{\hypertarget{method-InputPanel-new}{}}}
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InputPanel$new(appId, funs, args)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{InputPanel$new(funs, args)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{appId}}{(\code{character(1)})}
-
 \item{\code{funs}}{(\code{list()}) Named list of xInput functions used \code{list(funA = shiny::selectInput)}.}
 
 \item{\code{args}}{(\code{list()}) Named list of arguments used by xInput functions \code{list(funA = list(inputId = "name", label = "name"))}}

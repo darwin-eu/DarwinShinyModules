@@ -14,7 +14,7 @@ prev <- readRDS(system.file(
   "dummyData/IncidencePrevalence/rds/prevalence.rds"
 ))
 
-prevalence <- Prevalence$new(appId = "app", data = prev)
+prevalence <- Prevalence$new(data = prev)
 
 if (interactive()) {
   preview(prevalence)
@@ -32,7 +32,6 @@ if (interactive()) {
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="id"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-id'><code>DarwinShinyModules::ShinyModule$id()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="IncidencePrevalence" data-id="UI"><a href='../../DarwinShinyModules/html/IncidencePrevalence.html#method-IncidencePrevalence-UI'><code>DarwinShinyModules::IncidencePrevalence$UI()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="IncidencePrevalence" data-id="initialize"><a href='../../DarwinShinyModules/html/IncidencePrevalence.html#method-IncidencePrevalence-initialize'><code>DarwinShinyModules::IncidencePrevalence$initialize()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="IncidencePrevalence" data-id="server"><a href='../../DarwinShinyModules/html/IncidencePrevalence.html#method-IncidencePrevalence-server'><code>DarwinShinyModules::IncidencePrevalence$server()</code></a></span></li>

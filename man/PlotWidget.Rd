@@ -24,7 +24,7 @@ widgetFun <- function(data) {
   simpleNetwork(data)
 }
 
-widgetModule <- PlotWidget$new(appId = "app", data = networkData, fun = widgetFun)
+widgetModule <- PlotWidget$new(data = networkData, fun = widgetFun)
 if (interactive()) {
   preview(widgetModule)
 }
@@ -43,9 +43,7 @@ if (interactive()) {
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="id"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-id'><code>DarwinShinyModules::ShinyModule$id()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="initialize"><a href='../../DarwinShinyModules/html/Plot.html#method-Plot-initialize'><code>DarwinShinyModules::Plot$initialize()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="updateDataReactive"><a href='../../DarwinShinyModules/html/Plot.html#method-Plot-updateDataReactive'><code>DarwinShinyModules::Plot$updateDataReactive()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="validate"><a href='../../DarwinShinyModules/html/Plot.html#method-Plot-validate'><code>DarwinShinyModules::Plot$validate()</code></a></span></li>
 </ul>
 </details>
@@ -56,16 +54,9 @@ if (interactive()) {
 \subsection{Method \code{UI()}}{
 UI
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PlotWidget$UI(title = "Widget")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PlotWidget$UI()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{title}}{(\code{character(1)}) Title to use for the plot.}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
 \code{shiny.tag.list}
 }

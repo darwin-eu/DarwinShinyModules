@@ -14,6 +14,8 @@ inherited.
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
+\item{\code{data}}{(\code{data.frame}) Incidence or Prevalence data.}
+
 \item{\code{table}}{(\code{Table}) Module.}
 
 \item{\code{plot}}{(\code{PlotPlotly}) Module.}
@@ -30,27 +32,18 @@ inherited.
 \item \href{#method-IncidencePrevalence-clone}{\code{IncidencePrevalence$clone()}}
 }
 }
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
-<ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="id"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-id'><code>DarwinShinyModules::ShinyModule$id()</code></a></span></li>
-</ul>
-</details>
-}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-IncidencePrevalence-new"></a>}}
 \if{latex}{\out{\hypertarget{method-IncidencePrevalence-new}{}}}
 \subsection{Method \code{new()}}{
 initialize
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{IncidencePrevalence$new(appId, data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{IncidencePrevalence$new(data)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{appId}}{(\code{character(1)}) ID of the app, to use for namespacing.}
-
 \item{\code{data}}{Data to plot with, usually a \code{data.frame}-like object.}
 }
 \if{html}{\out{</div>}}
@@ -78,7 +71,7 @@ Validation method
 \subsection{Method \code{UI()}}{
 UI
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{IncidencePrevalence$UI(title = "Table")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{IncidencePrevalence$UI()}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
