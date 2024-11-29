@@ -44,10 +44,7 @@ Plot <- R6::R6Class(
         checkmate::assertFunction(fun)
         private$.fun <- fun
       }
-    },
-
-    #' @field reactiveValues Reactive values.
-    reactiveValues = function() return(private$.reactiveValues)
+    }
   ),
 
   # Public ----
