@@ -38,15 +38,11 @@ Config/testthat/parallel: true
 VignetteBuilder: knitr
 Language: en-US
 Collate: 
-    'ShinyModule.R'
-    'CohortMenuItem.R'
     'DarwinShinyModules.R'
-    'DatabaseMenuItem.R'
+    'ShinyModule.R'
     'IncidencePrevalence.R'
     'Incidence.R'
-    'IncidenceMenuItem.R'
     'InputPanel.R'
-    'Picker.R'
     'Plot.R'
     'PlotPlotly.R'
     'PlotStatic.R'
