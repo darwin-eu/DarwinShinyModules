@@ -96,12 +96,10 @@ Text <- R6::R6Class(
 
     #' @description initialize
     #'
-    #' @param appId (`character(1)`) ID of the app, to use for namespacing.
     #' @param markdown (`character(n)`) Markdown.
     #'
     #' @return `self`
-    initialize = function(appId, markdown) {
-      super$initialize(appId)
+    initialize = function(markdown) {
       private$.markdown <- markdown
       return(invisible(self))
     },

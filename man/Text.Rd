@@ -110,14 +110,12 @@ if (interactive()) {
 \subsection{Method \code{new()}}{
 initialize
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Text$new(appId, markdown)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Text$new(markdown)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{appId}}{(\code{character(1)}) ID of the app, to use for namespacing.}
-
 \item{\code{markdown}}{(\code{character(n)}) Markdown.}
 }
 \if{html}{\out{</div>}}

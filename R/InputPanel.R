@@ -34,6 +34,7 @@ InputPanel <- R6::R6Class(
 
   # Active ----
   active = list(
+    #' @field parentNamespace (`character(1)`) Namespace of the parent module.
     parentNamespace = function(parentNamespace) {
       super$parentNamespace <- parentNamespace
       private$updateIds()

@@ -12,6 +12,8 @@ Plot Decorator class
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
+\item{\code{title}}{(\code{character(1)}) Title to use for the plot.}
+
 \item{\code{data}}{Reactive data used for the plot. Use \code{shiny::isolate()} to get the non-reactive data.}
 
 \item{\code{reactiveValues}}{(\code{reactiveValues}) Reactive values used by the Plot object.}
@@ -48,13 +50,11 @@ initialize
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{Data to plot with, usually a \code{data.frame}-like object.}
+\item{\code{data}}{(\code{data.frame}) Data to plot with, usually a \code{data.frame}-like object.}
 
-\item{\code{fun}}{Function to plot with, with one argument: \code{data}.}
+\item{\code{fun}}{(\verb{function()}) Function to plot with, with one argument: \code{data}.}
 
-\item{\code{title}}{(\code{character(1)}) Title to use for the plot.}
-
-\item{\code{appId}}{(\code{character(1)}) ID of the app, to use for namespacing.}
+\item{\code{title}}{(\code{character(1)}) Title of the plot. When set to \code{NULL}, no title is shown.}
 }
 \if{html}{\out{</div>}}
 }

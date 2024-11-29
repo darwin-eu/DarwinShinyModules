@@ -12,7 +12,7 @@ Plot <- R6::R6Class(
 
   # Active ----
   active = list(
-    #' @param title (`character(1)`) Title to use for the plot.
+    #' @field title (`character(1)`) Title to use for the plot.
     title = function(title) {
       if (missing(title)) {
         return(private$.title)
@@ -52,9 +52,9 @@ Plot <- R6::R6Class(
     ## Methods ----
     #' @description initialize
     #'
-    #' @param appId (`character(1)`) ID of the app, to use for namespacing.
-    #' @param data Data to plot with, usually a `data.frame`-like object.
-    #' @param fun Function to plot with, with one argument: `data`.
+    #' @param data (`data.frame`) Data to plot with, usually a `data.frame`-like object.
+    #' @param fun (`function()`) Function to plot with, with one argument: `data`.
+    #' @param title (`character(1)`) Title of the plot. When set to `NULL`, no title is shown.
     #'
     #' @return `self`
     initialize = function(data, fun, title = "Plot") {

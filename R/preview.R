@@ -8,7 +8,7 @@
 #' @export
 #'
 #' @examples
-#' table <- Table$new(appId = "id", data = iris)
+#' table <- Table$new(data = iris)
 #'
 #' if (interactive()) {
 #'   preview(table)

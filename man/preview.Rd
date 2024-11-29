@@ -16,7 +16,7 @@ preview(modules)
 Launches a shiny app with the modules' \code{server()} and \code{UI()} methods.
 }
 \examples{
-table <- Table$new(appId = "id", data = iris)
+table <- Table$new(data = iris)
 
 if (interactive()) {
   preview(table)

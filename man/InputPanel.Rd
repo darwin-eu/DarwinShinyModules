@@ -30,6 +30,8 @@ if (interactive()) {
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
+\item{\code{parentNamespace}}{(\code{character(1)}) Namespace of the parent module.}
+
 \item{\code{funs}}{(\code{list()}) Named list of xInput functions used \code{list(funA = shiny::selectInput)}.}
 
 \item{\code{args}}{(\code{list()}) Named list of arguments used by xInput functions \code{list(funA = list(inputId = "name", label = "name"))}.}

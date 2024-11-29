@@ -62,6 +62,7 @@ Table <- R6::R6Class(
     #' @description initialize
     #'
     #' @param data (`data.frame`) Data to plot with, usually a `data.frame`-like object.
+    #' @param title (`character(1)`) Title of the table. When set to `NULL`, no title is shown.
     #' @param options (`list`) table options, by default it shows additional items next to
     #' the table like search box, pagination, etc. Only display the table using
     #' list(dom = '')

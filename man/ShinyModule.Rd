@@ -15,6 +15,13 @@ inherited by other Modules.
 \item{\code{parentNamespace}}{(\code{character(1)}) Namespace of the parent module.}
 
 \item{\code{moduleName}}{(\code{character(1)}) Name of the module.}
+
+\item{\code{moduleId}}{(\code{character(1)}) Module identifier, composed like:
+\code{moduleName-instanceId}}
+
+\item{\code{namespace}}{(\code{character(1)}) Namespace, composed like:
+\verb{[parentNamespace-]moduleName-instanceId} where \code{parentNamespace} is
+optional}
 }
 \if{html}{\out{</div>}}
 }
