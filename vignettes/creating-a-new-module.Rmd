@@ -95,29 +95,29 @@ MyModule <- R6::R6Class(
     UI = function() {
       shiny::tagList(
         # Output a table "input$app-MyModule_ABCDEFGHIJ__myTable"
-        shiny::tableOutput(outputId = shiny::NS(private$.appId, self$id("myTable"))),
+        shiny::tableOutput(outputId = shiny::NS(private$.namespace, "myTable")),
         # Output HTML "input$app-MyModule_ABCDEFGHIJ_moduleData"
-        shiny::uiOutput(outputId = shiny::NS(private$.appId, self$id("moduleData")))
+        shiny::uiOutput(outputId = shiny::NS(private$.namespace, "moduleData"))
       )
     },
 
     # Override server()
     server = function(input, output, session) {
-      # Render the table to "MyModule_ABCDEFGHIJ_myTable"
-      output[[self$id("myTable")]] <- shiny::renderTable({
-        head(private$.data)
-      })
-      
-      # Render the HTML to "MyModule_ABCDEFGHIJ_moduleData"
-      output[[self$id("moduleData")]] <- shiny::renderUI({
-        shiny::HTML(paste(
-          sprintf("App ID: %s", private$.appId),
-          sprintf("Module Name: %s", private$.moduleName),
-          sprintf("Instance ID: %s", private$.instanceId),
-          sprintf("Namespace ID myTable: %s", self$id("myTable")),
-          sprintf("Namespace ID moduleData: %s", self$id("moduleData")),
-          sep = "<br/>"
-        ))
+      shiny::moduleServer(id = private$.moduleId, module = function(input, output, session) {
+        # Render the table to "MyModule_ABCDEFGHIJ_myTable"
+        output$myTable <- shiny::renderTable({
+          head(private$.data)
+        })
+        
+        # Render the HTML to "MyModule_ABCDEFGHIJ_moduleData"
+        output$moduleData <- shiny::renderUI({
+          shiny::HTML(paste(
+            sprintf("App ID: %s", private$.moduleId),
+            sprintf("Module Name: %s", private$.moduleName),
+            sprintf("Instance ID: %s", private$.instanceId),
+            sep = "<br/>"
+          ))
+        })
       })
     }
   ),
@@ -136,7 +136,7 @@ MyModule <- R6::R6Class(
 
 To initialize our module object we call the `new()` method on our defined `MyModule`:
 ```{r}
-module <- MyModule$new(appId = "app")
+module <- MyModule$new()
 ```
 
 To see what the module contains we can simply `print()` the module instance:
@@ -147,7 +147,7 @@ There are several items listed under Public: `appId`, `clone()`, `data`, `id()` 
 
 We can get the active fields of our module `MyModule` like so:
 ```{r}
-module$appId
+module$moduleId
 module$instanceId
 module$moduleName
 head(module$data)
@@ -155,9 +155,9 @@ head(module$data)
 
 Notice that if we initialize multiple instances of the same type of module the `instanceId` is different per instance:
 ```{r}
-mod1 <- MyModule$new("app")
-mod2 <- MyModule$new("app")
-mod3 <- MyModule$new("app")
+mod1 <- MyModule$new()
+mod2 <- MyModule$new()
+mod3 <- MyModule$new()
 
 mod1$instanceId
 mod2$instanceId
@@ -172,9 +172,7 @@ ui <- shiny::fluidPage(
 )
 
 server <- function(input, output, session) {
-  shiny::moduleServer(id = "app", module = function(input, output, session) {
-    module$server(input, output, session)
-  })
+  module$server(input, output, session)
 }
 
 if (interactive()) {
@@ -198,7 +196,7 @@ MyModule2 <- R6::R6Class(
 )
 
 # initialize a MyModule2 instance
-module2 <- MyModule2$new("app")
+module2 <- MyModule2$new()
 ```
 
 We can spin up a new ShinyApp:
@@ -209,10 +207,8 @@ ui <- shiny::fluidPage(
 )
 
 server <- function(input, output, session) {
-  shiny::moduleServer(id = "app", module = function(input, output, session) {
-    module$server(input, output, session)
-    module2$server(input, output, session)
-  })
+  module$server(input, output, session)
+  module2$server(input, output, session)
 }
 
 if (interactive()) {
@@ -234,16 +230,14 @@ tp <- read.csv(system.file(
   "dummyData/TreatmentPatterns/csv/treatmentPathways.csv"
 ))
 
-sunburst <- Sunburst$new(appId = "app", tp)
+sunburst <- Sunburst$new(tp)
 
 ui <- shiny::fluidPage(
   sunburst$UI()
 )
 
 server <- function(input, output, session) {
-  shiny::moduleServer(id = "app", module = function(input, output, session) {
-    sunburst$server(input, output, session)
-  })
+  sunburst$server(input, output, session)
 }
 
 if (interactive()) {

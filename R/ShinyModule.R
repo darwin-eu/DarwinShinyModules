@@ -38,10 +38,15 @@ ShinyModule <- R6::R6Class(
       return(private$.moduleName)
     },
 
+    #' @field moduleId (`character(1)`) Module identifier, composed like:
+    #' `moduleName-instanceId`
     moduleId = function() {
       return(private$.moduleId)
     },
 
+    #' @field namespace (`character(1)`) Namespace, composed like:
+    #' `[parentNamespace-]moduleName-instanceId` where `parentNamespace` is
+    #' optional
     namespace = function() {
       return(private$.namespace)
     }

@@ -35,8 +35,8 @@ PlotPlotly <- R6::R6Class(
     #' @field source (`character`) Source label for the plotly plot.
     source = function() return(private$.source),
 
-    #' @field .bindings (`reactivevalues`) bindings from the plotly object.
-    bindingds = function() return(private$.bindings)
+    #' @field bindings (`reactivevalues`) bindings from the plotly object.
+    bindings = function() return(private$.bindings)
   ),
 
   # Public ----

@@ -3,9 +3,12 @@ library(TreatmentPatterns)
 library(dplyr)
 
 test_that("input to reactive", {
-  tp <- read.csv(system.file(package = "DarwinShinyModules", "dummyData/TreatmentPatterns/csv/treatmentPathways.csv"))
-  sunburst <- Sunburst$new(appId = "proxy1", data = tp)
-  sankey <- Sankey$new(appId = "proxy1", data = tp)
+  tp <- read.csv(system.file(
+    package = "DarwinShinyModules",
+    "dummyData/TreatmentPatterns/csv/treatmentPathways.csv"
+  ))
+  sunburst <- Sunburst$new(data = tp)
+  sankey <- Sankey$new(data = tp)
 
   sunburst$instanceId <- "A"
   sankey$instanceId <- "B"

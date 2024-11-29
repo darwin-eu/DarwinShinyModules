@@ -26,13 +26,6 @@ if (interactive()) {
 \section{Super classes}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{\link[DarwinShinyModules:Plot]{DarwinShinyModules::Plot}} -> \code{PlotPlotly}
 }
-\section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{.bindings}}{(\code{reactivevalues}) bindings from the plotly object.}
-}
-\if{html}{\out{</div>}}
-}
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
@@ -40,7 +33,7 @@ if (interactive()) {
 
 \item{\code{source}}{(\code{character}) Source label for the plotly plot.}
 
-\item{\code{.bindings}}{(\code{reactivevalues}) bindings from the plotly object.}
+\item{\code{bindings}}{(\code{reactivevalues}) bindings from the plotly object.}
 }
 \if{html}{\out{</div>}}
 }
