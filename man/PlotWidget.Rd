@@ -8,25 +8,35 @@ Widget Module
 }
 \examples{
 library(DarwinShinyModules)
-library(networkD3)
-src <- c(
-  "A", "A", "A", "A",
-  "B", "B", "C", "C", "D"
-)
-target <- c(
-  "B", "C", "D", "J",
-  "E", "F", "G", "H", "I"
+
+nD3Installed <- require(
+"networkD3",
+character.only = TRUE,
+quietly = TRUE,
+warn.conflicts = FALSE
 )
 
-networkData <- data.frame(src, target)
+if (nD3Installed) {
+  src <- c(
+    "A", "A", "A", "A",
+    "B", "B", "C", "C", "D"
+  )
+  target <- c(
+    "B", "C", "D", "J",
+    "E", "F", "G", "H", "I"
+  )
 
-widgetFun <- function(data) {
-  simpleNetwork(data)
-}
+  networkData <- data.frame(src, target)
 
-widgetModule <- PlotWidget$new(data = networkData, fun = widgetFun)
-if (interactive()) {
-  preview(widgetModule)
+  widgetFun <- function(data) {
+    simpleNetwork(data)
+  }
+
+  widgetModule <- PlotWidget$new(data = networkData, fun = widgetFun)
+
+  if (interactive()) {
+    preview(widgetModule)
+  }
 }
 }
 \section{Super classes}{

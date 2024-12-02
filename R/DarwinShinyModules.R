@@ -9,6 +9,7 @@
 #' @import ggplot2
 #' @import checkmate
 #' @import promises
+#' @import shinyWidgets
 #' @importFrom DT DTOutput renderDT
 #' @importFrom plotly event_register event_data plotlyOutput renderPlotly
 ## usethis namespace: end

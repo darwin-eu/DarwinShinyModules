@@ -22,7 +22,8 @@ Imports:
     ggplot2,
     plotly,
     DT,
-    promises
+    promises,
+    shinyWidgets
 Suggests:
     TreatmentPatterns,
     IncidencePrevalence,

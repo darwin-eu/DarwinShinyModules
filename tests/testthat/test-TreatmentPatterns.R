@@ -1,8 +1,15 @@
-library(shiny)
-library(TreatmentPatterns)
-library(dplyr)
+ableToRun <- function() {
+  all(
+    require("TreatmentPatterns", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
+    require("shiny", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
+    require("shinydashboard", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
+    require("dplyr", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
+  )
+}
 
 test_that("input to reactive", {
+  skip_if_not(ableToRun())
+
   tp <- read.csv(system.file(
     package = "DarwinShinyModules",
     "dummyData/TreatmentPatterns/csv/treatmentPathways.csv"
