@@ -1,10 +1,10 @@
 ---
-  name: Documentation
+name: Documentation
 about: Use to share an improvement for the documention.
 title: ''
 labels: ''
-assignees: mvankessel-EMC
+assignees: ''
 
 ---
 
-  **Clearly describe the requested improvement**
+**Clearly describe the requested improvement**

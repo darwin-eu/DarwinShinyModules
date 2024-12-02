@@ -1,13 +1,13 @@
 ---
-  name: Feature request
+name: Feature request
 about: Suggest an idea for this project. This can be a new feature or an improvement.
 title: ''
 labels: ''
-assignees: mvankessel-EMC, PRijnbeek
+assignees: ''
 
 ---
 
-  **Is your feature request related to a problem? Please describe.**
+**Is your feature request related to a problem? Please describe.**
   A clear and concise description of what the problem is. Ex. I need this because [...]
 
 **Describe the solution you'd like**
