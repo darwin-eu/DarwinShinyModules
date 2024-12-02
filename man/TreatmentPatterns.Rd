@@ -34,6 +34,13 @@ inherited.
 \item \href{#method-TreatmentPatterns-clone}{\code{TreatmentPatterns$clone()}}
 }
 }
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="initServer"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-initServer'><code>DarwinShinyModules::ShinyModule$initServer()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-TreatmentPatterns-new"></a>}}
 \if{latex}{\out{\hypertarget{method-TreatmentPatterns-new}{}}}

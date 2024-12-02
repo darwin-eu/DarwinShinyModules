@@ -73,6 +73,9 @@ PlotPlotly <- R6::R6Class(
     #' @return `NULL`
     server = function(input, output, session) {
       shiny::moduleServer(id = private$.moduleId, function(input, output, session) {
+        self$initServer()
+        private$.reactiveValues$data <- private$.data
+
         output$plot <- plotly::renderPlotly({
           data <- if (is.null(private$.reactiveValues$data)) {
             private$.data

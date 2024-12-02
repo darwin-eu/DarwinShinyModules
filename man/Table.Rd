@@ -21,11 +21,9 @@ if (interactive()) {
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{data}}{(\code{data.frame}) Reactive data, use \code{shiny::isolate()} to get the non-reactive data.}
-
-\item{\code{reactiveValues}}{(\code{reactiveValues}) Reactive values used by the \code{Table} object.}
-
 \item{\code{bindings}}{(\code{reactivevalues}) Reactive bindings for \code{DT::datatable}.}
+
+\item{\code{data}}{(\code{data.frame}) Reactive data, use \code{shiny::isolate()} to get the non-reactive data.}
 
 \item{\code{title}}{(\code{character}) Title of the table.}
 
@@ -45,6 +43,13 @@ if (interactive()) {
 \item \href{#method-Table-clone}{\code{Table$clone()}}
 }
 }
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="initServer"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-initServer'><code>DarwinShinyModules::ShinyModule$initServer()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Table-new"></a>}}
 \if{latex}{\out{\hypertarget{method-Table-new}{}}}

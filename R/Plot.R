@@ -26,15 +26,12 @@ Plot <- R6::R6Class(
     #' @field data Reactive data used for the plot. Use `shiny::isolate()` to get the non-reactive data.
     data = function(data) {
       if (missing(data)) {
-        return(private$.reactiveValues$data)
+        return(private$.data)
       } else {
         checkmate::assertDataFrame(data)
-        private$.reactiveValues$data <- data
+        private$.data <- data
       }
     },
-
-    #' @field reactiveValues (`reactiveValues`) Reactive values used by the Plot object.
-    reactiveValues = function(reactiveValues) return(private$.reactiveValues),
 
     #' @field fun Plotting function.
     fun = function(fun) {
@@ -59,8 +56,8 @@ Plot <- R6::R6Class(
     #' @return `self`
     initialize = function(data, fun, title = "Plot") {
       super$initialize()
+      private$.data <- data
       private$.fun <- fun
-      private$.reactiveValues$data <- data
       private$.title <- title
       self$validate()
     },
@@ -88,8 +85,6 @@ Plot <- R6::R6Class(
     ## Fields ----
     .fun = NULL,
     .title = "",
-    .reactiveValues = shiny::reactiveValues(
-      data = NULL,
-    )
+    .data = NULL
   )
 )

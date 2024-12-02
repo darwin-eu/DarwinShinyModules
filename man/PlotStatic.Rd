@@ -36,6 +36,7 @@ if (interactive()) {
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="initServer"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-initServer'><code>DarwinShinyModules::ShinyModule$initServer()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="initialize"><a href='../../DarwinShinyModules/html/Plot.html#method-Plot-initialize'><code>DarwinShinyModules::Plot$initialize()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="validate"><a href='../../DarwinShinyModules/html/Plot.html#method-Plot-validate'><code>DarwinShinyModules::Plot$validate()</code></a></span></li>
 </ul>

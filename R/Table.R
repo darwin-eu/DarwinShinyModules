@@ -22,23 +22,20 @@ Table <- R6::R6Class(
   # Active ----
   active = list(
     ## Reactive ----
-    #' @field data (`data.frame`) Reactive data, use `shiny::isolate()` to get the non-reactive data.
-    data = function(data) {
-      if (missing(data)) {
-        return(private$.reactiveValues$data)
-      } else {
-        checkmate::assertDataFrame(data)
-        private$.reactiveValues$data <- data
-      }
-    },
-
-    #' @field reactiveValues (`reactiveValues`) Reactive values used by the `Table` object.
-    reactiveValues = function() return(private$.reactiveValues),
-
     #' @field bindings (`reactivevalues`) Reactive bindings for `DT::datatable`.
     bindings = function() return(private$.bindings),
 
     ## Non-reactive ----
+    #' @field data (`data.frame`) Reactive data, use `shiny::isolate()` to get the non-reactive data.
+    data = function(data) {
+      if (missing(data)) {
+        return(private$.data)
+      } else {
+        checkmate::assertDataFrame(data)
+        private$.data <- data
+      }
+    },
+
     #' @field title (`character`) Title of the table.
     title = function(title) {
       if (missing(title)) {
@@ -71,7 +68,7 @@ Table <- R6::R6Class(
     #' @return `self`
     initialize = function(data, title = "Table", options = list(scrollX = TRUE), filter = "top") {
       super$initialize()
-      private$.reactiveValues$data <- data
+      private$.data <- data
       private$.title <- title
       private$.options <- options
       private$.filter <- filter
@@ -86,7 +83,7 @@ Table <- R6::R6Class(
       assertions <- checkmate::makeAssertCollection()
       checkmate::assertDataFrame(
         .var.name = "data",
-        x = isolate(private$.reactiveValues$data),
+        x = private$.data,
         add = assertions
       )
       checkmate::assertList(
@@ -125,9 +122,12 @@ Table <- R6::R6Class(
     #' @return `NULL`
     server = function(input, output, session) {
       shiny::moduleServer(id = private$.moduleId, module = function(input, output, session) {
+        self$initServer()
+        private$.reactiveValues$data <- private$.data
+
         private$renderTable(output)
         private$downloader(output)
-        private$setReactiveValues(input)
+        private$setBindings(input)
       })
     }
   ),
@@ -138,9 +138,7 @@ Table <- R6::R6Class(
     .title = "",
     .options = NULL,
     .filter = NULL,
-    .reactiveValues = shiny::reactiveValues(
-      data = NULL
-    ),
+    .data = NULL,
     .bindings = shiny::reactiveValues(
       cell_clicked = NULL,
       cells_selected = NULL,
@@ -156,7 +154,7 @@ Table <- R6::R6Class(
     ),
 
     ## Methods ----
-    setReactiveValues = function(input) {
+    setBindings = function(input) {
       shiny::observeEvent(eventExpr = input$table_cells_selected, {
         private$.bindings$cells_selected <- input$table_cells_selected
       })

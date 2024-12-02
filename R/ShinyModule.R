@@ -49,6 +49,11 @@ ShinyModule <- R6::R6Class(
     #' optional
     namespace = function() {
       return(private$.namespace)
+    },
+
+    #' @field reactiveValues (`reactivevalues`) Reactive values. use `isolate()` to get the non-reactive item.
+    reactiveValues = function() {
+      return(private$.reactiveValues)
     }
   ),
 
@@ -65,6 +70,16 @@ ShinyModule <- R6::R6Class(
       private$.instanceId <- private$makeInstanceId()
       private$.moduleId <- sprintf("%s-%s", private$.moduleName, private$.instanceId)
       private$.namespace <- c(private$.parentNamespace, private$.moduleId)
+      return(invisible(self))
+    },
+
+    #' @description
+    #' Initializer method server side.
+    #'
+    #' @return
+    #' (`self`)
+    initServer = function() {
+      private$.reactiveValues <- shiny::reactiveValues()
       return(invisible(self))
     },
 
@@ -127,14 +142,9 @@ ShinyModule <- R6::R6Class(
     #' @return
     #' (`NULL`)
     server = function(input, output, session) {
+      self$initializeServer()
       return(NULL)
-    },
-
-    addReactiveValue = function(value, label) {},
-
-    getRactiveValue = function(label) {},
-
-    listReactiveValues = function() {}
+    }
   ),
 
   # Private ----
@@ -145,8 +155,7 @@ ShinyModule <- R6::R6Class(
     .moduleId = "",
     .parentNamespace = NULL,
     .namespace = "",
-    .reactiveValues = shiny::reactiveValues(),
-
+    .reactiveValues = NULL,
 
     ## Methods ----
     finalize = function() {

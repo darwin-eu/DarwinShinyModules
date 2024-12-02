@@ -22,6 +22,8 @@ inherited by other Modules.
 \item{\code{namespace}}{(\code{character(1)}) Namespace, composed like:
 \verb{[parentNamespace-]moduleName-instanceId} where \code{parentNamespace} is
 optional}
+
+\item{\code{reactiveValues}}{(\code{reactivevalues}) Reactive values. use \code{isolate()} to get the non-reactive item.}
 }
 \if{html}{\out{</div>}}
 }
@@ -29,6 +31,7 @@ optional}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-ShinyModule-new}{\code{ShinyModule$new()}}
+\item \href{#method-ShinyModule-initServer}{\code{ShinyModule$initServer()}}
 \item \href{#method-ShinyModule-validate}{\code{ShinyModule$validate()}}
 \item \href{#method-ShinyModule-UI}{\code{ShinyModule$UI()}}
 \item \href{#method-ShinyModule-server}{\code{ShinyModule$server()}}
@@ -42,6 +45,19 @@ optional}
 Initializer method
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ShinyModule$new()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{self})
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ShinyModule-initServer"></a>}}
+\if{latex}{\out{\hypertarget{method-ShinyModule-initServer}{}}}
+\subsection{Method \code{initServer()}}{
+Initializer method server side.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ShinyModule$initServer()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{

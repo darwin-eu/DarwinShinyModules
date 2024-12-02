@@ -100,6 +100,7 @@ if (interactive()) {
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="initServer"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-initServer'><code>DarwinShinyModules::ShinyModule$initServer()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
 </ul>
 </details>

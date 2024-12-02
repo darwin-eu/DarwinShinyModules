@@ -16,8 +16,6 @@ Plot Decorator class
 
 \item{\code{data}}{Reactive data used for the plot. Use \code{shiny::isolate()} to get the non-reactive data.}
 
-\item{\code{reactiveValues}}{(\code{reactiveValues}) Reactive values used by the Plot object.}
-
 \item{\code{fun}}{Plotting function.}
 }
 \if{html}{\out{</div>}}
@@ -34,6 +32,7 @@ Plot Decorator class
 <details open><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="initServer"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-initServer'><code>DarwinShinyModules::ShinyModule$initServer()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
 </ul>
 </details>
