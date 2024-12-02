@@ -128,7 +128,13 @@ ShinyModule <- R6::R6Class(
     #' (`NULL`)
     server = function(input, output, session) {
       return(NULL)
-    }
+    },
+
+    addReactiveValue = function(value, label) {},
+
+    getRactiveValue = function(label) {},
+
+    listReactiveValues = function() {}
   ),
 
   # Private ----
@@ -139,6 +145,7 @@ ShinyModule <- R6::R6Class(
     .moduleId = "",
     .parentNamespace = NULL,
     .namespace = "",
+    .reactiveValues = shiny::reactiveValues(),
 
 
     ## Methods ----
