@@ -8,12 +8,22 @@ Sankey diagram Module.
 }
 \examples{
 library(DarwinShinyModules)
-tp <- read.csv(system.file(
-  package = "DarwinShinyModules",
-  "dummyData/TreatmentPatterns/csv/treatmentPathways.csv"
-))
 
-sankey <- Sankey$new(data = tp)
+tpInstalled <- require(
+  "TreatmentPatterns",
+  character.only = TRUE,
+  quietly = TRUE,
+  warn.conflicts = FALSE
+)
+
+if (tpInstalled) {
+  tp <- read.csv(system.file(
+    package = "DarwinShinyModules",
+    "dummyData/TreatmentPatterns/csv/treatmentPathways.csv"
+  ))
+
+  sankey <- Sankey$new(data = tp)
+}
 
 if (interactive()) {
   preview(sankey)

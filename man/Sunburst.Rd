@@ -8,12 +8,22 @@ Sunburst Module.
 }
 \examples{
 library(DarwinShinyModules)
-tp <- read.csv(system.file(
-  package = "DarwinShinyModules",
-  "dummyData/TreatmentPatterns/csv/treatmentPathways.csv"
-))
 
-sunburst <- Sunburst$new(data = tp)
+tpInstalled <- require(
+  "TreatmentPatterns",
+  character.only = TRUE,
+  quietly = TRUE,
+  warn.conflicts = FALSE
+)
+
+if (tpInstalled) {
+  tp <- read.csv(system.file(
+    package = "DarwinShinyModules",
+    "dummyData/TreatmentPatterns/csv/treatmentPathways.csv"
+  ))
+
+  sunburst <- Sunburst$new(data = tp)
+}
 
 if (interactive()) {
   preview(sunburst)

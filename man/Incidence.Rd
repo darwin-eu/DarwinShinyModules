@@ -8,15 +8,26 @@ Incidence Module. Composed of the Plot and Table modules.
 }
 \examples{
 library(DarwinShinyModules)
-inc <- readRDS(system.file(
-  package = "DarwinShinyModules",
-  "dummyData/IncidencePrevalence/rds/incidence.rds"
-))
 
-incidence <- Incidence$new(data = inc)
+ipInstalled <- require(
+  "IncidencePrevalence",
+  character.only = TRUE,
+  quietly = TRUE,
+  warn.conflicts = FALSE
+)
+
+if (ipInstalled) {
+
+  inc <- readRDS(system.file(
+    package = "DarwinShinyModules",
+    "dummyData/IncidencePrevalence/rds/incidence.rds"
+  ))
+
+  incidence <- Incidence$new(data = inc)
+}
 
 if (interactive()) {
-  preview(incidence)
+    preview(incidence)
 }
 }
 \section{Super classes}{

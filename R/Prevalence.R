@@ -10,12 +10,21 @@
 #' @examples
 #' library(DarwinShinyModules)
 #'
-#' prev <- readRDS(system.file(
-#'   package = "DarwinShinyModules",
-#'   "dummyData/IncidencePrevalence/rds/prevalence.rds"
-#' ))
+#' ipInstalled <- require(
+#'   "IncidencePrevalence",
+#'   character.only = TRUE,
+#'   quietly = TRUE,
+#'   warn.conflicts = FALSE
+#' )
 #'
-#' prevalence <- Prevalence$new(data = prev)
+#' if (ipInstalled) {
+#'   prev <- readRDS(system.file(
+#'     package = "DarwinShinyModules",
+#'     "dummyData/IncidencePrevalence/rds/prevalence.rds"
+#'   ))
+#'
+#'   prevalence <- Prevalence$new(data = prev)
+#' }
 #'
 #' if (interactive()) {
 #'   preview(prevalence)

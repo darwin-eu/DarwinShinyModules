@@ -2,7 +2,13 @@ library(shiny)
 library(TreatmentPatterns)
 library(dplyr)
 
+ableToRun <- function() {
+  require("TreatmentPatterns", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
+}
+
 test_that("input to reactive", {
+  skip_if_not(ableToRun())
+
   tp <- read.csv(system.file(
     package = "DarwinShinyModules",
     "dummyData/TreatmentPatterns/csv/treatmentPathways.csv"
