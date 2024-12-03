@@ -1,9 +1,17 @@
-#' @title Plot
+#' @title Plot Decorator Class
 #'
 #' @include ShinyModule.R
 #'
 #' @description
-#' Plot Decorator class
+#' This class is a `decorator` and is not meant to be directly used, but to be
+#' inherited by other modules, like `PlotStaic`, `PlotWidget`, and `PlotPlotly`.
+#'
+#' @details
+#' The inherited `Plot` modules evaluate the provided function with a provided
+#' data object.
+#'
+#' To add a new plot type it is required to inherit from the `Plot` class, and
+#' to override the private `.UI()` and `.server()` methods.
 #'
 #' @export
 Plot <- R6::R6Class(

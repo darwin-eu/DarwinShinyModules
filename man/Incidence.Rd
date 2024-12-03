@@ -2,9 +2,9 @@
 % Please edit documentation in R/Incidence.R
 \name{Incidence}
 \alias{Incidence}
-\title{Incidence}
+\title{Incidence Module Class}
 \description{
-Incidence Module. Composed of the Plot and Table modules.
+Incidence module that overrides the plotting method.
 }
 \examples{
 library(DarwinShinyModules)
@@ -42,10 +42,9 @@ if (interactive()) {
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="initServer"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-initServer'><code>DarwinShinyModules::ShinyModule$initServer()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="IncidencePrevalence" data-id="UI"><a href='../../DarwinShinyModules/html/IncidencePrevalence.html#method-IncidencePrevalence-UI'><code>DarwinShinyModules::IncidencePrevalence$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="IncidencePrevalence" data-id="initialize"><a href='../../DarwinShinyModules/html/IncidencePrevalence.html#method-IncidencePrevalence-initialize'><code>DarwinShinyModules::IncidencePrevalence$initialize()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="IncidencePrevalence" data-id="server"><a href='../../DarwinShinyModules/html/IncidencePrevalence.html#method-IncidencePrevalence-server'><code>DarwinShinyModules::IncidencePrevalence$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="IncidencePrevalence" data-id="validate"><a href='../../DarwinShinyModules/html/IncidencePrevalence.html#method-IncidencePrevalence-validate'><code>DarwinShinyModules::IncidencePrevalence$validate()</code></a></span></li>
 </ul>
 </details>

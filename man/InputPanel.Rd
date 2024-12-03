@@ -2,9 +2,15 @@
 % Please edit documentation in R/InputPanel.R
 \name{InputPanel}
 \alias{InputPanel}
-\title{InputPanel}
+\title{InputPanel Module Class}
 \description{
-InputPanel Module.
+InputPanel module that handles inputs based on an input function like:
+\code{shiny::selectInput()}, \code{shinyWidgets::pickerInput()}, etc.
+}
+\details{
+The assigned input values are accessible in the reactive values
+\code{inputValues} field. Other modules may trigger off these reactive values
+with i.e. \code{shiny::observeEvent()}.
 }
 \examples{
 library(DarwinShinyModules)
@@ -45,15 +51,14 @@ if (interactive()) {
 \itemize{
 \item \href{#method-InputPanel-new}{\code{InputPanel$new()}}
 \item \href{#method-InputPanel-validate}{\code{InputPanel$validate()}}
-\item \href{#method-InputPanel-UI}{\code{InputPanel$UI()}}
-\item \href{#method-InputPanel-server}{\code{InputPanel$server()}}
 \item \href{#method-InputPanel-clone}{\code{InputPanel$clone()}}
 }
 }
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="initServer"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-initServer'><code>DarwinShinyModules::ShinyModule$initServer()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -90,46 +95,6 @@ Validation method
 
 \subsection{Returns}{
 (\code{self})
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-InputPanel-UI"></a>}}
-\if{latex}{\out{\hypertarget{method-InputPanel-UI}{}}}
-\subsection{Method \code{UI()}}{
-Method to include a \link[shiny]{tagList} to include the body.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InputPanel$UI()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(\code{tagList})
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-InputPanel-server"></a>}}
-\if{latex}{\out{\hypertarget{method-InputPanel-server}{}}}
-\subsection{Method \code{server()}}{
-Method to handle the back-end.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InputPanel$server(input, output, session)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{input}}{(\code{input})\cr
-Input from the server function.}
-
-\item{\code{output}}{(\code{output})\cr
-Output from the server function.}
-
-\item{\code{session}}{(\code{session})\cr
-Session from the server function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{NULL})
 }
 }
 \if{html}{\out{<hr>}}

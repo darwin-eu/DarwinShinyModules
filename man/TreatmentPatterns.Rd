@@ -2,10 +2,10 @@
 % Please edit documentation in R/TreatmentPatterns.R
 \name{TreatmentPatterns}
 \alias{TreatmentPatterns}
-\title{TreatmentPatterns}
+\title{TreatmentPatterns Module Class}
 \description{
-\link{TreatmentPatterns} super class. Composed of a \link{PlotWidget} and \link{Table} modules.
-This class is an \code{interface} and is not meant to be directly used, but to be
+TreatmentPatterns super class. Composed of a \code{PlotWidget} and \code{Table} modules.
+This class is a \code{decorator} and is not meant to be directly used, but to be
 inherited.
 }
 \section{Super class}{
@@ -14,7 +14,7 @@ inherited.
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{data}}{Data to plot with, usually a \code{data.frame}-like object.}
+\item{\code{data}}{Underlying data the \code{table} and \code{widget} fields are based on.}
 
 \item{\code{inputPanel}}{(\link{InputPanel}) Module}
 
@@ -29,15 +29,14 @@ inherited.
 \itemize{
 \item \href{#method-TreatmentPatterns-new}{\code{TreatmentPatterns$new()}}
 \item \href{#method-TreatmentPatterns-validate}{\code{TreatmentPatterns$validate()}}
-\item \href{#method-TreatmentPatterns-UI}{\code{TreatmentPatterns$UI()}}
-\item \href{#method-TreatmentPatterns-server}{\code{TreatmentPatterns$server()}}
 \item \href{#method-TreatmentPatterns-clone}{\code{TreatmentPatterns$clone()}}
 }
 }
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="initServer"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-initServer'><code>DarwinShinyModules::ShinyModule$initServer()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -53,7 +52,8 @@ Initializer method
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{Data to plot with, usually a \code{data.frame}-like object.}
+\item{\code{data}}{The contents of the \code{treatmentPathways.csv} file from
+\code{TreatmentPatterns::export()}, as a \code{data.frame}-like object.}
 }
 \if{html}{\out{</div>}}
 }
@@ -72,46 +72,6 @@ Validation method
 
 \subsection{Returns}{
 (\code{self})
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TreatmentPatterns-UI"></a>}}
-\if{latex}{\out{\hypertarget{method-TreatmentPatterns-UI}{}}}
-\subsection{Method \code{UI()}}{
-Method to include a \link[shiny]{tagList} to include the body.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TreatmentPatterns$UI()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(\code{tagList})
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TreatmentPatterns-server"></a>}}
-\if{latex}{\out{\hypertarget{method-TreatmentPatterns-server}{}}}
-\subsection{Method \code{server()}}{
-Method to handle the back-end.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TreatmentPatterns$server(input, output, session)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{input}}{(\code{input})\cr
-Input from the server function.}
-
-\item{\code{output}}{(\code{output})\cr
-Output from the server function.}
-
-\item{\code{session}}{(\code{session})\cr
-Session from the server function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{NULL})
 }
 }
 \if{html}{\out{<hr>}}

@@ -1,13 +1,11 @@
-#' @title TreatmentPatterns
+#' @title TreatmentPatterns Module Class
 #'
 #' @include ShinyModule.R
 #'
 #' @description
-#' [TreatmentPatterns] super class. Composed of a [PlotWidget] and [Table] modules.
-#' This class is an `interface` and is not meant to be directly used, but to be
+#' TreatmentPatterns super class. Composed of a `PlotWidget` and `Table` modules.
+#' This class is a `decorator` and is not meant to be directly used, but to be
 #' inherited.
-#'
-#' @param data Data to plot with, usually a `data.frame`-like object.
 #'
 #' @export
 TreatmentPatterns <- R6::R6Class(
@@ -16,7 +14,7 @@ TreatmentPatterns <- R6::R6Class(
 
   # Active ----
   active = list(
-    #' @field data Data to plot with, usually a `data.frame`-like object.
+    #' @field data Underlying data the `table` and `widget` fields are based on.
     data = function() return(private$.data),
 
     #' @field inputPanel ([InputPanel]) Module
@@ -35,9 +33,13 @@ TreatmentPatterns <- R6::R6Class(
     #' @description
     #' Initializer method
     #'
+    #' @param data The contents of the `treatmentPathways.csv` file from
+    #' `TreatmentPatterns::export()`, as a `data.frame`-like object.
+    #'
     #' @return (`invisible(self)`)
     initialize = function(data) {
       super$initialize()
+      private$validateData(data)
       private$.data <- data %>%
         dplyr::mutate(
           sex = as.factor(.data$sex),
@@ -71,13 +73,19 @@ TreatmentPatterns <- R6::R6Class(
       checkmate::reportAssertions(assertions)
       private$assertTPInstall()
       return(invisible(self))
-    },
+    }
+  ),
 
-    #' @description
-    #' Method to include a \link[shiny]{tagList} to include the body.
-    #'
-    #' @return (`tagList`)
-    UI = function() {
+  # Private ----
+  private = list(
+    ## Fields ----
+    .data = NULL,
+    .inputPanel = NULL,
+    .widget = NULL,
+    .table = NULL,
+
+    ## Methods ----
+    .UI = function() {
       shiny::tagList(
         shiny::column(
           width = 12,
@@ -94,38 +102,12 @@ TreatmentPatterns <- R6::R6Class(
       )
     },
 
-    #' @description
-    #' Method to handle the back-end.
-    #'
-    #' @param input (`input`)\cr
-    #' Input from the server function.
-    #'
-    #' @param output (`output`)\cr
-    #' Output from the server function.
-    #'
-    #' @param session (`session`)\cr
-    #' Session from the server function.
-    #'
-    #' @return (`NULL`)
-    server = function(input, output, session) {
-      shiny::moduleServer(id = private$.moduleId, function(input, output, session) {
-        private$updateData(input)
-        private$.inputPanel$server(input, output, session)
-        private$.widget$server(input, output, session)
-        private$.table$server(input, output, session)
-      })
-    }
-  ),
+    .server = function(input, output, session) {
+      private$.inputPanel$server(input, output, session)
+      private$.widget$server(input, output, session)
+      private$.table$server(input, output, session)
+    },
 
-  # Private ----
-  private = list(
-    ## Fields ----
-    .data = NULL,
-    .inputPanel = NULL,
-    .widget = NULL,
-    .table = NULL,
-
-    ## Methods ----
     initInputPanel = function() {
       private$.inputPanel <- InputPanel$new(
         funs = list(
@@ -285,6 +267,12 @@ TreatmentPatterns <- R6::R6Class(
       } else {
         return(private$.inputPanel$inputValues$groupCombi)
       }
+    },
+
+    validateData = function(data) {
+      assertions <- checkmate::makeAssertCollection()
+      checkmate::assert_names(x = names(data), type = "named", subset.of = c("path", "freq", "age", "sex", "indexYear"))
+      checkmate::reportAssertions(assertions)
     }
   )
 )

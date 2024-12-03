@@ -2,9 +2,17 @@
 % Please edit documentation in R/Plot.R
 \name{Plot}
 \alias{Plot}
-\title{Plot}
+\title{Plot Decorator Class}
 \description{
-Plot Decorator class
+This class is a \code{decorator} and is not meant to be directly used, but to be
+inherited by other modules, like \code{PlotStaic}, \code{PlotWidget}, and \code{PlotPlotly}.
+}
+\details{
+The inherited \code{Plot} modules evaluate the provided function with a provided
+data object.
+
+To add a new plot type it is required to inherit from the \code{Plot} class, and
+to override the private \code{.UI()} and \code{.server()} methods.
 }
 \section{Super class}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{Plot}
@@ -32,7 +40,6 @@ Plot Decorator class
 <details open><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="initServer"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-initServer'><code>DarwinShinyModules::ShinyModule$initServer()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
 </ul>
 </details>

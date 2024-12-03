@@ -1,10 +1,141 @@
-#' @title Module Super Class
+#' @title Module Decorator Class
 #'
 #' @description
-#' This class is an `decorator` and is not meant to be directly used, but to be
+#' This class is a `decorator` and is not meant to be directly used, but to be
 #' inherited by other Modules.
 #'
+#' @details
+#' **Namespacing**\cr
+#' The `ShinyModule` class manages namespacing with the `moduleName` and
+#' `instanceId`, to create a `moduleId`. The `moduleId` and `parentNamespace`
+#' (when a module is nested in another module) make up the `namespace` field.
+#'
+#' \preformatted{
+#'   moduleId = moduleName-instanceId
+#'   namespace = [parentNamespace-]moduleId
+#' }
+#'
+#' **Server method**\cr
+#' When creating a new module, the `id` in `shiny::moduleServer()` is set to
+#' the `moduleId` field.
+#'
+#' Besides setting the `id`, the `initServer()` method is called at the start of
+#' `shiny::moduleServer()`. This initializes a reactive environment to be used
+#' freely when developing modules. This method may be expanded upon to
+#' initialize other namespace dependant features.
+#'
+#' All of this is done by the class it self, in the public `server()` method.
+#' The `server()` method calls the private `private$.server()`, which should
+#' overridden when creating a module.
+#'
+#' As an example:
+#' \preformatted{
+#' ...
+#' private = list(
+#'   .server = function(input, output, session) {
+#'     output$table <- shiny::renderTable(iris)
+#'   }
+#' )
+#' ...
+#' }
+#'
+#' If the public `server()` method is overridden an error will be thrown:
+#' \preformatted{
+#' ...
+#' public = list(
+#'   server = function(input, output, session) {
+#'     output$table <- shiny::renderTable(iris)
+#'   }
+#' )
+#' ...
+#'
+#' myModule <- MyModule$new()
+#' #> `self$server()` was overridden in `public = list(...)` override `private$.server()` instead in `private = list(.server = function(input, output, session) {})`
+#' }
+#'
+#' **UI method**\cr
+#' When accessing an `outputId` in the UI, the `namespace` field is used to
+#' reference the correct namespace with `shiny::NS()`.
+#'
+#' It is also expected that the `UI()` method returns all contents to be shown,
+#' so if multiple things should be shown, they should be nested in, as an
+#' exmaple, `shiny::taglist()`.
+#'
+#' As an example:
+#' \preformatted{
+#' ...
+#' private = list(
+#'   .UI = function() {
+#'     # `private$.namespace` would also be valid.
+#'     shiny::tableOutput(outputId = shiny::NS(self$namespace, "table"))
+#'   }
+#' )
+#' }
+#'
+#' If the public `UI()` method is overridden an error will be thrown:
+#' \preformatted{
+#' ...
+#' public = list(
+#'   server = function(input, output, session) {
+#'     output$table <- shiny::renderTable(iris)
+#'   }
+#' )
+#' ...
+#'
+#' myModule <- MyModule$new()
+#' #> `self$UI()` was overridden in `public = list(...)` override `private$.UI()` instead in `private = list(.UI = function() {})`
+#' }
+#'
 #' @export
+#'
+#' @examples
+#' MyModule <- R6::R6Class(
+#'   classname = "MyModule",
+#'   inherit = ShinyModule,
+#'
+#'   private = list(
+#'     .UI = function() {
+#'       # `private$.namespace` would also be valid.
+#'       shiny::tableOutput(outputId = shiny::NS(self$namespace, "table"))
+#'     },
+#'
+#'     # Override server()
+#'     .server = function(input, output, session) {
+#'       output$table <- shiny::renderTable(iris)
+#'     }
+#'   )
+#' )
+#'
+#' if (interactive()) {
+#'   myModule <- MyModule$new()
+#'   preview(myModule)
+#' }
+#'
+#' # The following would throw an error for overwritnig the public UI() and server() methods:
+#' MyModule <- R6::R6Class(
+#'   classname = "MyModule",
+#'   inherit = ShinyModule,
+#'
+#'   public = list(
+#'     UI = function() {
+#'       # `private$.namespace` would also be valid.
+#'       shiny::tableOutput(outputId = shiny::NS(self$namespace, "table"))
+#'     },
+#'
+#'     # Override server()
+#'     server = function(input, output, session) {
+#'       output$table <- shiny::renderTable(iris)
+#'     }
+#'   )
+#' )
+#'
+#' tryCatch({
+#'   myModule <- MyModule$new()
+#' }, error = function(e) {
+#'   message(e)
+#' })
+#' #> `self$server()` was overridden in `public = list(...)` override `private$.server()` instead in `private = list(.server = function(input, output, session) {})`
+#' #> `self$UI()` was overridden in `public = list(...)` override `private$.UI()` instead in `private = list(.UI = function() {})`
 ShinyModule <- R6::R6Class(
   classname = "ShinyModule",
 
@@ -17,6 +148,8 @@ ShinyModule <- R6::R6Class(
       } else {
         checkmate::assertCharacter(x = instanceId, len = 1)
         private$.instanceId <- instanceId
+        private$.moduleId <- paste(c(private$.moduleName, private$.instanceId), collapse = "-")
+        private$.namespace <- paste(c(private$.parentNamespace, private$.moduleId), collapse = "-")
         return(invisible(self))
       }
     },
@@ -26,7 +159,7 @@ ShinyModule <- R6::R6Class(
       if (missing(parentNamespace)) {
         return(private$.parentNamespace)
       } else {
-        checkmate::assertCharacter(x = parentNamespace, len = 1)
+        checkmate::assertCharacter(x = parentNamespace, len = 1, null.ok = TRUE)
         private$.parentNamespace <- parentNamespace
         private$.namespace <- paste(c(private$.parentNamespace, private$.moduleId), collapse = "-")
         return(invisible(self))
@@ -51,7 +184,9 @@ ShinyModule <- R6::R6Class(
       return(private$.namespace)
     },
 
-    #' @field reactiveValues (`reactivevalues`) Reactive values. use `isolate()` to get the non-reactive item.
+    #' @field reactiveValues (`reactivevalues`) Reactive values. use
+    #' `shiny::isolate()` to get a non-reactive item from the reactive
+    #' environment.
     reactiveValues = function() {
       return(private$.reactiveValues)
     }
@@ -66,20 +201,11 @@ ShinyModule <- R6::R6Class(
     #' @return
     #' (`self`)
     initialize = function() {
+      private$checkMethodOverrides()
       private$.moduleName <- class(self)[1]
       private$.instanceId <- private$makeInstanceId()
       private$.moduleId <- sprintf("%s-%s", private$.moduleName, private$.instanceId)
       private$.namespace <- c(private$.parentNamespace, private$.moduleId)
-      return(invisible(self))
-    },
-
-    #' @description
-    #' Initializer method server side.
-    #'
-    #' @return
-    #' (`self`)
-    initServer = function() {
-      private$.reactiveValues <- shiny::reactiveValues()
       return(invisible(self))
     },
 
@@ -129,7 +255,7 @@ ShinyModule <- R6::R6Class(
     #' @return
     #' (`tagList`)
     UI = function() {
-      return(shiny::tagList())
+      private$.UI()
     },
 
     #' @description
@@ -142,7 +268,10 @@ ShinyModule <- R6::R6Class(
     #' @return
     #' (`NULL`)
     server = function(input, output, session) {
-      self$initializeServer()
+      shiny::moduleServer(id = self$moduleId, module = function(input, output, session) {
+        private$.init()
+        private$.server(input, output, session)
+      })
       return(NULL)
     }
   ),
@@ -158,6 +287,15 @@ ShinyModule <- R6::R6Class(
     .reactiveValues = NULL,
 
     ## Methods ----
+    .init = function() {
+      private$.reactiveValues <- shiny::reactiveValues()
+      return(invisible(self))
+    },
+
+    .server = function(input, output, session) {},
+
+    .UI = function(input, output, session) {},
+
     finalize = function() {
       return(NULL)
     },
@@ -165,6 +303,22 @@ ShinyModule <- R6::R6Class(
     makeInstanceId = function(n = 20) {
       items <- c(letters, LETTERS, c(1:9), c("_"))
       paste0(sample(x = items, size = n), collapse = "")
+    },
+
+    checkMethodOverrides = function() {
+      if (!is.null(self$.__enclos_env__$super)) {
+        serverErr <- if (!identical(self$.__enclos_env__$super$server, self$server)) {
+          "`self$server()` was overridden in `public = list(...)` override `private$.server()` instead in `private = list(.server = function(input, output, session) {})`"
+        }
+
+        uiErr <- if (!identical(self$.__enclos_env__$super$UI, self$UI)) {
+          "`self$UI()` was overridden in `public = list(...)` override `private$.UI()` instead in `private = list(.UI = function() {})`"
+        }
+
+        if (any(!is.null(c(serverErr, uiErr)))) {
+          stop(c(serverErr, "\n  ", uiErr))
+        }
+      }
     }
   )
 )

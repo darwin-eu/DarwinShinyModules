@@ -2,10 +2,10 @@
 % Please edit documentation in R/IncidencePrevalence.R
 \name{IncidencePrevalence}
 \alias{IncidencePrevalence}
-\title{IncidencePrevalence}
+\title{IncidencePrevalence Module Class}
 \description{
-IncidencePrevalence super class. Composed of the Plot and Table modules.
-This class is an \code{interface} and is not meant to be directly used, but to be
+IncidencePrevalence super class. Composed of the \code{Plot} and \code{Table} modules.
+This class is a \code{decorator} and is not meant to be directly used, but to be
 inherited.
 }
 \section{Super class}{
@@ -14,7 +14,7 @@ inherited.
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{data}}{(\code{data.frame}) Incidence or Prevalence data.}
+\item{\code{data}}{(\code{data.frame}) Data the \code{table} and \code{plot} fields are based on.}
 
 \item{\code{table}}{(\code{Table}) Module.}
 
@@ -27,15 +27,14 @@ inherited.
 \itemize{
 \item \href{#method-IncidencePrevalence-new}{\code{IncidencePrevalence$new()}}
 \item \href{#method-IncidencePrevalence-validate}{\code{IncidencePrevalence$validate()}}
-\item \href{#method-IncidencePrevalence-UI}{\code{IncidencePrevalence$UI()}}
-\item \href{#method-IncidencePrevalence-server}{\code{IncidencePrevalence$server()}}
 \item \href{#method-IncidencePrevalence-clone}{\code{IncidencePrevalence$clone()}}
 }
 }
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="initServer"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-initServer'><code>DarwinShinyModules::ShinyModule$initServer()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -51,7 +50,9 @@ initialize
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{Data to plot with, usually a \code{data.frame}-like object.}
+\item{\code{data}}{Incidence or Prevalence data from
+\code{IncidencePrevalence::estimateIncidence()} or
+\code{IncidencePrevalence::estimatePrevalence()}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -70,50 +71,6 @@ Validation method
 
 \subsection{Returns}{
 (\code{self})
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-IncidencePrevalence-UI"></a>}}
-\if{latex}{\out{\hypertarget{method-IncidencePrevalence-UI}{}}}
-\subsection{Method \code{UI()}}{
-UI
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{IncidencePrevalence$UI()}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{title}}{(\code{character(1)}) Title to use for the plot.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{shiny.tag.list}
-server
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-IncidencePrevalence-server"></a>}}
-\if{latex}{\out{\hypertarget{method-IncidencePrevalence-server}{}}}
-\subsection{Method \code{server()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{IncidencePrevalence$server(input, output, session)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{input}}{(\code{input})}
-
-\item{\code{output}}{(\code{output})}
-
-\item{\code{session}}{(\code{session})}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

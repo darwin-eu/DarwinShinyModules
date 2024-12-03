@@ -2,9 +2,13 @@
 % Please edit documentation in R/PlotPlotly.R
 \name{PlotPlotly}
 \alias{PlotPlotly}
-\title{PlotPlotly}
+\title{PlotPlotly Module Class}
 \description{
-Plotly Module
+Plotly module that handles \code{plotly} objects.
+}
+\details{
+\code{Plotly} exposes bindings to interact with the plot programaticaly.
+Currently, only the \code{plotly_selected} binding is supported in this module.
 }
 \examples{
 library(DarwinShinyModules)
@@ -41,15 +45,14 @@ if (interactive()) {
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-PlotPlotly-new}{\code{PlotPlotly$new()}}
-\item \href{#method-PlotPlotly-UI}{\code{PlotPlotly$UI()}}
-\item \href{#method-PlotPlotly-server}{\code{PlotPlotly$server()}}
 \item \href{#method-PlotPlotly-clone}{\code{PlotPlotly$clone()}}
 }
 }
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="initServer"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-initServer'><code>DarwinShinyModules::ShinyModule$initServer()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="validate"><a href='../../DarwinShinyModules/html/Plot.html#method-Plot-validate'><code>DarwinShinyModules::Plot$validate()</code></a></span></li>
 </ul>
 </details>
@@ -76,43 +79,6 @@ initialize
 }
 \subsection{Returns}{
 \code{self}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-PlotPlotly-UI"></a>}}
-\if{latex}{\out{\hypertarget{method-PlotPlotly-UI}{}}}
-\subsection{Method \code{UI()}}{
-UI
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PlotPlotly$UI()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{shiny.tag.list}
-server
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-PlotPlotly-server"></a>}}
-\if{latex}{\out{\hypertarget{method-PlotPlotly-server}{}}}
-\subsection{Method \code{server()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PlotPlotly$server(input, output, session)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{input}}{(\code{input})}
-
-\item{\code{output}}{(\code{output})}
-
-\item{\code{session}}{(\code{session})}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

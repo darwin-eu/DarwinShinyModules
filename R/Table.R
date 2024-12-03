@@ -1,10 +1,31 @@
-#' @title Table
+#' @title Table Module Class
 #'
 #' @include ShinyModule.R
 #'
 #' @description
-#' Table Module
+#' Table module that displays `data.frame` like objects as a table that are
+#' supported by `DT::renderDT()` and `DT::DTOutput()`.
 #'
+#' @details
+#' The Table module exposes reactive bindings from the datatable object from
+#' `DT`, in `bindings` field. These bindings are:
+#' - cell_clicked
+#' - cells_selected
+#' - cell_info
+#' - rows_current
+#' - rows_all
+#' - rows_selected
+#' - row_last_clicked
+#' - columns_selected
+#' - search
+#' - search_columns
+#' - state
+#'
+#' These bindings allow you to trigger events with i.e. `shiny::observeEvent()`
+#' in another module.
+#'
+#' For a full description of the exposed bindings, consult the `DT`
+#' documentation: https://rstudio.github.io/DT/shiny.html
 #' @export
 #'
 #' @examples
@@ -22,7 +43,7 @@ Table <- R6::R6Class(
   # Active ----
   active = list(
     ## Reactive ----
-    #' @field bindings (`reactivevalues`) Reactive bindings for `DT::datatable`.
+    #' @field bindings (`reactiveValues`) Reactive bindings for `DT::datatable`.
     bindings = function() return(private$.bindings),
 
     ## Non-reactive ----
@@ -98,37 +119,6 @@ Table <- R6::R6Class(
       )
       checkmate::reportAssertions(assertions)
       return(invisible(self))
-    },
-
-    #' UI
-    #'
-    #' @param title (`character(1)`) Title to use for the DataTable.
-    #'
-    #' @return `shiny.tag.list`
-    UI = function() {
-      shiny::tagList(
-        shiny::h3(private$.title),
-        DT::DTOutput(outputId = shiny::NS(private$.namespace, "table")),
-        shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "csv")
-      )
-    },
-
-    #' server
-    #'
-    #' @param input (`input`)
-    #' @param output (`output`)
-    #' @param session (`session`)
-    #'
-    #' @return `NULL`
-    server = function(input, output, session) {
-      shiny::moduleServer(id = private$.moduleId, module = function(input, output, session) {
-        self$initServer()
-        private$.reactiveValues$data <- private$.data
-
-        private$renderTable(output)
-        private$downloader(output)
-        private$setBindings(input)
-      })
     }
   ),
 
@@ -154,6 +144,21 @@ Table <- R6::R6Class(
     ),
 
     ## Methods ----
+    .server = function(input, output, session) {
+      private$.reactiveValues$data <- private$.data
+      private$renderTable(output)
+      private$downloader(output)
+      private$setBindings(input)
+    },
+
+    .UI = function() {
+      shiny::tagList(
+        shiny::h3(private$.title),
+        DT::DTOutput(outputId = shiny::NS(private$.namespace, "table")),
+        shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "csv")
+      )
+    },
+
     setBindings = function(input) {
       shiny::observeEvent(eventExpr = input$table_cells_selected, {
         private$.bindings$cells_selected <- input$table_cells_selected

@@ -1,14 +1,5 @@
-ableToRun <- function() {
-  all(
-    require("TreatmentPatterns", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
-    require("shiny", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
-    require("shinydashboard", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
-    require("dplyr", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
-  )
-}
-
 test_that("input to reactive", {
-  skip_if_not(ableToRun())
+  skip_if_not(ableToRun()$treatmentPatterns)
 
   tp <- read.csv(system.file(
     package = "DarwinShinyModules",

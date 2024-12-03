@@ -2,9 +2,9 @@
 % Please edit documentation in R/PlotWidget.R
 \name{PlotWidget}
 \alias{PlotWidget}
-\title{PlotWidget}
+\title{PlotWidget Module Class}
 \description{
-Widget Module
+Widget module that handles \code{htmlwidget} objects.
 }
 \examples{
 library(DarwinShinyModules)
@@ -45,57 +45,19 @@ if (nD3Installed) {
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-PlotWidget-UI}{\code{PlotWidget$UI()}}
-\item \href{#method-PlotWidget-server}{\code{PlotWidget$server()}}
 \item \href{#method-PlotWidget-clone}{\code{PlotWidget$clone()}}
 }
 }
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="initServer"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-initServer'><code>DarwinShinyModules::ShinyModule$initServer()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="initialize"><a href='../../DarwinShinyModules/html/Plot.html#method-Plot-initialize'><code>DarwinShinyModules::Plot$initialize()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="validate"><a href='../../DarwinShinyModules/html/Plot.html#method-Plot-validate'><code>DarwinShinyModules::Plot$validate()</code></a></span></li>
 </ul>
 </details>
 }}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-PlotWidget-UI"></a>}}
-\if{latex}{\out{\hypertarget{method-PlotWidget-UI}{}}}
-\subsection{Method \code{UI()}}{
-UI
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PlotWidget$UI()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{shiny.tag.list}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-PlotWidget-server"></a>}}
-\if{latex}{\out{\hypertarget{method-PlotWidget-server}{}}}
-\subsection{Method \code{server()}}{
-server
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PlotWidget$server(input, output, session)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{input}}{(\code{input})}
-
-\item{\code{output}}{(\code{output})}
-
-\item{\code{session}}{(\code{session})}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PlotWidget-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-PlotWidget-clone}{}}}

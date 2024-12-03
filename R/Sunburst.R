@@ -1,9 +1,9 @@
-#' @title Sunburst
+#' @title Sunburst Module Class
 #'
 #' @include TreatmentPatterns.R
 #'
 #' @description
-#' Sunburst Module.
+#' Sunburst module that overrides the plotting method.
 #'
 #' @export
 #'

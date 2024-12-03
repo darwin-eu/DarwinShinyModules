@@ -2,10 +2,141 @@
 % Please edit documentation in R/ShinyModule.R
 \name{ShinyModule}
 \alias{ShinyModule}
-\title{Module Super Class}
+\title{Module Decorator Class}
 \description{
-This class is an \code{decorator} and is not meant to be directly used, but to be
+This class is a \code{decorator} and is not meant to be directly used, but to be
 inherited by other Modules.
+}
+\details{
+\strong{Namespacing}\cr
+The \code{ShinyModule} class manages namespacing with the \code{moduleName} and
+\code{instanceId}, to create a \code{moduleId}. The \code{moduleId} and \code{parentNamespace}
+(when a module is nested in another module) make up the \code{namespace} field.
+
+\preformatted{
+  moduleId = moduleName-instanceId
+  namespace = [parentNamespace-]moduleId
+}
+
+\strong{Server method}\cr
+When creating a new module, the \code{id} in \code{shiny::moduleServer()} is set to
+the \code{moduleId} field.
+
+Besides setting the \code{id}, the \code{initServer()} method is called at the start of
+\code{shiny::moduleServer()}. This initializes a reactive environment to be used
+freely when developing modules. This method may be expanded upon to
+initialize other namespace dependant features.
+
+All of this is done by the class it self, in the public \code{server()} method.
+The \code{server()} method calls the private \code{private$.server()}, which should
+overridden when creating a module.
+
+As an example:
+\preformatted{
+...
+private = list(
+  .server = function(input, output, session) {
+    output$table <- shiny::renderTable(iris)
+  }
+)
+...
+}
+
+If the public \code{server()} method is overridden an error will be thrown:
+\preformatted{
+...
+public = list(
+  server = function(input, output, session) {
+    output$table <- shiny::renderTable(iris)
+  }
+)
+...
+
+myModule <- MyModule$new()
+#> `self$server()` was overridden in `public = list(...)` override `private$.server()` instead in `private = list(.server = function(input, output, session) {})`
+}
+
+\strong{UI method}\cr
+When accessing an \code{outputId} in the UI, the \code{namespace} field is used to
+reference the correct namespace with \code{shiny::NS()}.
+
+It is also expected that the \code{UI()} method returns all contents to be shown,
+so if multiple things should be shown, they should be nested in, as an
+exmaple, \code{shiny::taglist()}.
+
+As an example:
+\preformatted{
+...
+private = list(
+  .UI = function() {
+    # `private$.namespace` would also be valid.
+    shiny::tableOutput(outputId = shiny::NS(self$namespace, "table"))
+  }
+)
+}
+
+If the public \code{UI()} method is overridden an error will be thrown:
+\preformatted{
+...
+public = list(
+  server = function(input, output, session) {
+    output$table <- shiny::renderTable(iris)
+  }
+)
+...
+
+myModule <- MyModule$new()
+#> `self$UI()` was overridden in `public = list(...)` override `private$.UI()` instead in `private = list(.UI = function() {})`
+}
+}
+\examples{
+MyModule <- R6::R6Class(
+  classname = "MyModule",
+  inherit = ShinyModule,
+
+  private = list(
+    .UI = function() {
+      # `private$.namespace` would also be valid.
+      shiny::tableOutput(outputId = shiny::NS(self$namespace, "table"))
+    },
+
+    # Override server()
+    .server = function(input, output, session) {
+      output$table <- shiny::renderTable(iris)
+    }
+  )
+)
+
+if (interactive()) {
+  myModule <- MyModule$new()
+  preview(myModule)
+}
+
+# The following would throw an error for overwritnig the public UI() and server() methods:
+MyModule <- R6::R6Class(
+  classname = "MyModule",
+  inherit = ShinyModule,
+
+  public = list(
+    UI = function() {
+      # `private$.namespace` would also be valid.
+      shiny::tableOutput(outputId = shiny::NS(self$namespace, "table"))
+    },
+
+    # Override server()
+    server = function(input, output, session) {
+      output$table <- shiny::renderTable(iris)
+    }
+  )
+)
+
+tryCatch({
+  myModule <- MyModule$new()
+}, error = function(e) {
+  message(e)
+})
+#> `self$server()` was overridden in `public = list(...)` override `private$.server()` instead in `private = list(.server = function(input, output, session) {})`
+#> `self$UI()` was overridden in `public = list(...)` override `private$.UI()` instead in `private = list(.UI = function() {})`
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
@@ -23,7 +154,9 @@ inherited by other Modules.
 \verb{[parentNamespace-]moduleName-instanceId} where \code{parentNamespace} is
 optional}
 
-\item{\code{reactiveValues}}{(\code{reactivevalues}) Reactive values. use \code{isolate()} to get the non-reactive item.}
+\item{\code{reactiveValues}}{(\code{reactivevalues}) Reactive values. use
+\code{shiny::isolate()} to get a non-reactive item from the reactive
+environment.}
 }
 \if{html}{\out{</div>}}
 }
@@ -31,7 +164,6 @@ optional}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-ShinyModule-new}{\code{ShinyModule$new()}}
-\item \href{#method-ShinyModule-initServer}{\code{ShinyModule$initServer()}}
 \item \href{#method-ShinyModule-validate}{\code{ShinyModule$validate()}}
 \item \href{#method-ShinyModule-UI}{\code{ShinyModule$UI()}}
 \item \href{#method-ShinyModule-server}{\code{ShinyModule$server()}}
@@ -45,19 +177,6 @@ optional}
 Initializer method
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ShinyModule$new()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(\code{self})
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ShinyModule-initServer"></a>}}
-\if{latex}{\out{\hypertarget{method-ShinyModule-initServer}{}}}
-\subsection{Method \code{initServer()}}{
-Initializer method server side.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyModule$initServer()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{

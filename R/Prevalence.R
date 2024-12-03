@@ -1,9 +1,9 @@
-#' @title Prevalence
+#' @title Prevalence Module Class
 #'
 #' @include IncidencePrevalence.R
 #'
 #' @description
-#' Prevalence Module
+#' Prevalence module that overrides the plotting method.
 #'
 #' @export
 #'
