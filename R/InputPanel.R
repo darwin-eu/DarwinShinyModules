@@ -105,6 +105,8 @@ InputPanel <- R6::R6Class(
     #' @return (`NULL`)
     server = function(input, output, session) {
       shiny::moduleServer(id = private$.moduleId, module = function(input, output, session) {
+        private$.inputValues <- shiny::reactiveValues()
+
         lapply(names(private$.args), function(label) {
           shiny::observeEvent(input[[label]], {
             private$.inputValues[[label]] <- input[[label]]
@@ -119,7 +121,7 @@ InputPanel <- R6::R6Class(
     ## Fields ----
     .funs = NULL,
     .args = NULL,
-    .inputValues = shiny::reactiveValues(),
+    .inputValues = NULL,
 
     updateIds = function() {
       for (name in names(private$.args)) {
