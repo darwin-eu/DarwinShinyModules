@@ -27,6 +27,8 @@ test_that("Creation", {
 
   widget <- PlotWidget$new(data = networkData, fun = f, title = "Network")
 
+  expect_identical(class(widget), c("PlotWidget", "Plot", "ShinyModule", "R6"))
+
   net <- widget$fun(data = widget$data)
   expect_identical(class(net), c("forceNetwork", "htmlwidget"))
 })

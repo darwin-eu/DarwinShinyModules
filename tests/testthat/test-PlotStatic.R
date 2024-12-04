@@ -1,13 +1,4 @@
 test_that("Creation", {
-  ggplot2Installed <- require(
-    "ggplot2",
-    character.only = TRUE,
-    quietly = TRUE,
-    warn.conflicts = FALSE
-  )
-
-  skip_if_not(ggplot2Installed)
-
   f <- function(data) {
       ggplot(data = data, mapping = aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
         geom_point() +
@@ -15,6 +6,9 @@ test_that("Creation", {
   }
 
   plot <- PlotStatic$new(data = iris, fun = f, title = "Iris")
+
+  expect_identical(class(plot), c("PlotStatic", "Plot", "ShinyModule", "R6"))
+
   g <- plot$fun(data = plot$data)
   expect_identical(class(g), c("gg", "ggplot"))
 
@@ -31,15 +25,6 @@ test_that("Creation", {
 })
 
 test_that("App", {
-  ggplot2Installed <- require(
-    "ggplot2",
-    character.only = TRUE,
-    quietly = TRUE,
-    warn.conflicts = FALSE
-  )
-
-  skip_if_not(ggplot2Installed)
-
   f <- function(data) {
     ggplot(data = data, mapping = aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
       geom_point() +
