@@ -5,3 +5,5 @@
 ^man-roxygen$
 ^docs$
 ^extras$
+^_pkgdown\.yml$
+^pkgdown$
