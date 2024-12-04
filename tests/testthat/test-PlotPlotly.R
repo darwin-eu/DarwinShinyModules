@@ -1,0 +1,45 @@
+test_that("Creation", {
+  f <- function(data) {
+    gg <- ggplot(data = data, mapping = aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+      geom_point() +
+      theme_bw()
+
+    ggplotly(gg)
+  }
+
+  plot <- suppressWarnings(PlotPlotly$new(data = iris, fun = f))
+
+  expect_identical(class(plot), c("PlotPlotly", "Plot", "ShinyModule", "R6"))
+
+  pg <- plot$fun(plot$data)
+  expect_identical(class(pg), c("plotly", "htmlwidget"))
+})
+
+test_that("App", {
+  f <- function(data) {
+    gg <- ggplot(data = data, mapping = aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+      geom_point() +
+      theme_bw()
+
+    ggplotly(gg)
+  }
+
+  plot <- suppressWarnings(PlotPlotly$new(data = iris, fun = f))
+
+  modServer <- function(id) {
+    plot$server(input, output, session)
+  }
+
+  testServer(modServer, {
+    suppressWarnings({
+      ## ReactiveValues ----
+      expect_identical(
+        isolate(plot$reactiveValues$data),
+        iris
+      )
+
+      ## Outputs ----
+      expect_true(nchar(output$plot) > 0)
+    })
+  })
+})

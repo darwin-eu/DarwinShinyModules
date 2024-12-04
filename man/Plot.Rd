@@ -2,9 +2,17 @@
 % Please edit documentation in R/Plot.R
 \name{Plot}
 \alias{Plot}
-\title{Plot}
+\title{Plot Decorator Class}
 \description{
-Plot Decorator class
+This class is a \code{decorator} and is not meant to be directly used, but to be
+inherited by other modules, like \code{PlotStaic}, \code{PlotWidget}, and \code{PlotPlotly}.
+}
+\details{
+The inherited \code{Plot} modules evaluate the provided function with a provided
+data object.
+
+To add a new plot type it is required to inherit from the \code{Plot} class, and
+to override the private \code{.UI()} and \code{.server()} methods.
 }
 \section{Super class}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{Plot}
@@ -15,8 +23,6 @@ Plot Decorator class
 \item{\code{title}}{(\code{character(1)}) Title to use for the plot.}
 
 \item{\code{data}}{Reactive data used for the plot. Use \code{shiny::isolate()} to get the non-reactive data.}
-
-\item{\code{reactiveValues}}{(\code{reactiveValues}) Reactive values used by the Plot object.}
 
 \item{\code{fun}}{Plotting function.}
 }

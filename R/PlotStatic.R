@@ -1,9 +1,10 @@
-#' @title PlotStatic
+#' @title PlotStatic Module Class
 #'
 #' @include Plot.R
 #'
 #' @description
-#' Static Plot (`plot()` or `ggplot2`) Module
+#' Static plot Module that handles static plots like from the `base::plot()`
+#' function or `ggplot2` objects.
 #'
 #' @export
 #'
@@ -26,31 +27,20 @@ PlotStatic <- R6::R6Class(
   classname = "PlotStatic",
   inherit = Plot,
 
-  # Public ----
-  public = list(
+  # Private ----
+  private = list(
     ## Methods ----
-    #' @description UI
-    #'
-    #' @return `shiny.tag.list`
-    UI = function() {
+    .UI = function() {
       shiny::tagList(
         shiny::h3(private$.title),
         shiny::plotOutput(shiny::NS(private$.namespace, "plot"))
       )
     },
 
-    #' @description server
-    #'
-    #' @param input (`input`)
-    #' @param output (`output`)
-    #' @param session (`session`)
-    #'
-    #' @return `NULL`
-    server = function(input, output, session) {
-      shiny::moduleServer(id = private$.moduleId, module = function(input, output, session) {
-        output$plot <- shiny::renderPlot({
-          do.call(private$.fun, list(data = private$.reactiveValues$data))
-        })
+    .server = function(input, output, session) {
+      private$.reactiveValues$data <- private$.data
+      output$plot <- shiny::renderPlot({
+        do.call(private$.fun, list(data = private$.reactiveValues$data))
       })
     }
   )

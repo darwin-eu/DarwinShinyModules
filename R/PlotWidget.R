@@ -1,9 +1,9 @@
-#' @title PlotWidget
+#' @title PlotWidget Module Class
 #'
 #' @include Plot.R
 #'
 #' @description
-#' Widget Module
+#' Widget module that handles `htmlwidget` objects.
 #'
 #' @export
 #'
@@ -43,30 +43,19 @@ PlotWidget <- R6::R6Class(
   classname = "PlotWidget",
   inherit = Plot,
 
-  # Public ----
-  public = list(
-    #' @description UI
-    #'
-    #' @return `shiny.tag.list`
-    UI = function() {
+  # Private ----
+  private = list(
+    .UI = function() {
       shiny::tagList(
         shiny::h3(private$.title),
         shiny::uiOutput(shiny::NS(private$.namespace, "plot"))
       )
     },
 
-    #' @description server
-    #'
-    #' @param input (`input`)
-    #' @param output (`output`)
-    #' @param session (`session`)
-    #'
-    #' @return `NULL`
-    server = function(input, output, session) {
-      shiny::moduleServer(id = private$.moduleId, module = function(input, output, session) {
-        output$plot <- shiny::renderUI({
-          do.call(private$.fun, list(data = private$.reactiveValues$data))
-        })
+    .server = function(input, output, session) {
+      private$.reactiveValues$data <- private$.data
+      output$plot <- shiny::renderUI({
+        do.call(private$.fun, list(data = private$.reactiveValues$data))
       })
     }
   )

@@ -40,18 +40,9 @@ preview <- function(modules) {
   )
 
   server <- function(input, output, session) {
-    shiny::moduleServer(id = modules[[1]]$appId, module = function(input, output, session) {
-      ids <- unique(unlist(lapply(modules, function(module) {
-        module$appId
-      })))
-      if (length(ids) > 1) {
-        warning(sprintf("Moduels have different appIds: (%s), using '%s'", paste(sprintf("'%s'", ids), collapse = ", "), modules[[1]]$appId))
-      }
-
-      servASync <- lapply(modules, function(module) {
-        promises::future_promise(module$server(input, output, session))
-      })
-    })
+    for (module in modules) {
+      module$server(input, output, session)
+    }
   }
 
   shiny::shinyApp(ui, server)

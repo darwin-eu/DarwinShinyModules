@@ -1,10 +1,10 @@
-#' @title IncidencePrevalence
+#' @title IncidencePrevalence Module Class
 #'
 #' @include ShinyModule.R
 #'
 #' @description
-#' IncidencePrevalence super class. Composed of the Plot and Table modules.
-#' This class is an `interface` and is not meant to be directly used, but to be
+#' IncidencePrevalence super class. Composed of the `Plot` and `Table` modules.
+#' This class is a `decorator` and is not meant to be directly used, but to be
 #' inherited.
 #'
 #' @export
@@ -14,7 +14,7 @@ IncidencePrevalence <- R6::R6Class(
 
   # Active ----
   active = list(
-    #' @field data (`data.frame`) Incidence or Prevalence data.
+    #' @field data (`data.frame`) Data the `table` and `plot` fields are based on.
     data = function() return(private$.data),
 
     #' @field table (`Table`) Module.
@@ -28,7 +28,9 @@ IncidencePrevalence <- R6::R6Class(
   public = list(
     #' @description initialize
     #'
-    #' @param data Data to plot with, usually a `data.frame`-like object.
+    #' @param data Incidence or Prevalence data from
+    #' `IncidencePrevalence::estimateIncidence()` or
+    #' `IncidencePrevalence::estimatePrevalence()`.
     #'
     #' @return `self`
     initialize = function(data) {
@@ -64,34 +66,6 @@ IncidencePrevalence <- R6::R6Class(
       checkmate::reportAssertions(assertions)
       private$assertIPInstall()
       return(invisible(self))
-    },
-
-    #' @description UI
-    #'
-    #' @param title (`character(1)`) Title to use for the plot.
-    #'
-    #' @return `shiny.tag.list`
-    UI = function() {
-      shiny::tagList(
-        private$.plot$UI(),
-        private$.table$UI()
-      )
-    },
-
-    #' server
-    #'
-    #' @param input (`input`)
-    #' @param output (`output`)
-    #' @param session (`session`)
-    #'
-    #' @return `NULL`
-    server = function(input, output, session) {
-      shiny::moduleServer(id = private$.moduleId, function(input, output, session) {
-        private$.plot$server(input, output, session)
-        private$.table$server(input, output, session)
-
-        shiny::observe(private$updateData())
-      })
     }
   ),
 
@@ -101,6 +75,20 @@ IncidencePrevalence <- R6::R6Class(
     .table = NULL,
     .plot = NULL,
     .data = NULL,
+
+    ## Methods ----
+    .UI = function() {
+      shiny::tagList(
+        private$.plot$UI(),
+        private$.table$UI()
+      )
+    },
+
+    .server = function(input, output, session) {
+      private$.plot$server(input, output, session)
+      private$.table$server(input, output, session)
+      shiny::observe(private$updateData())
+    },
 
     updateData = function() {
       private$.plot$data <- private$.data %>%
@@ -126,6 +114,11 @@ IncidencePrevalence <- R6::R6Class(
     },
 
     ## Methods ----
-    plotIncidencePrevalence = function(data) {}
+    plotIncidencePrevalence = function(data) {},
+
+    validateData = function() {
+      assertions <- checkmate::makeAssertCollection()
+      checkmate::assertClass(x = data, classes = c("IncidencePrevalenceResult"))
+    }
   )
 )

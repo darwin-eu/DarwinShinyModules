@@ -93,13 +93,13 @@ if (interactive()) {
 \itemize{
 \item \href{#method-Text-new}{\code{Text$new()}}
 \item \href{#method-Text-validate}{\code{Text$validate()}}
-\item \href{#method-Text-UI}{\code{Text$UI()}}
 \item \href{#method-Text-clone}{\code{Text$clone()}}
 }
 }
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
 </ul>
 </details>
@@ -135,19 +135,6 @@ Validator method
 
 \subsection{Returns}{
 (\code{self})
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Text-UI"></a>}}
-\if{latex}{\out{\hypertarget{method-Text-UI}{}}}
-\subsection{Method \code{UI()}}{
-UI
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Text$UI()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{shiny.tag.list}
 }
 }
 \if{html}{\out{<hr>}}

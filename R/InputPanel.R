@@ -1,13 +1,15 @@
-#' @title InputPanel
+#' @title InputPanel Module Class
 #'
 #' @include ShinyModule.R
 #'
-#' @template param_appId
-#' @param funs (`list()`) Named list of xInput functions used `list(funA = shiny::selectInput)`.
-#' @param args (`list()`) Named list of arguments used by xInput functions `list(funA = list(inputId = "name", label = "name"))`
-#'
 #' @description
-#' InputPanel Module.
+#' InputPanel module that handles inputs based on an input function like:
+#' `shiny::selectInput()`, `shinyWidgets::pickerInput()`, etc.
+#'
+#' @details
+#' The assigned input values are accessible in the reactive values
+#' `inputValues` field. Other modules may trigger off these reactive values
+#' with i.e. `shiny::observeEvent()`.
 #'
 #' @export
 #'
@@ -57,6 +59,9 @@ InputPanel <- R6::R6Class(
     #' @description
     #' Initializer method
     #'
+    #' @param funs (`list()`) Named list of xInput functions used `list(funA = shiny::selectInput)`.
+    #' @param args (`list()`) Named list of arguments used by xInput functions `list(funA = list(inputId = "name", label = "name"))`
+    #'
     #' @return (`invisible(self)`)
     initialize = function(funs, args) {
       super$initialize()
@@ -73,13 +78,17 @@ InputPanel <- R6::R6Class(
     #' @return (`self`)
     validate = function() {
       return(invisible(self))
-    },
+    }
+  ),
 
-    #' @description
-    #' Method to include a \link[shiny]{tagList} to include the body.
-    #'
-    #' @return (`tagList`)
-    UI = function() {
+  # Private ----
+  private = list(
+    ## Fields ----
+    .funs = NULL,
+    .args = NULL,
+    .inputValues = NULL,
+
+    .UI = function() {
       shiny::tagList(
         lapply(names(private$.funs), function(name) {
           # shiny::column(
@@ -90,36 +99,13 @@ InputPanel <- R6::R6Class(
       )
     },
 
-    #' @description
-    #' Method to handle the back-end.
-    #'
-    #' @param input (`input`)\cr
-    #' Input from the server function.
-    #'
-    #' @param output (`output`)\cr
-    #' Output from the server function.
-    #'
-    #' @param session (`session`)\cr
-    #' Session from the server function.
-    #'
-    #' @return (`NULL`)
-    server = function(input, output, session) {
-      shiny::moduleServer(id = private$.moduleId, module = function(input, output, session) {
-        lapply(names(private$.args), function(label) {
-          shiny::observeEvent(input[[label]], {
-            private$.inputValues[[label]] <- input[[label]]
-          })
+    .server = function(input, output, session) {
+      lapply(names(private$.args), function(label) {
+        shiny::observeEvent(input[[label]], {
+          private$.inputValues[[label]] <- input[[label]]
         })
       })
-    }
-  ),
-
-  # Private ----
-  private = list(
-    ## Fields ----
-    .funs = NULL,
-    .args = NULL,
-    .inputValues = shiny::reactiveValues(),
+    },
 
     updateIds = function() {
       for (name in names(private$.args)) {

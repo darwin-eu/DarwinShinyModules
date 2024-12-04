@@ -118,21 +118,19 @@ Text <- R6::R6Class(
         add = assertions
       )
       checkmate::reportAssertions(assertions)
-    },
-
-    #' @description UI
-    #'
-    #' @return `shiny.tag.list`
-    UI = function() {
-      shiny::tagList(
-        shiny::markdown(private$.markdown)
-      )
     }
   ),
 
   # Private ----
   private = list(
     ## Fields ----
-    .markdown = ""
+    .markdown = "",
+
+    ## Methods ----
+    .UI = function() {
+      shiny::tagList(
+        shiny::markdown(private$.markdown)
+      )
+    }
   )
 )

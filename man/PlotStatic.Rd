@@ -2,9 +2,10 @@
 % Please edit documentation in R/PlotStatic.R
 \name{PlotStatic}
 \alias{PlotStatic}
-\title{PlotStatic}
+\title{PlotStatic Module Class}
 \description{
-Static Plot (\code{plot()} or \code{ggplot2}) Module
+Static plot Module that handles static plots like from the \code{base::plot()}
+function or \code{ggplot2} objects.
 }
 \examples{
 library(DarwinShinyModules)
@@ -28,56 +29,19 @@ if (interactive()) {
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-PlotStatic-UI}{\code{PlotStatic$UI()}}
-\item \href{#method-PlotStatic-server}{\code{PlotStatic$server()}}
 \item \href{#method-PlotStatic-clone}{\code{PlotStatic$clone()}}
 }
 }
 \if{html}{\out{
 <details open><summary>Inherited methods</summary>
 <ul>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="initialize"><a href='../../DarwinShinyModules/html/Plot.html#method-Plot-initialize'><code>DarwinShinyModules::Plot$initialize()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="validate"><a href='../../DarwinShinyModules/html/Plot.html#method-Plot-validate'><code>DarwinShinyModules::Plot$validate()</code></a></span></li>
 </ul>
 </details>
 }}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-PlotStatic-UI"></a>}}
-\if{latex}{\out{\hypertarget{method-PlotStatic-UI}{}}}
-\subsection{Method \code{UI()}}{
-UI
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PlotStatic$UI()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{shiny.tag.list}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-PlotStatic-server"></a>}}
-\if{latex}{\out{\hypertarget{method-PlotStatic-server}{}}}
-\subsection{Method \code{server()}}{
-server
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PlotStatic$server(input, output, session)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{input}}{(\code{input})}
-
-\item{\code{output}}{(\code{output})}
-
-\item{\code{session}}{(\code{session})}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PlotStatic-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-PlotStatic-clone}{}}}

@@ -1,9 +1,13 @@
-#' @title PlotPlotly
+#' @title PlotPlotly Module Class
 #'
 #' @include Plot.R
 #'
 #' @description
-#' Plotly Module
+#' Plotly module that handles `plotly` objects.
+#'
+#' @details
+#' `Plotly` exposes bindings to interact with the plot programaticaly.
+#' Currently, only the `plotly_selected` binding is supported in this module.
 #'
 #' @export
 #'
@@ -52,39 +56,6 @@ PlotPlotly <- R6::R6Class(
     initialize = function(data, fun) {
       super$initialize(data, fun)
       return(invisible(self))
-    },
-
-    #' @description UI
-    #'
-    #' @return `shiny.tag.list`
-    UI = function() {
-      shiny::tagList(
-        shiny::h3(private$.title),
-        plotly::plotlyOutput(shiny::NS(private$.namespace, "plot"))
-      )
-    },
-
-    #' server
-    #'
-    #' @param input (`input`)
-    #' @param output (`output`)
-    #' @param session (`session`)
-    #'
-    #' @return `NULL`
-    server = function(input, output, session) {
-      shiny::moduleServer(id = private$.moduleId, function(input, output, session) {
-        output$plot <- plotly::renderPlotly({
-          data <- if (is.null(private$.reactiveValues$data)) {
-            private$.data
-          } else {
-            private$.reactiveValues$data
-          }
-          p <- do.call(what = private$.fun, args = list(data = data))
-          plotly::event_register(p = p, event = "plotly_selected")
-          private$updateBindings()
-          p
-        })
-      })
     }
   ),
 
@@ -98,6 +69,29 @@ PlotPlotly <- R6::R6Class(
     ),
 
     ## Methods ----
+    .UI = function() {
+      shiny::tagList(
+        shiny::h3(private$.title),
+        plotly::plotlyOutput(shiny::NS(private$.namespace, "plot"))
+      )
+    },
+
+    .server = function(input, output, session) {
+      private$.reactiveValues$data <- private$.data
+
+      output$plot <- plotly::renderPlotly({
+        data <- if (is.null(private$.reactiveValues$data)) {
+          private$.data
+        } else {
+          private$.reactiveValues$data
+        }
+        p <- do.call(what = private$.fun, args = list(data = data))
+        plotly::event_register(p = p, event = "plotly_selected")
+        private$updateBindings()
+        p
+      })
+    },
+
     updateBindings = function() {
       shiny::observeEvent(plotly::event_data("plotly_selected", source = private$.source), {
         private$.bindings$selected <- plotly::event_data("plotly_selected", source = private$.source)

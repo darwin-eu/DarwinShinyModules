@@ -29,11 +29,11 @@ Suggests:
     IncidencePrevalence,
     networkD3,
     testthat (>= 3.0.0),
-    duckdb,
     knitr,
     rmarkdown,
     datasets,
-    future
+    htmlwidgets,
+    xml2
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr

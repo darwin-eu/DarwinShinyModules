@@ -2,9 +2,33 @@
 % Please edit documentation in R/Table.R
 \name{Table}
 \alias{Table}
-\title{Table}
+\title{Table Module Class}
 \description{
-Table Module
+Table module that displays \code{data.frame} like objects as a table that are
+supported by \code{DT::renderDT()} and \code{DT::DTOutput()}.
+}
+\details{
+The Table module exposes reactive bindings from the datatable object from
+\code{DT}, in \code{bindings} field. These bindings are:
+\itemize{
+\item cell_clicked
+\item cells_selected
+\item cell_info
+\item rows_current
+\item rows_all
+\item rows_selected
+\item row_last_clicked
+\item columns_selected
+\item search
+\item search_columns
+\item state
+}
+
+These bindings allow you to trigger events with i.e. \code{shiny::observeEvent()}
+in another module.
+
+For a full description of the exposed bindings, consult the \code{DT}
+documentation: https://rstudio.github.io/DT/shiny.html
 }
 \examples{
 library(DarwinShinyModules)
@@ -21,11 +45,9 @@ if (interactive()) {
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
+\item{\code{bindings}}{(\code{reactiveValues}) Reactive bindings for \code{DT::datatable}.}
+
 \item{\code{data}}{(\code{data.frame}) Reactive data, use \code{shiny::isolate()} to get the non-reactive data.}
-
-\item{\code{reactiveValues}}{(\code{reactiveValues}) Reactive values used by the \code{Table} object.}
-
-\item{\code{bindings}}{(\code{reactivevalues}) Reactive bindings for \code{DT::datatable}.}
 
 \item{\code{title}}{(\code{character}) Title of the table.}
 
@@ -40,11 +62,17 @@ if (interactive()) {
 \itemize{
 \item \href{#method-Table-new}{\code{Table$new()}}
 \item \href{#method-Table-validate}{\code{Table$validate()}}
-\item \href{#method-Table-UI}{\code{Table$UI()}}
-\item \href{#method-Table-server}{\code{Table$server()}}
 \item \href{#method-Table-clone}{\code{Table$clone()}}
 }
 }
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Table-new"></a>}}
 \if{latex}{\out{\hypertarget{method-Table-new}{}}}
@@ -89,50 +117,6 @@ validate
 
 \subsection{Returns}{
 \code{self}
-UI
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Table-UI"></a>}}
-\if{latex}{\out{\hypertarget{method-Table-UI}{}}}
-\subsection{Method \code{UI()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Table$UI()}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{title}}{(\code{character(1)}) Title to use for the DataTable.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{shiny.tag.list}
-server
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Table-server"></a>}}
-\if{latex}{\out{\hypertarget{method-Table-server}{}}}
-\subsection{Method \code{server()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Table$server(input, output, session)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{input}}{(\code{input})}
-
-\item{\code{output}}{(\code{output})}
-
-\item{\code{session}}{(\code{session})}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

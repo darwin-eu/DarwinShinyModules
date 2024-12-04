@@ -1,9 +1,9 @@
-#' @title Incidence
+#' @title Incidence Module Class
 #'
 #' @include IncidencePrevalence.R
 #'
 #' @description
-#' Incidence Module. Composed of the Plot and Table modules.
+#' Incidence module that overrides the plotting method.
 #'
 #' @export
 #'
