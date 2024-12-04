@@ -208,7 +208,7 @@ TreatmentPatterns <- R6::R6Class(
             .data$sex == private$.inputPanel$inputValues$sexGroup,
             .data$indexYear == private$.inputPanel$inputValues$yearGroup
           )
-      })
+      }, ignoreNULL = TRUE)
 
       observeEvent(list(
         private$.inputPanel$inputValues$none,

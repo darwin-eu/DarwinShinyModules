@@ -135,8 +135,12 @@ tryCatch({
 }, error = function(e) {
   message(e)
 })
-#> `self$server()` was overridden in `public = list(...)` override `private$.server()` instead in `private = list(.server = function(input, output, session) {})`
-#> `self$UI()` was overridden in `public = list(...)` override `private$.UI()` instead in `private = list(.UI = function() {})`
+#> `self$server()` was overridden in `public = list(...)` override
+#> `private$.server()` instead in
+#> `private = list(.server = function(input,output, session) {})`
+
+#> `self$UI()` was overridden in `public = list(...)` override
+#> `private$.UI()` instead in `private = list(.UI = function() {})`
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}

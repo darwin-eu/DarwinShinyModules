@@ -134,8 +134,12 @@
 #' }, error = function(e) {
 #'   message(e)
 #' })
-#' #> `self$server()` was overridden in `public = list(...)` override `private$.server()` instead in `private = list(.server = function(input, output, session) {})`
-#' #> `self$UI()` was overridden in `public = list(...)` override `private$.UI()` instead in `private = list(.UI = function() {})`
+#' #> `self$server()` was overridden in `public = list(...)` override
+#' #> `private$.server()` instead in
+#' #> `private = list(.server = function(input,output, session) {})`
+#'
+#' #> `self$UI()` was overridden in `public = list(...)` override
+#' #> `private$.UI()` instead in `private = list(.UI = function() {})`
 ShinyModule <- R6::R6Class(
   classname = "ShinyModule",
 

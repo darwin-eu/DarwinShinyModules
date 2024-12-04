@@ -34,12 +34,12 @@ MyModule <- R6::R6Class(
   classname = "MyModule",
   inherit = ShinyModule,
 
-  public = list(
+  private = list(
     # Override UI()
-    UI = function() {},
+    .UI = function() {},
 
     # Override server()
-    server = function(input, output, session) {}
+    .server = function(input, output, session) {}
   )
 )
 ```
@@ -64,14 +64,14 @@ MyModule <- R6::R6Class(
   classname = "MyModule",
   inherit = ShinyModule,
 
-  public = list(
+  private = list(
     # Override UI()
-    UI = function() {
+    .UI = function() {
       myUi
     },
 
     # Override server()
-    server = function(input, output, session) {
+    .server = function(input, output, session) {
       myServer(input, output, session)
     }
   )
@@ -90,9 +90,17 @@ MyModule <- R6::R6Class(
   classname = "MyModule",
   inherit = ShinyModule,
 
-  public = list(
+  active = list(
+    # Additional active binding field, to fetch the private field .data
+    data = function() return(private$.data)
+  ),
+
+  private = list(
+    # Additional private field, containing the `iris` data.frame
+    .data = iris,
+
     # Override UI()
-    UI = function() {
+    .UI = function() {
       shiny::tagList(
         # Output a table "input$app-MyModule_ABCDEFGHIJ__myTable"
         shiny::tableOutput(outputId = shiny::NS(private$.namespace, "myTable")),
@@ -102,34 +110,21 @@ MyModule <- R6::R6Class(
     },
 
     # Override server()
-    server = function(input, output, session) {
-      shiny::moduleServer(id = private$.moduleId, module = function(input, output, session) {
-        # Render the table to "MyModule_ABCDEFGHIJ_myTable"
-        output$myTable <- shiny::renderTable({
-          head(private$.data)
-        })
-        
-        # Render the HTML to "MyModule_ABCDEFGHIJ_moduleData"
-        output$moduleData <- shiny::renderUI({
-          shiny::HTML(paste(
-            sprintf("App ID: %s", private$.moduleId),
-            sprintf("Module Name: %s", private$.moduleName),
-            sprintf("Instance ID: %s", private$.instanceId),
-            sep = "<br/>"
-          ))
-        })
+    .server = function(input, output, session) {
+      output$myTable <- shiny::renderTable({
+        head(private$.data)
+      })
+      
+      # Render the HTML to "MyModule_ABCDEFGHIJ_moduleData"
+      output$moduleData <- shiny::renderUI({
+        shiny::HTML(paste(
+          sprintf("App ID: %s", private$.moduleId),
+          sprintf("Module Name: %s", private$.moduleName),
+          sprintf("Instance ID: %s", private$.instanceId),
+          sep = "<br/>"
+        ))
       })
     }
-  ),
-
-  private = list(
-    # Additional private field, containing the `iris` data.frame
-    .data = iris
-  ),
-
-  active = list(
-    # Additional active binding field, to fetch the private field .data
-    data = function() return(private$.data)
   )
 )
 ```

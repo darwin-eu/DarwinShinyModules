@@ -1,14 +1,7 @@
 library(htmlwidgets)
 
 test_that("Creation", {
-  nD3Installed <- require(
-    "networkD3",
-    character.only = TRUE,
-    quietly = TRUE,
-    warn.conflicts = FALSE
-  )
-
-  skip_if_not(nD3Installed)
+  skip_if_not(suggestsInstalled)
 
   src <- c(
     "A", "A", "A", "A",
@@ -34,14 +27,7 @@ test_that("Creation", {
 })
 
 test_that("App", {
-  nD3Installed <- require(
-    "networkD3",
-    character.only = TRUE,
-    quietly = TRUE,
-    warn.conflicts = FALSE
-  )
-
-  skip_if_not(nD3Installed)
+  skip_if_not(suggestsInstalled)
 
   src <- c(
     "A", "A", "A", "A",
