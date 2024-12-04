@@ -6,6 +6,8 @@ test_that("Creation", {
     filter = "bottom"
   )
 
+  expect_identical(class(table), c("Table", "ShinyModule", "R6"))
+
   expect_true(is.null(isolate(table$reactiveValues$data)))
   expect_identical(table$data, iris)
   expect_identical(table$title, "Iris")
@@ -21,7 +23,7 @@ test_that("App", {
   }
 
   testServer(modServer, {
-    # ReactiveValues ----
+    ## ReactiveValues ----
     expect_identical(
       isolate(table$reactiveValues$data),
       iris

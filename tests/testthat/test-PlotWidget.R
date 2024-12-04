@@ -1,0 +1,75 @@
+library(htmlwidgets)
+
+test_that("Creation", {
+  nD3Installed <- require(
+    "networkD3",
+    character.only = TRUE,
+    quietly = TRUE,
+    warn.conflicts = FALSE
+  )
+
+  skip_if_not(nD3Installed)
+
+  src <- c(
+    "A", "A", "A", "A",
+    "B", "B", "C", "C", "D"
+  )
+  target <- c(
+    "B", "C", "D", "J",
+    "E", "F", "G", "H", "I"
+  )
+
+  networkData <- data.frame(src, target)
+
+  f <- function(data) {
+    simpleNetwork(data)
+  }
+
+  widget <- PlotWidget$new(data = networkData, fun = f, title = "Network")
+
+  net <- widget$fun(data = widget$data)
+  expect_identical(class(net), c("forceNetwork", "htmlwidget"))
+})
+
+test_that("App", {
+  nD3Installed <- require(
+    "networkD3",
+    character.only = TRUE,
+    quietly = TRUE,
+    warn.conflicts = FALSE
+  )
+
+  skip_if_not(nD3Installed)
+
+  src <- c(
+    "A", "A", "A", "A",
+    "B", "B", "C", "C", "D"
+  )
+  target <- c(
+    "B", "C", "D", "J",
+    "E", "F", "G", "H", "I"
+  )
+
+  networkData <- data.frame(src, target)
+
+  f <- function(data) {
+    simpleNetwork(data)
+  }
+
+  widget <- PlotWidget$new(data = networkData, fun = f, title = "Network")
+
+  modServer <- function(id) {
+    widget$server(input, output, session)
+  }
+
+  testServer(modServer, {
+    ## ReactiveValues ----
+    expect_identical(
+      isolate(widget$reactiveValues$data),
+      networkData
+    )
+
+    ## Outputs ----
+    expect_true(nchar(output$plot$html) > 0)
+  })
+})
