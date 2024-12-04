@@ -1,7 +1,18 @@
-test_that("ShinyModule namespacing", {
+test_that("Creation", {
+  mod <- ShinyModule$new()
+  expect_identical(class(mod), c("ShinyModule", "R6"))
+
+  expect_identical(mod$moduleName, class(mod)[1])
+  expect_true(is.character(mod$instanceId))
+  expect_true(grepl(pattern = mod$moduleName, x = mod$moduleId))
+  expect_true(grepl(pattern = mod$instanceId, x = mod$moduleId))
+  expect_true(grepl(pattern = mod$moduleId, x = mod$namespace))
+  expect_true(is.null(mod$reactiveValues))
+})
+
+test_that("Namespacing", {
   mod <- ShinyModule$new()
 
-  ## Base ----
   expect_identical(
     mod$namespace,
     paste(c(
@@ -19,7 +30,6 @@ test_that("ShinyModule namespacing", {
     ), collapse = "-")
   )
 
-  ## Override parentNamespace ----
   mod$parentNamespace <- "parent"
 
   expect_identical(
@@ -58,7 +68,6 @@ test_that("ShinyModule namespacing", {
     ), collapse = "-")
   )
 
-  ## Override parentNamesapce, and instanceID ----
   mod$parentNamespace <- "parent"
   mod$instanceId <- "A"
 
@@ -101,8 +110,7 @@ test_that("ShinyModule namespacing", {
   rm(mod)
 })
 
-test_that("Overrides", {
-  ## Override public server ----
+test_that("Method Overrides", {
   MyMod <- R6::R6Class(
     classname = "MyMod",
     inherit = ShinyModule,
@@ -115,7 +123,6 @@ test_that("Overrides", {
 
   expect_error(MyMod$new())
 
-  ## Override public UI ----
   MyMod <- R6::R6Class(
     classname = "MyMod",
     inherit = ShinyModule,
@@ -128,7 +135,6 @@ test_that("Overrides", {
 
   expect_error(MyMod$new())
 
-  ## Override public server and UI ----
   MyMod <- R6::R6Class(
     classname = "MyMod",
     inherit = ShinyModule,
@@ -145,7 +151,6 @@ test_that("Overrides", {
 
   expect_error(MyMod$new())
 
-  ## Override public UI private server ----
   MyMod <- R6::R6Class(
     classname = "MyMod",
     inherit = ShinyModule,
@@ -164,7 +169,6 @@ test_that("Overrides", {
 
   expect_error(MyMod$new())
 
-  ## Override public server, private UI ----
   MyMod <- R6::R6Class(
     classname = "MyMod",
     inherit = ShinyModule,
@@ -183,7 +187,6 @@ test_that("Overrides", {
 
   expect_error(MyMod$new())
 
-  ## Override private server and UI ----
   MyMod <- R6::R6Class(
     classname = "MyMod",
     inherit = ShinyModule,
@@ -204,29 +207,16 @@ test_that("Overrides", {
   rm(MyMod)
 })
 
-test_that("app", {
+test_that("Decorated", {
   MyMod <- R6::R6Class(
     classname = "MyMod",
     inherit = ShinyModule,
 
     private = list(
-      .UI = function() {
-        shiny::tableOutput(outputId = "table")
-        shiny::selectInput(
-          inputId = shiny::NS(mod$namespace, "select"),
-          label = "F",
-          choices = c("foo", "bar", "baz"),
-          selected = "foo"
-        )
-      },
-
       .server = function(input, output, session) {
-        output$table <- shiny::renderTable(iris)
-        private$.reactiveValues$select <- ""
-        shiny::observeEvent(input$select, {
-          private$.reactiveValues$select <- input$select
+        shiny::observeEvent(input$foo, {
+          private$.reactiveValues$foo <- input$foo
         })
-        private$.reactiveValues$x <- 3
       }
     )
   )
@@ -237,9 +227,13 @@ test_that("app", {
     mod$server(input, output, session)
   }
 
-  testServer(mod$server, {
-    session$setInputs(select = "foo")
-    print(mod$reactiveValues$select)
-    print(input$select)
+  testServer(modServer, {
+    expect_true(is.reactivevalues(mod$reactiveValues))
+
+    session$setInputs(foo = "bar")
+    expect_equal(input$select, mod$reactiveValues$select)
+
+    session$setInputs(foo = "baz")
+    expect_equal(input$select, mod$reactiveValues$select)
   })
 })
