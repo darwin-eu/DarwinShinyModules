@@ -50,7 +50,7 @@ InputPanel <- R6::R6Class(
     args = function() return(private$.args),
 
     #' @field inputValues (`reactiveValues`) Values passed from the input fields.
-    inputValues = function() return(private$.inputValues)
+    inputValues = function() return(private$.reactiveValues)
   ),
 
   # Public ----
@@ -86,7 +86,6 @@ InputPanel <- R6::R6Class(
     ## Fields ----
     .funs = NULL,
     .args = NULL,
-    .inputValues = NULL,
 
     .UI = function() {
       shiny::tagList(
@@ -102,7 +101,7 @@ InputPanel <- R6::R6Class(
     .server = function(input, output, session) {
       lapply(names(private$.args), function(label) {
         shiny::observeEvent(input[[label]], {
-          private$.inputValues[[label]] <- input[[label]]
+          private$.reactiveValues[[label]] <- input[[label]]
         })
       })
     },

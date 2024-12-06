@@ -77,15 +77,8 @@ PlotPlotly <- R6::R6Class(
     },
 
     .server = function(input, output, session) {
-      private$.reactiveValues$data <- private$.data
-
       output$plot <- plotly::renderPlotly({
-        data <- if (is.null(private$.reactiveValues$data)) {
-          private$.data
-        } else {
-          private$.reactiveValues$data
-        }
-        p <- do.call(what = private$.fun, args = list(data = data))
+        p <- do.call(what = private$.fun, args = list(data = private$.reactiveValues$data))
         plotly::event_register(p = p, event = "plotly_selected")
         private$updateBindings()
         p
