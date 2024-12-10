@@ -3,26 +3,39 @@ TreatmentPatterns <- R6::R6Class(
   inherit = ShinyModule,
 
   active = list(
-    #' @field jsShowLegend (`character(1)`) JavaScript function to show legend
-    #' on render as text.
-    jsShowLegend = function() return(private$.jsShowLegend)
+    sankeyCols = function(sankeyCols) {
+      if (missing(sankeyCols)) {
+        return(private$.sankeyCols)
+      } else {
+        checkmate::assertList(sankeyCols, types = "character")
+        private$.sankeyCols <- sankeyCols
+      }
+    },
+
+    sunburstCols = function(sunburstCols) {
+      if (missing(sunburstCols)) {
+        return(private$.sunburstCols)
+      } else {
+        assertCol <- checkmate::makeAssertCollection()
+        checkmate::assertList(sunburstCols, types = "list", len = 2, add = assertCol)
+        checkmate::assertList(sunburstCols[[1]], types = "character", add = assertCol)
+        checkmate::assertList(sunburstCols[[2]], types = "character", add = assertCol)
+        checkmate::reportAssertions(assertCol)
+        private$.sunburstCols <- sunburstCols
+      }
+    }
   ),
 
   public = list(
-    #' @field colours (`list()`) Named list of names (domain) and hex colour
-    #' codes (range):\cr `list(domain = c("A", "B"), range = c("#FF0000", "#00FF00"))`.
-    #' See \link[sunburstR]{sunburst}
-    colours = NULL,
-
     initialize = function(treatmentPathways) {
       private$.treatmentPathways <- treatmentPathways
       super$initialize()
       private$initInputPanel()
-      private$.sunburst <- PlotWidget$new(data = treatmentPathways, fun = private$plotSunburst, title = NULL)
+      private$.sunburst <- PlotWidget$new(data = treatmentPathways, fun = TreatmentPatterns::createSunburstPlot, title = NULL)
       private$.sunburst$parentNamespace <- self$namespace
-      private$.sankey <- PlotWidget$new(data = treatmentPathways, fun = private$plotSankey, title = NULL)
+      private$.sankey <- PlotWidget$new(data = treatmentPathways, fun = TreatmentPatterns::createSankeyDiagram, title = NULL)
       private$.sankey$parentNamespace <- self$namespace
-      private$.table <- Table$new(data = treatmentPathways, title = NULL)
+      private$.table <- Table$new(data = treatmentPathways, title = NULL, filter = "none")
       private$.table$parentNamespace <- self$namespace
     }
   ),
@@ -35,16 +48,12 @@ TreatmentPatterns <- R6::R6Class(
     .sunburst = NULL,
     .sankey = NULL,
     .table = NULL,
-    .jsShowLegend = "
-    function(el, x) {
-      d3.select(el).select('.sunburst-togglelegend').property('checkeda', true);
-      d3.select(el).select('.sunburst-legend').style('visibility', '');
-    }
-    ",
+    .sunburstCols = NULL,
+    .sankeyCols = NULL,
 
     ## Methods ----
     .UI = function() {
-      shiny::tagList(
+      shiny::wellPanel(
         shiny::column(
           width = 4,
           private$.inputPanel$UI()
@@ -71,19 +80,112 @@ TreatmentPatterns <- R6::R6Class(
       private$.sunburst$server(input, output, session)
       private$.sankey$server(input, output, session)
       private$.table$server(input, output, session)
-      observeEvent(private$.inputPanel$inputValues$none, {
-        none <- if (private$.inputPanel$inputValues$none) {
-          ""
-        } else {
-          "None"
-        }
-        data <- private$.treatmentPathways %>%
-          dplyr::filter(.data$path != none)
-        # print(data)
-        private$.sunburst$data <- data
-        # print(private$.sunburst$data)
-        private$.sankey$data <- data
+      observeEvent(
+        c(
+          private$.inputPanel$inputValues$none,
+          private$.inputPanel$inputValues$groupCombi,
+          private$.inputPanel$inputValues$ageGroup,
+          private$.inputPanel$inputValues$sexGroup,
+          private$.inputPanel$inputValues$yearGroup
+        ), {
+        dataUpdated <- private$updateData(private$.treatmentPathways)
+        private$setColours(dataUpdated)
+        private$updateTable(dataUpdated)
+        private$updateSunburst(dataUpdated)
+        private$updateSankey(dataUpdated)
       })
+    },
+
+    updateTable = function(data) {
+      private$.table$data <- data %>%
+        dplyr::arrange(dplyr::desc(.data$freq))
+    },
+
+    updateSunburst = function(data) {
+      private$.sunburst$args$groupCombinations <- private$.inputPanel$inputValues$groupCombi
+      private$.sunburst$args$legend <- list(w = 400)
+      private$.sunburst$args$colors <- private$.sunburstCols
+      private$.sunburst$args$treatmentPathways <- data
+    },
+
+    updateSankey = function(data) {
+      private$.sankey$args$groupCombinations <- private$.inputPanel$inputValues$groupCombi
+      private$.sankey$args$colors <- private$.sankeyCols
+      private$.sankey$args$treatmentPathways <- data
+    },
+
+    updateData = function(data) {
+      none <- private$getNone()
+      data <- data %>%
+        dplyr::filter(
+          .data$path != none,
+          .data$age == private$.inputPanel$inputValues$ageGroup,
+          .data$sex == private$.inputPanel$inputValues$sexGroup,
+          .data$indexYear == private$.inputPanel$inputValues$yearGroup
+        )
+      return(data)
+    },
+
+    setColours = function(data) {
+      if (is.null(private$.sunburstCols) & is.null(private$.sankeyCols)) {
+        colors <- c(
+          "#30123BFF", "#341A4EFF", "#362160FF", "#392971FF", "#3B3082FF",
+          "#28BDEAFF", "#23C3E4FF", "#1FC8DEFF", "#1CCDD8FF", "#1AD3D1FF",
+          "#A6FC3AFF", "#ADFB38FF", "#B4F836FF", "#BBF535FF", "#C1F334FF",
+          "#FA7A1FFF", "#F8731CFF", "#F66B19FF", "#F36315FF", "#F05C13FF",
+          "#3E3890FF", "#3F3F9FFF", "#4146ACFF", "#424DB8FF", "#4454C4FF",
+          "#18D8C9FF", "#18DDC2FF", "#18E1BCFF", "#1AE4B6FF", "#1EE8B0FF",
+          "#C7EF34FF", "#CEEC34FF", "#D4E735FF", "#DAE336FF", "#DFDF37FF",
+          "#ED5510FF", "#EA4F0DFF", "#E7490CFF", "#E2430AFF", "#DE3E08FF",
+          "#455BCEFF", "#4662D7FF", "#4669E0FF", "#4770E8FF", "#4776EEFF",
+          "#22EBAAFF", "#29EFA2FF", "#30F19AFF", "#38F491FF", "#41F689FF",
+          "#E4DA38FF", "#E9D539FF", "#EDD03AFF", "#F1CA3AFF", "#F5C53AFF",
+          "#DA3907FF", "#D53406FF", "#D02F05FF", "#CB2A04FF", "#C42603FF",
+          "#467CF3FF", "#4683F8FF", "#4589FCFF", "#4490FEFF", "#4196FFFF",
+          "#4AF880FF", "#54FA78FF", "#5EFC6EFF", "#68FD67FF", "#72FE5EFF",
+          "#F7C03AFF", "#FABA39FF", "#FCB436FF", "#FDAE35FF", "#FEA832FF",
+          "#BE2102FF", "#B81E02FF", "#B21A01FF", "#AA1701FF", "#A41301FF",
+          "#3D9DFEFF", "#3AA3FCFF", "#36AAF9FF", "#30B0F5FF", "#2CB7F0FF",
+          "#7DFF56FF", "#86FF50FF", "#8FFF49FF", "#98FE43FF", "#9FFD3FFF",
+          "#FEA030FF", "#FE992CFF", "#FE922AFF", "#FD8A26FF", "#FB8222FF",
+          "#9C0F01FF", "#940C01FF", "#8B0902FF", "#830702FF", "#7A0403FF"
+        )
+
+        labels <- data %>%
+          pull(.data$path) %>%
+          strsplit(split = "-") %>%
+          unlist() %>%
+          unique()
+
+        cols <- if (length(labels) > 0 & length(labels) <= 10) {
+          as.list(colors[seq(length(labels)) * 5 - 4])
+        } else if (length(labels) >= 11 & length(labels) <= 20) {
+          list(
+            colors[seq(length(labels)) * 5 - 4],
+            colors[seq(length(labels)) * 5]
+          )
+        } else if (length(labels) >= 21 & length(labels) <= 30) {
+          list(
+            colors[seq(length(labels)) * 5 - 4],
+            colors[seq(length(labels)) * 5 - 2],
+            colors[seq(length(labels)) * 5]
+          )
+        } else {
+          as.list(colors[seq(length(labels))])
+        }
+
+        private$.sunburstCols <- list(domain = as.list(labels), range = cols)
+        names(cols) <- labels
+        private$.sankeyCols <- cols
+      }
+    },
+
+    getNone = function() {
+      if (private$.inputPanel$inputValues$none) {
+        return("")
+      } else {
+        return("None")
+      }
     },
 
     initInputPanel = function() {
@@ -93,8 +195,7 @@ TreatmentPatterns <- R6::R6Class(
           groupCombi = shiny::checkboxInput,
           ageGroup = shinyWidgets::pickerInput,
           sexGroup = shinyWidgets::pickerInput,
-          yearGroup = shinyWidgets::pickerInput,
-          freqSlider = shiny::sliderInput
+          yearGroup = shinyWidgets::pickerInput
         ),
         args = list(
           none = list(
@@ -121,48 +222,10 @@ TreatmentPatterns <- R6::R6Class(
             inputId = "yearGroup",
             choices = unique(private$.treatmentPathways$indexYear),
             label = "Index Year"
-          ),
-          freqSlider = list(
-            inputId = "freqSlider",
-            label = "Frequency",
-            min = min(private$.treatmentPathways$freq),
-            max = max(private$.treatmentPathways$freq),
-            value = c(min(private$.treatmentPathways$freq), max(private$.treatmentPathways$freq)),
-            dragRange = TRUE,
-            step = 1
           )
         )
       )
       private$.inputPanel$parentNamespace <- self$namespace
-    },
-
-    plotSankey = function(data) {
-      req(all(
-        nrow(data) > 0,
-        !is.null(data)
-      ))
-      TreatmentPatterns::createSankeyDiagram(
-        treatmentPathways = data,
-        groupCombinations = FALSE,
-        colors = self$colours
-      )
-    },
-
-    plotSunburst = function(data) {
-      req(all(
-        nrow(data) > 0,
-        !is.null(data)
-      ))
-      htmlwidgets::onRender(
-        TreatmentPatterns::createSunburstPlot(
-          treatmentPathways = data,
-          groupCombinations = FALSE,
-          legend = list(w = 400),
-          withD3 = TRUE,
-          colors = self$colours
-        ),
-        jsCode = private$.jsShowLegend
-      )
     }
   )
 )

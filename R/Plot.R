@@ -55,6 +55,10 @@ Plot <- R6::R6Class(
 
   # Public ----
   public = list(
+    ## Fields ----
+    #' @field args (`reactiveValues`) Arguments used for plot.
+    args = NULL,
+
     ## Methods ----
     #' @description initialize
     #'
@@ -79,13 +83,12 @@ Plot <- R6::R6Class(
     validate = function() {
       super$validate()
       assertions <- checkmate::makeAssertCollection()
-      checkmate::assertFunction(
-        .var.name = "fun",
-        x = private$.fun,
-        args = "data",
-        add = assertions
-      )
       checkmate::reportAssertions(assertions)
+    },
+
+    server = function(input, output, session) {
+      self$args <- shiny::reactiveValues()
+      super$server(input, output, session)
     }
   ),
 
