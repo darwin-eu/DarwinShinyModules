@@ -18,11 +18,11 @@ test_that("Creation", {
     simpleNetwork(data)
   }
 
-  widget <- PlotWidget$new(data = networkData, fun = f, title = "Network")
+  widget <- PlotWidget$new(fun = f, args = list(data = networkData), title = "Network")
 
   expect_identical(class(widget), c("PlotWidget", "Plot", "ShinyModule", "R6"))
-
-  net <- widget$fun(data = widget$data)
+  widget$fun(data = widget$args$data)
+  net <- widget$fun(data = widget$args$data)
   expect_identical(class(net), c("forceNetwork", "htmlwidget"))
 })
 
@@ -44,7 +44,7 @@ test_that("App", {
     simpleNetwork(data)
   }
 
-  widget <- PlotWidget$new(data = networkData, fun = f, title = "Network")
+  widget <- PlotWidget$new(fun = f, args = list(data = networkData), title = "Network")
 
   modServer <- function(id) {
     widget$server(input, output, session)
@@ -53,7 +53,7 @@ test_that("App", {
   testServer(modServer, {
     ## ReactiveValues ----
     expect_identical(
-      isolate(widget$reactiveValues$data),
+      widget$args$data,
       networkData
     )
 

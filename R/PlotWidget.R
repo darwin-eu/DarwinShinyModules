@@ -27,13 +27,7 @@
 #'     "E", "F", "G", "H", "I"
 #'   )
 #'
-#'   networkData <- data.frame(src, target)
-#'
-#'   widgetFun <- function(data) {
-#'     simpleNetwork(data)
-#'   }
-#'
-#'   widgetModule <- PlotWidget$new(data = networkData, fun = widgetFun)
+#'   widgetModule <- PlotWidget$new(fun = simpleNetwork, args = list(Data = data.frame(src, target)))
 #'
 #'   if (interactive()) {
 #'     preview(widgetModule)
@@ -45,9 +39,6 @@ PlotWidget <- R6::R6Class(
 
   # Private ----
   private = list(
-    ## Fields ----
-    .widget = NULL,
-
     ## Methods ----
     .UI = function() {
       shiny::tagList(
@@ -59,10 +50,11 @@ PlotWidget <- R6::R6Class(
     },
 
     .server = function(input, output, session) {
+      super$.server(input, output, session)
       output$plot <- shiny::renderUI({
-        if (length(shiny::reactiveValuesToList(self$args)) > 0) {
-          private$.widget <- do.call(private$.fun, shiny::reactiveValuesToList(self$args))
-          private$.widget
+        if (length(shiny::reactiveValuesToList(private$.args)) > 0) {
+          private$.plot <- do.call(private$.fun, shiny::reactiveValuesToList(private$.args))
+          return(private$.plot)
         }
       })
       private$dlHtml(output)
@@ -81,7 +73,7 @@ PlotWidget <- R6::R6Class(
     },
 
     dlHtmlContent = function(file) {
-      htmlwidgets::saveWidget(widget = private$.widget, file = file)
+      htmlwidgets::saveWidget(widget = private$.plot, file = file)
     },
 
     dlPng = function(output) {
@@ -99,7 +91,7 @@ PlotWidget <- R6::R6Class(
       tempDir <- file.path(tempdir(), "pngContent")
       dir.create(tempDir, showWarnings = FALSE, recursive = TRUE)
       on.exit(unlink(tempDir, recursive = TRUE))
-      htmlwidgets::saveWidget(widget = private$.widget, file = file.path(tempDir, "pngToSave.html"))
+      htmlwidgets::saveWidget(widget = private$.plot, file = file.path(tempDir, "pngToSave.html"))
       webshot2::webshot(url = file.path("file:///", tempDir, "pngToSave.html"), file = file)
     }
   )

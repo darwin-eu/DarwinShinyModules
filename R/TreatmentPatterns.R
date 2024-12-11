@@ -1,8 +1,45 @@
+#' @title TreatmentPatterns Module Class
+#'
+#' @include ShinyModule.R
+#'
+#' @description
+#' TreatmentPatterns module that shows a Sunburst plot and Sankey diagram, with
+#' a table.
+#'
+#' @details
+#' The module consists of the following:
+#' \itemize{
+#'   \item{"InputPanel"}{Input panel to filter data.}
+#'   \item{"PlotWidget"}{Sunburst Plot, visualizing the data.}
+#'   \item{"PlotWidget"}{Sankey Diagram, visualizing the data.}
+#'   \item{"Table"}{Table containing the data.}
+#' }
+#'
+#' @export
+#'
+#' @examples{
+#' library(DarwinShinyModules)
+#'
+#' tp <- data.frame(
+#'   path = c("A+B-C", "B+C-A", "B-A+C"),
+#'   freq = 100,
+#'   sex = "all",
+#'   age = "all",
+#'   indexYear = "all"
+#' )
+#'
+#' treatmentPathways <- TreatmentPatterns$new(treatmentPathways = tp)
+#'
+#' if (interactive()) {
+#'   preview(treatmentPathways)
+#' }
+#' }
 TreatmentPatterns <- R6::R6Class(
   classname = "TreatmentPatterns",
   inherit = ShinyModule,
 
   active = list(
+    #' @field sankeyCols (`list(a = "#ff33cc")`) Colours for the Sankey diagram.
     sankeyCols = function(sankeyCols) {
       if (missing(sankeyCols)) {
         return(private$.sankeyCols)
@@ -12,6 +49,7 @@ TreatmentPatterns <- R6::R6Class(
       }
     },
 
+    #' @field sunburstCols (`list(domain = list(), range = list())`) Colours for the Sunburst plot.
     sunburstCols = function(sunburstCols) {
       if (missing(sunburstCols)) {
         return(private$.sunburstCols)
@@ -27,16 +65,35 @@ TreatmentPatterns <- R6::R6Class(
   ),
 
   public = list(
+
+    #' @description
+    #' Initializer method
+    #'
+    #' @param treatmentPathways (`data.frame`) Contents of the treatmentPathways.csv file from the `export()` function of TreatmentPatterns.
+    #'
+    #' @return (`invisible(self)`)
     initialize = function(treatmentPathways) {
       private$.treatmentPathways <- treatmentPathways
       super$initialize()
       private$initInputPanel()
-      private$.sunburst <- PlotWidget$new(data = treatmentPathways, fun = TreatmentPatterns::createSunburstPlot, title = NULL)
+
+      private$.sunburst <- PlotWidget$new(
+        fun = TreatmentPatterns::createSunburstPlot,
+        args = list(treatmentPathways = treatmentPathways),
+        title = NULL
+      )
       private$.sunburst$parentNamespace <- self$namespace
-      private$.sankey <- PlotWidget$new(data = treatmentPathways, fun = TreatmentPatterns::createSankeyDiagram, title = NULL)
+
+      private$.sankey <- PlotWidget$new(
+        fun = TreatmentPatterns::createSankeyDiagram,
+        args = list(treatmentPathways = treatmentPathways),
+        title = NULL
+      )
       private$.sankey$parentNamespace <- self$namespace
+
       private$.table <- Table$new(data = treatmentPathways, title = NULL, filter = "none")
       private$.table$parentNamespace <- self$namespace
+      return(invisible(self))
     }
   ),
 
@@ -88,12 +145,12 @@ TreatmentPatterns <- R6::R6Class(
           private$.inputPanel$inputValues$sexGroup,
           private$.inputPanel$inputValues$yearGroup
         ), {
-        dataUpdated <- private$updateData(private$.treatmentPathways)
-        private$setColours(dataUpdated)
-        private$updateTable(dataUpdated)
-        private$updateSunburst(dataUpdated)
-        private$updateSankey(dataUpdated)
-      })
+          dataUpdated <- private$updateData(private$.treatmentPathways)
+          private$setColours(dataUpdated)
+          private$updateTable(dataUpdated)
+          private$updateSunburst(dataUpdated)
+          private$updateSankey(dataUpdated)
+        })
     },
 
     updateTable = function(data) {

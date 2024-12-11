@@ -4,9 +4,36 @@
 \alias{TreatmentPatterns}
 \title{TreatmentPatterns Module Class}
 \description{
-TreatmentPatterns super class. Composed of a \code{PlotWidget} and \code{Table} modules.
-This class is a \code{decorator} and is not meant to be directly used, but to be
-inherited.
+TreatmentPatterns module that shows a Sunburst plot and Sankey diagram, with
+a table.
+}
+\details{
+The module consists of the following:
+\itemize{
+\item{"InputPanel"}{Input panel to filter data.}
+\item{"PlotWidget"}{Sunburst Plot, visualizing the data.}
+\item{"PlotWidget"}{Sankey Diagram, visualizing the data.}
+\item{"Table"}{Table containing the data.}
+}
+}
+\examples{
+{
+library(DarwinShinyModules)
+
+tp <- data.frame(
+  path = c("A+B-C", "B+C-A", "B-A+C"),
+  freq = 100,
+  sex = "all",
+  age = "all",
+  indexYear = "all"
+)
+
+treatmentPathways <- TreatmentPatterns$new(treatmentPathways = tp)
+
+if (interactive()) {
+  preview(treatmentPathways)
+}
+}
 }
 \section{Super class}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{TreatmentPatterns}
@@ -14,13 +41,9 @@ inherited.
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{data}}{Underlying data the \code{table} and \code{widget} fields are based on.}
+\item{\code{sankeyCols}}{(\code{list(a = "#ff33cc")}) Colours for the Sankey diagram.}
 
-\item{\code{inputPanel}}{(\link{InputPanel}) Module}
-
-\item{\code{widget}}{(\link{PlotWidget}) Module}
-
-\item{\code{table}}{(\link{Table}) Module}
+\item{\code{sunburstCols}}{(\code{list(domain = list(), range = list())}) Colours for the Sunburst plot.}
 }
 \if{html}{\out{</div>}}
 }
@@ -28,7 +51,6 @@ inherited.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-TreatmentPatterns-new}{\code{TreatmentPatterns$new()}}
-\item \href{#method-TreatmentPatterns-validate}{\code{TreatmentPatterns$validate()}}
 \item \href{#method-TreatmentPatterns-clone}{\code{TreatmentPatterns$clone()}}
 }
 }
@@ -37,6 +59,7 @@ inherited.
 <ul>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -46,32 +69,18 @@ inherited.
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TreatmentPatterns$new(data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TreatmentPatterns$new(treatmentPathways)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{The contents of the \code{treatmentPathways.csv} file from
-\code{TreatmentPatterns::export()}, as a \code{data.frame}-like object.}
+\item{\code{treatmentPathways}}{(\code{data.frame}) Contents of the treatmentPathways.csv file from the \code{export()} function of TreatmentPatterns.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
 (\code{invisible(self)})
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-TreatmentPatterns-validate"></a>}}
-\if{latex}{\out{\hypertarget{method-TreatmentPatterns-validate}{}}}
-\subsection{Method \code{validate()}}{
-Validation method
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TreatmentPatterns$validate()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(\code{self})
 }
 }
 \if{html}{\out{<hr>}}

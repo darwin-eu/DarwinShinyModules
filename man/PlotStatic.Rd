@@ -17,7 +17,7 @@ staticFun <- function(data) {
     theme_bw()
 }
 
-staticModule <- PlotStatic$new(data = iris, fun = staticFun)
+staticModule <- PlotStatic$new(fun = staticFun, args = list(data = iris))
 
 if (interactive()) {
   preview(staticModule)
@@ -25,6 +25,13 @@ if (interactive()) {
 }
 \section{Super classes}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{\link[DarwinShinyModules:Plot]{DarwinShinyModules::Plot}} -> \code{PlotStatic}
+}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{plot}}{Plot object.}
+}
+\if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{

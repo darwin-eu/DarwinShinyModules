@@ -38,8 +38,8 @@ IncidencePrevalence <- R6::R6Class(
       private$.data <- data
       private$.table <- Table$new(data = data)
       private$.plot <- PlotPlotly$new(
-        data = data,
-        fun = private$plotIncidencePrevalence
+        fun = private$plotIncidencePrevalence,
+        args = list(data = data)
       )
 
       private$.table$parentNamespace <- private$.namespace

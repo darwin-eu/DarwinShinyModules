@@ -146,6 +146,7 @@ Table <- R6::R6Class(
 
     ## Methods ----
     .server = function(input, output, session) {
+      private$.reactiveValues$data <- private$.data
       private$renderTable(output)
       private$downloader(output)
       private$setBindings(input)

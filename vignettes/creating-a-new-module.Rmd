@@ -225,14 +225,14 @@ tp <- read.csv(system.file(
   "dummyData/TreatmentPatterns/csv/treatmentPathways.csv"
 ))
 
-sunburst <- Sunburst$new(tp)
+treatmentPatternsModule <- TreatmentPatterns$new(treatmentPathways = tp)
 
 ui <- shiny::fluidPage(
-  sunburst$UI()
+  treatmentPatternsModule$UI()
 )
 
 server <- function(input, output, session) {
-  sunburst$server(input, output, session)
+  treatmentPatternsModule$server(input, output, session)
 }
 
 if (interactive()) {
