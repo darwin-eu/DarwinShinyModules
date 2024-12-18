@@ -9,7 +9,7 @@ a table.
 }
 \details{
 The module consists of the following:
-\itemize{
+\describe{
 \item{"InputPanel"}{Input panel to filter data.}
 \item{"PlotWidget"}{Sunburst Plot, visualizing the data.}
 \item{"PlotWidget"}{Sankey Diagram, visualizing the data.}

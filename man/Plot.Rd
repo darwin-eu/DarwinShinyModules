@@ -58,7 +58,9 @@ initialize
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{fun}}{(\verb{function()}) Function to plot with, with one argument: \code{data}.}
+\item{\code{fun}}{(\verb{function()}) Function to plot with.}
+
+\item{\code{args}}{(\code{list}) Named list of arguments to pass to \code{fun}.}
 
 \item{\code{title}}{(\code{character(1)}) Title of the plot. When set to \code{NULL}, no title is shown.}
 }
