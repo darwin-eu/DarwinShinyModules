@@ -20,18 +20,21 @@
 #' @examples{
 #' library(DarwinShinyModules)
 #'
-#' tp <- data.frame(
-#'   path = c("A+B-C", "B+C-A", "B-A+C"),
-#'   freq = 100,
-#'   sex = "all",
-#'   age = "all",
-#'   indexYear = "all"
-#' )
+#' if (require("TreatmentPatterns", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)) {
 #'
-#' treatmentPathways <- TreatmentPatterns$new(treatmentPathways = tp)
+#'   tp <- data.frame(
+#'     path = c("A+B-C", "B+C-A", "B-A+C"),
+#'     freq = 100,
+#'     sex = "all",
+#'     age = "all",
+#'     indexYear = "all"
+#'   )
 #'
-#' if (interactive()) {
-#'   preview(treatmentPathways)
+#'   treatmentPathways <- TreatmentPatterns$new(treatmentPathways = tp)
+#'
+#'   if (interactive()) {
+#'     preview(treatmentPathways)
+#'   }
 #' }
 #' }
 TreatmentPatterns <- R6::R6Class(
