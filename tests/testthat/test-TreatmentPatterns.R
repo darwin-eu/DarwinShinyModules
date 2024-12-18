@@ -1,4 +1,6 @@
 test_that("Creation", {
+  skip_if_not(require("TreatmentPatterns", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE))
+
   tp <- data.frame(
     path = c("A+B-C", "B+C-A", "B-A+C"),
     freq = 100,
