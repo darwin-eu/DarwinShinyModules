@@ -219,7 +219,7 @@ Modules may be nested in other modules. For instance the `Sunburst` module, is c
 
 The `Sunburst` module displays a `data.frame` result of the `TreatmentPatterns` package. The nested `Table` module displays the `data.frame` as a `DT` DataTable. The nested `PlotWidget` module displays a sunburst plot as a `HtmlWidget`.
 
-```{r}
+```{r, eval=FALSE}
 tp <- read.csv(system.file(
   package = "DarwinShinyModules",
   "dummyData/TreatmentPatterns/csv/treatmentPathways.csv"
