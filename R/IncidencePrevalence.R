@@ -1,3 +1,72 @@
+#' @title IncidencePrevalence Module Class
+#'
+#' @include ShinyModule.R
+#'
+#' @description
+#' IncidencePrevalence module that shows a that supports incidence; point and
+#' period prevalence results from the IncidencePrevalence package.
+#'
+#' @details
+#' The module consists of the following:
+#' \describe{
+#'   \item{"PlotPlotly"}{Interactive Plotly plot, visualizing the data.}
+#'   \item{"GTTable"}{gttable visualizing the tidy data}
+#'   \item{"GTTable"}{gttable visualizing the attirtion data}
+#'   \item{"Table"}{basic table visualizing the raw data}
+#' }
+#'
+#' @export
+#'
+#' @examples{
+#'  library(IncidencePrevalence)
+#'  library(DarwinShinyModules)
+#'
+#'  cdm <- mockIncidencePrevalence(sampleSize = 1000)
+#'  cdm <- generateDenominatorCohortSet(
+#'    cdm = cdm, name = "denominator",
+#'    cohortDateRange = c(as.Date("2008-01-01"), as.Date("2018-01-01"))
+#'  )
+#'
+#'  inc <- estimateIncidence(
+#'    cdm = cdm,
+#'    denominatorTable = "denominator",
+#'    outcomeTable = "outcome"
+#'  )
+#'
+#'  pointPrev <- estimatePointPrevalence(
+#'    cdm = cdm,
+#'    denominatorTable = "denominator",
+#'    outcomeTable = "outcome",
+#'    interval = "months"
+#'  )
+#'
+#'  periodPrev <- estimatePeriodPrevalence(
+#'    cdm = cdm,
+#'    denominatorTable = "denominator",
+#'    outcomeTable = "outcome",
+#'    interval = "months"
+#'  )
+#'
+#'  incMod <- IncidencePrevalence$new(data = inc)
+#'  pointPrevMod <- IncidencePrevalence$new(data = pointPrev)
+#'  periodPrevMod <- IncidencePrevalence$new(data = periodPrev)
+#'
+#'  ui <- shiny::fluidPage(
+#'    incMod$UI(),
+#'    pointPrevMod$UI(),
+#'    periodPrevMod$UI()
+#'  )
+#'
+#'  server <- function(input, output, session) {
+#'    incMod$server(input, output, session)
+#'    pointPrevMod$server(input, output, session)
+#'    periodPrevMod$server(input, output, session)
+#'  }
+#'
+#'  if (interactive()) {
+#'    shiny::shinyApp(ui = ui, server = server)
+#'  }
+#' }
 IncidencePrevalence <- R6::R6Class(
   classname = "IncidencePrevalence",
   inherit = DarwinShinyModules::ShinyModule,
@@ -7,12 +76,20 @@ IncidencePrevalence <- R6::R6Class(
 
   # Public ----
   public = list(
+
+    #' @description
+    #' Initializer method
+    #'
+    #' @param data (`summarised_result`) Result object from the `IncidencePrevalence` package.
+    #'
+    #' @returns `self`
     initialize = function(data) {
       super$initialize()
       private$assertIPData(data)
       private$.data <- data
       private$.table <- DarwinShinyModules::Table$new(data = data, title = NULL)
       private$.table$parentNamespace <- self$namespace
+      return(invisible(self))
     }
   ),
 

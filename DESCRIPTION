@@ -40,15 +40,14 @@ VignetteBuilder: knitr
 Language: en-US
 Collate: 
     'DarwinShinyModules.R'
+    'GTTable.R'
     'ShinyModule.R'
     'IncidencePrevalence.R'
-    'Incidence.R'
     'InputPanel.R'
     'Plot.R'
     'PlotPlotly.R'
     'PlotStatic.R'
     'PlotWidget.R'
-    'Prevalence.R'
     'Table.R'
     'Text.R'
     'TreatmentPatterns.R'
