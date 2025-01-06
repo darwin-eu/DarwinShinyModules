@@ -8,6 +8,13 @@
 \description{
 Install this package to access useful shiny modules for building shiny apps to explore results using the Darwin tools.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://darwin-eu-dev.github.io/DarwinShinyModules/}
+}
+
+}
 \author{
 \strong{Maintainer}: Maarten van Kessel \email{m.l.vankessel@erasmusmc.nl} (\href{https://orcid.org/0009-0006-8832-6030}{ORCID})
 

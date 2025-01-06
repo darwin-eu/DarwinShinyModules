@@ -21,29 +21,31 @@
 #' \donttest{
 #'  library(DarwinShinyModules)
 #'
-#'  inc <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/incidence.rds"))
-#'  pointPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/pointPrevalence.rds"))
-#'  periodPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/periodPrevalence.rds"))
+#'  if (require("TreatmentPatterns", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)) {
+#'     inc <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/incidence.rds"))
+#'     pointPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/pointPrevalence.rds"))
+#'     periodPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/periodPrevalence.rds"))
 #'
-#'  incMod <- IncidencePrevalence$new(data = inc)
-#'  pointPrevMod <- IncidencePrevalence$new(data = pointPrev)
-#'  periodPrevMod <- IncidencePrevalence$new(data = periodPrev)
+#'     incMod <- IncidencePrevalence$new(data = inc)
+#'     pointPrevMod <- IncidencePrevalence$new(data = pointPrev)
+#'     periodPrevMod <- IncidencePrevalence$new(data = periodPrev)
 #'
-#'  ui <- shiny::fluidPage(
-#'    incMod$UI(),
-#'    pointPrevMod$UI(),
-#'    periodPrevMod$UI()
-#'  )
+#'     ui <- shiny::fluidPage(
+#'       incMod$UI(),
+#'       pointPrevMod$UI(),
+#'       periodPrevMod$UI()
+#'     )
 #'
-#'  server <- function(input, output, session) {
-#'    incMod$server(input, output, session)
-#'    pointPrevMod$server(input, output, session)
-#'    periodPrevMod$server(input, output, session)
-#'  }
+#'     server <- function(input, output, session) {
+#'       incMod$server(input, output, session)
+#'       pointPrevMod$server(input, output, session)
+#'       periodPrevMod$server(input, output, session)
+#'     }
 #'
-#'  if (interactive()) {
-#'    shiny::shinyApp(ui = ui, server = server)
-#'  }
+#'     if (interactive()) {
+#'       shiny::shinyApp(ui = ui, server = server)
+#'     }
+#'   }
 #' }
 #' }
 IncidencePrevalence <- R6::R6Class(
