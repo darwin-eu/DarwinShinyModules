@@ -55,6 +55,15 @@ tp <- read.csv(system.file(package = "DarwinShinyModules", "dummyData", "Treatme
 
 treatmentPatterns <- DarwinShinyModules::TreatmentPatterns$new(treatmentPathways = tp)
 
+# IncidencePrevalence Module ----
+inc <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/incidence.rds"))
+pointPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/pointPrevalence.rds"))
+periodPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/periodPrevalence.rds"))
+
+incMod <- IncidencePrevalence$new(data = inc)
+pointPrevMod <- IncidencePrevalence$new(data = pointPrev)
+periodPrevMod <- IncidencePrevalence$new(data = periodPrev)
+
 # UI ----
 ui <- shinydashboard::dashboardPage(
   header = shinydashboard::dashboardHeader(
@@ -67,7 +76,8 @@ ui <- shinydashboard::dashboardPage(
       shinydashboard::menuItem(text = "Tables", tabName = "tables"),
       shinydashboard::menuItem(text = "Plots", tabName = "plots"),
       shinydashboard::menuItem(text = "InputPanel", tabName = "inputPanel"),
-      shinydashboard::menuItem(text = "TreatmentPatterns", tabName = "treatmentPatterns")
+      shinydashboard::menuItem(text = "TreatmentPatterns", tabName = "treatmentPatterns"),
+      shinydashboard::menuItem(text = "IncidencePrevalence", tabName = "incidencePrevalence")
     )
   ),
 
@@ -94,6 +104,12 @@ ui <- shinydashboard::dashboardPage(
       shinydashboard::tabItem(
         tabName = "treatmentPatterns",
         treatmentPatterns$UI()
+      ),
+      shinydashboard::tabItem(
+        tabName = "incidencePrevalence",
+        incMod$UI(),
+        pointPrevMod$UI(),
+        periodPrevMod$UI()
       )
     )
   )
@@ -108,6 +124,9 @@ server <- function(input, output, session) {
   plotNetwork$server(input, output, session)
   inputPanel$server(input, output, session)
   treatmentPatterns$server(input, output, session)
+  incMod$server(input, output, session)
+  pointPrevMod$server(input, output, session)
+  periodPrevMod$server(input, output, session)
 }
 
 # Run ShinyApp ----

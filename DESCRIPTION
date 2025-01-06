@@ -28,7 +28,6 @@ Imports:
 Suggests:
     TreatmentPatterns,
     IncidencePrevalence,
-    CDMConnector,
     networkD3,
     testthat (>= 3.0.0),
     knitr,

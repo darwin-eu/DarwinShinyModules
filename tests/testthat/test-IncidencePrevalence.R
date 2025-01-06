@@ -1,17 +1,7 @@
 test_that("Creation: Incidence", {
   skip_if_not(require("IncidencePrevalence", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE))
-  cdm <- mockIncidencePrevalence(sampleSize = 1000)
-  cdm <- generateDenominatorCohortSet(
-   cdm = cdm, name = "denominator",
-   cohortDateRange = c(as.Date("2008-01-01"), as.Date("2018-01-01"))
-  )
 
-  inc <- estimateIncidence(
-   cdm = cdm,
-   denominatorTable = "denominator",
-   outcomeTable = "outcome"
-  )
-
+  inc <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/incidence.rds"))
   incMod <- IncidencePrevalence$new(data = inc)
 
   expect_identical(class(incMod), c("IncidencePrevalence", "ShinyModule", "R6"))
@@ -22,25 +12,12 @@ test_that("Creation: Incidence", {
 
   expect_identical(incMod$data, inc)
   expect_identical(incMod$dataType, "Incidence")
-
-  CDMConnector::cdmDisconnect(cdm)
 })
 
 test_that("Creation: Point Prevalence", {
   skip_if_not(require("IncidencePrevalence", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE))
-  cdm <- mockIncidencePrevalence(sampleSize = 1000)
-  cdm <- generateDenominatorCohortSet(
-    cdm = cdm, name = "denominator",
-    cohortDateRange = c(as.Date("2008-01-01"), as.Date("2018-01-01"))
-  )
 
-  pointPrev <- estimatePointPrevalence(
-    cdm = cdm,
-    denominatorTable = "denominator",
-    outcomeTable = "outcome",
-    interval = "months"
-  )
-
+  pointPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/pointPrevalence.rds"))
   pointPrevMod <- IncidencePrevalence$new(data = pointPrev)
 
   expect_identical(class(pointPrevMod), c("IncidencePrevalence", "ShinyModule", "R6"))
@@ -51,25 +28,12 @@ test_that("Creation: Point Prevalence", {
 
   expect_identical(pointPrevMod$data, pointPrev)
   expect_identical(pointPrevMod$dataType, "Point Prevalence")
-
-  CDMConnector::cdmDisconnect(cdm)
 })
 
 test_that("Creation: Period Prevalence", {
   skip_if_not(require("IncidencePrevalence", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE))
-  cdm <- mockIncidencePrevalence(sampleSize = 1000)
-  cdm <- generateDenominatorCohortSet(
-    cdm = cdm, name = "denominator",
-    cohortDateRange = c(as.Date("2008-01-01"), as.Date("2018-01-01"))
-  )
 
-  periodPrev <- estimatePeriodPrevalence(
-    cdm = cdm,
-    denominatorTable = "denominator",
-    outcomeTable = "outcome",
-    interval = "months"
-  )
-
+  periodPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/periodPrevalence.rds"))
   periodPrevMod <- IncidencePrevalence$new(data = periodPrev)
 
   expect_identical(class(periodPrevMod), c("IncidencePrevalence", "ShinyModule", "R6"))
@@ -80,6 +44,4 @@ test_that("Creation: Period Prevalence", {
 
   expect_identical(periodPrevMod$data, periodPrev)
   expect_identical(periodPrevMod$dataType, "Period Prevalence")
-
-  CDMConnector::cdmDisconnect(cdm)
 })
