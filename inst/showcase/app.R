@@ -10,6 +10,7 @@ code <- DarwinShinyModules::Text$new(
 # Table Modules ----
 tableIris <- DarwinShinyModules::Table$new(data = iris, title = "Iris Data")
 tableMtcars <- DarwinShinyModules::Table$new(data = mtcars, title = NULL, filter = "none")
+gtTableAirquality <- DarwinShinyModules::GTTable$new(fun = gt::gt, args = list(data = airquality))
 
 # Plot Modules ----
 plotFun <- function(data) {
@@ -19,6 +20,8 @@ plotFun <- function(data) {
 }
 
 plotIris <- DarwinShinyModules::PlotStatic$new(fun = plotFun, args = list(data = iris))
+
+plotIrisPlotly <- DarwinShinyModules::PlotPlotly$new(fun = plotFun, args = list(data = iris))
 
 src <- c(
   "A", "A", "A", "A",
@@ -30,6 +33,7 @@ target <- c(
 )
 
 plotNetwork <- DarwinShinyModules::PlotWidget$new(fun = networkD3::simpleNetwork, args = list(Data = data.frame(src, target)))
+
 
 # InputPanel Module ----
 inputPanel <- DarwinShinyModules::InputPanel$new(
@@ -90,11 +94,13 @@ ui <- shinydashboard::dashboardPage(
       shinydashboard::tabItem(
         tabName = "tables",
         tableIris$UI(),
-        tableMtcars$UI()
+        tableMtcars$UI(),
+        gtTableAirquality$UI()
       ),
       shinydashboard::tabItem(
         tabName = "plots",
         plotIris$UI(),
+        plotIrisPlotly$UI(),
         plotNetwork$UI()
       ),
       shinydashboard::tabItem(
@@ -120,7 +126,9 @@ server <- function(input, output, session) {
   code$server(input, output, session)
   tableIris$server(input, output, session)
   tableMtcars$server(input, output, session)
+  gtTableAirquality$server(input, output, session)
   plotIris$server(input, output, session)
+  plotIrisPlotly$server(input, output, session)
   plotNetwork$server(input, output, session)
   inputPanel$server(input, output, session)
   treatmentPatterns$server(input, output, session)
