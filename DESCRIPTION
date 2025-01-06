@@ -22,6 +22,7 @@ Imports:
     ggplot2,
     plotly,
     DT,
+    gt,
     promises,
     shinyWidgets
 Suggests:
@@ -40,8 +41,8 @@ VignetteBuilder: knitr
 Language: en-US
 Collate: 
     'DarwinShinyModules.R'
-    'GTTable.R'
     'ShinyModule.R'
+    'GTTable.R'
     'IncidencePrevalence.R'
     'InputPanel.R'
     'Plot.R'

@@ -5,3 +5,4 @@
 ^man-roxygen$
 ^docs$
 ^extras$
+^inst/showcase/rsconnect$

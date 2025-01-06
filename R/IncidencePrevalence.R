@@ -18,6 +18,7 @@
 #' @export
 #'
 #' @examples{
+#' \donttest{
 #'  library(IncidencePrevalence)
 #'  library(DarwinShinyModules)
 #'
@@ -66,6 +67,7 @@
 #'  if (interactive()) {
 #'    shiny::shinyApp(ui = ui, server = server)
 #'  }
+#' }
 #' }
 IncidencePrevalence <- R6::R6Class(
   classname = "IncidencePrevalence",

@@ -21,6 +21,7 @@ The module consists of the following:
 }
 \examples{
 {
+\donttest{
  library(IncidencePrevalence)
  library(DarwinShinyModules)
 
@@ -69,6 +70,7 @@ The module consists of the following:
  if (interactive()) {
    shiny::shinyApp(ui = ui, server = server)
  }
+}
 }
 }
 \section{Super class}{

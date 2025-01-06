@@ -1,3 +1,24 @@
+#' @title GTTable Module Class
+#'
+#' @include ShinyModule.R
+#'
+#' @description
+#' GTTable module that displays tables using `gt` that are supported by
+#' `gt::render_gt()` and `gt::gt_output()`.
+#'
+#' @export
+#'
+#' @examples
+#' library(DarwinShinyModules)
+#'
+#' gtTable <- GTTable$new(
+#'   fun = gt::gt,
+#'   args = list(data = iris)
+#' )
+#'
+#' if(interactive()) {
+#'   preview(gtTable)
+#' }
 GTTable <- R6::R6Class(
   classname = "GTTable",
   inherit = DarwinShinyModules::ShinyModule,
@@ -7,11 +28,20 @@ GTTable <- R6::R6Class(
 
   # Public ----
   public = list(
+
+    #' @description
+    #' Initializer method.
+    #'
+    #' @param fun Function to prode a `gt` table with, i.e `gt::gt`.
+    #' @param args Arguments for said function as a named list i.e. `list(data = iris)`.
+    #'
+    #' @returns `self`
     initialize = function(fun, args) {
       super$initialize()
       private$assertGtInstall()
       private$.fun <- fun
       private$.args <- args
+      return(invisible(self))
     }
   ),
 
