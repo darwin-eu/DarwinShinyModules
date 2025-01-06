@@ -18,7 +18,7 @@
 #'     theme_bw()
 #' }
 #'
-#' staticModule <- PlotStatic$new(data = iris, fun = staticFun)
+#' staticModule <- PlotStatic$new(fun = staticFun, args = list(data = iris))
 #'
 #' if (interactive()) {
 #'   preview(staticModule)
@@ -26,6 +26,13 @@
 PlotStatic <- R6::R6Class(
   classname = "PlotStatic",
   inherit = Plot,
+
+  active = list(
+    #' @field plot Plot object.
+    plot = function() {
+      return(isolate(eval(private$.plot)))
+    }
+  ),
 
   # Private ----
   private = list(
@@ -38,9 +45,12 @@ PlotStatic <- R6::R6Class(
     },
 
     .server = function(input, output, session) {
-      private$.reactiveValues$data <- private$.data
+      super$.server(input, output, session)
       output$plot <- shiny::renderPlot({
-        do.call(private$.fun, list(data = private$.reactiveValues$data))
+        if (length(shiny::reactiveValuesToList(private$.args)) > 0) {
+          private$.plot <- expr(do.call(private$.fun, shiny::reactiveValuesToList(private$.args)))
+          return(eval(private$.plot))
+        }
       })
     }
   )

@@ -5,11 +5,11 @@ test_that("Creation", {
         theme_bw()
   }
 
-  plot <- PlotStatic$new(data = iris, fun = f, title = "Iris")
+  plot <- PlotStatic$new(fun = f, args = list(data = iris), title = "Iris")
 
   expect_identical(class(plot), c("PlotStatic", "Plot", "ShinyModule", "R6"))
 
-  g <- plot$fun(data = plot$data)
+  g <- plot$fun(data = plot$args$data)
   expect_identical(class(g), c("gg", "ggplot"))
 
   f <- function(data, foo = "bar") {
@@ -19,8 +19,8 @@ test_that("Creation", {
       labs(title = foo)
   }
 
-  plot <- PlotStatic$new(data = iris, fun = f)
-  g <- plot$fun(data = plot$data)
+  plot <- PlotStatic$new(fun = f, args = list(data = iris))
+  g <- plot$fun(data = plot$args$data)
   expect_identical(g$labels$title, "bar")
 })
 
@@ -31,7 +31,7 @@ test_that("App", {
       theme_bw()
   }
 
-  plot <- PlotStatic$new(data = iris, fun = f, title = "Iris")
+  plot <- PlotStatic$new(fun = f, args = list(data = iris), title = "Iris")
 
   modServer <- function(id) {
     plot$server(input, output, session)
@@ -40,7 +40,7 @@ test_that("App", {
   testServer(modServer, {
     ## ReactiveValues ----
     expect_identical(
-      isolate(plot$reactiveValues$data),
+      plot$args$data,
       iris
     )
 

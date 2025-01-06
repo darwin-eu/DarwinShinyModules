@@ -3,10 +3,54 @@
 \name{IncidencePrevalence}
 \alias{IncidencePrevalence}
 \title{IncidencePrevalence Module Class}
+\value{
+\code{self}
+}
 \description{
-IncidencePrevalence super class. Composed of the \code{Plot} and \code{Table} modules.
-This class is a \code{decorator} and is not meant to be directly used, but to be
-inherited.
+IncidencePrevalence module that shows a that supports incidence; point and
+period prevalence results from the IncidencePrevalence package.
+}
+\details{
+The module consists of the following:
+\describe{
+\item{"PlotPlotly"}{Interactive Plotly plot, visualizing the data.}
+\item{"GTTable"}{gttable visualizing the tidy data}
+\item{"GTTable"}{gttable visualizing the attirtion data}
+\item{"Table"}{basic table visualizing the raw data}
+}
+}
+\examples{
+{
+\donttest{
+ library(DarwinShinyModules)
+
+ if (require("TreatmentPatterns", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)) {
+    inc <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/incidence.rds"))
+    pointPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/pointPrevalence.rds"))
+    periodPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/periodPrevalence.rds"))
+
+    incMod <- IncidencePrevalence$new(data = inc)
+    pointPrevMod <- IncidencePrevalence$new(data = pointPrev)
+    periodPrevMod <- IncidencePrevalence$new(data = periodPrev)
+
+    ui <- shiny::fluidPage(
+      incMod$UI(),
+      pointPrevMod$UI(),
+      periodPrevMod$UI()
+    )
+
+    server <- function(input, output, session) {
+      incMod$server(input, output, session)
+      pointPrevMod$server(input, output, session)
+      periodPrevMod$server(input, output, session)
+    }
+
+    if (interactive()) {
+      shiny::shinyApp(ui = ui, server = server)
+    }
+  }
+}
+}
 }
 \section{Super class}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{IncidencePrevalence}
@@ -14,11 +58,18 @@ inherited.
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{data}}{(\code{data.frame}) Data the \code{table} and \code{plot} fields are based on.}
+\item{\code{data}}{(\code{summarised_result}) Summarised result object.}
+
+\item{\code{dataType}}{(\code{character(1)}) Assumed data type of the provided data.
+One of: \code{"Incidence"}, \code{"Point Prevalence"}, or \code{"Period Prevalence"}}
+
+\item{\code{plotPlotly}}{(\code{PlotPlotly}) Module.}
+
+\item{\code{gtTable}}{(\code{GTTable}) Module.}
+
+\item{\code{gtAttrition}}{(\code{GTTable}) Module.}
 
 \item{\code{table}}{(\code{Table}) Module.}
-
-\item{\code{plot}}{(\code{PlotPlotly}) Module.}
 }
 \if{html}{\out{</div>}}
 }
@@ -26,7 +77,6 @@ inherited.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-IncidencePrevalence-new}{\code{IncidencePrevalence$new()}}
-\item \href{#method-IncidencePrevalence-validate}{\code{IncidencePrevalence$validate()}}
 \item \href{#method-IncidencePrevalence-clone}{\code{IncidencePrevalence$clone()}}
 }
 }
@@ -35,6 +85,7 @@ inherited.
 <ul>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -42,7 +93,7 @@ inherited.
 \if{html}{\out{<a id="method-IncidencePrevalence-new"></a>}}
 \if{latex}{\out{\hypertarget{method-IncidencePrevalence-new}{}}}
 \subsection{Method \code{new()}}{
-initialize
+Initializer method
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IncidencePrevalence$new(data)}\if{html}{\out{</div>}}
 }
@@ -50,27 +101,9 @@ initialize
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{Incidence or Prevalence data from
-\code{IncidencePrevalence::estimateIncidence()} or
-\code{IncidencePrevalence::estimatePrevalence()}.}
+\item{\code{data}}{(\code{summarised_result}) Result object from the \code{IncidencePrevalence} package.}
 }
 \if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{self}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-IncidencePrevalence-validate"></a>}}
-\if{latex}{\out{\hypertarget{method-IncidencePrevalence-validate}{}}}
-\subsection{Method \code{validate()}}{
-Validation method
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{IncidencePrevalence$validate()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(\code{self})
 }
 }
 \if{html}{\out{<hr>}}

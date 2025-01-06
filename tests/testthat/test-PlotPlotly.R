@@ -7,11 +7,11 @@ test_that("Creation", {
     ggplotly(gg)
   }
 
-  plot <- suppressWarnings(PlotPlotly$new(data = iris, fun = f))
+  plot <- suppressWarnings(PlotPlotly$new(fun = f, args = list(data = iris)))
 
   expect_identical(class(plot), c("PlotPlotly", "Plot", "ShinyModule", "R6"))
 
-  pg <- plot$fun(plot$data)
+  pg <- plot$fun(plot$args$data)
   expect_identical(class(pg), c("plotly", "htmlwidget"))
 })
 
@@ -24,7 +24,7 @@ test_that("App", {
     ggplotly(gg)
   }
 
-  plot <- suppressWarnings(PlotPlotly$new(data = iris, fun = f))
+  plot <- suppressWarnings(PlotPlotly$new(fun = f, args = list(data = iris)))
 
   modServer <- function(id) {
     plot$server(input, output, session)
@@ -34,7 +34,7 @@ test_that("App", {
     suppressWarnings({
       ## ReactiveValues ----
       expect_identical(
-        isolate(plot$reactiveValues$data),
+        isolate(plot$args$data),
         iris
       )
 

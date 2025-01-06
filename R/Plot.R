@@ -31,16 +31,6 @@ Plot <- R6::R6Class(
       return(invisible(self))
     },
 
-    #' @field data Reactive data used for the plot. Use `shiny::isolate()` to get the non-reactive data.
-    data = function(data) {
-      if (missing(data)) {
-        return(private$.data)
-      } else {
-        checkmate::assertDataFrame(data)
-        private$.data <- data
-      }
-    },
-
     #' @field fun Plotting function.
     fun = function(fun) {
       if (missing(fun)) {
@@ -49,6 +39,20 @@ Plot <- R6::R6Class(
         checkmate::assertFunction(fun)
         private$.fun <- fun
       }
+    },
+
+    #' @field args (`reactiveValues`) Arguments used for plot.
+    args = function(args) {
+      if (missing(args)) {
+        return(private$.args)
+      } else {
+        private$.args <- args
+      }
+    },
+
+    #' @field plot Plot object.
+    plot = function() {
+      return(private$.plot)
     }
   ),
 
@@ -57,15 +61,16 @@ Plot <- R6::R6Class(
     ## Methods ----
     #' @description initialize
     #'
-    #' @param data (`data.frame`) Data to plot with, usually a `data.frame`-like object.
-    #' @param fun (`function()`) Function to plot with, with one argument: `data`.
+    #' @param fun (`function()`) Function to plot with.
+    #' @param args (`list`) Named list of arguments to pass to `fun`.
     #' @param title (`character(1)`) Title of the plot. When set to `NULL`, no title is shown.
     #'
     #' @return `self`
-    initialize = function(data, fun, title = "Plot") {
+    initialize = function(fun, args, title = "Plot") {
       super$initialize()
       private$.data <- data
       private$.fun <- fun
+      private$.args <- args
       private$.title <- title
       self$validate()
     },
@@ -78,12 +83,6 @@ Plot <- R6::R6Class(
     validate = function() {
       super$validate()
       assertions <- checkmate::makeAssertCollection()
-      checkmate::assertFunction(
-        .var.name = "fun",
-        x = private$.fun,
-        args = "data",
-        add = assertions
-      )
       checkmate::reportAssertions(assertions)
     }
   ),
@@ -92,7 +91,16 @@ Plot <- R6::R6Class(
   private = list(
     ## Fields ----
     .fun = NULL,
+    .args = NULL,
     .title = "",
-    .data = NULL
+    .data = NULL,
+    .plot = NULL,
+
+    ## Methods ----
+    .server = function(input, output, session) {
+      if (is.list(private$.args)) {
+        private$.args <- do.call(shiny::reactiveValues, private$.args)
+      }
+    }
   )
 )

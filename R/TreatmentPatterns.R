@@ -3,75 +3,99 @@
 #' @include ShinyModule.R
 #'
 #' @description
-#' TreatmentPatterns super class. Composed of a `PlotWidget` and `Table` modules.
-#' This class is a `decorator` and is not meant to be directly used, but to be
-#' inherited.
+#' TreatmentPatterns module that shows a Sunburst plot and Sankey diagram, with
+#' a table.
+#'
+#' @details
+#' The module consists of the following:
+#' \describe{
+#'   \item{"InputPanel"}{Input panel to filter data.}
+#'   \item{"PlotWidget"}{Sunburst Plot, visualizing the data.}
+#'   \item{"PlotWidget"}{Sankey Diagram, visualizing the data.}
+#'   \item{"Table"}{Table containing the data.}
+#' }
 #'
 #' @export
+#'
+#' @examples{
+#' library(DarwinShinyModules)
+#'
+#' if (require("TreatmentPatterns", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)) {
+#'
+#'   tp <- data.frame(
+#'     path = c("A+B-C", "B+C-A", "B-A+C"),
+#'     freq = 100,
+#'     sex = "all",
+#'     age = "all",
+#'     indexYear = "all"
+#'   )
+#'
+#'   treatmentPathways <- TreatmentPatterns$new(treatmentPathways = tp)
+#'
+#'   if (interactive()) {
+#'     preview(treatmentPathways)
+#'   }
+#' }
+#' }
 TreatmentPatterns <- R6::R6Class(
   classname = "TreatmentPatterns",
   inherit = ShinyModule,
 
-  # Active ----
   active = list(
-    #' @field data Underlying data the `table` and `widget` fields are based on.
-    data = function() return(private$.data),
+    #' @field sankeyCols (`list(a = "#ff33cc")`) Colours for the Sankey diagram.
+    sankeyCols = function(sankeyCols) {
+      if (missing(sankeyCols)) {
+        return(private$.sankeyCols)
+      } else {
+        checkmate::assertList(sankeyCols, types = "character")
+        private$.sankeyCols <- sankeyCols
+      }
+    },
 
-    #' @field inputPanel ([InputPanel]) Module
-    inputPanel = function() return(private$.inputPanel),
-
-    #' @field widget ([PlotWidget]) Module
-    widget = function() return(private$.widget),
-
-    #' @field table ([Table]) Module
-    table = function() return(private$.table)
+    #' @field sunburstCols (`list(domain = list(), range = list())`) Colours for the Sunburst plot.
+    sunburstCols = function(sunburstCols) {
+      if (missing(sunburstCols)) {
+        return(private$.sunburstCols)
+      } else {
+        assertCol <- checkmate::makeAssertCollection()
+        checkmate::assertList(sunburstCols, types = "list", len = 2, add = assertCol)
+        checkmate::assertList(sunburstCols[[1]], types = "character", add = assertCol)
+        checkmate::assertList(sunburstCols[[2]], types = "character", add = assertCol)
+        checkmate::reportAssertions(assertCol)
+        private$.sunburstCols <- sunburstCols
+      }
+    }
   ),
 
-  # Public ----
   public = list(
-    ## Methods ----
+
     #' @description
     #' Initializer method
     #'
-    #' @param data The contents of the `treatmentPathways.csv` file from
-    #' `TreatmentPatterns::export()`, as a `data.frame`-like object.
+    #' @param treatmentPathways (`data.frame`) Contents of the treatmentPathways.csv file from the `export()` function of TreatmentPatterns.
     #'
     #' @return (`invisible(self)`)
-    initialize = function(data) {
+    initialize = function(treatmentPathways) {
+      private$.treatmentPathways <- treatmentPathways
       super$initialize()
-      private$validateData(data)
-      private$.data <- data %>%
-        dplyr::mutate(
-          sex = as.factor(.data$sex),
-          age = as.factor(.data$age),
-          indexYear = as.factor(.data$indexYear)
-        )
       private$initInputPanel()
-      private$initWidget()
-      private$initTable()
-    },
 
-    #' @description
-    #' Validation method
-    #'
-    #' @return (`self`)
-    validate = function() {
-      super$validate()
-      assertions <- checkmate::makeAssertCollection()
-      checkmate::assertNames(
-        .var.name = "data",
-        x = names(private$.data),
-        type = "named",
-        must.include = c("path", "freq", "age", "sex", "indexYear")
+      private$.sunburst <- PlotWidget$new(
+        fun = TreatmentPatterns::createSunburstPlot,
+        args = list(treatmentPathways = treatmentPathways),
+        title = NULL
       )
-      checkmate::assertDataFrame(
-        .var.name = "data",
-        x = private$.data,
-        any.missing = FALSE,
-        min.rows = 1
+      private$.sunburst$parentNamespace <- self$namespace
+
+      private$.sankey <- PlotWidget$new(
+        fun = TreatmentPatterns::createSankeyDiagram,
+        args = list(treatmentPathways = treatmentPathways),
+        title = NULL
       )
-      checkmate::reportAssertions(assertions)
-      private$assertTPInstall()
+      private$.sankey$parentNamespace <- self$namespace
+
+      private$.table <- Table$new(data = treatmentPathways, title = NULL, filter = "none")
+      private$.table$parentNamespace <- self$namespace
       return(invisible(self))
     }
   ),
@@ -79,33 +103,162 @@ TreatmentPatterns <- R6::R6Class(
   # Private ----
   private = list(
     ## Fields ----
-    .data = NULL,
+    .treatmentPathways = NULL,
     .inputPanel = NULL,
-    .widget = NULL,
+    .sunburst = NULL,
+    .sankey = NULL,
     .table = NULL,
+    .sunburstCols = NULL,
+    .sankeyCols = NULL,
 
     ## Methods ----
     .UI = function() {
-      shiny::tagList(
+      shiny::wellPanel(
         shiny::column(
-          width = 12,
-          shinydashboard::box(
-            width = 4,
-            private$.inputPanel$UI(),
-            private$.table$UI()
-          ),
-          shinydashboard::box(
-            width = 8,
-            private$.widget$UI()
+          width = 4,
+          private$.inputPanel$UI()
+        ),
+        shiny::column(
+          width = 8,
+          shiny::tabsetPanel(
+            shiny::tabPanel(
+              title = "Sunburst Plot",
+              private$.sunburst$UI()
+            ),
+            shiny::tabPanel(
+              title = "Sankey Diagram",
+              private$.sankey$UI()
+            )
           )
-        )
+        ),
+        private$.table$UI()
       )
     },
 
     .server = function(input, output, session) {
       private$.inputPanel$server(input, output, session)
-      private$.widget$server(input, output, session)
+      private$.sunburst$server(input, output, session)
+      private$.sankey$server(input, output, session)
       private$.table$server(input, output, session)
+      observeEvent(
+        c(
+          private$.inputPanel$inputValues$none,
+          private$.inputPanel$inputValues$groupCombi,
+          private$.inputPanel$inputValues$ageGroup,
+          private$.inputPanel$inputValues$sexGroup,
+          private$.inputPanel$inputValues$yearGroup
+        ), {
+          dataUpdated <- private$updateData(private$.treatmentPathways)
+          private$setColours(dataUpdated)
+          private$updateTable(dataUpdated)
+          private$updateSunburst(dataUpdated)
+          private$updateSankey(dataUpdated)
+        })
+    },
+
+    assertInstall = function() {
+      if (!require("TreatmentPatterns", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)) {
+        answer <- readline(prompt = "`TreatmentPatterns` is not installed, would you like to install from CRAN? (y/n)")
+        if (substr(tolower(answer), start = 1, stop = 1) == "y") {
+          utils::install.packages("TreatmentPatterns")
+        } else if (substr(tolower(answer), start = 1, stop = 1) == "n") {
+          stop("You can install `TreatmentPatterns` manually by running one of the following:\n  1. `install.packages('TreatmentPatterns')`\n  2. `remotes::install_github('darwin-eu/TreatmentPatterns')`")
+        } else {
+          stop("Your answer was not `y` or `n`")
+        }
+      }
+    },
+
+    updateTable = function(data) {
+      private$.table$data <- data %>%
+        dplyr::arrange(dplyr::desc(.data$freq))
+    },
+
+    updateSunburst = function(data) {
+      private$.sunburst$args$groupCombinations <- private$.inputPanel$inputValues$groupCombi
+      private$.sunburst$args$legend <- list(w = 400)
+      private$.sunburst$args$colors <- private$.sunburstCols
+      private$.sunburst$args$treatmentPathways <- data
+    },
+
+    updateSankey = function(data) {
+      private$.sankey$args$groupCombinations <- private$.inputPanel$inputValues$groupCombi
+      private$.sankey$args$colors <- private$.sankeyCols
+      private$.sankey$args$treatmentPathways <- data
+    },
+
+    updateData = function(data) {
+      none <- private$getNone()
+      data <- data %>%
+        dplyr::filter(
+          .data$path != none,
+          .data$age == private$.inputPanel$inputValues$ageGroup,
+          .data$sex == private$.inputPanel$inputValues$sexGroup,
+          .data$indexYear == private$.inputPanel$inputValues$yearGroup
+        )
+      return(data)
+    },
+
+    setColours = function(data) {
+      if (is.null(private$.sunburstCols) & is.null(private$.sankeyCols)) {
+        colors <- c(
+          "#30123BFF", "#341A4EFF", "#362160FF", "#392971FF", "#3B3082FF",
+          "#28BDEAFF", "#23C3E4FF", "#1FC8DEFF", "#1CCDD8FF", "#1AD3D1FF",
+          "#A6FC3AFF", "#ADFB38FF", "#B4F836FF", "#BBF535FF", "#C1F334FF",
+          "#FA7A1FFF", "#F8731CFF", "#F66B19FF", "#F36315FF", "#F05C13FF",
+          "#3E3890FF", "#3F3F9FFF", "#4146ACFF", "#424DB8FF", "#4454C4FF",
+          "#18D8C9FF", "#18DDC2FF", "#18E1BCFF", "#1AE4B6FF", "#1EE8B0FF",
+          "#C7EF34FF", "#CEEC34FF", "#D4E735FF", "#DAE336FF", "#DFDF37FF",
+          "#ED5510FF", "#EA4F0DFF", "#E7490CFF", "#E2430AFF", "#DE3E08FF",
+          "#455BCEFF", "#4662D7FF", "#4669E0FF", "#4770E8FF", "#4776EEFF",
+          "#22EBAAFF", "#29EFA2FF", "#30F19AFF", "#38F491FF", "#41F689FF",
+          "#E4DA38FF", "#E9D539FF", "#EDD03AFF", "#F1CA3AFF", "#F5C53AFF",
+          "#DA3907FF", "#D53406FF", "#D02F05FF", "#CB2A04FF", "#C42603FF",
+          "#467CF3FF", "#4683F8FF", "#4589FCFF", "#4490FEFF", "#4196FFFF",
+          "#4AF880FF", "#54FA78FF", "#5EFC6EFF", "#68FD67FF", "#72FE5EFF",
+          "#F7C03AFF", "#FABA39FF", "#FCB436FF", "#FDAE35FF", "#FEA832FF",
+          "#BE2102FF", "#B81E02FF", "#B21A01FF", "#AA1701FF", "#A41301FF",
+          "#3D9DFEFF", "#3AA3FCFF", "#36AAF9FF", "#30B0F5FF", "#2CB7F0FF",
+          "#7DFF56FF", "#86FF50FF", "#8FFF49FF", "#98FE43FF", "#9FFD3FFF",
+          "#FEA030FF", "#FE992CFF", "#FE922AFF", "#FD8A26FF", "#FB8222FF",
+          "#9C0F01FF", "#940C01FF", "#8B0902FF", "#830702FF", "#7A0403FF"
+        )
+
+        labels <- data %>%
+          pull(.data$path) %>%
+          strsplit(split = "-") %>%
+          unlist() %>%
+          unique()
+
+        cols <- if (length(labels) > 0 & length(labels) <= 10) {
+          as.list(colors[seq(length(labels)) * 5 - 4])
+        } else if (length(labels) >= 11 & length(labels) <= 20) {
+          list(
+            colors[seq(length(labels)) * 5 - 4],
+            colors[seq(length(labels)) * 5]
+          )
+        } else if (length(labels) >= 21 & length(labels) <= 30) {
+          list(
+            colors[seq(length(labels)) * 5 - 4],
+            colors[seq(length(labels)) * 5 - 2],
+            colors[seq(length(labels)) * 5]
+          )
+        } else {
+          as.list(colors[seq(length(labels))])
+        }
+
+        private$.sunburstCols <- list(domain = as.list(labels), range = cols)
+        names(cols) <- labels
+        private$.sankeyCols <- cols
+      }
+    },
+
+    getNone = function() {
+      if (private$.inputPanel$inputValues$none) {
+        return("")
+      } else {
+        return("None")
+      }
     },
 
     initInputPanel = function() {
@@ -115,8 +268,7 @@ TreatmentPatterns <- R6::R6Class(
           groupCombi = shiny::checkboxInput,
           ageGroup = shinyWidgets::pickerInput,
           sexGroup = shinyWidgets::pickerInput,
-          yearGroup = shinyWidgets::pickerInput,
-          freqSlider = shiny::sliderInput
+          yearGroup = shinyWidgets::pickerInput
         ),
         args = list(
           none = list(
@@ -131,148 +283,22 @@ TreatmentPatterns <- R6::R6Class(
           ),
           ageGroup = list(
             inputId = "ageGroup",
-            choices = unique(private$.data$age),
+            choices = unique(private$.treatmentPathways$age),
             label = "Age Group"
           ),
           sexGroup = list(
             inputId = "sexGroup",
-            choices = unique(private$.data$sex),
+            choices = unique(private$.treatmentPathways$sex),
             label = "Sex"
           ),
           yearGroup = list(
             inputId = "yearGroup",
-            choices = unique(private$.data$indexYear),
+            choices = unique(private$.treatmentPathways$indexYear),
             label = "Index Year"
-          ),
-          freqSlider = list(
-            inputId = "freqSlider",
-            label = "Frequency",
-            min = min(private$.data$freq),
-            max = max(private$.data$freq),
-            value = c(min(private$.data$freq), max(private$.data$freq)),
-            dragRange = TRUE,
-            step = 1
           )
         )
       )
-      private$.inputPanel$parentNamespace <- private$.namespace
-    },
-
-    initWidget = function() {
-      private$.widget <- PlotWidget$new(
-        data = private$.data,
-        fun = private$plotSunburstSankey,
-        title = NULL
-      )
-      private$.widget$parentNamespace <- private$.namespace
-    },
-
-    initTable = function() {
-      private$.table <- Table$new(
-        data = private$.data,
-        filter = "none",
-        title = NULL
-      )
-      private$.table$parentNamespace <- private$.namespace
-    },
-
-    assertTPInstall = function() {
-      tpInstalled <- requireNamespace(
-        "TreatmentPatterns",
-        quietly = TRUE
-      )
-
-      if (!tpInstalled) {
-        installTP <- readline("TreatmentPatterns is not installed, would you like to? (y/n)")
-        if (tolower(installTP) == "y") {
-          install.packages("TreatmentPatterns")
-        } else {
-          stop("TreatmentPatterns is not installed")
-        }
-      }
-    },
-
-    plotSunburstSankey = function(data) {},
-
-    updateData = function(input) {
-      data <- shiny::eventReactive(list(
-        private$.inputPanel$inputValues$none,
-        private$.inputPanel$inputValues$ageGroup,
-        private$.inputPanel$inputValues$sexGroup,
-        private$.inputPanel$inputValues$yearGroup
-      ), {
-        private$.data %>%
-          dplyr::filter(
-            .data$path != private$getNone(),
-            .data$age == private$.inputPanel$inputValues$ageGroup,
-            .data$sex == private$.inputPanel$inputValues$sexGroup,
-            .data$indexYear == private$.inputPanel$inputValues$yearGroup
-          )
-      }, ignoreNULL = TRUE)
-
-      observeEvent(list(
-        private$.inputPanel$inputValues$none,
-        private$.inputPanel$inputValues$ageGroup,
-        private$.inputPanel$inputValues$sexGroup,
-        private$.inputPanel$inputValues$yearGroup
-      ), {
-        data <- data()
-        shiny::updateSliderInput(
-          inputId = shiny::NS(private$.inputPanel$moduleId, "freqSlider"),
-          min = min(data$freq),
-          max = max(data$freq),
-          value = c(min(data$freq), max(data$freq))
-        )
-      })
-
-      observeEvent(list(
-        private$.inputPanel$inputValues$none,
-        private$.inputPanel$inputValues$ageGroup,
-        private$.inputPanel$inputValues$sexGroup,
-        private$.inputPanel$inputValues$yearGroup,
-        private$.inputPanel$inputValues$freqSlider
-      ), {
-        data <- data() %>%
-          dplyr::filter(
-            .data$freq >= min(private$.inputPanel$inputValues$freqSlider) &
-            .data$freq <= max(private$.inputPanel$inputValues$freqSlider)
-          )
-
-        private$.widget$data <- data
-        private$.table$data <- data
-      })
-
-      observeEvent(private$.table$bindings$rows_all, {
-        data <- private$.table$data %>%
-          shiny::isolate() %>%
-          dplyr::filter(
-            dplyr::row_number() %in% private$.table$bindings$rows_all
-          )
-        private$.widget$data <- data
-      })
-    },
-
-    getNone = function() {
-      none <- if (private$.inputPanel$inputValues$none) {
-        ""
-      } else {
-        "None"
-      }
-      return(none)
-    },
-
-    getCombinations = function() {
-      if (is.null(private$.inputPanel$inputValues$groupCombi)) {
-        return(FALSE)
-      } else {
-        return(private$.inputPanel$inputValues$groupCombi)
-      }
-    },
-
-    validateData = function(data) {
-      assertions <- checkmate::makeAssertCollection()
-      checkmate::assert_names(x = names(data), type = "named", subset.of = c("path", "freq", "age", "sex", "indexYear"))
-      checkmate::reportAssertions(assertions)
+      private$.inputPanel$parentNamespace <- self$namespace
     }
   )
 )

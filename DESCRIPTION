@@ -22,6 +22,7 @@ Imports:
     ggplot2,
     plotly,
     DT,
+    gt,
     promises,
     shinyWidgets
 Suggests:
@@ -41,18 +42,15 @@ Language: en-US
 Collate: 
     'DarwinShinyModules.R'
     'ShinyModule.R'
+    'GTTable.R'
     'IncidencePrevalence.R'
-    'Incidence.R'
     'InputPanel.R'
     'Plot.R'
     'PlotPlotly.R'
     'PlotStatic.R'
     'PlotWidget.R'
-    'Prevalence.R'
-    'TreatmentPatterns.R'
-    'Sankey.R'
-    'Sunburst.R'
     'Table.R'
     'Text.R'
+    'TreatmentPatterns.R'
     'preview.R'
 URL: https://darwin-eu-dev.github.io/DarwinShinyModules/

@@ -21,7 +21,7 @@ plotlyFun <- function(data) {
   )
 }
 
-plotlyModule <- PlotPlotly$new(data = iris, fun = plotlyFun)
+plotlyModule <- PlotPlotly$new(fun = plotlyFun, args = list(data = iris))
 
 if (interactive()) {
   preview(plotlyModule)
@@ -44,7 +44,6 @@ if (interactive()) {
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-PlotPlotly-new}{\code{PlotPlotly$new()}}
 \item \href{#method-PlotPlotly-clone}{\code{PlotPlotly$clone()}}
 }
 }
@@ -53,34 +52,11 @@ if (interactive()) {
 <ul>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="initialize"><a href='../../DarwinShinyModules/html/Plot.html#method-Plot-initialize'><code>DarwinShinyModules::Plot$initialize()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Plot" data-id="validate"><a href='../../DarwinShinyModules/html/Plot.html#method-Plot-validate'><code>DarwinShinyModules::Plot$validate()</code></a></span></li>
 </ul>
 </details>
 }}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-PlotPlotly-new"></a>}}
-\if{latex}{\out{\hypertarget{method-PlotPlotly-new}{}}}
-\subsection{Method \code{new()}}{
-initialize
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PlotPlotly$new(data, fun)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{data}}{Data to plot with, usually a \code{data.frame}-like object.}
-
-\item{\code{fun}}{Function to plot with, with one argument: \code{data}.}
-
-\item{\code{appId}}{(\code{character(1)}) ID of the app, to use for namespacing.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{self}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PlotPlotly-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-PlotPlotly-clone}{}}}

@@ -22,7 +22,7 @@
 #'   )
 #' }
 #'
-#' plotlyModule <- PlotPlotly$new(data = iris, fun = plotlyFun)
+#' plotlyModule <- PlotPlotly$new(fun = plotlyFun, args = list(data = iris))
 #'
 #' if (interactive()) {
 #'   preview(plotlyModule)
@@ -43,22 +43,6 @@ PlotPlotly <- R6::R6Class(
     bindings = function() return(private$.bindings)
   ),
 
-  # Public ----
-  public = list(
-    ## Methods ----
-    #' @description initialize
-    #'
-    #' @param appId (`character(1)`) ID of the app, to use for namespacing.
-    #' @param data Data to plot with, usually a `data.frame`-like object.
-    #' @param fun Function to plot with, with one argument: `data`.
-    #'
-    #' @return `self`
-    initialize = function(data, fun) {
-      super$initialize(data, fun)
-      return(invisible(self))
-    }
-  ),
-
   # Private ----
   private = list(
     ## Fields ----
@@ -77,18 +61,14 @@ PlotPlotly <- R6::R6Class(
     },
 
     .server = function(input, output, session) {
-      private$.reactiveValues$data <- private$.data
-
+      super$.server(input, output, session)
       output$plot <- plotly::renderPlotly({
-        data <- if (is.null(private$.reactiveValues$data)) {
-          private$.data
-        } else {
-          private$.reactiveValues$data
+        if (length(shiny::reactiveValuesToList(private$.args)) > 0) {
+          private$.plot <- do.call(what = private$.fun, args = shiny::reactiveValuesToList(private$.args))
+          plotly::event_register(p = private$.plot, event = "plotly_selected")
+          private$updateBindings()
+          return(private$.plot)
         }
-        p <- do.call(what = private$.fun, args = list(data = data))
-        plotly::event_register(p = p, event = "plotly_selected")
-        private$updateBindings()
-        p
       })
     },
 

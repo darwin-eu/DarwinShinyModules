@@ -22,9 +22,11 @@ to override the private \code{.UI()} and \code{.server()} methods.
 \describe{
 \item{\code{title}}{(\code{character(1)}) Title to use for the plot.}
 
-\item{\code{data}}{Reactive data used for the plot. Use \code{shiny::isolate()} to get the non-reactive data.}
-
 \item{\code{fun}}{Plotting function.}
+
+\item{\code{args}}{(\code{reactiveValues}) Arguments used for plot.}
+
+\item{\code{plot}}{Plot object.}
 }
 \if{html}{\out{</div>}}
 }
@@ -50,15 +52,15 @@ to override the private \code{.UI()} and \code{.server()} methods.
 \subsection{Method \code{new()}}{
 initialize
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Plot$new(data, fun, title = "Plot")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Plot$new(fun, args, title = "Plot")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{(\code{data.frame}) Data to plot with, usually a \code{data.frame}-like object.}
+\item{\code{fun}}{(\verb{function()}) Function to plot with.}
 
-\item{\code{fun}}{(\verb{function()}) Function to plot with, with one argument: \code{data}.}
+\item{\code{args}}{(\code{list}) Named list of arguments to pass to \code{fun}.}
 
 \item{\code{title}}{(\code{character(1)}) Title of the plot. When set to \code{NULL}, no title is shown.}
 }

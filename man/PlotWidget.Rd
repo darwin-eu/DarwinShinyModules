@@ -26,13 +26,7 @@ if (nD3Installed) {
     "E", "F", "G", "H", "I"
   )
 
-  networkData <- data.frame(src, target)
-
-  widgetFun <- function(data) {
-    simpleNetwork(data)
-  }
-
-  widgetModule <- PlotWidget$new(data = networkData, fun = widgetFun)
+  widgetModule <- PlotWidget$new(fun = simpleNetwork, args = list(Data = data.frame(src, target)))
 
   if (interactive()) {
     preview(widgetModule)
