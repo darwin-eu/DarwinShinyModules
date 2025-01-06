@@ -6,3 +6,5 @@
 ^docs$
 ^extras$
 ^inst/showcase/rsconnect$
+^_pkgdown\.yml$
+^pkgdown$
