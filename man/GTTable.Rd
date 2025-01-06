@@ -25,6 +25,15 @@ if(interactive()) {
 \section{Super class}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{GTTable}
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{fun}}{(\code{function}) Function to produce a \code{gt} table with, i.e \code{gt::gt}.}
+
+\item{\code{args}}{(\code{list}) Arguments for said function as a named list i.e. \code{list(data = iris)}.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -53,9 +62,9 @@ Initializer method.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{fun}}{Function to prode a \code{gt} table with, i.e \code{gt::gt}.}
+\item{\code{fun}}{(\code{function}) Function to produce a \code{gt} table with, i.e \code{gt::gt}.}
 
-\item{\code{args}}{Arguments for said function as a named list i.e. \code{list(data = iris)}.}
+\item{\code{args}}{(\code{list()}) Arguments for said function as a named list i.e. \code{list(data = iris)}.}
 }
 \if{html}{\out{</div>}}
 }

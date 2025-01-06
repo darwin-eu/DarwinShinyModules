@@ -24,7 +24,17 @@ GTTable <- R6::R6Class(
   inherit = DarwinShinyModules::ShinyModule,
 
   # Active ----
-  active = list(),
+  active = list(
+    #' @field fun (`function`) Function to produce a `gt` table with, i.e `gt::gt`.
+    fun = function() {
+      return(private$.fun)
+    },
+
+    #' @field args (`list`) Arguments for said function as a named list i.e. `list(data = iris)`.
+    args = function() {
+      return(private$.args)
+    }
+  ),
 
   # Public ----
   public = list(
@@ -32,8 +42,8 @@ GTTable <- R6::R6Class(
     #' @description
     #' Initializer method.
     #'
-    #' @param fun Function to prode a `gt` table with, i.e `gt::gt`.
-    #' @param args Arguments for said function as a named list i.e. `list(data = iris)`.
+    #' @param fun (`function`) Function to produce a `gt` table with, i.e `gt::gt`.
+    #' @param args (`list()`) Arguments for said function as a named list i.e. `list(data = iris)`.
     #'
     #' @returns `self`
     initialize = function(fun, args) {

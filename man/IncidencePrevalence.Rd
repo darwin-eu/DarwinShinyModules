@@ -76,6 +76,24 @@ The module consists of the following:
 \section{Super class}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{IncidencePrevalence}
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{data}}{(\code{summarised_result}) Summarised result object.}
+
+\item{\code{dataType}}{(\code{character(1)}) Assumed data type of the provided data.
+One of: \code{"Incidence"}, \code{"Point Prevalence"}, or \code{"Period Prevalence"}}
+
+\item{\code{plotPlotly}}{(\code{PlotPlotly}) Module.}
+
+\item{\code{gtTable}}{(\code{GTTable}) Module.}
+
+\item{\code{gtAttrition}}{(\code{GTTable}) Module.}
+
+\item{\code{table}}{(\code{Table}) Module.}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{

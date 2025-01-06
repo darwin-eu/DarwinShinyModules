@@ -74,7 +74,38 @@ IncidencePrevalence <- R6::R6Class(
   inherit = DarwinShinyModules::ShinyModule,
 
   # Active ----
-  active = list(),
+  active = list(
+    #' @field data (`summarised_result`) Summarised result object.
+    data = function() {
+      return(private$.data)
+    },
+
+    #' @field dataType (`character(1)`) Assumed data type of the provided data.
+    #' One of: `"Incidence"`, `"Point Prevalence"`, or `"Period Prevalence"`
+    dataType = function() {
+      return(private$.dataType)
+    },
+
+    #' @field plotPlotly (`PlotPlotly`) Module.
+    plotPlotly = function() {
+      return(private$.plot)
+    },
+
+    #' @field gtTable (`GTTable`) Module.
+    gtTable = function() {
+      return(private$.gtTable)
+    },
+
+    #' @field gtAttrition (`GTTable`) Module.
+    gtAttrition = function() {
+      return(private$.attrition)
+    },
+
+    #' @field table (`Table`) Module.
+    table = function() {
+      return(private$.table)
+    }
+  ),
 
   # Public ----
   public = list(
@@ -139,7 +170,7 @@ IncidencePrevalence <- R6::R6Class(
       }
 
       if (all(resSettings$result_type %in% c("incidence", "incidence_attrition"))) {
-        dataType <- "Incidence"
+        private$.dataType <- "Incidence"
         plotFun <- IncidencePrevalence::plotIncidence
         gtTableFun <- IncidencePrevalence::tablePrevalence
         attritionFun <- IncidencePrevalence::tableIncidenceAttrition
@@ -148,9 +179,9 @@ IncidencePrevalence <- R6::R6Class(
         gtTableFun <- IncidencePrevalence::tablePrevalence
         attritionFun <- IncidencePrevalence::tablePrevalenceAttrition
         if ("point prevalence" %in% resSettings$analysis_type) {
-          dataType <- "Point Prevalence"
+          private$.dataType <- "Point Prevalence"
         } else if ("period prevalence" %in% resSettings$analysis_type) {
-          dataType <- "Period Prevalence"
+          private$.dataType <- "Period Prevalence"
         } else {
           stop("Cannot assert `Point Prevalence` or `Period Prevalence` result")
         }
@@ -161,7 +192,7 @@ IncidencePrevalence <- R6::R6Class(
       private$.plot <- DarwinShinyModules::PlotPlotly$new(
         fun = plotFun,
         args = list(result = data),
-        title = dataType
+        title = private$.dataType
       )
       private$.plot$parentNamespace <- self$namespace
 
