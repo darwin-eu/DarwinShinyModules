@@ -19,34 +19,11 @@
 #'
 #' @examples{
 #' \donttest{
-#'  library(IncidencePrevalence)
 #'  library(DarwinShinyModules)
 #'
-#'  cdm <- mockIncidencePrevalence(sampleSize = 1000)
-#'  cdm <- generateDenominatorCohortSet(
-#'    cdm = cdm, name = "denominator",
-#'    cohortDateRange = c(as.Date("2008-01-01"), as.Date("2018-01-01"))
-#'  )
-#'
-#'  inc <- estimateIncidence(
-#'    cdm = cdm,
-#'    denominatorTable = "denominator",
-#'    outcomeTable = "outcome"
-#'  )
-#'
-#'  pointPrev <- estimatePointPrevalence(
-#'    cdm = cdm,
-#'    denominatorTable = "denominator",
-#'    outcomeTable = "outcome",
-#'    interval = "months"
-#'  )
-#'
-#'  periodPrev <- estimatePeriodPrevalence(
-#'    cdm = cdm,
-#'    denominatorTable = "denominator",
-#'    outcomeTable = "outcome",
-#'    interval = "months"
-#'  )
+#'  inc <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/incidence.rds"))
+#'  pointPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/pointPrevalence.rds"))
+#'  periodPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/periodPrevalence.rds"))
 #'
 #'  incMod <- IncidencePrevalence$new(data = inc)
 #'  pointPrevMod <- IncidencePrevalence$new(data = pointPrev)
