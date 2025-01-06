@@ -156,6 +156,19 @@ TreatmentPatterns <- R6::R6Class(
         })
     },
 
+    assertInstall = function() {
+      if (!require("TreatmentPatterns", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)) {
+        answer <- readline(prompt = "`TreatmentPatterns` is not installed, would you like to install from CRAN? (y/n)")
+        if (substr(tolower(answer), start = 1, stop = 1) == "y") {
+          utils::install.packages("TreatmentPatterns")
+        } else if (substr(tolower(answer), start = 1, stop = 1) == "n") {
+          stop("You can install `TreatmentPatterns` manually by running one of the following:\n  1. `install.packages('TreatmentPatterns')`\n  2. `remotes::install_github('darwin-eu/TreatmentPatterns')`")
+        } else {
+          stop("Your answer was not `y` or `n`")
+        }
+      }
+    },
+
     updateTable = function(data) {
       private$.table$data <- data %>%
         dplyr::arrange(dplyr::desc(.data$freq))

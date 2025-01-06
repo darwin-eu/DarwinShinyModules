@@ -118,6 +118,7 @@ IncidencePrevalence <- R6::R6Class(
     #' @returns `self`
     initialize = function(data) {
       super$initialize()
+      private$assertInstall()
       private$assertIPData(data)
       private$.data <- data
       private$.table <- DarwinShinyModules::Table$new(data = data, title = NULL)
@@ -160,6 +161,19 @@ IncidencePrevalence <- R6::R6Class(
       private$.table$server(input, output, session)
       private$.gtTable$server(input, output, session)
       private$.attrition$server(input, output, session)
+    },
+
+    assertInstall = function() {
+      if (!require("IncidencePrevalence", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)) {
+        answer <- readline(prompt = "`IncidencePrevalence` is not installed, would you like to install from CRAN? (y/n)")
+        if (substr(tolower(answer), start = 1, stop = 1) == "y") {
+          utils::install.packages("IncidencePrevalence")
+        } else if (substr(tolower(answer), start = 1, stop = 1) == "n") {
+          stop("You can install `IncidencePrevalence` manually by running one of the following:\n  1. `install.packages('IncidencePrevalence')`\n  2. `remotes::install_github('darwin-eu/IncidencePrevalence')`")
+        } else {
+          stop("Your answer was not `y` or `n`")
+        }
+      }
     },
 
     assertIPData = function(data) {
