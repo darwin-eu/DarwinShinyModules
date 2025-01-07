@@ -1,3 +1,5 @@
+# 2.x.x ----
+
 #' @title TreatmentPatterns Module Class
 #'
 #' @include ShinyModule.R
@@ -100,9 +102,9 @@ TreatmentPatterns <- R6::R6Class(
     }
   ),
 
-  # Private ----
+  ## Private ----
   private = list(
-    ## Fields ----
+    ### Fields ----
     .treatmentPathways = NULL,
     .inputPanel = NULL,
     .sunburst = NULL,
@@ -111,7 +113,7 @@ TreatmentPatterns <- R6::R6Class(
     .sunburstCols = NULL,
     .sankeyCols = NULL,
 
-    ## Methods ----
+    ### Methods ----
     .UI = function() {
       shiny::wellPanel(
         shiny::column(
@@ -149,7 +151,7 @@ TreatmentPatterns <- R6::R6Class(
           private$.inputPanel$inputValues$yearGroup
         ), {
           dataUpdated <- private$updateData(private$.treatmentPathways)
-          private$setColours(dataUpdated)
+          # private$setColours(dataUpdated)
           private$updateTable(dataUpdated)
           private$updateSunburst(dataUpdated)
           private$updateSankey(dataUpdated)
@@ -302,3 +304,105 @@ TreatmentPatterns <- R6::R6Class(
     }
   )
 )
+
+# 3.x.x ----
+TreatmentPatterns_3x <- R6::R6Class(
+  classname = "TreatmentPatterns_3x",
+  inherit = TreatmentPatterns,
+
+  ## Private ----
+  private = list(
+    updateData = function(data) {
+      none <- private$getNone()
+      data <- data %>%
+        dplyr::filter(
+          .data$pathway != none,
+          .data$age == private$.inputPanel$inputValues$ageGroup,
+          .data$sex == private$.inputPanel$inputValues$sexGroup,
+          .data$index_year == private$.inputPanel$inputValues$yearGroup
+        )
+      return(data)
+    },
+
+    initInputPanel = function() {
+      private$.inputPanel <- InputPanel$new(
+        funs = list(
+          none = shiny::checkboxInput,
+          groupCombi = shiny::checkboxInput,
+          ageGroup = shinyWidgets::pickerInput,
+          sexGroup = shinyWidgets::pickerInput,
+          yearGroup = shinyWidgets::pickerInput
+        ),
+        args = list(
+          none = list(
+            inputId = "none",
+            label = "Show none paths",
+            value = TRUE
+          ),
+          groupCombi = list(
+            inputId = "groupCombi",
+            label = "Group Combinations",
+            value = TRUE
+          ),
+          ageGroup = list(
+            inputId = "ageGroup",
+            choices = unique(private$.treatmentPathways$age),
+            label = "Age Group"
+          ),
+          sexGroup = list(
+            inputId = "sexGroup",
+            choices = unique(private$.treatmentPathways$sex),
+            label = "Sex"
+          ),
+          yearGroup = list(
+            inputId = "yearGroup",
+            choices = unique(private$.treatmentPathways$index_year),
+            label = "Index Year"
+          )
+        )
+      )
+      private$.inputPanel$parentNamespace <- self$namespace
+    }
+  )
+)
+
+#' makeTreatmentPatternsModule
+#'
+#' Factory function to create a TreatmentPatterns module. Supports 2.x.x and
+#' 3.x.x versions of TreatmentPatterns
+#'
+#' @param treatmentPathways (`data.frame`) treatmentPathways result.
+#' @param version (`character(1)`: `NULL`) Main version to use i.e. `"2"`,
+#' `"3"`, or `NULL` which determines the installed version automatically.
+#'
+#' @returns `TreatmentPatternsResults`
+#' @export
+#'
+#' @examples
+#' d1 <- read.csv(system.file(package = "DarwinShinyModules", "dummyData/TreatmentPatterns/2.7.0/treatmentPathways.csv")
+#' d2 <- read.csv(system.file(package = "DarwinShinyModules", "dummyData/TreatmentPatterns/3.0.0/treatment_pathways.csv")
+#'
+#' mod1 <- makeTreatmentPatternsModule(d1, version = "2")
+#' mod2 <- makeTreatmentPatternsModule(d2, version = "3")
+#'
+#' if (interactive()) {
+#'   preview(list(mod1, mod2))
+#' }
+makeTreatmentPatternsModule <- function(treatmentPathways, version = NULL) {
+  v <- substr(as.character(packageVersion("TreatmentPatterns")), start = 1, stop = 1)
+  version <- if (is.null(version)) {
+    v
+  } else {
+    if (v != version) warning("[!] Explicit version does not match installed version!")
+    version
+  }
+  switch(
+    version,
+    "2" = {
+      TreatmentPatterns$new(treatmentPathways)
+    },
+    "3" = {
+      TreatmentPatterns_3x$new(treatmentPathways)
+    }
+  )
+}
