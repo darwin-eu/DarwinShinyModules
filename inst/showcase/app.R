@@ -1,3 +1,4 @@
+library(DarwinShinyModules)
 # Text module ----
 code <- DarwinShinyModules::Text$new(
   markdown = c(
@@ -55,14 +56,17 @@ inputPanel <- DarwinShinyModules::InputPanel$new(
 )
 
 # TreatmentPatterns Module ----
-tp <- read.csv(system.file(package = "DarwinShinyModules", "dummyData", "TreatmentPatterns", "csv", "treatmentPathways.csv"))
+tp <- read.csv(system.file(
+  package = "DarwinShinyModules",
+  "dummyData/TreatmentPatterns/3.0.0", "treatment_pathways.csv"
+))
 
 treatmentPatterns <- DarwinShinyModules::TreatmentPatterns$new(treatmentPathways = tp)
 
 # IncidencePrevalence Module ----
-inc <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/incidence.rds"))
-pointPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/pointPrevalence.rds"))
-periodPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/periodPrevalence.rds"))
+inc <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/0.9.0/incidence.rds"))
+pointPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/0.9.0/pointPrevalence.rds"))
+periodPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/0.9.0/periodPrevalence.rds"))
 
 incMod <- IncidencePrevalence$new(data = inc)
 pointPrevMod <- IncidencePrevalence$new(data = pointPrev)
