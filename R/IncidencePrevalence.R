@@ -21,10 +21,26 @@
 #' \donttest{
 #'  library(DarwinShinyModules)
 #'
-#'  if (require("TreatmentPatterns", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)) {
-#'     inc <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/incidence.rds"))
-#'     pointPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/pointPrevalence.rds"))
-#'     periodPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/periodPrevalence.rds"))
+#'  if (
+#'    require(
+#'      "IncidencePrevalence",
+#'      character.only = TRUE,
+#'      quietly = TRUE,
+#'      warn.conflicts = FALSE
+#'    )
+#'  ) {
+#'     inc <- readRDS(system.file(
+#'       package = "DarwinShinyModules",
+#'       "dummyData/IncidencePrevalence/0.9.0/incidence.rds"
+#'     ))
+#'     pointPrev <- readRDS(system.file(
+#'       package = "DarwinShinyModules",
+#'       "dummyData/IncidencePrevalence/0.9.0/pointPrevalence.rds"
+#'     ))
+#'     periodPrev <- readRDS(system.file(
+#'       package = "DarwinShinyModules",
+#'       "dummyData/IncidencePrevalence/0.9.0/periodPrevalence.rds"
+#'     ))
 #'
 #'     incMod <- IncidencePrevalence$new(data = inc)
 #'     pointPrevMod <- IncidencePrevalence$new(data = pointPrev)
