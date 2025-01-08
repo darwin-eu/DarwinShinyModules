@@ -1,7 +1,7 @@
 test_that("Creation: Incidence", {
   skip_if_not(require("IncidencePrevalence", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE))
 
-  inc <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/incidence.rds"))
+  inc <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/0.9.0/incidence.rds"))
   incMod <- IncidencePrevalence$new(data = inc)
 
   expect_identical(class(incMod), c("IncidencePrevalence", "ShinyModule", "R6"))
@@ -17,7 +17,7 @@ test_that("Creation: Incidence", {
 test_that("Creation: Point Prevalence", {
   skip_if_not(require("IncidencePrevalence", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE))
 
-  pointPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/pointPrevalence.rds"))
+  pointPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/0.9.0/pointPrevalence.rds"))
   pointPrevMod <- IncidencePrevalence$new(data = pointPrev)
 
   expect_identical(class(pointPrevMod), c("IncidencePrevalence", "ShinyModule", "R6"))
@@ -33,7 +33,7 @@ test_that("Creation: Point Prevalence", {
 test_that("Creation: Period Prevalence", {
   skip_if_not(require("IncidencePrevalence", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE))
 
-  periodPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/rds/periodPrevalence.rds"))
+  periodPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/0.9.0/periodPrevalence.rds"))
   periodPrevMod <- IncidencePrevalence$new(data = periodPrev)
 
   expect_identical(class(periodPrevMod), c("IncidencePrevalence", "ShinyModule", "R6"))
