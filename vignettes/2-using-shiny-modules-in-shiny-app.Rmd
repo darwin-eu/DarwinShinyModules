@@ -2,7 +2,7 @@
 title: "Using modules in a shiny app"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Creating a new Module}
+  %\VignetteIndexEntry{Using modules in a shiny app}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
