@@ -90,7 +90,7 @@ All of these options seem like a more round about way of doing things, for this 
 
 ![](./img/1-dsm.png){#id .class width=100%}
 
-At the top of this hierarchy is the `ShinyModule` class. This class deals with the overhead of `shiny`, like namespaces, reactive environments, and server execution. All other modules in `DarwinShinyModules` inherit from this module. The second layer of modules are the 'base' modules described earlier. Some of these modules might have an intermediate parent class. For instance the `PlotStatic`, `PlotWidget`, and `PlotPlotly` inherit from a `Plot` class. This is mostly due to the specific `renderX()` and `XOutput()` functions specific for each kind of plot. Finaly in the third layer are the 'composed' modules.
+At the top of this hierarchy is the `ShinyModule` class. This class deals with the overhead of `shiny`, like namespaces, reactive environments, and server execution. All other modules in `DarwinShinyModules` inherit from this module. The second layer of modules are the 'base' modules described earlier. Some of these modules might have an intermediate parent class. For instance the `PlotStatic`, `PlotWidget`, and `PlotPlotly` inherit from a `Plot` class. This is mostly due to the specific `renderX()` and `XOutput()` functions specific for each kind of plot. Finally in the third layer are the 'composed' modules.
 
 ## Suplementals
 ### A: Full code
