@@ -58,7 +58,7 @@ inputPanel <- DarwinShinyModules::InputPanel$new(
 # TreatmentPatterns Module ----
 tp <- read.csv(system.file(
   package = "DarwinShinyModules",
-  "dummyData/TreatmentPatterns/3.0.0", "treatment_pathways.csv"
+  "dummyData/TreatmentPatterns/2.7.0", "treatmentPathways.csv"
 ))
 
 treatmentPatterns <- DarwinShinyModules::TreatmentPatterns$new(treatmentPathways = tp)
