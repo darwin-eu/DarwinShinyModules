@@ -101,6 +101,11 @@ Plot <- R6::R6Class(
       if (is.list(private$.args)) {
         private$.args <- do.call(shiny::reactiveValues, private$.args)
       }
+      shiny::onStop(fun = private$finalize)
+    },
+
+    finalize = function() {
+      self$args <- isolate(shiny::reactiveValuesToList(self$args))
     }
   )
 )
