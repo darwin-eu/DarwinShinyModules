@@ -45,6 +45,7 @@ Collate:
     'GTTable.R'
     'IncidencePrevalence.R'
     'InputPanel.R'
+    'OhdsiModule.R'
     'Plot.R'
     'PlotPlotly.R'
     'PlotStatic.R'
@@ -52,5 +53,6 @@ Collate:
     'Table.R'
     'Text.R'
     'TreatmentPatterns.R'
+    'appBuilders.R'
     'preview.R'
 URL: https://darwin-eu-dev.github.io/DarwinShinyModules/
