@@ -74,6 +74,7 @@ OhdsiModule <- R6::R6Class(
     #'
     #' @returns `self`
     initialize = function(connectionHandler, viewerFun, serverFun, resultDatabaseSettings = ShinyAppBuilder::createDefaultResultDatabaseSettings()) {
+      super$initialize()
       private$.connectionHandler <- connectionHandler
       private$.viewerFun <- viewerFun
       private$.serverFun <- serverFun
