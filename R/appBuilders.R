@@ -30,69 +30,93 @@ StudyStatus <- function(type) {
 }
 
 modulesBody <- function(tabList) {
-  l <- lapply(seq_len(length(tabList)), function(i) {
-    nav <- tabList[[i]]
-    lapply(seq_len(length(nav)), function(j) {
-      subNav <- nav[[j]]
-      if (all(class(subNav) == "list")) {
-        lapply(subNav, function(module) {
-          return(
-            shinydashboard::tabItem(
-              tabName = names(nav[j]),
-              module$UI()
-            )
-          )
+  items <- list()
+
+  for (i in seq_len(length(tabList))) {
+    label <- names(tabList)[i]
+    if ("list" %in% class(tabList[[i]])) {
+      subLabels <- names(tabList[[i]])
+      if (is.null(subLabels)) {
+        body <- lapply(tabList[[i]], function(module) {
+          module$UI()
         }) |>
-          unlist(recursive = FALSE)
-      } else {
-        module <- subNav
-        return(
-          shinydashboard::tabItem(
-            tabName = names(tabList[i]),
-            module$UI()
-          )
+          shiny::tagList()
+        items <- append(
+          items,
+          list(shinydashboard::tabItem(
+            tabName = label,
+            body
+          ))
         )
+      } else {
+        for (subLabel in subLabels) {
+          if ("list" %in% class(tabList[[i]][[subLabel]])) {
+            body <- lapply(tabList[[i]][[subLabel]], function(module) {
+              module$UI()
+            }) |>
+              shiny::tagList()
+            items <- append(
+              items,
+              list(shinydashboard::tabItem(
+                tabName = subLabel,
+                body
+              ))
+            )
+          } else {
+            items <- append(
+              items,
+              list(shinydashboard::tabItem(
+                tabName = subLabel,
+                tabList[[i]][[subLabel]]$UI()
+              ))
+            )
+          }
+        }
       }
-    })
-  }) |> unlist(recursive = FALSE)
-
-  l <- lapply(l, function(item) {
-    class(item) <- "shiny.tag"
-    item
-  })
-
-  do.call(shinydashboard::tabItems, args = l)
+    } else {
+      items <- append(
+        items,
+        list(shinydashboard::tabItem(
+          tabName = label,
+          tabList[[i]]$UI()
+        ))
+      )
+    }
+  }
+  do.call(shinydashboard::tabItems, items)
 }
 
-modulesSideBar <- function(tabList) {
-  menuItems <- lapply(seq_len(length(tabList)), function(i) {
-    moduleList <- tabList[[i]]
-    text <- names(tabList)[i]
+modulesSidebar <- function(tabList) {
+  lapply(seq_len(length(tabList)), function(i) {
+    menuLabel <- names(tabList[i])
 
-    if (length(moduleList) > 1) {
-      subTexts <- names(moduleList)
+    subItems <- if ("list" %in% class(tabList[[i]])) {
+      labels <- names(tabList[[i]])
+      lapply(labels, function(label) {
+        shinydashboard::menuItem(text = label, tabName = label)
+      })
+    } else {
+      NULL
+    }
+
+    if (length(subItems) > 0) {
       shinydashboard::menuItem(
-        text = text,
-        lapply(subTexts, function(subText) {
-          shinydashboard::menuSubItem(
-            text = stringr::str_replace_all(subText, pattern = "_", replacement = " "),
-            tabName = subText
-          )
-        })
+        text = stringr::str_replace_all(menuLabel, pattern = "_", replacement = " "),
+        tabName = menuLabel,
+        shiny::tagList(subItems)
       )
     } else {
       shinydashboard::menuItem(
-        text = stringr::str_replace_all(text, pattern = "_", replacement = " "),
-        tabName = text
+        text = stringr::str_replace_all(menuLabel, pattern = "_", replacement = " "),
+        tabName = menuLabel
       )
     }
   })
-  menuItems
 }
 
 #' dashboardApp
 #'
-#' @param moduleList (`list(list())`) A list of named lists, containing modules.
+#' @param appStructure (`list(list())`) A list of named lists, containing modules.
 #' The level of nesting groups or separates modules in menu items `"_"` will be read as a space.
 #' @param title (`character(1)`: `NULL`) Title of the app
 #'
@@ -103,36 +127,40 @@ modulesSideBar <- function(tabList) {
 #' library(DarwinShinyModules)
 #' library(ggplot2)
 #'
-#' mtcarsTable <- Table$new(data = mtcars)
-#' irisTable <- Table$new(data = iris)
-#'
-#' irisPlotFun <- function(data) {
-#'   ggplot(data = data, mapping = aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
-#'     geom_point() +
-#'     theme_bw()
-#' }
-#'
-#' irisPlot <- PlotStatic$new(fun = irisPlotFun, args = list(data = iris))
+#' base <- Text$new("**base**")
+#' nested_a <- Text$new("**nested A**")
+#' nested_b <- Text$new("**nested B**")
+#' sub_a <- Text$new("**sub A**")
+#' sub_b <- Text$new("**sub B**")
+#' comb_a <- Text$new("**comb A**")
+#' comb_b <- Text$new("**comb B**")
+#' comb_c <- Text$new("**comb C**")
 #'
 #' if (interactive()) {
-#'   dashboardApp(
-#'     moduleList = list(
-#'       # Menu item `Iris`
-#'       Iris = list(irisPlot, irisTable),
-#'       # Menu item `MT Cars`
-#'       MT_Cars = list(mtcarsTable)
+#'   appStructure <- list(
+#'     base = base,
+#'     nested = list(nested_a, nested_b),
+#'     nested_sub = list(
+#'       sub_a = sub_a,
+#'       sub_b = sub_b
+#'     ),
+#'     nested_combined = list(
+#'       comb_a_b = list(comb_a, comb_b),
+#'       comb_c = comb_c
 #'     )
 #'   )
+#'
+#'   dashboardApp(appStructure)
 #' }
-dashboardApp <- function(moduleList, title = NULL) {
+dashboardApp <- function(appStructure, title = NULL) {
   ui <- shinydashboard::dashboardPage(
     header = shinydashboard::dashboardHeader(title = title),
-    sidebar = modulesSideBar(moduleList),
-    body = shinydashboard::dashboardBody(modulesBody(moduleList))
+    sidebar = shinydashboard::dashboardSidebar(shinydashboard::sidebarMenu(modulesSidebar(appStructure))),
+    body = shinydashboard::dashboardBody(modulesBody(appStructure))
   )
 
   server = function(input, output, session) {
-    modules <- unlist(moduleList)
+    modules <- unlist(appStructure)
     for (module in modules) {
       module$server(input, output, session)
     }
@@ -187,7 +215,7 @@ darwinFooter <- function() {
 
 #' darwinApp
 #'
-#' @param moduleList (`list(list())`) A list of named lists, containing modules.
+#' @param appStructure (`list(list())`) A list of named lists, containing modules.
 #' The level of nesting groups or separates modules in menu items `"_"` will be read as a space.
 #' @param title (`character(1)`: `NULL`) Title of the app
 #' @param studyStatus (`character(1)`: `"ongoing"`) Status of the study
@@ -220,7 +248,7 @@ darwinFooter <- function() {
 #'     )
 #'   )
 #' }
-darwinApp <- function(moduleList, title = "", studyStatus = "ongoing") {
+darwinApp <- function(appStructure, title = "", studyStatus = "ongoing") {
   shiny::addResourcePath(
     prefix = "www/img",
     directoryPath = system.file("www/img", package = "DarwinShinyModules")
@@ -237,16 +265,16 @@ darwinApp <- function(moduleList, title = "", studyStatus = "ongoing") {
       ),
       sidebar = shinydashboard::dashboardSidebar(
         shinydashboard::sidebarMenu(
-          modulesSideBar(moduleList)
+          modulesSidebar(appStructure)
         ), width = 300
       ),
-      body = shinydashboard::dashboardBody(modulesBody(moduleList))
+      body = shinydashboard::dashboardBody(modulesBody(appStructure))
     ),
     darwinFooter()
   )
 
   server = function(input, output, session) {
-    modules <- unlist(moduleList)
+    modules <- unlist(appStructure)
     for (module in modules) {
       module$server(input, output, session)
     }
