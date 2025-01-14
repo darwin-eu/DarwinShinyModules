@@ -4,10 +4,10 @@
 \alias{darwinApp}
 \title{darwinApp}
 \usage{
-darwinApp(moduleList, title = "", studyStatus = "ongoing")
+darwinApp(appStructure, title = "", studyStatus = "ongoing")
 }
 \arguments{
-\item{moduleList}{(\code{list(list())}) A list of named lists, containing modules.
+\item{appStructure}{(\code{list(list())}) A list of named lists, containing modules.
 The level of nesting groups or separates modules in menu items \code{"_"} will be read as a space.}
 
 \item{title}{(\code{character(1)}: \code{NULL}) Title of the app}
