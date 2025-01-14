@@ -4,10 +4,10 @@
 \alias{dashboardApp}
 \title{dashboardApp}
 \usage{
-dashboardApp(moduleList, title = NULL)
+dashboardApp(appStructure, title = NULL)
 }
 \arguments{
-\item{moduleList}{(\code{list(list())}) A list of named lists, containing modules.
+\item{appStructure}{(\code{list(list())}) A list of named lists, containing modules.
 The level of nesting groups or separates modules in menu items \code{"_"} will be read as a space.}
 
 \item{title}{(\code{character(1)}: \code{NULL}) Title of the app}
@@ -22,25 +22,29 @@ dashboardApp
 library(DarwinShinyModules)
 library(ggplot2)
 
-mtcarsTable <- Table$new(data = mtcars)
-irisTable <- Table$new(data = iris)
-
-irisPlotFun <- function(data) {
-  ggplot(data = data, mapping = aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
-    geom_point() +
-    theme_bw()
-}
-
-irisPlot <- PlotStatic$new(fun = irisPlotFun, args = list(data = iris))
+base <- Text$new("**base**")
+nested_a <- Text$new("**nested A**")
+nested_b <- Text$new("**nested B**")
+sub_a <- Text$new("**sub A**")
+sub_b <- Text$new("**sub B**")
+comb_a <- Text$new("**comb A**")
+comb_b <- Text$new("**comb B**")
+comb_c <- Text$new("**comb C**")
 
 if (interactive()) {
-  dashboardApp(
-    moduleList = list(
-      # Menu item `Iris`
-      Iris = list(irisPlot, irisTable),
-      # Menu item `MT Cars`
-      MT_Cars = list(mtcarsTable)
+  appStructure <- list(
+    base = base,
+    nested = list(nested_a, nested_b),
+    nested_sub = list(
+      sub_a = sub_a,
+      sub_b = sub_b
+    ),
+    nested_combined = list(
+      comb_a_b = list(comb_a, comb_b),
+      comb_c = comb_c
     )
   )
+
+  dashboardApp(appStructure)
 }
 }
