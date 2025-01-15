@@ -258,8 +258,8 @@ darwinFooter <- function() {
 #' }
 darwinApp <- function(appStructure, title = NULL, studyStatus = "ongoing") {
   assertAppStructure(appStructure)
+  checkmate::assertChoice(studyStatus, choices = c("ongoing", "completed", "stop"))
   checkmate::assertCharacter(title, len = 1, null.ok = TRUE)
-  checkmate::assertChoice(studyStatus, choices = "ongoing", "completed", "stop")
 
   shiny::addResourcePath(
     prefix = "www/img",
