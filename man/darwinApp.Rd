@@ -4,7 +4,7 @@
 \alias{darwinApp}
 \title{darwinApp}
 \usage{
-darwinApp(appStructure, title = "", studyStatus = "ongoing")
+darwinApp(appStructure, title = NULL, studyStatus = "ongoing")
 }
 \arguments{
 \item{appStructure}{(\code{list(list())}) A list of named lists, containing modules.
