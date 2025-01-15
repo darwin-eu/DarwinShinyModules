@@ -32,7 +32,7 @@
 #' )
 #'
 #' if (interactive()) {
-#'   preview(est)
+#'   preview(estimation)
 #' }
 #' }
 OhdsiModule <- R6::R6Class(

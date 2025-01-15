@@ -36,7 +36,7 @@ estimation <- OhdsiModule$new(
 )
 
 if (interactive()) {
-  preview(est)
+  preview(estimation)
 }
 }
 }
