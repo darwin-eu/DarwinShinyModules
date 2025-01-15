@@ -24,7 +24,8 @@ Imports:
     DT,
     gt,
     promises,
-    shinyWidgets
+    shinyWidgets,
+    stringr
 Suggests:
     TreatmentPatterns,
     IncidencePrevalence,
@@ -34,9 +35,14 @@ Suggests:
     rmarkdown,
     datasets,
     htmlwidgets,
-    xml2
+    xml2,
+    DatabaseConnector,
+    OhdsiShinyModules,
+    ResultModelManager,
+    ShinyAppBuilder
 Config/testthat/edition: 3
 Config/testthat/parallel: true
+Additional_repositories: https://ohdsi.github.io/drat
 VignetteBuilder: knitr
 Language: en-US
 Collate: 

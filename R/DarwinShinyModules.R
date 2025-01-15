@@ -10,6 +10,7 @@
 #' @import checkmate
 #' @import promises
 #' @import shinyWidgets
+#' @import stringr
 #' @importFrom gt render_gt gt_output
 #' @importFrom DT DTOutput renderDT
 #' @importFrom plotly event_register event_data plotlyOutput renderPlotly
