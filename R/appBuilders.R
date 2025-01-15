@@ -114,6 +114,13 @@ modulesSidebar <- function(tabList) {
   })
 }
 
+assertAppStructure <- function(appStructure) {
+  assertions <- checkmate::makeAssertCollection()
+  checkmate::assertList(appStructure, types = c("ShinyModule", "list"), add = assertions)
+  checkmate::assertNamed(appStructure, type = "named", add = assertions)
+  checkmate::reportAssertions(assertions)
+}
+
 #' dashboardApp
 #'
 #' @param appStructure (`list(list())`) A list of named lists, containing modules.
@@ -125,7 +132,6 @@ modulesSidebar <- function(tabList) {
 #'
 #' @examples
 #' library(DarwinShinyModules)
-#' library(ggplot2)
 #'
 #' base <- Text$new("**base**")
 #' nested_a <- Text$new("**nested A**")
@@ -153,13 +159,15 @@ modulesSidebar <- function(tabList) {
 #'   dashboardApp(appStructure)
 #' }
 dashboardApp <- function(appStructure, title = NULL) {
+  assertAppStructure(appStructure)
+  checkmate::assertCharacter(title, len = 1, null.ok = TRUE)
   ui <- shinydashboard::dashboardPage(
     header = shinydashboard::dashboardHeader(title = title),
     sidebar = shinydashboard::dashboardSidebar(shinydashboard::sidebarMenu(modulesSidebar(appStructure))),
     body = shinydashboard::dashboardBody(modulesBody(appStructure))
   )
 
-  server = function(input, output, session) {
+  server <- function(input, output, session) {
     modules <- unlist(appStructure)
     for (module in modules) {
       module$server(input, output, session)
@@ -248,7 +256,11 @@ darwinFooter <- function() {
 #'     )
 #'   )
 #' }
-darwinApp <- function(appStructure, title = "", studyStatus = "ongoing") {
+darwinApp <- function(appStructure, title = NULL, studyStatus = "ongoing") {
+  assertAppStructure(appStructure)
+  checkmate::assertCharacter(title, len = 1, null.ok = TRUE)
+  checkmate::assertChoice(studyStatus, choices = "ongoing", "completed", "stop")
+
   shiny::addResourcePath(
     prefix = "www/img",
     directoryPath = system.file("www/img", package = "DarwinShinyModules")
@@ -273,7 +285,7 @@ darwinApp <- function(appStructure, title = "", studyStatus = "ongoing") {
     darwinFooter()
   )
 
-  server = function(input, output, session) {
+  server <- function(input, output, session) {
     modules <- unlist(appStructure)
     for (module in modules) {
       module$server(input, output, session)
