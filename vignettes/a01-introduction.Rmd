@@ -102,6 +102,7 @@ ExampleModule <- R6::R6Class(
   active = list(),
   public = list(
     initialize = function() {
+      super$initialize()
       private$.data <- iris
       private$.data$size <- 1
       private$.table <- Table$new(private$.data, title = NULL)
