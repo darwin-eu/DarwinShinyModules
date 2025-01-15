@@ -1,0 +1,48 @@
+---
+title: "Compatibility"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Compatibility}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Compatibility
+`DarwinShinyModules` is compatible with other modules or shiny code. One module that you might have noticed in the documentation is the `OhdsiModule`. The `OhdsiModule` is a module that wraps around the `xViewer` and `xServer` functions. This makes modules from `OhdsiShinyModules` compatible by default.
+
+```{r eval=FALSE}
+library(DarwinShinyModules)
+library(DatabaseConnector)
+library(ResultModelManager)
+library(OhdsiShinyModules)
+library(ShinyAppBuilder)
+
+connectionDetails <- createConnectionDetails(
+  dbms = "sqlite",
+  server = "./results.sqlite"
+)
+
+connectionHandler <- ConnectionHandler$new(
+  connectionDetails = connectionDetails
+)
+
+estimation <- OhdsiModule$new(
+  connectionHandler = connectionHandler,
+  viewerFun = estimationViewer,
+  serverFun = estimationServer,
+  resultDatabaseSettings = createDefaultResultDatabaseSettings()
+)
+
+if (interactive()) {
+  preview(estimation)
+}
+```
+
+If you want to create your own wrapper arround other existing modules, or shiny app code you can follow the examples in the *Creating A New Module* vignette.
