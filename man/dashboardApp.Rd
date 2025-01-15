@@ -20,7 +20,6 @@ dashboardApp
 }
 \examples{
 library(DarwinShinyModules)
-library(ggplot2)
 
 base <- Text$new("**base**")
 nested_a <- Text$new("**nested A**")
