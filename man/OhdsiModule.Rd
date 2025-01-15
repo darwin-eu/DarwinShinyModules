@@ -13,29 +13,29 @@ support any module from \code{OhdsiShinyModules}.
 }
 \examples{
 \donttest{
-library(DarwinShinyModules)
-library(DatabaseConnector)
-library(ResultModelManager)
-library(OhdsiShinyModules)
-library(ShinyAppBuilder)
-
-connectionDetails <- createConnectionDetails(
-  dbms = "sqlite",
-  server = "./results.sqlite"
-)
-
-connectionHandler <- ConnectionHandler$new(
-  connectionDetails = connectionDetails
-)
-
-estimation <- OhdsiModule$new(
-  connectionHandler = connectionHandler,
-  viewerFun = estimationViewer,
-  serverFun = estimationServer,
-  resultDatabaseSettings = createDefaultResultDatabaseSettings()
-)
-
 if (interactive()) {
+  library(DarwinShinyModules)
+  # library(DatabaseConnector)
+  # library(ResultModelManager)
+  # library(OhdsiShinyModules)
+  # library(ShinyAppBuilder)
+
+  connectionDetails <- createConnectionDetails(
+    dbms = "sqlite",
+    server = file.path(tempdir(), "results.sqlite")
+  )
+
+  connectionHandler <- ConnectionHandler$new(
+    connectionDetails = connectionDetails
+  )
+
+  estimation <- OhdsiModule$new(
+    connectionHandler = connectionHandler,
+    viewerFun = estimationViewer,
+    serverFun = estimationServer,
+    resultDatabaseSettings = createDefaultResultDatabaseSettings()
+  )
+
   preview(estimation)
 }
 }
