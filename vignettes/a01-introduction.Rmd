@@ -17,9 +17,9 @@ knitr::opts_chunk$set(
 ## Motivation
 Shiny apps are a wonderful way to communicate data to others. It allows for interactivity to get additional insights into the data without completely re-running an analysis and re-generating a report.
 
-Within the OHDSI sphere it is customary that a study has a accompanying shiny app, to visualize the data. `OhdsiShinyModules` was developed to standardize shiny apps for commonly ran analyses, mainly from the `HADES` suite.
+Within the OHDSI sphere it is customary that a study has a accompanying shiny app, to visualize the data. `OhdsiShinyModules` and `ShinyAppBuilder` were developed to standardize shiny apps for commonly ran analyses, mainly from the `HADES` suite.
 
-`OhdsiShinyModules` seems to be air tight in the way it functions, without much room for flexibility. It has to, to maintain the level of standardization it provides. It offers the most extreme opposite of what developing a fully customized shiny app would be.
+`ShinyAppBuilder` seems to be air tight in the way it functions, without much room for flexibility. It has to, to maintain the level of standardization it provides. It offers the most extreme opposite of what developing a fully customized shiny app would be.
 
 `DarwinShinyModules` attempts to strike the middle ground between both. It deals with the overhead of `shiny`, like namespaces, reactive environments, and server execution; provides pre-specified modules to rapidly develop functional shiny apps, but stays flexible enough to include custom additions to your shiny app.
 
