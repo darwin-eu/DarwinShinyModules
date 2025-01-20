@@ -1,6 +1,7 @@
 DarwinShinyModules
 =================
 
+[![Lifecycle:experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Build Status](https://github.com/darwin-eu-dev/DarwinShinyModules/workflows/R-CMD-check/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions?query=workflow%3AR-CMD-check)
 [![codecov.io](https://codecov.io/github/darwin-eu-dev/DarwinShinyModules/coverage.svg?branch=main)](https://codecov.io/github/darwin-eu-dev/DarwinShinyModules?branch=main)
 
