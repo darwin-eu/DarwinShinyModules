@@ -8,3 +8,5 @@
 ^inst/showcase/rsconnect$
 ^_pkgdown\.yml$
 ^pkgdown$
+^README\.Rmd$
+^README_files$
