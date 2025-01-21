@@ -54,11 +54,8 @@ UI <- shiny::fluidPage(
   table$UI()
 )
 
-if (interactive()) {
-  shiny::shinyApp(ui = UI, server = server)
-}
+shiny::shinyApp(ui = UI, server = server)
 ```
-![](./img/2-app-1.png){#id .class width=100%}
 
 We have some arguments to customize our table, `title`, `options`, `filter`. The `options` and `filter` arguments are `DT` arguments to add extra options, or to have control over the filtering.
 ```{r}
@@ -77,11 +74,8 @@ UI <- shiny::fluidPage(
   table$UI()
 )
 
-if (interactive()) {
-  shiny::shinyApp(ui = UI, server = server)
-}
+shiny::shinyApp(ui = UI, server = server)
 ```
-![](./img/2-app-2.png){#id .class width=100%}
 
 Maybe we don't like the standard filtering that `DT` provides, let's add an `InputPanel` module. The `InputPanel` module requires a named list of `xInput()` functions and a named list of their corresponding arguments. The upside of this is, that if you may add an input function from another package, without breaking compatibility.
 ```{r}
@@ -116,11 +110,8 @@ UI <- shiny::fluidPage(
   table$UI()
 )
 
-if (interactive()) {
-  shiny::shinyApp(ui = UI, server = server)
-}
+shiny::shinyApp(ui = UI, server = server)
 ```
-![](./img/2-app-3.png){#id .class width=100%}
 
 Initially the selection input shows the correct thing, but doesn't actually filter the data in the table. We have to update the data in the `Table` module.
 ```{r}
@@ -142,10 +133,62 @@ UI <- shiny::fluidPage(
   table$UI()
 )
 
-if (interactive()) {
-  shiny::shinyApp(ui = UI, server = server)
-}
+shiny::shinyApp(ui = UI, server = server)
 ```
-![](./img/2-app-4.png){#id .class width=100%}
 
 With some minor overhead we can make two modules communicate data between one another.
+
+## The Bridge Module
+The `Bridge` module is a type of module that contains other modules, and "bridges" them together. We can use the code in the previous example, and implement it as a `Bridge` instead. This has the upside that we can nest two or more modules together, and package them up in a new module, which will then behave as any other module.
+
+Lets first initiate our `Bridge` module with out any extra code. This will simply execute the `UI()` and `server()` methods, without any interaction.
+```{r}
+bridge <- Bridge$new(inputPanel, table)
+
+preview(bridge)
+```
+To make the `inputPanel` and `table` modules interact, we have to provide a function that makes them interact. We specify the function as a regular shiny `server()` function. This function is executed with the `server()` methods of the modules.
+```{r}
+bridgeFun <- function(input, output, session) {
+  shiny::observeEvent(inputPanel$inputValues$inputSpecies, {
+    table$data <- iris %>%
+      dplyr::filter(.data$Species == inputPanel$inputValues$inputSpecies)
+  })
+}
+
+bridge <- Bridge$new(inputPanel, table, bridgeFun = bridgeFun)
+```
+
+We can then use our `Bridge` module, like any other module.
+```{r}
+preview(bridge)
+```
+
+Or use it in any bespoke shiny app.
+```{r}
+library(shinydashboard)
+library(shiny)
+
+ui <- dashboardPage(
+  header = dashboardHeader(title = "My App"),
+  sidebar = dashboardSidebar(
+    sidebarMenu(
+      menuItem(text = "Iris Data", tabName = "bridge")
+    )
+  ),
+  body = dashboardBody(
+    tabItems(
+      tabItem(
+        tabName = "bridge",
+        bridge$UI()
+      )
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  bridge$server(input, output, session)
+}
+
+shinyApp(ui, server)
+```

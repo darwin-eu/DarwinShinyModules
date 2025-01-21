@@ -40,9 +40,7 @@ estimation <- OhdsiModule$new(
   resultDatabaseSettings = createDefaultResultDatabaseSettings()
 )
 
-if (interactive()) {
-  preview(estimation)
-}
+preview(estimation)
 ```
 
 If you want to create your own wrapper arround other existing modules, or shiny app code you can follow the examples in the *Creating A New Module* vignette.
