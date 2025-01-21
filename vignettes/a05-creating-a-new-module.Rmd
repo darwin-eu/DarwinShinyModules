@@ -171,11 +171,8 @@ server <- function(input, output, session) {
   module$server(input, output, session)
 }
 
-if (interactive()) {
-  shiny::shinyApp(ui, server)
-}
+shiny::shinyApp(ui, server)
 ```
-![](./img/app1.png)
 
 ## Multiple Modules in one ShinyApp
 We can also combine multiple modules into one ShinyApp.
@@ -207,11 +204,8 @@ server <- function(input, output, session) {
   module2$server(input, output, session)
 }
 
-if (interactive()) {
-  shiny::shinyApp(ui, server)
-}
+shiny::shinyApp(ui, server)
 ```
-![](./img/app2.png)
 
 ## Nesting modules
 Modules may be nested in other modules. The nested modules can communicate data to one another.
@@ -335,11 +329,9 @@ And now that we have something to look at, let's preview our module
 ```{r}
 mod <- ExampleModule$new(data = data)
 
-if (interactive()) {
-  preview(mod)
-}
+preview(mod)
 ```
-![](./img/5-nesting-1.png){#id .class width=100%}
+
 The `Table` and `PlotStatic` modules are now independent from one another. However, we can change that by adding some extra code in the `.server()` method.
 ```{r}
 ExampleModule <- R6::R6Class(
@@ -402,11 +394,8 @@ We can preview our module again.
 ```{r}
 mod <- ExampleModule$new(data = data)
 
-if (interactive()) {
-  preview(mod)
-}
+preview(mod)
 ```
-![](./img/5-nesting-2.png){#id .class width=100%}
 
 We can see that if we select rows in our table, the size updates in the plot for the selected row.
 
@@ -468,4 +457,3 @@ ExampleModule <- R6::R6Class(
   )
 )
 ```
-
