@@ -29,14 +29,14 @@
 #'   )
 #' )
 #'
-#' f <- function(input, output, session) {
+#' bridgeFun <- function(input, output, session) {
 #'   shiny::observeEvent(inputPanel$inputValues$inputSpecies, {
 #'     table$data <- iris %>%
 #'       dplyr::filter(.data$Species == inputPanel$inputValues$inputSpecies)
 #'   })
 #' }
 #'
-#' bridge <- Bridge$new(inputPanel, table, bridgeFun = f)
+#' bridge <- Bridge$new(inputPanel, table, bridgeFun = bridgeFun)
 #'
 #' if (interactive()) {
 #'   preview(bridge)
@@ -47,12 +47,12 @@ Bridge <- R6::R6Class(
 
   # Active ----
   active = list(
-    #' @field (`list`) List of modules.
+    #' @field modules (`list`) List of modules.
     modules = function() {
       return(private$.modules)
     },
 
-    #' @field (`function`) Function that bridges modules.
+    #' @field birdgeFun (`function`) Function that bridges modules.
     birdgeFun = function() {
       return(private$.bridgeFun)
     }
