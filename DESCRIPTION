@@ -44,6 +44,7 @@ Collate:
     'ShinyModule.R'
     'Bridge.R'
     'DarwinShinyModules.R'
+    'DrugExposureDiagnostics.R'
     'GTTable.R'
     'IncidencePrevalence.R'
     'InputPanel.R'
