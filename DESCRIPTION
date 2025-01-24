@@ -50,6 +50,7 @@ Collate:
     'DarwinBslibApp.R'
     'DarwinDashboardApp.R'
     'DarwinShinyModules.R'
+    'DrugExposureDiagnostics.R'
     'GTTable.R'
     'IncidencePrevalence.R'
     'InputPanel.R'
