@@ -37,7 +37,7 @@ server <- function(input, output, session) {
 
 mod <- makeModule(ui, server)
 
-if (interactive) {
+if (interactive()) {
   preview(mod)
 }
 }

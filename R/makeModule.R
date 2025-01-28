@@ -84,7 +84,7 @@ GenericModule <- R6::R6Class(
 #'
 #' mod <- makeModule(ui, server)
 #'
-#' if (interactive) {
+#' if (interactive()) {
 #'   preview(mod)
 #' }
 makeModule <- function(ui, server) {
