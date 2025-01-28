@@ -56,5 +56,6 @@ Collate:
     'Text.R'
     'TreatmentPatterns.R'
     'appBuilders.R'
+    'makeModule.R'
     'preview.R'
 URL: https://darwin-eu-dev.github.io/DarwinShinyModules/
