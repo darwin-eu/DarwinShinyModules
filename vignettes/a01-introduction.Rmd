@@ -27,7 +27,7 @@ Within the OHDSI sphere it is customary that a study has a accompanying shiny ap
 The idea behind `DarwinShinyModules` is that one component can be a module. A component may be a plot, a table, text, etc. These kinds of modules contain code to deal with some kind of data, and present the output in a standardized way. For instance a `Table` module might show a form of tabular data like a `data.frame` the same standardizes way, independent of the contents of the data.
 
 As an example we can display the contents of the `iris` and `mtcars` data sets in a similar fashion:
-```{r}
+```{r, eval=FALSE}
 library(DarwinShinyModules)
 
 tableIris <- Table$new(iris, title = "Iris")
@@ -35,6 +35,7 @@ tableMtcars <- Table$new(mtcars, title = "MT Cars")
 
 preview(list(tableIris, tableMtcars))
 ```
+![](./img/a01-1.png){#id .class width=100%}
 
 Notice that both tables are effectively formatted the same, and that only the data contained within is different. Both have a button to download the visualized data in the bottom left, both are search-able per column, etc.
 
@@ -59,9 +60,7 @@ server = function(input, output, session) {
   })
 }
 ```
-![](./img/1-tab-plot-3.png){#id .class width=100%}
-![](./img/1-tab-plot-2.png){#id .class width=100%}
-![](./img/1-tab-plot-1.png){#id .class width=100%}
+![](./img/a01-2.png)
 
 The full underlying code is out of scope of this vignette, but included at the end of this vignette for completeness in supplementary A.
 
@@ -86,7 +85,7 @@ All of these options seem like a more round about way of doing things, for this 
 
 `DarwinShinyModules` uses inheritance to inherit common functionality between modules, following a "decorator" style design pattern. The idea behind this is that inheritance should come naturally, and (hopefully) intuitively.
 
-![](./img/1-dsm.png){#id .class width=100%}
+![](./img/a01-3.png){#id .class width=100%}
 
 At the top of this hierarchy is the `ShinyModule` class. This class deals with the overhead of `shiny`, like namespaces, reactive environments, and server execution. All other modules in `DarwinShinyModules` inherit from this module. The second layer of modules are the 'base' modules described earlier. Some of these modules might have an intermediate parent class. For instance the `PlotStatic`, `PlotWidget`, and `PlotPlotly` inherit from a `Plot` class. This is mostly due to the specific `renderX()` and `XOutput()` functions specific for each kind of plot. Finally in the third layer are the 'composed' modules.
 

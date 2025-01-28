@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## Introduction
 In this vignette we will discuss how to use various shiny modules in a shiny app. The shiny app exists out of two components: the UI, and the server:
-```{r}
+```{r, eval=FALSE}
 server <- function(input, output, session) {
   
 }
@@ -29,6 +29,7 @@ if (interactive()) {
   shiny::shinyApp(ui = UI, server = server)
 }
 ```
+![](./img/a02-1.png)
 
 These two components will be the foundation of our shiny app.
 
@@ -45,7 +46,7 @@ table
 The table module is an `R6` class and contains various public and private fields and methods. Some of these are specific to the `Table` module. But most of them are present in all `DarwinShinyModule` modules. All modules have a `server()` and `UI()` method. These methods are used make the shiny app function, and may be used on their own by `shiny::shinyApp()`. This makes each module essentially a tiny stand-alone shiny app.
 
 To integrate our module in our own shiny app, all we have to do is add the `UI()` and `server()` method calls to our own shiny app:
-```{r}
+```{r, eval=FALSE}
 server <- function(input, output, session) {
   table$server(input, output, session)
 }
@@ -56,9 +57,10 @@ UI <- shiny::fluidPage(
 
 shiny::shinyApp(ui = UI, server = server)
 ```
+![](./img/a02-2.png)
 
 We have some arguments to customize our table, `title`, `options`, `filter`. The `options` and `filter` arguments are `DT` arguments to add extra options, or to have control over the filtering.
-```{r}
+```{r, eval=FALSE}
 table <- Table$new(
   data = iris,
   title = "Iris Dataset",
@@ -76,6 +78,7 @@ UI <- shiny::fluidPage(
 
 shiny::shinyApp(ui = UI, server = server)
 ```
+![](./img/a02-3.png)
 
 Maybe we don't like the standard filtering that `DT` provides, let's add an `InputPanel` module. The `InputPanel` module requires a named list of `xInput()` functions and a named list of their corresponding arguments. The upside of this is, that if you may add an input function from another package, without breaking compatibility.
 ```{r}
@@ -99,7 +102,7 @@ inputPanel
 Before we add our `InputPanel` let's see what it contains. It again has a `server()` and `UI()` method, but it now also has a `inputValues` active binding. `inputValues` is a reactive environment, where the input is stored from all the added `xInput()` functions. The reference for each value is the specified `inputId` in the `args` arguments list when creating a new `InputPanel` module.
 
 Again we can add the `server()` and `UI()` method calls to our shiny app. Note that the UI is rendered first come, first serve:
-```{r}
+```{r, eval=FALSE}
 server <- function(input, output, session) {
   table$server(input, output, session)
   inputPanel$server(input, output, session)
@@ -112,9 +115,10 @@ UI <- shiny::fluidPage(
 
 shiny::shinyApp(ui = UI, server = server)
 ```
+![](./img/a02-4.png)
 
 Initially the selection input shows the correct thing, but doesn't actually filter the data in the table. We have to update the data in the `Table` module.
-```{r}
+```{r, eval=FALSE}
 server <- function(input, output, session) {
   table$server(input, output, session)
   inputPanel$server(input, output, session)
@@ -135,6 +139,7 @@ UI <- shiny::fluidPage(
 
 shiny::shinyApp(ui = UI, server = server)
 ```
+![](./img/a02-5.png)
 
 With some minor overhead we can make two modules communicate data between one another.
 
@@ -147,6 +152,8 @@ bridge <- Bridge$new(inputPanel, table)
 
 preview(bridge)
 ```
+![](./img/a02-6.png)
+
 To make the `inputPanel` and `table` modules interact, we have to provide a function that makes them interact. We specify the function as a regular shiny `server()` function. This function is executed with the `server()` methods of the modules.
 ```{r}
 bridgeFun <- function(input, output, session) {
@@ -164,8 +171,10 @@ We can then use our `Bridge` module, like any other module.
 preview(bridge)
 ```
 
+![](./img/a02-7.png)
+
 Or use it in any bespoke shiny app.
-```{r}
+```{r, eval=FALSE}
 library(shinydashboard)
 library(shiny)
 
@@ -192,3 +201,4 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
+![](./img/a02-8.png)
