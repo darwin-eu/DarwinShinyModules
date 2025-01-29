@@ -75,8 +75,10 @@ darwinFooter <- function() {
     style = "padding: 0px; text-align: center; position: fixed; bottom: 0; width: 100%;",
     shiny::h6(
       sprintf(
-        "Generated with DarwinShinyModules %s",
-        utils::packageVersion("DarwinShinyModules")
+        "Generated with DarwinShinyModules %s | Deployed on: %s | © %s - 2023 European Medicines Agency. All rights reserved. Certain parts are licensed under conditions to the European Medicines Agency.",
+        utils::packageVersion("DarwinShinyModules"),
+        Sys.Date(),
+        substr(Sys.Date(), start = 1, stop = 4)
       )
     )
   )
