@@ -62,6 +62,7 @@ Collate:
     'Table.R'
     'Text.R'
     'TreatmentPatterns.R'
+    'makeModule.R'
     'appBuilderUtils.R'
     'launchBslibApp.R'
     'launchDarwinBslibApp.R'
