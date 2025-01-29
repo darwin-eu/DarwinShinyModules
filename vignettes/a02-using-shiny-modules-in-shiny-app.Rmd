@@ -165,7 +165,7 @@ preview(bridge)
 ```
 
 Or use it in any bespoke shiny app.
-```{r}
+```{r, eval=FALSE}
 library(shinydashboard)
 library(shiny)
 
