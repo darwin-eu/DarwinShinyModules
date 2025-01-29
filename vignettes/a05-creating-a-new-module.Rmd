@@ -162,7 +162,7 @@ mod3$instanceId
 
 
 We can spin up a simple shiny app using our module:
-```{r}
+```{r, eval=FALSE}
 ui <- shiny::fluidPage(
   module$UI()
 )
@@ -173,6 +173,7 @@ server <- function(input, output, session) {
 
 shiny::shinyApp(ui, server)
 ```
+![](./img/a05-1.png)
 
 ## Multiple Modules in one ShinyApp
 We can also combine multiple modules into one ShinyApp.
@@ -193,7 +194,7 @@ module2 <- MyModule2$new()
 ```
 
 We can spin up a new ShinyApp:
-```{r}
+```{r, eval=FALSE}
 ui <- shiny::fluidPage(
   module$UI(),
   module2$UI()
@@ -206,6 +207,7 @@ server <- function(input, output, session) {
 
 shiny::shinyApp(ui, server)
 ```
+![](./img/a05-2.png)
 
 ## Nesting modules
 Modules may be nested in other modules. The nested modules can communicate data to one another.
@@ -326,11 +328,12 @@ ExampleModule <- R6::R6Class(
 ```
 
 And now that we have something to look at, let's preview our module
-```{r}
+```{r, eval=FALSE}
 mod <- ExampleModule$new(data = data)
 
 preview(mod)
 ```
+![](./img/a05-3.png)
 
 The `Table` and `PlotStatic` modules are now independent from one another. However, we can change that by adding some extra code in the `.server()` method.
 ```{r}
@@ -391,11 +394,12 @@ ExampleModule <- R6::R6Class(
 ```
 
 We can preview our module again.
-```{r}
+```{r, eval=FALSE}
 mod <- ExampleModule$new(data = data)
 
 preview(mod)
 ```
+![](./img/a05-4.png)
 
 We can see that if we select rows in our table, the size updates in the plot for the selected row.
 
