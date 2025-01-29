@@ -44,7 +44,7 @@ We will call modules that deal directly with data like this **base** modules. Th
 The second kind of module in `DarwinShinyModules` is a **composed** module. This kind of module is a for a large part of its server code composed of other modules. Additional code can make it so these modules can communicate with each other.
 
 As an example, this server function uses the pre-specified `table` and `plot` server methods. A small amount of code is then added to update a "size" column in the data, depending on what rows are selected in the table, and then updated in the `plot`. The `plot` will then update with the updated data.
-```{r, eval=FALSE}
+```{r}
 server = function(input, output, session) {
   # Server method for the `plot`
   private$.plot$server(input, output, session)
@@ -60,7 +60,8 @@ server = function(input, output, session) {
   })
 }
 ```
-![](./img/a01-2.png)
+![](./img/a01-2.png){#id .class width=100%}
+
 
 The full underlying code is out of scope of this vignette, but included at the end of this vignette for completeness in supplementary A.
 

@@ -55,12 +55,12 @@ appStructure <- list(
   )
 )
 
-dashboardApp(appStructure)
+launchShinydashboardApp(appStructure)
 ```
-![](./img/a03-1.png)
+![](./img/a03-1.png){#id .class width=100%}
 
 We can also use the `darwinApp()` function to get a DARWIN EU© themed shiny app.
 ```{r, eval=FALSE}
-darwinApp(appStructure, title = "Study", studyStatus = "ongoing")
+darwinApp(appStructure, title = "Study")
 ```
-![](./img/a03-2.png)
+![](./img/a03-2.png){#id .class width=100%}
