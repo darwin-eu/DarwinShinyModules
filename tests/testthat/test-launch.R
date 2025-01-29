@@ -1,4 +1,6 @@
 test_that("App Creation", {
+  skip_if_not(rlang::is_installed(c("shinydashboard", "bslib")))
+
   base <- Text$new("**base**")
   nested_a <- Text$new("**nested A**")
   nested_b <- Text$new("**nested B**")
