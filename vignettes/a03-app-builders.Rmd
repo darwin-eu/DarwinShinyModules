@@ -32,7 +32,7 @@ comb_c <- Text$new("**comb C**")
 ```
 
 We can organize the modules in a nested named list. Where the names of the overarching list are the main menu items, and subsequent names are sub menu items.
-```{r}
+```{r, eval=FALSE}
 appStructure <- list(
   # `base` on a page
   base = base,
@@ -59,6 +59,6 @@ launchShinydashboardApp(appStructure)
 ```
 
 We can also use the `darwinApp()` function to get a DARWIN EU© themed shiny app.
-```{r}
+```{r, eval=FALSE}
 launchDarwinDashboardApp(appStructure, title = "Study")
 ```
