@@ -1,44 +1,83 @@
-#' darwinDashboardApp
-#'
-#' @param appStructure (`list(list())`) A list of named lists, containing modules.
-#' The level of nesting groups or separates modules in menu items `"_"` will be read as a space.
-#' @param title (`character(1)`: `NULL`) Title of the app
-#' @param studyStatus (`character(1)`: `"ongoing"`) Status of the study
-#'
-#' @returns
-#' @export
-#'
-#' @examples
-#' library(DarwinShinyModules)
-#'
-#' base <- Text$new("**base**")
-#' nested_a <- Text$new("**nested A**")
-#' nested_b <- Text$new("**nested B**")
-#' sub_a <- Text$new("**sub A**")
-#' sub_b <- Text$new("**sub B**")
-#' comb_a <- Text$new("**comb A**")
-#' comb_b <- Text$new("**comb B**")
-#' comb_c <- Text$new("**comb C**")
-#'
-#' if (interactive()) {
-#'   appStructure <- list(
-#'     base = base,
-#'     nested = list(nested_a, nested_b),
-#'     nested_sub = list(
-#'       sub_a = sub_a,
-#'       sub_b = sub_b
-#'     ),
-#'     nested_combined = list(
-#'       comb_a_b = list(comb_a, comb_b),
-#'       comb_c = comb_c
-#'     )
-#'   )
-#'
-#'   darwinDashboardApp(appStructure)
-#' }
-darwinDashboardApp <- function(appStructure, title = NULL, studyStatus = "ongoing") {
-  assertAppStructure(appStructure)
-  checkmate::assertCharacter(title, len = 1, null.ok = TRUE)
-  app <- DarwinDashboard$new(appStructure, title = title, studyStatus = studyStatus)
-  app$launch()
+# Classes ----
+DarwinDashboardApp <- R6::R6Class(
+  classname = "DarwinDashboardApp",
+  inherit = ShinydashboardApp,
+
+  ## Public ----
+  public = list(
+    launch = function() {
+      shiny::addResourcePath(
+        prefix = "www/img",
+        directoryPath = system.file("www/img", package = "DarwinShinyModules")
+      )
+      super$launch()
+    },
+
+    UI = function() {
+      shiny::tags$body(
+        shiny::includeCSS(path = system.file(package = "DarwinShinyModules", "www", "theme.css")),
+        darwinHeader(),
+        shinydashboard::dashboardPage(
+          header = shinydashboard::dashboardHeader(
+            title = private$.title,
+            titleWidth = 300
+          ),
+          sidebar = shinydashboard::dashboardSidebar(
+            shinydashboard::sidebarMenu(
+              private$modulesSidebar(private$.appStructure)
+            ), width = 300
+          ),
+          body = shinydashboard::dashboardBody(private$modulesBody(private$.appStructure))
+        ),
+        darwinFooter()
+      )
+    }
+  )
+)
+
+# Internal Functions ----
+darwinHeader <- function() {
+  shiny::tagList(
+    shiny::includeCSS(path = system.file(package = "DarwinShinyModules", "www", "style.css")),
+    shiny::tags$body(
+      shiny::tags$div(
+        class = "g-block size-100 darwin-top-line",
+        shiny::tags$div(
+          id = "custom-2346-particle",
+          class = "g-content g-particle"
+        )
+      ),
+      shiny::tags$div(
+        class = "g-grid",
+        shiny::tags$div(
+          class = "header-background-image",
+          style = "padding-top&#x3A;&#x20;40px&#x20;&#x21;important&#x3B;&#x20;padding-left&#x3A;&#x20;25px&#x20;&#x21;important&#x3B;",
+          shiny::tags$div(
+            id = "logo-1935-particle",
+            class = "g-content g-particle",
+            shiny::tags$a(
+              href = "/", class = "g-logo darwin-eu-logo", target = "_self", title = "", rel = "home",
+              shiny::tags$img(
+                src = "https://darwin-eu.org/templates/rt_horizon/custom/images/darwin-eu-logo.png",
+                height = "100px",
+                alt = ""
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+}
+
+darwinFooter <- function() {
+  shiny::tags$footer(
+    style = "padding: 0px; text-align: center; position: fixed; bottom: 0; width: 100%;",
+    shiny::h6(
+      sprintf(
+        "Generated with DarwinShinyModules %s",
+        utils::packageVersion("DarwinShinyModules")
+      )
+    )
+  )
 }

@@ -1,4 +1,4 @@
-#' dashboardApp
+#' launchDarwinBslibApp
 #'
 #' @param appStructure (`list(list())`) A list of named lists, containing modules.
 #' The level of nesting groups or separates modules in menu items `"_"` will be read as a space.
@@ -33,11 +33,14 @@
 #'     )
 #'   )
 #'
-#'   dashboardApp(appStructure)
+#'   launchDarwinBslibApp(appStructure)
 #' }
-dashboardApp <- function(appStructure, title = NULL) {
+launchDarwinBslibApp <- function(appStructure, title = NULL) {
+  if (!rlang::is_installed(pkg = "bslib")) {
+    rlang::abort("`bslib` is not installed.")
+  }
   assertAppStructure(appStructure)
   checkmate::assertCharacter(title, len = 1, null.ok = TRUE)
-  app <- ShinydashboardApp$new(appStructure)
+  app <- DarwinBslibApp$new(appStructure, title = title)
   app$launch()
 }

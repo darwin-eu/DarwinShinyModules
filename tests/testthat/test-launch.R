@@ -21,6 +21,15 @@ test_that("App Creation", {
     )
   )
 
-  app <- dashboardApp(appStructure)
+  app <- launchShinydashboardApp(appStructure)
+  expect_equal(class(app), "shiny.appobj")
+
+  app <- launchDarwinDashboardApp(appStructure)
+  expect_equal(class(app), "shiny.appobj")
+
+  app <- launchBslibApp(appStructure)
+  expect_equal(class(app), "shiny.appobj")
+
+  app <- launchDarwinBslibApp(appStructure)
   expect_equal(class(app), "shiny.appobj")
 })

@@ -13,7 +13,13 @@ App <- R6::R6Class(
       shiny::shinyApp(ui = self$UI(), server = self$server)
     },
 
-    server = function(input, output, session) {},
+    server = function(input, output, session) {
+      modules <- unlist(private$.appStructure)
+      for (module in modules) {
+        module$server(input, output, session)
+      }
+    },
+
     UI = function() {}
   ),
 

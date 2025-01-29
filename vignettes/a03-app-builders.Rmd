@@ -55,10 +55,10 @@ appStructure <- list(
   )
 )
 
-dashboardApp(appStructure)
+launchShinydashboardApp(appStructure)
 ```
 
 We can also use the `darwinApp()` function to get a DARWIN EU© themed shiny app.
 ```{r}
-darwinApp(appStructure, title = "Study", studyStatus = "ongoing")
+launchDarwinDashboardApp(appStructure, title = "Study")
 ```

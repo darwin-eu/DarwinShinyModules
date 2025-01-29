@@ -13,16 +13,9 @@ ShinydashboardApp <- R6::R6Class(
     UI = function() {
       shinydashboard::dashboardPage(
         header = shinydashboard::dashboardHeader(title = private$.title),
-        sidebar = shinydashboard::dashboardSidebar(shinydashboard::sidebarMenu(modulesSidebar(private$.appStructure))),
-        body = shinydashboard::dashboardBody(modulesBody(private$.appStructure))
+        sidebar = shinydashboard::dashboardSidebar(shinydashboard::sidebarMenu(private$modulesSidebar(private$.appStructure))),
+        body = shinydashboard::dashboardBody(private$modulesBody(private$.appStructure))
       )
-    },
-
-    server = function(input, output, session) {
-      modules <- unlist(private$.appStructure)
-      for (module in modules) {
-        module$server(input, output, session)
-      }
     }
   ),
 

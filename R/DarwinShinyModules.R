@@ -4,7 +4,7 @@
 ## usethis namespace: start
 #' @import R6
 #' @import shiny
-#' @import shinydashboard
+#' @import rlang
 #' @import dplyr
 #' @import ggplot2
 #' @import checkmate
