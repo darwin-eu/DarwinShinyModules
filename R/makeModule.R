@@ -10,6 +10,16 @@ GenericModule <- R6::R6Class(
   inherit = ShinyModule,
 
   active = list(
+    #' @field moduleId (`character`) Overwrite from `ShinyModule`
+    moduleId = function(moduleId) {
+      if (missing(moduleId)) {
+        return(private$.moduleId)
+      } else {
+        checkmate::assertCharacter(moduleId, null.ok = TRUE, len = 1)
+        private$.moduleId <- moduleId
+      }
+    },
+
     #' @field varUI UI element passed to the `makeModule()` function.
     varUI = function() {
       return(private$.varUI)
@@ -45,10 +55,18 @@ GenericModule <- R6::R6Class(
     },
 
     .server = function(input, output, session = shiny::getDefaultReactiveDomain()) {
-      do.call(
-        what = private$.varServer,
-        args = list(input = input, output = output, session = session)
-      )
+      serverFunArgs <- list(args(private$.varServer))
+      if ("session" %in% serverFunArgs) {
+        do.call(
+          what = private$.varServer,
+          args = list(input = input, output = output, session = session)
+        )
+      } else {
+        do.call(
+          what = private$.varServer,
+          args = list(input = input, output = output)
+        )
+      }
     }
   )
 )
@@ -69,6 +87,7 @@ GenericModule <- R6::R6Class(
 #' from packages like `shiny`, `shinydashboard`, or `bslib`
 #' @param server (`function`) A server function with atleast a `input` and
 #' `output` argument.
+#' @param namespace (`character`: `NULL`) Namespace used in the ui element.
 #'
 #' @returns `ShinyModule`
 #' @export
@@ -87,6 +106,8 @@ GenericModule <- R6::R6Class(
 #' if (interactive()) {
 #'   preview(mod)
 #' }
-makeModule <- function(ui, server) {
-  GenericModule$new(ui = ui, server = server)
+makeModule <- function(ui, server, namespace = NULL) {
+  mod <- GenericModule$new(ui = ui, server = server)
+  mod$moduleId <- namespace
+  return(mod)
 }
