@@ -98,7 +98,7 @@ Plot <- R6::R6Class(
 
     ## Methods ----
     .server = function(input, output, session) {
-      if (is.list(private$.args)) {
+      if (!shiny::is.reactivevalues(private$.args)) {
         private$.args <- do.call(shiny::reactiveValues, private$.args)
       }
       shiny::onStop(fun = private$finalize)
