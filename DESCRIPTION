@@ -29,7 +29,7 @@ Imports:
 Suggests:
     TreatmentPatterns,
     IncidencePrevalence,
-    DrugExposureDiagnostics,
+    DrugExposureDiagnostics (>= 1.1.1),
     networkD3,
     testthat (>= 3.0.0),
     knitr,
