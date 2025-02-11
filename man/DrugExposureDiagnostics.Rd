@@ -9,10 +9,8 @@ DrugExposureDiagnostics module that shows tables and plots
 \details{
 The module consists of the following:
 \describe{
-\item{"InputPanel"}{Input panel to filter data.}
-\item{"PlotWidget"}{Sunburst Plot, visualizing the data.}
-\item{"PlotWidget"}{Sankey Diagram, visualizing the data.}
-\item{"Table"}{Table containing the data.}
+\item{"dataPlotPanel"}{Table and a plot (bar or box) for each check.}
+\item{"metaDataPanel"}{Table containing the metadata.}
 }
 }
 \examples{
@@ -23,7 +21,7 @@ if (require("DrugExposureDiagnostics", character.only = TRUE, quietly = TRUE, wa
 
   cdm <- DrugExposureDiagnostics:::mockDrugExposure()
   ded <- DrugExposureDiagnostics::executeChecks(cdm)
-  mod <- DrugExposureDiagnostics$new(resultList = ded)
+  mod <- DrugExposureDiagnostics$new(resultList = ded, databaseId = "Eunomia")
 
   if (interactive()) {
     preview(mod)
@@ -56,13 +54,15 @@ if (require("DrugExposureDiagnostics", character.only = TRUE, quietly = TRUE, wa
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DrugExposureDiagnostics$new(resultList)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DrugExposureDiagnostics$new(resultList, database_id = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{resultList}}{(\code{list}) List containing the output of the checks}
+
+\item{\code{database_id}}{(\code{character}) Database identifier (optional)}
 }
 \if{html}{\out{</div>}}
 }
