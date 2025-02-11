@@ -19,9 +19,8 @@ library(DarwinShinyModules)
 
 if (require("DrugExposureDiagnostics", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)) {
 
-  cdm <- DrugExposureDiagnostics:::mockDrugExposure()
-  ded <- DrugExposureDiagnostics::executeChecks(cdm)
-  mod <- DrugExposureDiagnostics$new(resultList = ded, databaseId = "Eunomia")
+  ded <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/DrugExposureDiagnostics/1.1.1/ded.rds"))
+  mod <- DrugExposureDiagnostics$new(resultList = ded)
 
   if (interactive()) {
     preview(mod)
