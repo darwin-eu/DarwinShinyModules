@@ -82,7 +82,6 @@ DrugExposureDiagnostics <- R6::R6Class(
       }
       shiny::fluidPage(
         theme = bslib::bs_theme(version = "4", bootswatch = "spacelab"),
-        shinyjs::useShinyjs(),
         shiny::titlePanel(
           title = h2("Drug Exposure Diagnostics Dashboard", align = "center"),
           windowTitle = "Drug Exposure Diagnostics Dashboard"
