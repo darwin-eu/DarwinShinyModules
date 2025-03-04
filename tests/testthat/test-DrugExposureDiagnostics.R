@@ -1,7 +1,9 @@
 library(shiny)
 library(dplyr)
 
-test_that("input to reactive", {
+test_that("Creation of module", {
+  skip_if_not(require("DrugExposureDiagnostics", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE))
+
   dedData <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/DrugExposureDiagnostics/1.1.1/ded.rds"))
 
   app <- DrugExposureDiagnostics$new(

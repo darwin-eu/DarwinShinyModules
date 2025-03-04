@@ -41,7 +41,6 @@ DrugExposureDiagnostics <- R6::R6Class(
     #' @return (`invisible(self)`)
     initialize = function(resultList, database_id = NULL) {
       super$initialize()
-      private$assertInstall()
       private$.resultList <- resultList
       if (!is.null(database_id)) {
         private$.database_id <- database_id
