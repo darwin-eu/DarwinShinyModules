@@ -15,9 +15,9 @@ Depends:
     R (>= 4.0)
 Imports:
     R6,
+    rlang,
     checkmate,
     shiny,
-    shinydashboard,
     dplyr,
     ggplot2,
     plotly,
@@ -27,6 +27,8 @@ Imports:
     shinyWidgets,
     stringr
 Suggests:
+    bslib,
+    shinydashboard,
     TreatmentPatterns,
     IncidencePrevalence,
     DrugExposureDiagnostics (>= 1.1.1),
@@ -43,8 +45,12 @@ Config/testthat/parallel: true
 VignetteBuilder: knitr
 Language: en-US
 Collate: 
+    'App.R'
     'ShinyModule.R'
     'Bridge.R'
+    'BslibApp.R'
+    'DarwinBslibApp.R'
+    'DarwinDashboardApp.R'
     'DarwinShinyModules.R'
     'DrugExposureDiagnostics.R'
     'GTTable.R'
@@ -55,9 +61,15 @@ Collate:
     'PlotPlotly.R'
     'PlotStatic.R'
     'PlotWidget.R'
+    'ShinydashboardApp.R'
     'Table.R'
     'Text.R'
     'TreatmentPatterns.R'
-    'appBuilders.R'
+    'makeModule.R'
+    'appBuilderUtils.R'
+    'launchBslibApp.R'
+    'launchDarwinBslibApp.R'
+    'launchDarwinDashboardApp.R'
+    'launchShinydashboardApp.R'
     'preview.R'
 URL: https://darwin-eu-dev.github.io/DarwinShinyModules/

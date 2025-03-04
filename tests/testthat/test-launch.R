@@ -1,4 +1,6 @@
 test_that("App Creation", {
+  skip_if_not(rlang::is_installed(c("shinydashboard", "bslib")))
+
   base <- Text$new("**base**")
   nested_a <- Text$new("**nested A**")
   nested_b <- Text$new("**nested B**")
@@ -21,6 +23,15 @@ test_that("App Creation", {
     )
   )
 
-  app <- dashboardApp(appStructure)
+  app <- launchShinydashboardApp(appStructure)
+  expect_equal(class(app), "shiny.appobj")
+
+  app <- launchDarwinDashboardApp(appStructure)
+  expect_equal(class(app), "shiny.appobj")
+
+  app <- launchBslibApp(appStructure)
+  expect_equal(class(app), "shiny.appobj")
+
+  app <- launchDarwinBslibApp(appStructure)
   expect_equal(class(app), "shiny.appobj")
 })
