@@ -13,6 +13,8 @@ an UI element and server function, with the `makeModule()` function.
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
+\item{\code{moduleId}}{(`character`) Overwrite from `ShinyModule`}
+
 \item{\code{varUI}}{UI element passed to the `makeModule()` function.}
 
 \item{\code{varServer}}{(`function`) Server function passed to the `makeModule()` function}

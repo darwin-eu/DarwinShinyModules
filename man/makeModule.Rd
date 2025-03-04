@@ -4,7 +4,7 @@
 \alias{makeModule}
 \title{makeModule}
 \usage{
-makeModule(ui, server)
+makeModule(ui, server, namespace = NULL)
 }
 \arguments{
 \item{ui}{Shiny UI elements i.e. a \code{shiny.tag.list}, or similar ui objects
@@ -12,6 +12,8 @@ from packages like \code{shiny}, \code{shinydashboard}, or \code{bslib}}
 
 \item{server}{(\code{function}) A server function with atleast a \code{input} and
 \code{output} argument.}
+
+\item{namespace}{(\code{character}: \code{NULL}) Namespace used in the ui element.}
 }
 \value{
 \code{ShinyModule}

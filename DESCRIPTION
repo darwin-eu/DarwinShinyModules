@@ -65,11 +65,11 @@ Collate:
     'Table.R'
     'Text.R'
     'TreatmentPatterns.R'
-    'makeModule.R'
     'appBuilderUtils.R'
     'launchBslibApp.R'
     'launchDarwinBslibApp.R'
     'launchDarwinDashboardApp.R'
     'launchShinydashboardApp.R'
+    'makeModule.R'
     'preview.R'
 URL: https://darwin-eu-dev.github.io/DarwinShinyModules/
