@@ -52,166 +52,18 @@ DrugExposureDiagnostics <- R6::R6Class(
           )
         })
       }
-      if (nrow(private$.resultList$conceptSummary) > 0) {
-        ingredientConceptsColumnsToHide <- c(
-          "concept_code", "valid_start_date", "valid_end_date",
-          "invalid_reason", "amount_value", "amount_unit_concept_id", "numerator_value",
-          "numerator_unit_concept_id", "numerator_unit", "denominator_value",
-          "denominator_unit_concept_id", "denominator_unit", "box_size", "amount_unit"
-        )
-        ingredientConceptColumnsSelected <- colnames(private$.resultList$conceptSummary)
-        ingredientConceptColumnsSelected <- setdiff(ingredientConceptColumnsSelected, ingredientConceptsColumnsToHide)
-        private$.ingredientConceptsTab <- DrugExposureDiagnostics::dataPlotPanel$new(
-          data = private$.resultList$conceptSummary,
-          id = "ingredientConcepts",
-          title = "Ingredient concepts",
-          description = "Ingredient concepts",
-          plotPercentage = FALSE,
-          byConcept = FALSE,
-          downloadFilename = "IngredientConcepts.csv",
-          selectedColumns = ingredientConceptColumnsSelected
-        )
-        private$.ingredientConceptsTab$parentNamespace <- self$namespace
-      }
-      if (nrow(private$.resultList$drugRoutesOverall) > 0) {
-        private$.drugRoutesTab <- DrugExposureDiagnostics::dataPlotPanel$new(
-          data = private$.resultList$drugRoutesOverall,
-          dataByConcept = private$.resultList$drugRoutesByConcept,
-          id = "drugRoutes",
-          title = "Drug routes",
-          description = "Drug routes",
-          plotPercentage = FALSE,
-          byConcept = TRUE,
-          downloadFilename = "DrugRoutes.csv"
-        )
-        private$.drugRoutesTab$parentNamespace <- self$namespace
-      }
-      if (nrow(private$.resultList$drugTypesOverall) > 0) {
-        private$.drugTypesTab <- DrugExposureDiagnostics::dataPlotPanel$new(
-          data = private$.resultList$drugTypesOverall,
-          dataByConcept = private$.resultList$drugTypesByConcept,
-          id = "drugTypes",
-          title = "Drug types",
-          description = "Drug types",
-          plotPercentage = FALSE,
-          byConcept = TRUE,
-          downloadFilename = "DrugTypes.csv"
-        )
-        private$.drugTypesTab$parentNamespace <- self$namespace
-      }
-      if (nrow(private$.resultList$drugSourceConceptsOverall) > 0) {
-        private$.drugSourceConceptsTab <- DrugExposureDiagnostics::dataPlotPanel$new(
-          data = private$.resultList$drugSourceConceptsOverall,
-          id = "drugSourceConcepts",
-          title = "Drug source concepts",
-          description = "Drug source concepts",
-          plotPercentage = FALSE,
-          byConcept = FALSE,
-          downloadFilename = "DrugSourceConcepts.csv"
-        )
-        private$.drugSourceConceptsTab$parentNamespace <- self$namespace
-      }
-      if (nrow(private$.resultList$drugExposureDurationOverall) > 0) {
-        private$.drugExposureDurationTab <- DrugExposureDiagnostics::dataPlotPanel$new(
-          data = private$.resultList$drugExposureDurationOverall,
-          dataByConcept = private$.resultList$drugExposureDurationByConcept,
-          id = "drugExposureDuration",
-          title = "Drug exposure duration",
-          description = "Drug exposure duration",
-          plotPercentage = FALSE,
-          byConcept = TRUE,
-          downloadFilename = "DrugExposureDuration.csv"
-        )
-        private$.drugExposureDurationTab$parentNamespace <- self$namespace
-      }
-      if (nrow(private$.resultList$missingValuesOverall) > 0) {
-        private$.drugVariablesMissingTab <- DrugExposureDiagnostics::dataPlotPanel$new(
-          data = private$.resultList$missingValuesOverall,
-          dataByConcept = private$.resultList$missingValuesByConcept,
-          id = "drugVariablesMissing",
-          title = "Drug variables missing",
-          description = "Drug variables missing",
-          plotPercentage = TRUE,
-          byConcept = TRUE,
-          downloadFilename = "DrugVariablesMissing.csv"
-        )
-        private$.drugVariablesMissingTab$parentNamespace <- self$namespace
-      }
-      if (nrow(private$.resultList$drugDaysSupply) > 0) {
-        private$.drugDaysSupplyTab <- DrugExposureDiagnostics::dataPlotPanel$new(
-          data = private$.resultList$drugDaysSupply,
-          dataByConcept = private$.resultList$drugDaysSupplyByConcept,
-          id = "drugDaysSupply",
-          title = "Drug days supply",
-          description = "Drug days supply",
-          plotPercentage = FALSE,
-          byConcept = TRUE,
-          downloadFilename = "DrugDaysSupply.csv"
-        )
-        private$.drugDaysSupplyTab$parentNamespace <- self$namespace
-      }
-      if (nrow(private$.resultList$drugQuantity) > 0) {
-        private$.drugQuantityTab <- DrugExposureDiagnostics::dataPlotPanel$new(
-          data = private$.resultList$drugQuantity,
-          dataByConcept = private$.resultList$drugQuantityByConcept,
-          id = "drugQuantity",
-          title = "Drug quantity",
-          description = "Drug quantity",
-          plotPercentage = FALSE,
-          byConcept = TRUE,
-          downloadFilename = "DrugQuantity.csv"
-        )
-        private$.drugQuantityTab$parentNamespace <- self$namespace
-      }
-      if (nrow(private$.resultList$drugSig) > 0) {
-        private$.drugSigTab <- DrugExposureDiagnostics::dataPlotPanel$new(
-          data = private$.resultList$drugSig,
-          dataByConcept = private$.resultList$drugSigByConcept,
-          id = "drugSig",
-          title = "Drug sig",
-          description = "Drug sig",
-          plotPercentage = FALSE,
-          byConcept = TRUE,
-          downloadFilename = "DrugSig.csv"
-        )
-        private$.drugSigTab$parentNamespace <- self$namespace
-      }
-      if (nrow(private$.resultList$drugVerbatimEndDate) > 0) {
-        private$.drugVerbatimEndDateTab <- DrugExposureDiagnostics::dataPlotPanel$new(
-          data = private$.resultList$drugVerbatimEndDate,
-          dataByConcept = private$.resultList$drugVerbatimEndDateByConcept,
-          id = "drugVerbatimEndDate",
-          title = "Drug verbatim end date",
-          description = "Drug verbatim end date",
-          plotPercentage = FALSE,
-          byConcept = TRUE,
-          downloadFilename = "DrugVerbatimEndDate.csv"
-        )
-        private$.drugVerbatimEndDateTab$parentNamespace <- self$namespace
-      }
-      if (nrow(private$.resultList$drugDose) > 0) {
-        private$.drugDailyDoseTab <- DrugExposureDiagnostics::dataPlotPanel$new(
-          data = private$.resultList$drugDose,
-          id = "drugDailyDose",
-          title = "Drug daily dose",
-          description = "Drug daily dose",
-          plotPercentage = FALSE,
-          byConcept = FALSE,
-          downloadFilename = "DrugDailyDose.csv"
-        )
-        private$.drugDailyDoseTab$parentNamespace <- self$namespace
-      }
-      # metadata
-      if (nrow(private$.resultList$metadata) > 0) {
-        private$.metaDataTab <- DrugExposureDiagnostics::metaDataPanel$new(
-          data = private$.resultList$metadata,
-          id = "metaData",
-          title = "Metadata",
-          description = "Metadata",
-          downloadFilename = "metaData.csv"
-        )
-        private$.metaDataTab$parentNamespace <- self$namespace
-      }
+      private$.initIngredientConceptsTab()
+      private$.initDrugRoutesTab()
+      private$.initDrugTypesTab()
+      private$.initDrugSourceConceptsTab()
+      private$.initDrugExposureDurationTab()
+      private$.initMissingValuesTab()
+      private$.initDrugDaysSupplyTab
+      private$.initDrugQuantityTab()
+      private$.initDrugSigTab()
+      private$.initDrugVerbatimEndDateTab()
+      private$.initDrugDoseTab()
+      private$.initMetaDataTab()
       return(invisible(self))
     }
   ),
@@ -221,57 +73,13 @@ DrugExposureDiagnostics <- R6::R6Class(
     ### Fields ----
     .resultList = NULL,
     .database_id = NULL,
-    .ingredientConceptsTab = NULL,
-    .drugRoutesTab = NULL,
-    .drugTypesTab = NULL,
-    .drugSourceConceptsTab = NULL,
-    .drugExposureDurationTab = NULL,
-    .drugVariablesMissingTab = NULL,
-    .drugDaysSupplyTab = NULL,
-    .drugQuantityTab = NULL,
-    .drugSigTab = NULL,
-    .drugVerbatimEndDateTab = NULL,
-    .drugDailyDoseTab = NULL,
-    .metaDataTab = NULL,
+    .modules = list(),
 
     ### Methods ----
     .UI = function() {
       allTabsList <- list(widths = c(2, 10))
-      if (!is.null(private$.ingredientConceptsTab)) {
-        allTabsList[[length(allTabsList) + 1]] <- private$.ingredientConceptsTab$uiBody()
-      }
-      if (!is.null(private$.drugRoutesTab)) {
-        allTabsList[[length(allTabsList) + 1]] <- private$.drugRoutesTab$uiBody()
-      }
-      if (!is.null(private$.drugTypesTab)) {
-        allTabsList[[length(allTabsList) + 1]] <- private$.drugTypesTab$uiBody()
-      }
-      if (!is.null(private$.drugSourceConceptsTab)) {
-        allTabsList[[length(allTabsList) + 1]] <- private$.drugSourceConceptsTab$uiBody()
-      }
-      if (!is.null(private$.drugExposureDurationTab)) {
-        allTabsList[[length(allTabsList) + 1]] <- private$.drugExposureDurationTab$uiBody()
-      }
-      if (!is.null(private$.drugVariablesMissingTab)) {
-        allTabsList[[length(allTabsList) + 1]] <- private$.drugVariablesMissingTab$uiBody()
-      }
-      if (!is.null(private$.drugDaysSupplyTab)) {
-        allTabsList[[length(allTabsList) + 1]] <- private$.drugDaysSupplyTab$uiBody()
-      }
-      if (!is.null(private$.drugQuantityTab)) {
-        allTabsList[[length(allTabsList) + 1]] <- private$.drugQuantityTab$uiBody()
-      }
-      if (!is.null(private$.drugSigTab)) {
-        allTabsList[[length(allTabsList) + 1]] <- private$.drugSigTab$uiBody()
-      }
-      if (!is.null(private$.drugVerbatimEndDateTab)) {
-        allTabsList[[length(allTabsList) + 1]] <- private$.drugVerbatimEndDateTab$uiBody()
-      }
-      if (!is.null(private$.drugDailyDoseTab)) {
-        allTabsList[[length(allTabsList) + 1]] <- private$.drugDailyDoseTab$uiBody()
-      }
-      if (!is.null(private$.metaDataTab)) {
-        allTabsList[[length(allTabsList) + 1]] <- private$.metaDataTab$uiBody()
+      for (module in private$.modules) {
+        allTabsList[[length(allTabsList) + 1]] <- module$uiBody()
       }
       shiny::fluidPage(
         theme = bslib::bs_theme(version = "4", bootswatch = "spacelab"),
@@ -284,18 +92,204 @@ DrugExposureDiagnostics <- R6::R6Class(
       )
     },
     .server = function(input, output, session) {
-      private$.ingredientConceptsTab$server(input, output, session)
-      private$.drugRoutesTab$server(input, output, session)
-      private$.drugTypesTab$server(input, output, session)
-      private$.drugSourceConceptsTab$server(input, output, session)
-      private$.drugExposureDurationTab$server(input, output, session)
-      private$.drugVariablesMissingTab$server(input, output, session)
-      private$.drugDaysSupplyTab$server(input, output, session)
-      private$.drugQuantityTab$server(input, output, session)
-      private$.drugSigTab$server(input, output, session)
-      private$.drugVerbatimEndDateTab$server(input, output, session)
-      private$.drugDailyDoseTab$server(input, output, session)
-      private$.metaDataTab$server(input, output, session)
+      for (module in private$.modules) {
+        module$server(input, output, session)
+      }
+    },
+    .initIngredientConceptsTab = function() {
+      if (nrow(private$.resultList$conceptSummary) > 0) {
+        ingredientConceptsColumnsToHide <- c(
+          "concept_code", "valid_start_date", "valid_end_date",
+          "invalid_reason", "amount_value", "amount_unit_concept_id", "numerator_value",
+          "numerator_unit_concept_id", "numerator_unit", "denominator_value",
+          "denominator_unit_concept_id", "denominator_unit", "box_size", "amount_unit"
+        )
+        ingredientConceptColumnsSelected <- colnames(private$.resultList$conceptSummary)
+        ingredientConceptColumnsSelected <- setdiff(ingredientConceptColumnsSelected, ingredientConceptsColumnsToHide)
+        newModule <- DrugExposureDiagnostics::dataPlotPanel$new(
+          data = private$.resultList$conceptSummary,
+          id = "ingredientConcepts",
+          title = "Ingredient concepts",
+          description = "Ingredient concepts",
+          plotPercentage = FALSE,
+          byConcept = FALSE,
+          downloadFilename = "IngredientConcepts.csv",
+          selectedColumns = ingredientConceptColumnsSelected
+        )
+        newModule$parentNamespace <- self$namespace
+        private$.modules <- append(private$.modules, newModule)
+      }
+    },
+    .initDrugRoutesTab = function() {
+      if (nrow(private$.resultList$drugRoutesOverall) > 0) {
+        newModule <- DrugExposureDiagnostics::dataPlotPanel$new(
+          data = private$.resultList$drugRoutesOverall,
+          dataByConcept = private$.resultList$drugRoutesByConcept,
+          id = "drugRoutes",
+          title = "Drug routes",
+          description = "Drug routes",
+          plotPercentage = FALSE,
+          byConcept = TRUE,
+          downloadFilename = "DrugRoutes.csv"
+        )
+        newModule$parentNamespace <- self$namespace
+        private$.modules <- append(private$.modules, newModule)
+      }
+    },
+    .initDrugTypesTab = function() {
+      if (nrow(private$.resultList$drugTypesOverall) > 0) {
+        newModule <- DrugExposureDiagnostics::dataPlotPanel$new(
+          data = private$.resultList$drugTypesOverall,
+          dataByConcept = private$.resultList$drugTypesByConcept,
+          id = "drugTypes",
+          title = "Drug types",
+          description = "Drug types",
+          plotPercentage = FALSE,
+          byConcept = TRUE,
+          downloadFilename = "DrugTypes.csv"
+        )
+        newModule$parentNamespace <- self$namespace
+        private$.modules <- append(private$.modules, newModule)
+      }
+    },
+    .initDrugSourceConceptsTab = function() {
+      if (nrow(private$.resultList$drugSourceConceptsOverall) > 0) {
+        newModule <- DrugExposureDiagnostics::dataPlotPanel$new(
+          data = private$.resultList$drugSourceConceptsOverall,
+          id = "drugSourceConcepts",
+          title = "Drug source concepts",
+          description = "Drug source concepts",
+          plotPercentage = FALSE,
+          byConcept = FALSE,
+          downloadFilename = "DrugSourceConcepts.csv"
+        )
+        newModule$parentNamespace <- self$namespace
+        private$.modules <- append(private$.modules, newModule)
+      }
+    },
+    .initDrugExposureDurationTab = function() {
+      if (nrow(private$.resultList$drugExposureDurationOverall) > 0) {
+        newModule <- DrugExposureDiagnostics::dataPlotPanel$new(
+          data = private$.resultList$drugExposureDurationOverall,
+          dataByConcept = private$.resultList$drugExposureDurationByConcept,
+          id = "drugExposureDuration",
+          title = "Drug exposure duration",
+          description = "Drug exposure duration",
+          plotPercentage = FALSE,
+          byConcept = TRUE,
+          downloadFilename = "DrugExposureDuration.csv"
+        )
+        newModule$parentNamespace <- self$namespace
+        private$.modules <- append(private$.modules, newModule)
+      }
+    },
+    .initMissingValuesTab = function() {
+      if (nrow(private$.resultList$missingValuesOverall) > 0) {
+        newModule <- DrugExposureDiagnostics::dataPlotPanel$new(
+          data = private$.resultList$missingValuesOverall,
+          dataByConcept = private$.resultList$missingValuesByConcept,
+          id = "drugVariablesMissing",
+          title = "Drug variables missing",
+          description = "Drug variables missing",
+          plotPercentage = TRUE,
+          byConcept = TRUE,
+          downloadFilename = "DrugVariablesMissing.csv"
+        )
+        newModule$parentNamespace <- self$namespace
+        private$.modules <- append(private$.modules, newModule)
+      }
+    },
+    .initDrugDaysSupplyTab = function() {
+      if (nrow(private$.resultList$drugDaysSupply) > 0) {
+        newModule <- DrugExposureDiagnostics::dataPlotPanel$new(
+          data = private$.resultList$drugDaysSupply,
+          dataByConcept = private$.resultList$drugDaysSupplyByConcept,
+          id = "drugDaysSupply",
+          title = "Drug days supply",
+          description = "Drug days supply",
+          plotPercentage = FALSE,
+          byConcept = TRUE,
+          downloadFilename = "DrugDaysSupply.csv"
+        )
+        newModule$parentNamespace <- self$namespace
+        private$.modules <- append(private$.modules, newModule)
+      }
+    },
+    .initDrugQuantityTab = function() {
+      if (nrow(private$.resultList$drugQuantity) > 0) {
+        newModule <- DrugExposureDiagnostics::dataPlotPanel$new(
+          data = private$.resultList$drugQuantity,
+          dataByConcept = private$.resultList$drugQuantityByConcept,
+          id = "drugQuantity",
+          title = "Drug quantity",
+          description = "Drug quantity",
+          plotPercentage = FALSE,
+          byConcept = TRUE,
+          downloadFilename = "DrugQuantity.csv"
+        )
+        newModule$parentNamespace <- self$namespace
+        private$.modules <- append(private$.modules, newModule)
+      }
+    },
+    .initDrugSigTab = function() {
+      if (nrow(private$.resultList$drugSig) > 0) {
+        newModule <- DrugExposureDiagnostics::dataPlotPanel$new(
+          data = private$.resultList$drugSig,
+          dataByConcept = private$.resultList$drugSigByConcept,
+          id = "drugSig",
+          title = "Drug sig",
+          description = "Drug sig",
+          plotPercentage = FALSE,
+          byConcept = TRUE,
+          downloadFilename = "DrugSig.csv"
+        )
+        newModule$parentNamespace <- self$namespace
+        private$.modules <- append(private$.modules, newModule)
+      }
+    },
+    .initDrugVerbatimEndDateTab = function() {
+      if (nrow(private$.resultList$drugVerbatimEndDate) > 0) {
+        newModule <- DrugExposureDiagnostics::dataPlotPanel$new(
+          data = private$.resultList$drugVerbatimEndDate,
+          dataByConcept = private$.resultList$drugVerbatimEndDateByConcept,
+          id = "drugVerbatimEndDate",
+          title = "Drug verbatim end date",
+          description = "Drug verbatim end date",
+          plotPercentage = FALSE,
+          byConcept = TRUE,
+          downloadFilename = "DrugVerbatimEndDate.csv"
+        )
+        newModule$parentNamespace <- self$namespace
+        private$.modules <- append(private$.modules, newModule)
+      }
+    },
+    .initDrugDoseTab = function() {
+      if (nrow(private$.resultList$drugDose) > 0) {
+        newModule <- DrugExposureDiagnostics::dataPlotPanel$new(
+          data = private$.resultList$drugDose,
+          id = "drugDailyDose",
+          title = "Drug daily dose",
+          description = "Drug daily dose",
+          plotPercentage = FALSE,
+          byConcept = FALSE,
+          downloadFilename = "DrugDailyDose.csv"
+        )
+        newModule$parentNamespace <- self$namespace
+        private$.modules <- append(private$.modules, newModule)
+      }
+    },
+    .initMetaDataTab = function() {
+      if (nrow(private$.resultList$metadata) > 0) {
+        newModule <- DrugExposureDiagnostics::metaDataPanel$new(
+          data = private$.resultList$metadata,
+          id = "metaData",
+          title = "Metadata",
+          description = "Metadata",
+          downloadFilename = "metaData.csv"
+        )
+        newModule$parentNamespace <- self$namespace
+        private$.modules <- append(private$.modules, newModule)
+      }
     },
     assertInstall = function() {
       if (!require("DrugExposureDiagnostics", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)) {
