@@ -1,6 +1,6 @@
 Package: DarwinShinyModules
 Title: Repository of Shiny Modules for Darwin Result Viewers
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
     person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut"), comment = c(ORCID = "0000-0001-8993-8748")),
     person("Maarten", "van Kessel", email = "m.l.vankessel@erasmusmc.nl", role = c("aut", "cre"), comment = c(ORCID = "0009-0006-8832-6030")),
