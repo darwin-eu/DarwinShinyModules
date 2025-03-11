@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DarwinShinyModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,6 +40,7 @@
     <li><a class="dropdown-item" href="../articles/a05-creating-a-new-module.html">Creating a new Module</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -108,7 +109,7 @@ and <code>mtcars</code> data sets in a similar fashion:</p>
 <span><span class="va">tableMtcars</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/Table.html">Table</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">mtcars</span>, title <span class="op">=</span> <span class="st">"MT Cars"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/preview.html">preview</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">tableIris</span>, <span class="va">tableMtcars</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div style="width: 100% ; height: 400px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
+<p><img src="img%2Fa01-1.png" id="id" class="class" style="width:100.0%"></p>
 <p>Notice that both tables are effectively formatted the same, and that
 only the data contained within is different. Both have a button to
 download the visualized data in the bottom left, both are search-able
@@ -142,7 +143,7 @@ updated data.</p>
 <span>    <span class="va">private</span><span class="op">$</span><span class="va">.plot</span><span class="op">$</span><span class="va">args</span><span class="op">$</span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">private</span><span class="op">$</span><span class="va">.data</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p><img src="./img/1-tab-plot-3.png" id="id" class="class" style="width:100.0%"><img src="./img/1-tab-plot-2.png" id="id" class="class" style="width:100.0%"><img src="./img/1-tab-plot-1.png" id="id" class="class" style="width:100.0%"></p>
+<p><img src="img%2Fa01-2.png" id="id" class="class" style="width:100.0%"></p>
 <p>The full underlying code is out of scope of this vignette, but
 included at the end of this vignette for completeness in supplementary
 A.</p>
@@ -181,7 +182,7 @@ things, for this use case.</p>
 functionality between modules, following a “decorator” style design
 pattern. The idea behind this is that inheritance should come naturally,
 and (hopefully) intuitively.</p>
-<p><img src="img%2F1-dsm.png" id="id" class="class" style="width:100.0%"></p>
+<p><img src="img%2Fa01-3.png" id="id" class="class" style="width:100.0%"></p>
 <p>At the top of this hierarchy is the <code>ShinyModule</code> class.
 This class deals with the overhead of <code>shiny</code>, like
 namespaces, reactive environments, and server execution. All other
