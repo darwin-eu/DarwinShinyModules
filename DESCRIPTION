@@ -1,6 +1,6 @@
 Package: DarwinShinyModules
 Title: Repository of Shiny Modules for Darwin Result Viewers
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
     person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut"), comment = c(ORCID = "0000-0001-8993-8748")),
     person("Maarten", "van Kessel", email = "m.l.vankessel@erasmusmc.nl", role = c("aut", "cre"), comment = c(ORCID = "0009-0006-8832-6030")),
@@ -15,9 +15,9 @@ Depends:
     R (>= 4.0)
 Imports:
     R6,
+    rlang,
     checkmate,
     shiny,
-    shinydashboard,
     dplyr,
     ggplot2,
     plotly,
@@ -27,23 +27,32 @@ Imports:
     shinyWidgets,
     stringr
 Suggests:
+    bslib,
+    shinydashboard,
     TreatmentPatterns,
     IncidencePrevalence,
+    DrugExposureDiagnostics (>= 1.1.1),
     networkD3,
     testthat (>= 3.0.0),
     knitr,
     rmarkdown,
     datasets,
     htmlwidgets,
-    xml2
+    xml2,
+    shinycssloaders
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr
 Language: en-US
 Collate: 
+    'App.R'
     'ShinyModule.R'
     'Bridge.R'
+    'BslibApp.R'
+    'DarwinBslibApp.R'
+    'DarwinDashboardApp.R'
     'DarwinShinyModules.R'
+    'DrugExposureDiagnostics.R'
     'GTTable.R'
     'IncidencePrevalence.R'
     'InputPanel.R'
@@ -52,9 +61,15 @@ Collate:
     'PlotPlotly.R'
     'PlotStatic.R'
     'PlotWidget.R'
+    'ShinydashboardApp.R'
     'Table.R'
     'Text.R'
     'TreatmentPatterns.R'
-    'appBuilders.R'
+    'appBuilderUtils.R'
+    'launchBslibApp.R'
+    'launchDarwinBslibApp.R'
+    'launchDarwinDashboardApp.R'
+    'launchShinydashboardApp.R'
+    'makeModule.R'
     'preview.R'
 URL: https://darwin-eu-dev.github.io/DarwinShinyModules/
