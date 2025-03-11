@@ -1,7 +1,7 @@
 #' @title Generic Module Class
 #'
 #' @description
-#' This class is an internal class used to progrmatically generate modules from
+#' This class is an internal class used to programmatically generate modules from
 #' an UI element and server function, with the `makeModule()` function.
 #'
 #' @noMd
