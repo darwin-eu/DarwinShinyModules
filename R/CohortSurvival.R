@@ -1,3 +1,57 @@
+#' @title CohortSurvival Module Class
+#'
+#' @include ShinyModule.R
+#'
+#' @description
+#' CohortSurvival module that shows a that supports results from the
+#' CohortSurvival package.
+#'
+#' @details
+#' The module consists of the following:
+#' \describe{
+#'   \item{"PlotPlotly"}{Interactive Plotly plot, visualizing the data.}
+#'   \item{"GTTable"}{gttable visualizing the tidy data}
+#'   \item{"InputPanel"}{Input panel dealing with user input}
+#'   \item{"Table"}{basic table visualizing the raw data}
+#' }
+#'
+#' @export
+#'
+#' @examples{
+#' \donttest{
+#'  library(DarwinShinyModules)
+#'
+#'  if (
+#'    require(
+#'      "CohortSurvival",
+#'      character.only = TRUE,
+#'      quietly = TRUE,
+#'      warn.conflicts = FALSE
+#'    )
+#'  ) {
+#'     library(CDMConnector)
+#'     library(CohortSurvival)
+#'
+#'     cdm <- CohortSurvival::mockMGUS2cdm()
+#'
+#'     MGUS_death <- estimateSingleEventSurvival(
+#'       cdm,
+#'       targetCohortTable = "mgus_diagnosis",
+#'       outcomeCohortTable = "death_cohort",
+#'       strata = list(
+#'         c("age_group"),
+#'         c("sex"),
+#'         c("age_group", "sex")
+#'       )
+#'     )
+#'
+#'     cs <- CohortSurvival$new(data = MGUS_death)
+#'     if (interactive()) {
+#'       preview(cs)
+#'     }
+#'   }
+#' }
+#' }
 CohortSurvival <- R6::R6Class(
   classname = "CohortSurvival",
   inherit = ShinyModule,

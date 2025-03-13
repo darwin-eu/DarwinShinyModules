@@ -49,6 +49,7 @@ Collate:
     'ShinyModule.R'
     'Bridge.R'
     'BslibApp.R'
+    'CohortSurvival.R'
     'DarwinBslibApp.R'
     'DarwinDashboardApp.R'
     'DarwinShinyModules.R'
