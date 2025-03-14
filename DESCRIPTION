@@ -32,6 +32,8 @@ Suggests:
     TreatmentPatterns,
     IncidencePrevalence,
     DrugExposureDiagnostics (>= 1.1.1),
+    CohortSurvival,
+    CDMConnector,
     networkD3,
     testthat (>= 3.0.0),
     knitr,
