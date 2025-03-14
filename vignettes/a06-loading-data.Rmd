@@ -21,7 +21,7 @@ In this vignette we will explore how to load in data from files and databases, b
 
 ## Preloading data
 ### From a File
-```{r}
+```{r, eval=FALSE}
 library(DarwinShinyModules)
 
 tempDir <- file.path(tempdir(), "loading_data_example")
@@ -39,7 +39,7 @@ if (interactive()) {
 ```
 
 ### A database using `DBI`
-```{r}
+```{r, eval=FALSE}
 library(DBI)
 library(duckdb)
 library(dplyr)
@@ -74,7 +74,7 @@ if (interactive()) {
 ```
 
 ### From a database using `DatabaseConnector`
-```{r}
+```{r, eval=FALSE}
 library(DatabaseConnector)
 
 connectionDetails <- DatabaseConnector::createConnectionDetails(
@@ -122,7 +122,7 @@ The following examples show how to dynamically load from:
 3. A database using `DatabaseConnector`, while managing the connection in run time.
 
 ### From csv-files
-```{r}
+```{r, eval=FALSE}
 TablesFromFile <- R6::R6Class(
   classname = "TablesFromFile",
   inherit = ShinyModule,
@@ -181,7 +181,7 @@ if (interactive()) {
 
 ### From a database using `DBI`
 In this example we maintain the connection to the database.
-```{r}
+```{r, eval=FALSE}
 TablesFromDBI <- R6::R6Class(
   classname = "TablesFromDBI",
   inherit = ShinyModule,
@@ -236,7 +236,7 @@ if (interactive()) {
 
 ### From a database using `DatabaseConnector`
 In this example we manage the connection to the database within run time.
-```{r}
+```{r, eval=FALSE}
 TablesFromDBC <- R6::R6Class(
   classname = "TablesFromDBC",
   inherit = ShinyModule,
