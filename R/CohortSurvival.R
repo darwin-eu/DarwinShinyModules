@@ -103,7 +103,7 @@ CohortSurvival <- R6::R6Class(
     #'
     #' @return `invisible(self)`
     initialize = function(data) {
-      checkmate::assertClass(x = data, classes = "summarised_result", "omop_result")
+      checkmate::assertClass(x = data, classes = c("summarised_result", "omop_result"))
       super$initialize()
       private$.data <- data
       private$initInputValues()
