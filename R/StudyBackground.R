@@ -31,7 +31,7 @@
 #'   EUPAS = "EUPAS9999999"
 #' )
 #'
-#' if (interacitve()) {
+#' if (interactive()) {
 #'   preview(studyBackground)
 #' }
 StudyBackground <- R6::R6Class(

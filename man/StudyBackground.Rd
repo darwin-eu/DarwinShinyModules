@@ -17,7 +17,7 @@ studyBackground <- StudyBackground$new(
   EUPAS = "EUPAS9999999"
 )
 
-if (interacitve()) {
+if (interactive()) {
   preview(studyBackground)
 }
 }
