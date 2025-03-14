@@ -11,6 +11,7 @@
 #' @import promises
 #' @import shinyWidgets
 #' @import stringr
+#' @importFrom purrr map
 #' @importFrom gt render_gt gt_output
 #' @importFrom DT DTOutput renderDT
 #' @importFrom plotly event_register event_data plotlyOutput renderPlotly
