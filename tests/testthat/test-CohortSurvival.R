@@ -26,7 +26,6 @@ test_that("CohortSurvival: Server", {
   }
 
   testServer(modServer, {
-    browser()
     args <- list(
       plotFacet = "age_group",
       plotColour = "sex"
