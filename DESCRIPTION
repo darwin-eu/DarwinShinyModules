@@ -64,6 +64,7 @@ Collate:
     'PlotStatic.R'
     'PlotWidget.R'
     'ShinydashboardApp.R'
+    'StudyBackground.R'
     'Table.R'
     'Text.R'
     'TreatmentPatterns.R'
