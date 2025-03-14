@@ -1,0 +1,345 @@
+---
+title: "Loading Data From Different Sources"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Loading Data From Different Sources}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+Data can come from anywhere. `DarwinShinyModules` assumes *you* load in the data from whatever source you like. This may be a csv-file, a table from a database. But in the end the data is loaded into memory in R. The intention behind this is that individual modules are (and should be) small. But can be used in large overarching modules.
+
+In this vignette we will explore how to load in data from files and databases, by either pre-loading the data into memory. Or by loading data dynamically, during run time.
+
+## Preloading data
+### From a File
+```{r}
+library(DarwinShinyModules)
+
+tempDir <- file.path(tempdir(), "loading_data_example")
+dir.create(tempDir, showWarnings = FALSE, recursive = TRUE)
+write.csv(iris, file.path(tempDir, "iris.csv"), row.names = FALSE)
+write.csv(mtcars, file.path(tempDir, "mtcars.csv"), row.names = FALSE)
+
+data <- read.csv(file.path(tempDir, "iris.csv"))
+
+tableFile <- Table$new(data = data)
+
+if (interactive()) {
+  preview(tableFile)
+}
+```
+
+### A database using `DBI`
+```{r}
+library(DBI)
+library(duckdb)
+library(dplyr)
+
+con <- DBI::dbConnect(
+  drv = duckdb::duckdb(),
+  server = file.path(tempDir, "database.duckdb")
+)
+
+DBI::dbWriteTable(
+  conn = con,
+  name = "iris",
+  value = iris
+)
+
+DBI::dbWriteTable(
+  conn = con,
+  name = "mtcars",
+  value = mtcars
+)
+
+iris_db <- dplyr::tbl(src = con, "iris")
+
+data <- iris_db %>%
+  dplyr::collect()
+
+tableDB <- Table$new(data = data)
+
+if (interactive()) {
+  preview(tableDB)
+}
+```
+
+### From a database using `DatabaseConnector`
+```{r}
+library(DatabaseConnector)
+
+connectionDetails <- DatabaseConnector::createConnectionDetails(
+  dbms = "sqlite", 
+  server = file.path(tempDir, "database.sqlite")
+)
+
+connection <- DatabaseConnector::connect(connectionDetails)
+
+DatabaseConnector::insertTable(
+  connection = connection,
+  databaseSchema = "main",
+  tableName = "iris",
+  data = iris
+)
+
+DatabaseConnector::insertTable(
+  connection = connection,
+  databaseSchema = "main",
+  tableName = "mtcars",
+  data = mtcars
+)
+
+data <- DatabaseConnector::renderTranslateQuerySql(
+  connection = connection,
+  sql = "SELECT * FROM iris;"
+)
+
+DatabaseConnector::disconnect(connection)
+
+tableDBC <- Table$new(data)
+
+if (interactive()) {
+  preview(tableDBC)
+}
+```
+
+## Using a database in your module
+You can dynamically load data from files or a database in your own module. The loaded data can then be used in regular `DarwinShinyModule` modules.
+
+The following examples show how to dynamically load from:
+
+1. CSV-files
+2. A database using `DBI` while maintaining the database connection
+3. A database using `DatabaseConnector`, while managing the connection in run time.
+
+### From csv-files
+```{r}
+TablesFromFile <- R6::R6Class(
+  classname = "TablesFromFile",
+  inherit = ShinyModule,
+
+  public = list(
+    initialize = function(filePath) {
+      private$.filePath <- filePath
+      # initialize the `Table` module with an empty data.frame
+      private$.table <- Table$new(data = data.frame())
+      private$.table$parentNamespace <- self$namespace
+    }
+  ),
+  private = list(
+    ## Fields
+    .filePath = "",
+    .table = NULL,
+
+    ## Methods
+    .UI = function() {
+      shiny::tagList(
+        # Select input to get csv-files from `tempDir`
+        shiny::selectInput(
+          inputId = shiny::NS(self$namespace, "file"),
+          label = "File",
+          # Get csv-file names for `tempDir`
+          choices = private$getCsvFiles()
+        ),
+        private$.table$UI()
+      )
+    },
+
+    .server = function(input, output, session) {
+      private$.table$server(input, output, session)
+
+      # Trigger on the file-selector
+      shiny::observeEvent(input$file, {
+        # Update the data field in the `Table` module with the selected csv-file
+        private$.table$data <- read.csv(file.path(private$.filePath, input$file))
+      })
+    },
+
+    # Get all csv-files from `tempDir`
+    getCsvFiles = function() {
+      allFiles <- basename(list.files(private$.filePath))
+      allFiles[endsWith(allFiles, suffix = ".csv")]
+    }
+  )
+)
+
+mod <- TablesFromFile$new(tempDir)
+
+if (interactive()) {
+  preview(mod)
+}
+```
+
+### From a database using `DBI`
+In this example we maintain the connection to the database.
+```{r}
+TablesFromDBI <- R6::R6Class(
+  classname = "TablesFromDBI",
+  inherit = ShinyModule,
+
+  public = list(
+    initialize = function(con) {
+      private$.con <- con
+      # initialize the `Table` module with an empty data.frame
+      private$.table <- Table$new(data = data.frame())
+      private$.table$parentNamespace <- self$namespace
+    }
+  ),
+  private = list(
+    ## Fields
+    .con = NULL,
+    .table = NULL,
+
+    ## Methods
+    .UI = function() {
+      shiny::tagList(
+        # Select input to get csv-files from `tempDir`
+        shiny::selectInput(
+          inputId = shiny::NS(self$namespace, "table"),
+          label = "Table",
+          # List tables from the connection
+          choices = DBI::dbListTables(private$.con)
+        ),
+        private$.table$UI()
+      )
+    },
+
+    .server = function(input, output, session) {
+      private$.table$server(input, output, session)
+
+      # Trigger on the file-selector
+      shiny::observeEvent(input$table, {
+        # Fetch table from DBI connection
+        private$.table$data <- dplyr::tbl(src = private$.con, input$table) %>%
+          # We need to collect, as the table needs to be in memory
+          dplyr::collect()
+      })
+    }
+  )
+)
+
+mod <- TablesFromDBI$new(con)
+
+if (interactive()) {
+  preview(mod)
+}
+```
+
+### From a database using `DatabaseConnector`
+In this example we manage the connection to the database within run time.
+```{r}
+TablesFromDBC <- R6::R6Class(
+  classname = "TablesFromDBC",
+  inherit = ShinyModule,
+
+  public = list(
+    initialize = function(connectionDetails) {
+      # Save connectionDetails
+      private$.connectionDetails <- connectionDetails
+      # initialize the `Table` module with an empty data.frame
+      private$.table <- Table$new(data = data.frame())
+      private$.table$parentNamespace <- self$namespace
+    }
+  ),
+
+  private = list(
+    ## Fields
+    .connectionDetails = NULL,
+    .connection = NULL,
+    .table = NULL,
+
+    ## Methods
+    .UI = function() {
+      shiny::tagList(
+        # Select input to get csv-files from `tempDir`
+        shiny::selectInput(
+          inputId = shiny::NS(self$namespace, "table"),
+          label = "Table",
+          # Initialize empty, we update once the connection is established.
+          choices = ""
+        ),
+        private$.table$UI()
+      )
+    },
+
+    .server = function(input, output, session) {
+      # Connect to the database if `.connection` is `NULL`
+      if (is.null(private$.connection)) {
+        private$.connection <- DatabaseConnector::connect(connectionDetails)
+      }
+
+      # Run the `finalize` method when the session ends >>this includes refreshing the session<<
+      shiny::onStop(private$finalize)
+
+      private$.table$server(input, output, session)
+      
+      # If we're connected to the database
+      if (!is.null(private$.connection)) {
+        # The `updated` flag ensures we update the choices once. Otherwise we
+        # continuously query the database for table names. Which is not desirable
+        # for this use case. The database has a separate state, and can therefore
+        # change at will, in a different connection. New tables could appear,
+        # existing tables could disappear.
+        updated <- FALSE
+        if (!updated) {
+          # Update choices in select
+          shiny::updateSelectInput(
+            inputId = "table",
+            choices = private$fetchTableNames()
+          )
+          updated <- TRUE
+        }
+  
+        # Trigger on the file-selector
+        shiny::observeEvent(input$table, {
+          # Only query the table when the selector is updated
+          if (input$table != "") {
+            # Fetch table from the database
+            private$.table$data <- DatabaseConnector::renderTranslateQuerySql(
+              connection = private$.connection,
+              sql = "SELECT * FROM @table",
+              table = input$table
+            )
+          }
+        })
+      }
+    },
+
+    # Fetches the names of the tables in SQLite
+    fetchTableNames = function() {
+      if (!is.null(private$.connection)) {
+        DatabaseConnector::renderTranslateQuerySql(
+        connection = private$.connection,
+        sql = "SELECT name FROM sqlite_master WHERE type = 'table'"
+      ) %>%
+          dplyr::pull(.data$NAME)
+      }
+    },
+
+    # A feature of R6 is that the `Finalize` method also runs when the object is garbage collected.
+    finalize = function() {
+      if (!is.null(private$.connection)) {
+        # Disconnect from database
+        DatabaseConnector::disconnect(private$.connection)
+        # Set `.connection` to `NULL`
+        private$.connection <- NULL
+      }
+    }
+  )
+)
+
+mod <- TablesFromDBC$new(connectionDetails)
+
+if (interactive()) {
+  preview(mod)
+}
+```

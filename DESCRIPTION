@@ -39,7 +39,10 @@ Suggests:
     datasets,
     htmlwidgets,
     xml2,
-    shinycssloaders
+    shinycssloaders,
+    DatabaseConnector,
+    DBI,
+    duckdb
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr
