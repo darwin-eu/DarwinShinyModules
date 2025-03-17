@@ -1,23 +1,34 @@
+#' @title Database Decorator Class
+#'
+#' @include ShinyModule.R
+#'
+#' @description
+#' This class is a `decorator` and is not meant to be directly used, but to be
+#' inherited by other modules, like `DatabaseDBC` and `DatabaseDBI`.
+#'
+#' @details
+#' The inherited `Database` modules have their own implementation to connect
+#' to, and query the database.
+#'
+#' To add a new database type it is required to inherit from the `Database`
+#' class, to override the private `connect()` and `disconnect()` methods, and
+#' to extend it with functionality to query the database.
+#'
+#' `DatabaseDBC` extends this class with the public `query()` and `execute()`
+#' methods, while `DatabaseDBI` extends it with the `attachTables()` and
+#' `detatchTables()` methods, and the public `tables` field.
+#'
+#' @export
 Database <- R6::R6Class(
   classname = "Database",
   inherit = ShinyModule,
 
   ## Active ----
   active = list(
-    connectionDetails = function() {
-      return(private$.connectionDetails)
-    },
-
+    #' @field connected (`logical(1)`) Logical if connected to the database.
     connected = function() {
       return(!is.null(private$.connection))
     }
-  ),
-
-  ## Public ----
-  public = list(
-    ## Methods ----
-    query = function() {},
-    execute = function() {}
   ),
 
   ## Private ----

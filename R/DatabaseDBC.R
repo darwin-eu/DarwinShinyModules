@@ -1,3 +1,12 @@
+#' @title DatabaseDBC Class
+#'
+#' @include Database.R
+#'
+#' @description
+#' This class extends the `Database` class, to query a database using
+#' `DatabaseConnector` with JDBC.
+#'
+#' @export
 DatabaseDBC <- R6::R6Class(
   classname = "DatabaseDBC",
   inherit = Database,
@@ -5,11 +14,25 @@ DatabaseDBC <- R6::R6Class(
   ## Public ----
   public = list(
     ## Methods ----
+    #' @description
+    #' Initializer method
+    #'
+    #' @param connectionDetails (`ConnectionDetails`) Connection Details from `DatabaseConnector::createConnectionDetails`
+    #'
+    #' @return `invisible(self)`
     initialize = function(connectionDetails) {
       super$initialize()
       private$.connectionDetails <- connectionDetails
+      return(invisible(self))
     },
 
+    #' @description
+    #' Query method to query the database using `DatabaseConnector::renderTranslateQuerySql`
+    #'
+    #' @param sql (`character(1)`) SQL Query
+    #' @param ... Additional parameters for `DatabaseConnector::renderTranslateQuerySql`
+    #'
+    #' @return `data.frame`
     query = function(sql, ...) {
       DatabaseConnector::renderTranslateQuerySql(
         connection = private$.connection,
@@ -18,12 +41,20 @@ DatabaseDBC <- R6::R6Class(
       )
     },
 
+    #' @description
+    #' Execute method to execute a query on the database using `DatabaseConnector::renderTranslateExecuteSql`
+    #'
+    #' @param sql (`character(1)`) SQL Query to execute
+    #' @param ... Additional parameters for `DatabaseConnector::renderTranslateExecuteSql`
+    #'
+    #' @return `invisible(self)`
     execute = function(sql, ...) {
       DatabaseConnector::renderTranslateExecuteSql(
         connection = private$.connection,
         sql = sql,
         ...
       )
+      return(invisible(self))
     }
   ),
 

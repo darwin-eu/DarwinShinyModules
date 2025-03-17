@@ -1,13 +1,24 @@
+#' @title DatabaseDBI Class
+#'
+#' @include Database.R
+#'
+#' @description
+#' This class extends the `Database` class, to query a database using
+#' `DBI` with ODBC.
+#'
+#' @export
 DatabaseDBI <- R6::R6Class(
   classname = "DatabaseDBI",
   inherit = Database,
 
   ## Active ----
   active = list(
+    #' @field tables (`list(n)`) List of `tbl_dbi` tables for the respective driver.
     tables = function() {
       return(private$.tables)
     },
 
+    #' @field connectArgs (`list(n)`) Named list of additional arguments used in `DBI::dbConnect()`
     connectArgs = function(connectArgs) {
       if (missing(connectArgs)) {
         return(private$.connectArgs)
@@ -17,6 +28,7 @@ DatabaseDBI <- R6::R6Class(
       }
     },
 
+    #' @field disconnectArgs (`list(n)`) Named list of additional arguments used in `DBI::dbDisconnect()`
     disconnectArgs = function(disconnectArgs) {
       if (missing(disconnectArgs)) {
         return(private$.disconnectArgs)
@@ -30,11 +42,22 @@ DatabaseDBI <- R6::R6Class(
   ## Public ----
   public = list(
     ## Methods ----
+    #' @description
+    #' Initializer method
+    #'
+    #' @param driver Driver to use to connect to the database with `DBI::dbConnect()`
+    #'
+    #' @return `invisible(self)`
     initialize = function(driver) {
       super$initialize()
       private$.driver <- driver
+      return(invisible(self))
     },
 
+    #' @description
+    #' Method to attach tables from the database in the `tables` field.
+    #'
+    #' @param ... (`character()`) Names of tables to attach.
     attachTables = function(...) {
       tableNames <- c(...)
       private$.tables <- lapply(tableNames, function(table) {
@@ -43,6 +66,10 @@ DatabaseDBI <- R6::R6Class(
       names(private$.tables) <- tableNames
     },
 
+    #' @description
+    #' Method to detatch tables from the `tables` field.
+    #'
+    #' @param ... (`character()`) Names of the tables to detatch.
     detatchTables = function(...) {
       tableNames <- c(...)
       private$.tables <- private$.tables[[tableNames]]
