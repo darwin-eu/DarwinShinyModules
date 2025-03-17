@@ -49,6 +49,7 @@ DatabaseDBI <- R6::R6Class(
     #'
     #' @return `invisible(self)`
     initialize = function(driver) {
+      rlang::check_installed("DBI")
       super$initialize()
       private$.driver <- driver
       return(invisible(self))
@@ -72,7 +73,7 @@ DatabaseDBI <- R6::R6Class(
     #' @param ... (`character()`) Names of the tables to detatch.
     detatchTables = function(...) {
       tableNames <- c(...)
-      private$.tables <- private$.tables[[tableNames]]
+      private$.tables <- private$.tables[!names(private$.tables) %in% tableNames]
     }
   ),
 
@@ -98,8 +99,6 @@ DatabaseDBI <- R6::R6Class(
           basename(private$.connection@driver@dbdir)
         })
         private$.reactiveValues$databaseName <- dbName
-      } else {
-        message("Already connected to database")
       }
     },
 
@@ -113,8 +112,6 @@ DatabaseDBI <- R6::R6Class(
         private$.reactiveValues$connected <- FALSE
         private$.reactiveValues$databaseName <- ""
         message("Disconnected from database")
-      } else {
-        message("Already disconnected from database")
       }
     }
   )

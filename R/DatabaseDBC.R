@@ -21,6 +21,7 @@ DatabaseDBC <- R6::R6Class(
     #'
     #' @return `invisible(self)`
     initialize = function(connectionDetails) {
+      rlang::check_installed("DatabaseConnector")
       super$initialize()
       private$.connectionDetails <- connectionDetails
       return(invisible(self))
@@ -74,8 +75,6 @@ DatabaseDBC <- R6::R6Class(
           private$.connection@dbiConnection@dbname
         }
         private$.reactiveValues$databaseName <- dbName
-      } else {
-        message("Already connected to database")
       }
     },
 
@@ -86,8 +85,6 @@ DatabaseDBC <- R6::R6Class(
         private$.reactiveValues$connected <- FALSE
         private$.reactiveValues$databaseName <- ""
         message("Disconnected from database")
-      } else {
-        message("Already disconnected from database")
       }
     }
   )
