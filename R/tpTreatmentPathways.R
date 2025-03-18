@@ -1,9 +1,9 @@
-#' @title TreatmentPatterns Module Class
+#' @title TreatmentPathways Module Class
 #'
 #' @include ShinyModule.R
 #'
 #' @description
-#' TreatmentPatterns module that shows a Sunburst plot and Sankey diagram, with
+#' TreatmentPathways module that shows a Sunburst plot and Sankey diagram, with
 #' a table.
 #'
 #' @details
@@ -20,7 +20,7 @@
 #' @examples{
 #' library(DarwinShinyModules)
 #'
-#' if (require("TreatmentPatterns", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)) {
+#' if (require("TreatmentPathways", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)) {
 #'
 #'   tp <- data.frame(
 #'     path = c("A+B-C", "B+C-A", "B-A+C"),
@@ -30,15 +30,15 @@
 #'     indexYear = "all"
 #'   )
 #'
-#'   treatmentPathways <- TreatmentPatterns$new(treatmentPathways = tp)
+#'   treatmentPathways <- TreatmentPathways$new(treatmentPathways = tp)
 #'
 #'   if (interactive()) {
 #'     preview(treatmentPathways)
 #'   }
 #' }
 #' }
-TreatmentPatterns <- R6::R6Class(
-  classname = "TreatmentPatterns",
+tpTreatmentPathways <- R6::R6Class(
+  classname = "TreatmentPathways",
   inherit = ShinyModule,
 
   active = list(
@@ -72,7 +72,7 @@ TreatmentPatterns <- R6::R6Class(
     #' @description
     #' Initializer method
     #'
-    #' @param treatmentPathways (`data.frame`) Contents of the treatmentPathways.csv file from the `export()` function of TreatmentPatterns.
+    #' @param treatmentPathways (`data.frame`) Contents of the treatmentPathways.csv file from the `export()` function of TreatmentPathways.
     #'
     #' @return (`invisible(self)`)
     initialize = function(treatmentPathways) {
@@ -94,14 +94,14 @@ TreatmentPatterns <- R6::R6Class(
       private$initInputPanel()
 
       private$.sunburst <- PlotWidget$new(
-        fun = TreatmentPatterns::createSunburstPlot,
+        fun = TreatmentPathways::createSunburstPlot,
         args = list(treatmentPathways = treatmentPathways),
         title = NULL
       )
       private$.sunburst$parentNamespace <- self$namespace
 
       private$.sankey <- PlotWidget$new(
-        fun = TreatmentPatterns::createSankeyDiagram,
+        fun = TreatmentPathways::createSankeyDiagram,
         args = list(treatmentPathways = treatmentPathways),
         title = NULL
       )
@@ -171,12 +171,12 @@ TreatmentPatterns <- R6::R6Class(
     },
 
     assertInstall = function() {
-      if (!require("TreatmentPatterns", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)) {
-        answer <- readline(prompt = "`TreatmentPatterns` is not installed, would you like to install from CRAN? (y/n)")
+      if (!require("TreatmentPathways", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)) {
+        answer <- readline(prompt = "`TreatmentPathways` is not installed, would you like to install from CRAN? (y/n)")
         if (substr(tolower(answer), start = 1, stop = 1) == "y") {
-          utils::install.packages("TreatmentPatterns")
+          utils::install.packages("TreatmentPathways")
         } else if (substr(tolower(answer), start = 1, stop = 1) == "n") {
-          stop("You can install `TreatmentPatterns` manually by running one of the following:\n  1. `install.packages('TreatmentPatterns')`\n  2. `remotes::install_github('darwin-eu/TreatmentPatterns')`")
+          stop("You can install `TreatmentPathways` manually by running one of the following:\n  1. `install.packages('TreatmentPathways')`\n  2. `remotes::install_github('darwin-eu/TreatmentPathways')`")
         } else {
           stop("Your answer was not `y` or `n`")
         }
