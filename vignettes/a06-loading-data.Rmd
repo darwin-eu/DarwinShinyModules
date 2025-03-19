@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 ## Introduction
 Data can come from anywhere. `DarwinShinyModules` assumes *you* load in the data from whatever source you like. This may be a csv-file, a table from a database. But in the end the data is loaded into memory in R. The intention behind this is that individual modules are (and should be) small. But can be used in large overarching modules.
 
-In this vignette we will explore how to load in data from files and databases, by either pre-loading the data into memory. Or by loading data dynamically, during run time.
+In this vignette we will explore how to load in data from files and databases, by either pre-loading the data into memory. Or by loading data dynamically, during run time. Finally we will also show how to use the `DatabaseDBI` and `DatabaseDBC` modules.
 
 ## Preloading data
 ### From a File
@@ -44,21 +44,26 @@ library(DBI)
 library(duckdb)
 library(dplyr)
 
+driver <- duckdb::duckdb(
+  dbdir = file.path(tempDir, "database.duckdb")
+)
+
 con <- DBI::dbConnect(
-  drv = duckdb::duckdb(),
-  server = file.path(tempDir, "database.duckdb")
+  drv = driver
 )
 
 DBI::dbWriteTable(
   conn = con,
   name = "iris",
-  value = iris
+  value = iris,
+  overwrite = TRUE
 )
 
 DBI::dbWriteTable(
   conn = con,
   name = "mtcars",
-  value = mtcars
+  value = mtcars,
+  overwrite = TRUE
 )
 
 iris_db <- dplyr::tbl(src = con, "iris")
@@ -180,7 +185,7 @@ if (interactive()) {
 ```
 
 ### From a database using `DBI`
-In this example we maintain the connection to the database.
+In this example we maintain the connection to the database, post run-time.
 ```{r, eval=FALSE}
 TablesFromDBI <- R6::R6Class(
   classname = "TablesFromDBI",
@@ -232,6 +237,8 @@ mod <- TablesFromDBI$new(con)
 if (interactive()) {
   preview(mod)
 }
+
+DBI::dbDisconnect(con)
 ```
 
 ### From a database using `DatabaseConnector`
@@ -343,3 +350,123 @@ if (interactive()) {
   preview(mod)
 }
 ```
+
+## Database Modules
+These database modules were developed based on the previous example. Two implementations exist as of writing, a database module using `DatabaseConnector`, and a module using `DBI`.
+
+The upside of using these modules is that you they manage the connection for you. They open the connection on start-up, and close it on shutdown.
+
+When the connection unexpectedly drops, it will also prompt the user to re-connect to the database.
+
+### DatabaseDBI
+The `DatabaseDBI` module uses `DBI` to interface with the database. This is ideal when you want to use `dplyr` syntax to query a database during run-time of your shiny app.
+
+```{r, eval=FALSE}
+# Setup the module with the driver for the database
+db <- DatabaseDBI$new(driver)
+
+# We initialize the table modules with an empty data.frame
+irisTable <- Table$new(data.frame(), title = NULL)
+carTable <- Table$new(data.frame(), title = NULL)
+
+ui <- shiny::fluidPage(
+  irisTable$UI(),
+  carTable$UI(),
+  db$UI()
+)
+
+server <- function(input, output, session) {
+  # Run the server methods
+  db$server(input, output, session)
+  irisTable$server(input, output, session)
+  carTable$server(input, output, session)
+
+  # Attach tables `iris` and `mtcars` from the database
+  db$attachTables("iris", "mtcars")
+
+  # Update `data` field in `irisTable` module
+  irisTable$data <- db$tables$iris %>%
+    # We can use dplyr syntax that is supported by the driver
+    dplyr::mutate(
+      foo = .data$Sepal.Length * .data$Sepal.Width
+    ) %>%
+    head() %>%
+    # We MUST collect the data, as `DarwinShinyModules` expects the final result
+    # to be in memory.
+    dplyr::collect()
+
+  carTable$data <- db$tables$mtcars %>%
+    dplyr::group_by(.data$cyl) %>%
+    dplyr::summarise(mean_hp = mean(.data$hp, na.rm = TRUE), .groups = "drop") %>%
+    dplyr::collect()
+}
+
+if (interactive()) {
+  shiny::shinyApp(ui, server)
+}
+```
+
+### DatabaseDBC
+The `DatabaseDBC` module uses `DatabaseConnector` to interface with the database. This is ideal when you want to use SQL to query a database during run-time of your shiny app.
+
+```{r, eval=FALSE}
+# Setup the module with the ConnectionDetails of the database
+db <- DatabaseDBC$new(connectionDetails)
+
+# We initialize the table modules with an empty data.frame
+irisTable <- Table$new(data.frame(), title = NULL)
+carTable <- Table$new(data.frame(), title = NULL)
+
+ui <- shiny::fluidPage(
+  irisTable$UI(),
+  carTable$UI(),
+  db$UI()
+)
+
+server <- function(input, output, session) {
+  # If we want to run code in shiny::onStop() we must do that before the
+  # server() method.
+  stopFun <- function() {
+    db$execute(
+      # Drop a table we create later
+      sql = "DROP TABLE IF EXISTS tmp_table;"
+    )
+  }
+
+  shiny::onStop(stopFun)
+
+  # Run the server methods
+  db$server(input, output, session)
+  irisTable$server(input, output, session)
+  carTable$server(input, output, session)
+
+  # query the database, we can use all arguments from DatabaseConnectors
+  #`renderTranslateQuerySql()`
+  irisTable$data <- db$query(
+    sql = "SELECT * FROM @schema.iris LIMIT 10",
+    schema = "main"
+  )
+
+  # We can also execute queries in the database
+  db$execute("
+    DROP TABLE IF EXISTS tmp_table;
+    
+    SELECT
+      cyl,
+      AVG(hp) as avg_hp
+    FROM @schema.mtcars
+    GROUP BY cyl
+    INTO tmp_table;",
+    schema = "main"
+  )
+
+  # Assign the result from `tmp_table` to `carTable`
+  carTable$data <- db$query(
+    sql = "SELECT * FROM @schema.tmp_table;",
+    schema = "main"
+  )
+}
+
+shiny::shinyApp(ui, server)
+```
+
