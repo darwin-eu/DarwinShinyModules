@@ -25,7 +25,8 @@ Imports:
     gt,
     promises,
     shinyWidgets,
-    stringr
+    stringr,
+    purrr
 Suggests:
     bslib,
     shinydashboard,
@@ -52,6 +53,7 @@ Collate:
     'DarwinBslibApp.R'
     'DarwinDashboardApp.R'
     'DarwinShinyModules.R'
+    'DatabaseOverview.R'
     'DrugExposureDiagnostics.R'
     'GTTable.R'
     'IncidencePrevalence.R'
