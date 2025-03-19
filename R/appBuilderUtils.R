@@ -35,3 +35,18 @@ studyStatus <- function(type) {
          "complete" = statusCompleted(),
          "ongoing" = statusOngoing())
 }
+
+setAsync <- function(appStructure) {
+  i <- 1
+  while (TRUE) {
+    if ("ShinyModule" %in% class(appStructure[[i]])) {
+      appStructure[[i]]$async <- TRUE
+    } else {
+      setAsync(appStructure[[i]])
+    }
+    i <- i + 1
+    if (i > length(appStructure)) {
+      return(NULL)
+    }
+  }
+}

@@ -3,6 +3,7 @@
 #' @param appStructure (`list(list())`) A list of named lists, containing modules.
 #' The level of nesting groups or separates modules in menu items `"_"` will be read as a space.
 #' @param title (`character(1)`: `NULL`) Title of the app
+#' @param async (`logical(1)`: `FALSE`) Run app asynchronously
 #'
 #' @returns `NULL`
 #' @export
@@ -35,12 +36,13 @@
 #'
 #'   launchBslibApp(appStructure)
 #' }
-launchBslibApp <- function(appStructure, title = NULL) {
+launchBslibApp <- function(appStructure, title = NULL, async = FALSE) {
   if (!rlang::is_installed(pkg = "bslib")) {
     rlang::abort("`bslib` is not installed.")
   }
   assertAppStructure(appStructure)
   checkmate::assertCharacter(title, len = 1, null.ok = TRUE)
+  if (async) setAsync(appStructure)
   app <- BslibApp$new(appStructure, title = title)
   app$launch()
 }

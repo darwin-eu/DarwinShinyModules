@@ -193,6 +193,17 @@ ShinyModule <- R6::R6Class(
     #' environment.
     reactiveValues = function() {
       return(private$.reactiveValues)
+    },
+
+    #' @field async (`logical(1)`: `FALSE`) Logical parameter to switch
+    #' asynchronous mode on or off.
+    async = function(async) {
+      if (missing(async)) {
+        return(private$.async)
+      } else {
+        checkmate::assertLogical(x = async, len = 1)
+        private$.async <- async
+      }
     }
   ),
 
@@ -274,7 +285,11 @@ ShinyModule <- R6::R6Class(
     server = function(input, output, session) {
       shiny::moduleServer(id = self$moduleId, module = function(input, output, session) {
         private$.init()
-        private$.server(input, output, session)
+        if (private$.async) {
+          promises::future_promise(private$.server(input, output, session))
+        } else {
+          private$.server(input, output, session)
+        }
       })
       return(NULL)
     }
@@ -289,6 +304,7 @@ ShinyModule <- R6::R6Class(
     .parentNamespace = NULL,
     .namespace = "",
     .reactiveValues = NULL,
+    .async = FALSE,
 
     ## Methods ----
     .init = function() {

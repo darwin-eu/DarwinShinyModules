@@ -3,6 +3,7 @@
 #' @param appStructure (`list(list())`) A list of named lists, containing modules.
 #' The level of nesting groups or separates modules in menu items `"_"` will be read as a space.
 #' @param title (`character(1)`: `NULL`) Title of the app
+#' @param async (`logical(1)`: `FALSE`) Run app asynchronously
 #'
 #' @returns `NULL`
 #' @export
@@ -35,12 +36,14 @@
 #'
 #'   launchShinydashboardApp(appStructure)
 #' }
-launchShinydashboardApp <- function(appStructure, title = NULL) {
+launchShinydashboardApp <- function(appStructure, title = NULL, async = FALSE) {
   if (!rlang::is_installed(pkg = "shinydashboard")) {
     rlang::abort("`bslib` is not installed.")
   }
   assertAppStructure(appStructure)
   checkmate::assertCharacter(title, len = 1, null.ok = TRUE)
+
+  if (async) setAsync(appStructure)
   app <- ShinydashboardApp$new(appStructure)
   app$launch()
 }
