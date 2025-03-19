@@ -4,13 +4,15 @@
 \alias{launchBslibApp}
 \title{launchBslibApp}
 \usage{
-launchBslibApp(appStructure, title = NULL)
+launchBslibApp(appStructure, title = NULL, async = FALSE)
 }
 \arguments{
 \item{appStructure}{(\code{list(list())}) A list of named lists, containing modules.
 The level of nesting groups or separates modules in menu items \code{"_"} will be read as a space.}
 
 \item{title}{(\code{character(1)}: \code{NULL}) Title of the app}
+
+\item{async}{(\code{logical(1)}: \code{FALSE}) Run app asynchronously}
 }
 \value{
 \code{NULL}

@@ -25,7 +25,8 @@ Imports:
     gt,
     promises,
     shinyWidgets,
-    stringr
+    stringr,
+    purrr
 Suggests:
     bslib,
     shinydashboard,
@@ -59,6 +60,7 @@ Collate:
     'Database.R'
     'DatabaseDBC.R'
     'DatabaseDBI.R'
+    'DatabaseOverview.R'
     'DrugExposureDiagnostics.R'
     'GTTable.R'
     'IncidencePrevalence.R'
@@ -69,6 +71,7 @@ Collate:
     'PlotStatic.R'
     'PlotWidget.R'
     'ShinydashboardApp.R'
+    'StudyBackground.R'
     'Table.R'
     'Text.R'
     'TreatmentPatterns.R'
