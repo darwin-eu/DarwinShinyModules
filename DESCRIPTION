@@ -25,7 +25,8 @@ Imports:
     gt,
     promises,
     shinyWidgets,
-    stringr
+    stringr,
+    purrr
 Suggests:
     bslib,
     shinydashboard,
@@ -39,7 +40,11 @@ Suggests:
     datasets,
     htmlwidgets,
     xml2,
-    shinycssloaders
+    shinycssloaders,
+    DatabaseConnector,
+    DBI,
+    dbplyr,
+    duckdb
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr
@@ -52,6 +57,10 @@ Collate:
     'DarwinBslibApp.R'
     'DarwinDashboardApp.R'
     'DarwinShinyModules.R'
+    'Database.R'
+    'DatabaseDBC.R'
+    'DatabaseDBI.R'
+    'DatabaseOverview.R'
     'DrugExposureDiagnostics.R'
     'GTTable.R'
     'IncidencePrevalence.R'
@@ -62,6 +71,7 @@ Collate:
     'PlotStatic.R'
     'PlotWidget.R'
     'ShinydashboardApp.R'
+    'StudyBackground.R'
     'Table.R'
     'Text.R'
     'TreatmentPatterns.R'
