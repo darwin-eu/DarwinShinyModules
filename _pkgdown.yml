@@ -2,3 +2,67 @@ url: https://darwin-eu-dev.github.io/DarwinShinyModules/
 template:
   bootstrap: 5
 
+reference:
+- title: Decorator Classes
+- desc: Documentation for modules that have decorated implementations
+- contents:
+  - ShinyModule
+  - Plot
+  - Database
+
+- title: Modules
+- subtitle: Tables
+- contents:
+  - Table
+  - GTTable
+
+- subtitle: Plots
+- desc: Documentation for modules that decorate the `Plot` decorator module
+- contents:
+  - PlotStatic
+  - PlotPlotly
+  - PlotWidget
+
+- subtitle: Databases
+- desc: Documentation for modules that decorate the `Database` decorator module
+- contents:
+  - DatabaseDBC
+  - DatabaseDBI
+
+- subtitle: Adapters
+- contents:
+  - OhdsiModule
+  - Bridge
+
+- subtitle: Other
+- contents:
+  - InputPanel
+  - Text
+
+- subtitle: Utility Functions
+- contents:
+    - preview
+    - makeModule
+
+- subtitle: Shiny App Generator Functions
+- contents:
+  - launchBslibApp
+  - launchShinydashboardApp
+
+- title: DARWIN EU
+- subtitle: Study Modules
+- contents:
+  - DatabaseOverview
+  - StudyBackground
+
+- subtitle: Analytical Package Modules
+- contents:
+  - CohortSurvival
+  - DrugExposureDiagnostics
+  - IncidencePrevalence
+  - TreatmentPatterns
+
+- subtitle: Shiny App Generator Functions
+- contents:
+  - launchDarwinBslibApp
+  - launchDarwinDashboardApp
