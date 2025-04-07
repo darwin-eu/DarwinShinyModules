@@ -21,6 +21,8 @@
 #' an UI element and server function, with the `makeModule()` function.
 #'
 #' @noMd
+#' @noRd
+#' @keywords internal
 GenericModule <- R6::R6Class(
   classname = "GenericModule",
   inherit = ShinyModule,
