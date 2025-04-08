@@ -354,7 +354,7 @@ if (interactive()) {
 ## Database Modules
 These database modules were developed based on the previous example. Two implementations exist as of writing, a database module using `DatabaseConnector`, and a module using `DBI`.
 
-The upside of using these modules is that you they manage the connection for you. They open the connection on start-up, and close it on shutdown.
+The upside of using these modules is that they manage the connection for you. They open the connection on start-up, and close it on shutdown.
 
 When the connection unexpectedly drops, it will also prompt the user to re-connect to the database.
 

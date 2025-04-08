@@ -147,7 +147,7 @@ With some minor overhead we can make two modules communicate data between one an
 The `Bridge` module is a type of module that contains other modules, and "bridges" them together. We can use the code in the previous example, and implement it as a `Bridge` instead. This has the upside that we can nest two or more modules together, and package them up in a new module, which will then behave as any other module.
 
 Lets first initiate our `Bridge` module with out any extra code. This will simply execute the `UI()` and `server()` methods, without any interaction.
-```{r}
+```{r, eval=FALSE}
 bridge <- Bridge$new(inputPanel, table)
 
 preview(bridge)
@@ -167,7 +167,7 @@ bridge <- Bridge$new(inputPanel, table, bridgeFun = bridgeFun)
 ```
 
 We can then use our `Bridge` module, like any other module.
-```{r}
+```{r, eval=FALSE}
 preview(bridge)
 ```
 
