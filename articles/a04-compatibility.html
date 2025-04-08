@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DarwinShinyModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,7 @@
     <li><a class="dropdown-item" href="../articles/a03-app-builders.html">Shiny App Builders</a></li>
     <li><a class="dropdown-item" href="../articles/a04-compatibility.html">Compatibility</a></li>
     <li><a class="dropdown-item" href="../articles/a05-creating-a-new-module.html">Creating a new Module</a></li>
+    <li><a class="dropdown-item" href="../articles/a06-loading-data.html">Loading Data From Different Sources</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -75,37 +76,212 @@
 shiny code. One module that you might have noticed in the documentation
 is the <code>OhdsiModule</code>. The <code>OhdsiModule</code> is a
 module that wraps around the <code>xViewer</code> and
-<code>xServer</code> functions. This makes modules from
-<code>OhdsiShinyModules</code> compatible by default.</p>
+<code>xServer</code> functions. This enables you to easily integrate
+already existing modules from <code>OhdsiShinyModules</code> into your
+shiny apps built with <code>DarwinShinyModules</code>.</p>
+<p>The base setup to do this would look something like this:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://darwin-eu-dev.github.io/DarwinShinyModules/">DarwinShinyModules</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/DatabaseConnector/" class="external-link">DatabaseConnector</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/OHDSI/ResultModelManager" class="external-link">ResultModelManager</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">OhdsiShinyModules</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ShinyAppBuilder</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">connectionDetails</span> <span class="op">&lt;-</span> <span class="fu">createConnectionDetails</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="co"># Create connection details to the results database</span></span>
+<span><span class="va">connectionDetails</span> <span class="op">&lt;-</span> <span class="fu">DatabseConnector</span><span class="fu">::</span><span class="fu">createConnectionDetails</span><span class="op">(</span></span>
 <span>  dbms <span class="op">=</span> <span class="st">"sqlite"</span>,</span>
 <span>  server <span class="op">=</span> <span class="st">"./results.sqlite"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">connectionHandler</span> <span class="op">&lt;-</span> <span class="va">ConnectionHandler</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span><span class="co"># Create a ConnectionHandler object</span></span>
+<span><span class="va">connectionHandler</span> <span class="op">&lt;-</span> <span class="fu">ResultModelManager</span><span class="fu">::</span><span class="va">ConnectionHandler</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  connectionDetails <span class="op">=</span> <span class="va">connectionDetails</span></span>
 <span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># Make our module</span></span>
 <span><span class="va">estimation</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/OhdsiModule.html">OhdsiModule</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  connectionHandler <span class="op">=</span> <span class="va">connectionHandler</span>,</span>
 <span>  viewerFun <span class="op">=</span> <span class="va">estimationViewer</span>,</span>
 <span>  serverFun <span class="op">=</span> <span class="va">estimationServer</span>,</span>
 <span>  resultDatabaseSettings <span class="op">=</span> <span class="fu">createDefaultResultDatabaseSettings</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>We can then either preview the module</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">DarwinShinyModules</span><span class="fu">::</span><span class="fu"><a href="../reference/preview.html">preview</a></span><span class="op">(</span><span class="va">estimation</span><span class="op">)</span></span></code></pre></div>
+<p>Launch a shiny app using the appStructure</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">appStructure</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  Estimation <span class="op">=</span> <span class="va">estimation</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/preview.html">preview</a></span><span class="op">(</span><span class="va">estimation</span><span class="op">)</span></span></code></pre></div>
-<p>If you want to create your own wrapper arround other existing
-modules, or shiny app code you can follow the examples in the
-<em>Creating A New Module</em> vignette.</p>
+<span><span class="fu">DarwinShinyModules</span><span class="fu">::</span><span class="fu"><a href="../reference/launchDarwinDashboardApp.html">launchDarwinDashboardApp</a></span><span class="op">(</span><span class="va">appStructure</span><span class="op">)</span></span></code></pre></div>
+<p>Or integrate it in a bespoke shiny app</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="co"># Do bespoke stuff ...</span></span>
+<span>  <span class="va">estimation</span><span class="op">$</span><span class="fu">server</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
+<span>  <span class="co"># Bespoke UI ...</span></span>
+<span>  <span class="va">estimation</span><span class="op">$</span><span class="fu">UI</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
 </div>
-  </main>
+<div class="section level2">
+<h2 id="example-using-cohortmethod">Example using CohortMethod<a class="anchor" aria-label="anchor" href="#example-using-cohortmethod"></a>
+</h2>
+<p>A full example using <code>CohortMethod</code> to run a comparative
+effectiveness analysis of Celexocib vs Diclofenac, with outcome GiBleed
+is shown below.</p>
+<div class="section level3">
+<h3 id="run-the-analysis">Run the analysis<a class="anchor" aria-label="anchor" href="#run-the-analysis"></a>
+</h3>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ohdsi.github.io/DatabaseConnector/" class="external-link">DatabaseConnector</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/OHDSI/Eunomia" class="external-link">Eunomia</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">CohortMethod</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">connectionDetails</span> <span class="op">&lt;-</span> <span class="fu">Eunomia</span><span class="fu">::</span><span class="fu">getEunomiaConnectionDetails</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">Eunomia</span><span class="fu">::</span><span class="fu">createCohorts</span><span class="op">(</span></span>
+<span>  connectionDetails <span class="op">=</span> <span class="va">connectionDetails</span>,</span>
+<span>  cdmDatabaseSchema <span class="op">=</span> <span class="st">"main"</span>,</span>
+<span>  cohortDatabaseSchema <span class="op">=</span> <span class="st">"main"</span>,</span>
+<span>  cohortTable <span class="op">=</span> <span class="st">"cohort"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">covarSettings</span> <span class="op">&lt;-</span> <span class="fu">FeatureExtraction</span><span class="fu">::</span><span class="fu">createDefaultCovariateSettings</span><span class="op">(</span></span>
+<span>  excludedCovariateConceptIds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="co"># Celexocib</span></span>
+<span>    <span class="fl">1118084</span>,</span>
+<span>    <span class="co"># Diclofenac</span></span>
+<span>    <span class="fl">1124300</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  addDescendantsToExclude <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">tcos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">CohortMethod</span><span class="fu">::</span><span class="fu">createTargetComparatorOutcomes</span><span class="op">(</span></span>
+<span>  targetId <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  comparatorId <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  outcomes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">CohortMethod</span><span class="fu">::</span><span class="fu">createOutcome</span><span class="op">(</span></span>
+<span>    outcomeId <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>    outcomeOfInterest <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    trueEffectSize <span class="op">=</span> <span class="cn">NA</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">getDbCmDataArgs</span> <span class="op">&lt;-</span> <span class="fu">CohortMethod</span><span class="fu">::</span><span class="fu">createGetDbCohortMethodDataArgs</span><span class="op">(</span></span>
+<span>  studyStartDate <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  studyEndDate <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  covariateSettings <span class="op">=</span> <span class="va">covarSettings</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">studyPopArgs</span> <span class="op">&lt;-</span> <span class="fu">CohortMethod</span><span class="fu">::</span><span class="fu">createCreateStudyPopulationArgs</span><span class="op">(</span></span>
+<span>  firstExposureOnly <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  restrictToCommonPeriod <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  removeDuplicateSubjects <span class="op">=</span> <span class="st">"keep all"</span>,</span>
+<span>  removeSubjectsWithPriorOutcome <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  minDaysAtRisk <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  startAnchor <span class="op">=</span> <span class="st">"cohort start"</span>,</span>
+<span>  riskWindowStart <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  endAnchor <span class="op">=</span> <span class="st">"cohort end"</span>,</span>
+<span>  riskWindowEnd <span class="op">=</span> <span class="fl">30</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">psArgs</span> <span class="op">&lt;-</span> <span class="fu">CohortMethod</span><span class="fu">::</span><span class="fu">createCreatePsArgs</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">matchPsArgs</span> <span class="op">&lt;-</span> <span class="fu">CohortMethod</span><span class="fu">::</span><span class="fu">createMatchOnPsArgs</span><span class="op">(</span>caliper <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">outcomeModelArgs</span> <span class="op">&lt;-</span> <span class="fu">CohortMethod</span><span class="fu">::</span><span class="fu">createFitOutcomeModelArgs</span><span class="op">(</span>modelType <span class="op">=</span> <span class="st">"cox"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">analysis</span> <span class="op">&lt;-</span> <span class="fu">CohortMethod</span><span class="fu">::</span><span class="fu">createCmAnalysis</span><span class="op">(</span></span>
+<span>  analysisId <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  description <span class="op">=</span> <span class="st">"Celecoxib vs Diclofenac"</span>,</span>
+<span>  getDbCohortMethodDataArgs <span class="op">=</span> <span class="va">getDbCmDataArgs</span>,</span>
+<span>  createStudyPopArgs <span class="op">=</span> <span class="va">studyPopArgs</span>,</span>
+<span>  createPsArgs <span class="op">=</span> <span class="va">psArgs</span>,</span>
+<span>  matchOnPsArgs <span class="op">=</span> <span class="va">matchPsArgs</span>,</span>
+<span>  computeCovariateBalanceArgs <span class="op">=</span> <span class="fu">CohortMethod</span><span class="fu">::</span><span class="fu">createComputeCovariateBalanceArgs</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  computeSharedCovariateBalanceArgs <span class="op">=</span> <span class="fu">CohortMethod</span><span class="fu">::</span><span class="fu">createComputeCovariateBalanceArgs</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  fitOutcomeModelArgs <span class="op">=</span> <span class="va">outcomeModelArgs</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">outputFolder</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"cm-test-output"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">refTable</span> <span class="op">&lt;-</span> <span class="fu">CohortMethod</span><span class="fu">::</span><span class="fu">runCmAnalyses</span><span class="op">(</span></span>
+<span>  connectionDetails <span class="op">=</span> <span class="va">connectionDetails</span>,</span>
+<span>  cdmDatabaseSchema <span class="op">=</span> <span class="st">"main"</span>,</span>
+<span>  exposureDatabaseSchema <span class="op">=</span> <span class="st">"main"</span>,</span>
+<span>  exposureTable <span class="op">=</span> <span class="st">"cohort"</span>,</span>
+<span>  outcomeDatabaseSchema <span class="op">=</span> <span class="st">"main"</span>,</span>
+<span>  outcomeTable <span class="op">=</span> <span class="st">"cohort"</span>,</span>
+<span>  outputFolder <span class="op">=</span> <span class="va">outputFolder</span>,</span>
+<span>  cmAnalysisList <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">analysis</span><span class="op">)</span>,</span>
+<span>  targetComparatorOutcomesList <span class="op">=</span> <span class="va">tcos</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="export-results">Export results<a class="anchor" aria-label="anchor" href="#export-results"></a>
+</h3>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">exportFolder</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"cm-test-export"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">CohortMethod</span><span class="fu">::</span><span class="fu">exportToCsv</span><span class="op">(</span></span>
+<span>  outputFolder <span class="op">=</span> <span class="va">outputFolder</span>,</span>
+<span>  exportFolder <span class="op">=</span> <span class="va">exportFolder</span>,</span>
+<span>  databaseId <span class="op">=</span> <span class="st">"Eunomia"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="upload-results-to-database">Upload results to database<a class="anchor" aria-label="anchor" href="#upload-results-to-database"></a>
+</h3>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cg_cohort</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  cohortId <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  cohortName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"celexocib"</span>, <span class="st">"diclofenac"</span>, <span class="st">"GiBleed"</span><span class="op">)</span>,</span>
+<span>  sql <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  json <span class="op">=</span> <span class="st">""</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">resDb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"cm-test-res.sqlite"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">resConnectionDetails</span> <span class="op">&lt;-</span> <span class="fu">DatabaseConnector</span><span class="fu">::</span><span class="fu"><a href="https://ohdsi.github.io/DatabaseConnector/reference/createConnectionDetails.html" class="external-link">createConnectionDetails</a></span><span class="op">(</span></span>
+<span>  dbms <span class="op">=</span> <span class="st">"sqlite"</span>,</span>
+<span>  server <span class="op">=</span> <span class="va">resDb</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">CohortMethod</span><span class="fu">::</span><span class="fu">uploadExportedResults</span><span class="op">(</span></span>
+<span>  connectionDetails <span class="op">=</span> <span class="va">resConnectionDetails</span>,</span>
+<span>  databaseSchema <span class="op">=</span> <span class="st">"main"</span>,</span>
+<span>  append <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  exportFolder <span class="op">=</span> <span class="va">exportFolder</span>,</span>
+<span>  cohorts <span class="op">=</span> <span class="va">cg_cohort</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="make-a-shiny-module-using-darwinshinymodules-and-ohdsishinymodules">Make a shiny module using <code>DarwinShinyModules</code> and
+<code>OhdsiShinyModules</code><a class="anchor" aria-label="anchor" href="#make-a-shiny-module-using-darwinshinymodules-and-ohdsishinymodules"></a>
+</h3>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://darwin-eu-dev.github.io/DarwinShinyModules/">DarwinShinyModules</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">connectionHandler</span> <span class="op">&lt;-</span> <span class="fu">ResultModelManager</span><span class="fu">::</span><span class="va">ConnectionHandler</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>connectionDetails <span class="op">=</span> <span class="va">resConnectionDetails</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">estimation</span> <span class="op">&lt;-</span> <span class="fu">DarwinShinyModules</span><span class="fu">::</span><span class="va"><a href="../reference/OhdsiModule.html">OhdsiModule</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>  connectionHandler <span class="op">=</span> <span class="va">connectionHandler</span>,</span>
+<span>  viewerFun <span class="op">=</span> <span class="fu">OhdsiShinyModules</span><span class="fu">::</span><span class="va">estimationViewer</span>,</span>
+<span>  serverFun <span class="op">=</span> <span class="fu">OhdsiShinyModules</span><span class="fu">::</span><span class="va">estimationServer</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">appStructure</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  Comparative_Effectiveness <span class="op">=</span> <span class="va">estimation</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Default themed</span></span>
+<span><span class="fu">DarwinShinyModules</span><span class="fu">::</span><span class="fu"><a href="../reference/launchShinydashboardApp.html">launchShinydashboardApp</a></span><span class="op">(</span><span class="va">appStructure</span>, title <span class="op">=</span> <span class="st">"celecoxib vs diclofenac"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># DARWIN themed</span></span>
+<span><span class="fu">DarwinShinyModules</span><span class="fu">::</span><span class="fu"><a href="../reference/launchDarwinDashboardApp.html">launchDarwinDashboardApp</a></span><span class="op">(</span><span class="va">appStructure</span>, title <span class="op">=</span> <span class="st">"celecoxib vs diclofenac"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="img%2Fa04-01.png" id="id" class="class" style="width:100.0%"></p>
+</div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

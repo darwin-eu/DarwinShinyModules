@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DarwinShinyModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,7 @@
     <li><a class="dropdown-item" href="../articles/a03-app-builders.html">Shiny App Builders</a></li>
     <li><a class="dropdown-item" href="../articles/a04-compatibility.html">Compatibility</a></li>
     <li><a class="dropdown-item" href="../articles/a05-creating-a-new-module.html">Creating a new Module</a></li>
+    <li><a class="dropdown-item" href="../articles/a06-loading-data.html">Loading Data From Different Sources</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -221,6 +222,7 @@ the module instance:</p>
 <span><span class="co">#&gt; &lt;MyModule&gt;</span></span>
 <span><span class="co">#&gt;   Inherits from: &lt;ShinyModule&gt;</span></span>
 <span><span class="co">#&gt;   Public:</span></span>
+<span><span class="co">#&gt;     async: active binding</span></span>
 <span><span class="co">#&gt;     clone: function (deep = FALSE) </span></span>
 <span><span class="co">#&gt;     data: active binding</span></span>
 <span><span class="co">#&gt;     initialize: function () </span></span>
@@ -234,6 +236,7 @@ the module instance:</p>
 <span><span class="co">#&gt;     UI: function () </span></span>
 <span><span class="co">#&gt;     validate: function () </span></span>
 <span><span class="co">#&gt;   Private:</span></span>
+<span><span class="co">#&gt;     .async: FALSE</span></span>
 <span><span class="co">#&gt;     .data: data.frame</span></span>
 <span><span class="co">#&gt;     .init: function () </span></span>
 <span><span class="co">#&gt;     .instanceId: SwlKLU5Ed6ieYxombQ_X</span></span>
