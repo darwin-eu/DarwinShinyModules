@@ -161,6 +161,9 @@ optional}
 \item{\code{reactiveValues}}{(\code{reactivevalues}) Reactive values. use
 \code{shiny::isolate()} to get a non-reactive item from the reactive
 environment.}
+
+\item{\code{async}}{(\code{logical(1)}: \code{FALSE}) Logical parameter to switch
+asynchronous mode on or off.}
 }
 \if{html}{\out{</div>}}
 }

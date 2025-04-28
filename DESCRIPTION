@@ -1,6 +1,6 @@
 Package: DarwinShinyModules
 Title: Repository of Shiny Modules for Darwin Result Viewers
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(
     person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut"), comment = c(ORCID = "0000-0001-8993-8748")),
     person("Maarten", "van Kessel", email = "m.l.vankessel@erasmusmc.nl", role = c("aut", "cre"), comment = c(ORCID = "0009-0006-8832-6030")),
@@ -25,13 +25,16 @@ Imports:
     gt,
     promises,
     shinyWidgets,
-    stringr
+    stringr,
+    purrr
 Suggests:
     bslib,
     shinydashboard,
     TreatmentPatterns,
     IncidencePrevalence,
     DrugExposureDiagnostics (>= 1.1.1),
+    CohortSurvival,
+    CDMConnector,
     networkD3,
     testthat (>= 3.0.0),
     knitr,
@@ -39,7 +42,11 @@ Suggests:
     datasets,
     htmlwidgets,
     xml2,
-    shinycssloaders
+    shinycssloaders,
+    DatabaseConnector,
+    DBI,
+    dbplyr,
+    duckdb
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr
@@ -49,9 +56,14 @@ Collate:
     'ShinyModule.R'
     'Bridge.R'
     'BslibApp.R'
+    'CohortSurvival.R'
     'DarwinBslibApp.R'
     'DarwinDashboardApp.R'
     'DarwinShinyModules.R'
+    'Database.R'
+    'DatabaseDBC.R'
+    'DatabaseDBI.R'
+    'DatabaseOverview.R'
     'DrugExposureDiagnostics.R'
     'GTTable.R'
     'IncidencePrevalence.R'
@@ -62,6 +74,7 @@ Collate:
     'PlotStatic.R'
     'PlotWidget.R'
     'ShinydashboardApp.R'
+    'StudyBackground.R'
     'Table.R'
     'Text.R'
     'TreatmentPatterns.R'
