@@ -130,7 +130,7 @@ InputPanel <- R6::R6Class(
       lapply(names(private$.args), function(label) {
         shiny::observeEvent(input[[label]], {
           private$.reactiveValues[[label]] <- input[[label]]
-        })
+        }, ignoreNULL = FALSE)
       })
     },
 
