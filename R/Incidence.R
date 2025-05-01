@@ -73,44 +73,8 @@ Incidence <- R6::R6Class(
       super$initialize()
       private$assertInstall()
       private$assertIncidenceData(data)
-      private$.data <- data
-
-      private$.cdmPicker <- Picker$new(data = private$.incData$database, label = "Database")
-      private$.outcomePicker <- Picker$new(data = private$.incData$outcome_cohort_name, label = "Outcome name")
-      private$.denomAgeGroupPicker <- Picker$new(data = private$.incData$denominator_age_group, label = "Age group", selected = unique(private$.incData$denominator_age_group)[1])
-      private$.denomSexPicker <- Picker$new(data = private$.incData$denominator_sex, label = "Sex", selected = unique(private$.incData$denominator_sex)[1])
-      private$.denomPriorObsPicker <- Picker$new(data = private$.incData$denominator_days_prior_observation, label = "Days prior observation")
-      private$.denomStartDatePicker <- Picker$new(data = private$.incData$denominator_start_date, label = "Start date")
-      private$.denomEndDatePicker <- Picker$new(data = private$.incData$denominator_end_date, label = "End date")
-      private$.outcomeWashoutPicker <- Picker$new(data = private$.incData$analysis_outcome_washout, label = "Outcome washout")
-      private$.repeatedEventsPicker <- Picker$new(data = private$.incData$analysis_repeated_events, label = "Repeated events")
-      private$.completePeriodPicker <- Picker$new(data = private$.incData$analysis_complete_database_intervals, label = "Complete period")
-      private$.minCountsPicker <- Picker$new(data = private$.incData$analysis_min_cell_count, label = "Minimum counts")
-      private$.intervalPicker <- Picker$new(data = private$.incData$analysis_interval, label = "Interval", selected = unique(private$.incData$analysis_interval)[1])
-      private$.incStartDatePicker <- Picker$new(data = private$.incData$incidence_start_date, label = "Year")
-
-      # plot picker
-      plotDataChoices <- c("database", "outcome_cohort_name", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation",
-                           "denominator_start_date", "denominator_end_date", "analysis_outcome_washout", "analysis_repeated_events", "analysis_complete_database_intervals",
-                           "analysis_min_cell_count", "analysis_interval", "incidence_start_date")
-      private$.incXAxisPicker <- Picker$new(data = plotDataChoices,
-                                            label = "Incidence start date",
-                                            selected = "incidence_start_date",
-                                            multiple = FALSE)
-      private$.incFacetByPicker <- Picker$new(data = plotDataChoices,
-                                              label = "Facet by",
-                                              selected = c("outcome_cohort_name", "database"))
-      private$.incColorByPicker <- Picker$new(data = plotDataChoices,
-                                              label = "Colour by",
-                                              selected = c())
-      private$.incRibbonPicker <- Picker$new(data = c(TRUE, FALSE),
-                                             label = "Ribbon",
-                                             selected = TRUE,
-                                             multiple = FALSE)
-      private$.incConfIntervalPicker <- Picker$new(data = c(TRUE, FALSE),
-                                                   label = "Confidence interval",
-                                                   selected = FALSE,
-                                                   multiple = FALSE)
+      private$.data <- private$transformData(data)
+      private$initPickers()
       return(invisible(self))
     }
   ),
@@ -118,6 +82,7 @@ Incidence <- R6::R6Class(
   # Private ----
   private = list(
     .data = NULL,
+    .pickers = NULL,
     .cdmPicker = NULL,
     .outcomePicker = NULL,
     .denomAgeGroupPicker = NULL,
@@ -132,11 +97,11 @@ Incidence <- R6::R6Class(
     .intervalPicker = NULL,
     .incStartDatePicker = NULL,
     .treatmentPicker = NULL,
-    .incXAxisPicker = NULL,
-    .incFacetByPicker = NULL,
-    .incColorByPicker = NULL,
-    .incRibbonPicker = NULL,
-    .incConfIntervalPicker = NULL,
+    .xAxisPicker = NULL,
+    .facetByPicker = NULL,
+    .colorByPicker = NULL,
+    .ribbonPicker = NULL,
+    .confIntervalPicker = NULL,
 
     .UI = function() {
       shiny::tagList(
@@ -167,19 +132,19 @@ Incidence <- R6::R6Class(
             type = "tabs",
             shiny::tabPanel(
               "Table of estimates",
-              shiny::downloadButton(shiny::NS(private$.namespace, "incidence_estimates_download_table"), "Download current estimates"),
-              DT::DTOutput(shiny::NS(private$.namespace, "incidence_estimates_table")) %>% shinycssloaders::withSpinner()
+              shiny::downloadButton(shiny::NS(private$.namespace, "download_table"), "Download current estimates"),
+              DT::DTOutput(shiny::NS(private$.namespace, "table")) %>% shinycssloaders::withSpinner()
             ),
             shiny::tabPanel(
               "Plot of estimates",
               p("Plotting options"),
-              private$.incXAxisPicker$UI(),
-              private$.incFacetByPicker$UI(),
-              private$.incColorByPicker$UI(),
-              private$.incRibbonPicker$UI(),
-              private$.incConfIntervalPicker$UI(),
+              private$.xAxisPicker$UI(),
+              private$.facetByPicker$UI(),
+              private$.colorByPicker$UI(),
+              private$.ribbonPicker$UI(),
+              private$.confIntervalPicker$UI(),
               plotly::plotlyOutput(
-                shiny::NS(private$.namespace, "incidence_estimates_plot"),
+                shiny::NS(private$.namespace, "plot"),
                 height = "800px"
               ) %>%
                 shinycssloaders::withSpinner(),
@@ -187,21 +152,21 @@ Incidence <- R6::R6Class(
               shiny::div("height:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
               shiny::div(
                 style = "display: inline-block;",
-                shiny::textInput(shiny::NS(private$.namespace, "incidence_estimates_download_height"), "", 10, width = "50px")
+                shiny::textInput(shiny::NS(private$.namespace, "download_height"), "", 10, width = "50px")
               ),
               shiny::div("cm", style = "display: inline-block; margin-right: 25px;"),
               shiny::div("width:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
               shiny::div(
                 style = "display: inline-block;",
-                shiny::textInput(shiny::NS(private$.namespace, "incidence_estimates_download_width"), "", 20, width = "50px")
+                shiny::textInput(shiny::NS(private$.namespace, "download_width"), "", 20, width = "50px")
               ),
               shiny::div("cm", style = "display: inline-block; margin-right: 25px;"),
               shiny::div("dpi:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
               shiny::div(
                 style = "display: inline-block; margin-right:",
-                shiny::textInput(shiny::NS(private$.namespace, "incidence_estimates_download_dpi"), "", 300, width = "50px")
+                shiny::textInput(shiny::NS(private$.namespace, "download_dpi"), "", 300, width = "50px")
               ),
-              shiny::downloadButton(shiny::NS(private$.namespace, "incidence_estimates_download_plot"), "Download plot")
+              shiny::downloadButton(shiny::NS(private$.namespace, "download_plot"), "Download plot")
             )
           )
         )
@@ -209,22 +174,26 @@ Incidence <- R6::R6Class(
     },
 
     .server = function(input, output, session) {
+      for (module in private$.pickers) {
+        module$server(input, output, session)
+      }
+
       # Incidence
       getIncidenceEstimates <- reactive({
-        result <- private$.incData %>%
-          dplyr::filter(database %in% input$incidence_estimates_database) %>%
-          dplyr::filter(outcome_cohort_name %in% input$incidence_estimates_outcome_cohort_name) %>%
-          dplyr::filter(denominator_age_group %in% input$incidence_estimates_denominator_age_group) %>%
-          dplyr::filter(denominator_sex %in% input$incidence_estimates_denominator_sex) %>%
-          dplyr::filter(denominator_days_prior_observation %in% input$incidence_estimates_denominator_days_prior_observation) %>%
-          dplyr::filter(denominator_start_date %in% input$incidence_estimates_denominator_start_date) %>%
-          dplyr::filter(denominator_end_date %in% input$incidence_estimates_denominator_end_date) %>%
-          dplyr::filter(analysis_outcome_washout %in% input$incidence_estimates_analysis_outcome_washout) %>%
-          dplyr::filter(analysis_repeated_events %in% input$incidence_estimates_analysis_repeated_events) %>%
-          dplyr::filter(analysis_complete_database_intervals %in% input$incidence_estimates_analysis_complete_database_intervals) %>%
-          dplyr::filter(analysis_min_cell_count %in% input$incidence_estimates_analysis_min_cell_count) %>%
-          dplyr::filter(analysis_interval %in% input$incidence_estimates_analysis_interval) %>%
-          dplyr::filter(incidence_start_date %in% input$incidence_estimates_incidence_start_date) %>%
+        result <- private$.data %>%
+          dplyr::filter(database %in% private$.cdmPicker$inputValues$cdm) %>%
+          dplyr::filter(outcome_cohort_name %in% private$.outcomePicker$inputValues$outcome) %>%
+          dplyr::filter(denominator_age_group %in% private$.denomAgeGroupPicker$inputValues$age_group) %>%
+          dplyr::filter(denominator_sex %in% private$.denomSexPicker$inputValues$denom_sex) %>%
+          dplyr::filter(denominator_days_prior_observation %in% private$.denomPriorObsPicker$inputValues$prior_obs) %>%
+          dplyr::filter(denominator_start_date %in% private$.denomStartDatePicker$inputValues$start_date) %>%
+          dplyr::filter(denominator_end_date %in% private$.denomEndDatePicker$inputValues$end_date) %>%
+          dplyr::filter(analysis_outcome_washout %in% private$.outcomeWashoutPicker$inputValues$washout) %>%
+          dplyr::filter(analysis_repeated_events %in% private$.repeatedEventsPicker$inputValues$repeated_events) %>%
+          dplyr::filter(analysis_complete_database_intervals %in% private$.completePeriodPicker$inputValues$complete_period) %>%
+          dplyr::filter(analysis_min_cell_count %in% private$.minCountsPicker$inputValues$min_cell_count) %>%
+          dplyr::filter(analysis_interval %in% private$.intervalPicker$inputValues$interval) %>%
+          dplyr::filter(incidence_start_date %in% private$.incStartDatePicker$inputValues$year) %>%
           dplyr::mutate(
             person_years = round(suppressWarnings(as.numeric(person_years))),
             person_days = round(suppressWarnings(as.numeric(person_days))),
@@ -233,15 +202,11 @@ Incidence <- R6::R6Class(
             incidence_100000_pys_95CI_lower = round(suppressWarnings(as.numeric(incidence_100000_pys_95CI_lower))),
             incidence_100000_pys_95CI_upper = round(suppressWarnings(as.numeric(incidence_100000_pys_95CI_upper)))
           )
-        if ("treatment" %in% colnames(result)) {
-          result <- result %>%
-            filter(treatment %in% input$incidence_estimates_treatment_name)
-        }
         return(result)
       })
 
       ### download table ----
-      output$incidence_estimates_download_table <- downloadHandler(
+      output$download_table <- downloadHandler(
         filename = function() {
           "incidenceEstimatesTable.csv"
         },
@@ -251,7 +216,7 @@ Incidence <- R6::R6Class(
       )
 
       ### table estimates ----
-      output$incidence_estimates_table <- DT::renderDT({
+      output$table <- DT::renderDT({
         table <- getIncidenceEstimates()
         shiny::validate(need(nrow(table) > 0, "No results for selected inputs"))
 
@@ -299,11 +264,11 @@ Incidence <- R6::R6Class(
           y = "incidence_100000_pys",
           ylim = c(0, NA),
           ytype = "count",
-          ribbon = as.logical(input$incidence_estimates_ribbon),
-          facet = input$incidence_estimates_plot_facet,
-          colour = input$incidence_estimates_plot_colour,
+          ribbon = as.logical(private$.ribbonPicker$inputValues$ribbon),
+          facet = private$.facetByPicker$inputValues$facet_by,
+          colour = private$.colorByPicker$inputValues$color_by,
           colour_name = paste0(input$incidence_estimates_plot_colour, collapse = "; "),
-          options = list("hideConfidenceInterval" = !as.logical(input$incidence_estimates_confidence_interval))
+          options = list("hideConfidenceInterval" = !as.logical(private$.confIntervalPicker$inputValues$conf_interval))
         ) +
           ggplot2::scale_fill_discrete(breaks = ageGroups) +
           ggplot2::scale_color_discrete(breaks = ageGroups) +
@@ -312,7 +277,7 @@ Incidence <- R6::R6Class(
       })
 
       ### download plot ----
-      output$incidence_estimates_download_plot <- downloadHandler(
+      output$download_plot <- downloadHandler(
         filename = function() {
           "incidenceEstimatesPlot.png"
         },
@@ -328,147 +293,9 @@ Incidence <- R6::R6Class(
         }
       )
       ### plot ----
-      output$incidence_estimates_plot <- renderPlotly({
+      output$plot <- renderPlotly({
         plotIncidenceEstimates()
       })
-
-      ## comorbidity ----
-      getsummaryComorbidity  <- reactive({
-        result <- private$.cmbData %>%
-          filter(database %in% input$cmorbs_cdm) %>%
-          filter(time_window %in% input$cmorbs_time_window)   %>%
-          filter(variable_level %in% input$cmorbs_variable_level) %>%
-          filter(strata_level %in% input$cmorbs_strata_level)  %>%
-          pivot_wider(names_from = c("database", "time_window"),
-                      values_from = c("estimate"),
-                      names_glue = "{database} [{time_window}] {.value}",
-                      names_vary = "slowest")
-        formatObj3Estimates(result)
-      })
-
-      output$dt_summaryComorbidity  <- DT::renderDT({
-        table_data <- getsummaryComorbidity()
-        datatable(table_data, rownames= FALSE)
-      })
-
-      output$dt_summaryComorbidity_csv <- downloadHandler(
-        filename = function() {
-          "summaryComorbidity.csv"
-        },
-        content = function(file) {
-          x <- getsummaryComorbidity()
-          write.csv(x,
-                    file,
-                    row.names=FALSE)
-        }
-      )
-
-      # medications ----
-      getsummaryMedications <- reactive({
-        result <- private$.medData %>%
-          filter(database %in% input$meds_cdm) %>%
-          filter(time_window %in% input$meds_time_window) %>%
-          filter(variable_level %in% input$meds_variable_level) %>%
-          filter(strata_level %in% input$meds_strata_level)   %>%
-          pivot_wider(names_from = c("database", "time_window"),
-                      values_from = c("estimate"),
-                      names_glue = "{database} [{time_window}] {.value}",
-                      names_vary = "slowest")
-        formatObj3Estimates(result)
-      })
-
-      output$dt_summaryMedications  <- DT::renderDT({
-        table_data <- getsummaryMedications()
-        datatable(table_data, rownames= FALSE)
-      })
-
-      output$dt_summaryMedications_csv <- downloadHandler(
-        filename = function() {
-          "summaryMedications.csv"
-        },
-        content = function(file) {
-          x <- getsummaryMedications()
-          write.csv(x,
-                    file,
-                    row.names=FALSE)
-        }
-      )
-
-      # lsc ----
-      getsummaryLS <- reactive({
-        private$.lscData %>%
-          dplyr::filter(database %in% input$ls_cdm) %>%
-          dplyr::filter(time_window %in% input$ls_time_window)   %>%
-          dplyr::filter(strata_level %in% input$ls_strata_level)  %>%
-          dplyr::filter(domain %in% input$ls_domain) %>%
-          dplyr::distinct()
-      })
-
-      output$dt_summaryLS  <- DT::renderDT({
-        table_data <- getsummaryLS() %>%
-          pivot_wider(names_from = c("database", "time_window"),
-                      values_from = c("estimate"),
-                      names_glue = "{database} [{time_window}] {.value}",
-                      names_vary = "slowest")
-        datatable(formatObj3Estimates(table_data, other = c("variable", "domain")), rownames= FALSE)
-      })
-
-      output$dt_summaryLS_csv <- downloadHandler(
-        filename = function() {
-          "summaryLS.csv"
-        },
-        content = function(file) {
-          x <- getsummaryLS()  %>%
-            pivot_wider(names_from = c("database", "time_window"),
-                        values_from = c("estimate"),
-                        names_glue = "{database} [{time_window}] {.value}",
-                        names_vary = "slowest")
-          write.csv(x,
-                    file,
-                    row.names=FALSE)
-        }
-      )
-
-      getTopLs <- reactive({
-        tableData <- getsummaryLS()
-        result <- tibble::tibble(rank = 1:input$top_n)
-
-        for (i in seq_along(unique(tableData$database))){
-          db <- unique(tableData$database)[i]
-          dbData <- tableData %>%
-            filter(database == db)
-
-          topData <- dbData %>%
-            group_by(strata_level, variable, time_window) %>%
-            summarise(n = as.numeric(estimate[1]), percentage = as.numeric(estimate)[2]) %>%
-            ungroup() %>%
-            slice_max(percentage, n = input$top_n) %>%
-            arrange(desc(percentage)) %>%
-            mutate(rank = row_number(), !!db :=  paste0(strata_level, " - ", variable, ": ", n, " (", percentage, "%)")) %>%
-            select(rank, db)
-
-          result <- result %>%
-            left_join(topData,
-                      by = "rank")
-        }
-        result
-      })
-
-      output$dt_top  <- DT::renderDT({
-        datatable(getTopLs(), rownames= FALSE)
-      })
-
-      output$dt_top_csv <- downloadHandler(
-        filename = function() {
-          "TopLS.csv"
-        },
-        content = function(file) {
-          x <- getTopLs()
-          write.csv(x,
-                    file,
-                    row.names=FALSE)
-        }
-      )
     },
 
     assertInstall = function() {
@@ -492,6 +319,184 @@ Incidence <- R6::R6Class(
       if (!all(resSettings$result_type %in% c("incidence", "incidence_attrition"))) {
         stop("Cannot assert `Incidence` result")
       }
+    },
+
+    transformData = function(data) {
+      minCellCount <- attr(data, "settings") %>%
+        dplyr::pull(min_cell_count) %>%
+        unique()
+      data <- IncidencePrevalence::asIncidenceResult(data) %>%
+        dplyr::mutate(analysis_min_cell_count = !!minCellCount) %>%
+        dplyr::rename(database = cdm_name,
+                      n_events = outcome_count,
+                      n_persons = denominator_count)
+    },
+    initPickers = function() {
+      # cdm
+      private$.cdmPicker <- InputPanel$new(
+        funs = list(cdm = shinyWidgets::pickerInput),
+        args = list(cdm = list(inputId = "cdm", choices = private$.data$database, label = "Database")),
+        addDiv = TRUE
+      )
+      private$.cdmPicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.cdmPicker)
+
+      # outcome
+      private$.outcomePicker <- InputPanel$new(
+        funs = list(outcome = shinyWidgets::pickerInput),
+        args = list(outcome = list(inputId = "outcome", choices = private$.data$outcome_cohort_name, label = "Outcome")),
+        addDiv = TRUE
+      )
+      private$.outcomePicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.outcomePicker)
+
+      # denominator age group
+      private$.denomAgeGroupPicker <- InputPanel$new(
+        funs = list(age_group = shinyWidgets::pickerInput),
+        args = list(age_group = list(inputId = "age_group", choices = private$.data$denominator_age_group, label = "Age group")),
+        addDiv = TRUE
+      )
+      private$.denomAgeGroupPicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.denomAgeGroupPicker)
+
+      # denominator sex
+      private$.denomSexPicker <- InputPanel$new(
+        funs = list(denom_sex = shinyWidgets::pickerInput),
+        args = list(denom_sex = list(inputId = "denom_sex", choices = private$.data$denominator_sex, label = "Sex")),
+        addDiv = TRUE
+      )
+      private$.denomSexPicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.denomSexPicker)
+
+      # prior observation
+      private$.denomPriorObsPicker <- InputPanel$new(
+        funs = list(prior_obs = shinyWidgets::pickerInput),
+        args = list(prior_obs = list(inputId = "prior_obs", choices = private$.data$denominator_days_prior_observation, label = "Prior observation")),
+        addDiv = TRUE
+      )
+      private$.denomPriorObsPicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.denomPriorObsPicker)
+
+      # denominator start date
+      private$.denomStartDatePicker <- InputPanel$new(
+        funs = list(start_date = shinyWidgets::pickerInput),
+        args = list(start_date = list(inputId = "start_date", choices = private$.data$denominator_start_date, label = "Start date")),
+        addDiv = TRUE
+      )
+      private$.denomStartDatePicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.denomStartDatePicker)
+
+      # denominator end date
+      private$.denomEndDatePicker <- InputPanel$new(
+        funs = list(end_date = shinyWidgets::pickerInput),
+        args = list(end_date = list(inputId = "end_date", choices = private$.data$denominator_end_date, label = "End date")),
+        addDiv = TRUE
+      )
+      private$.denomEndDatePicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.denomEndDatePicker)
+
+      # washout
+      private$.outcomeWashoutPicker <- InputPanel$new(
+        funs = list(washout = shinyWidgets::pickerInput),
+        args = list(washout = list(inputId = "washout", choices = private$.data$analysis_outcome_washout, label = "Outcome washout")),
+        addDiv = TRUE
+      )
+      private$.outcomeWashoutPicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.outcomeWashoutPicker)
+
+      # repeated events
+      private$.repeatedEventsPicker <- InputPanel$new(
+        funs = list(repeated_events = shinyWidgets::pickerInput),
+        args = list(repeated_events = list(inputId = "repeated_events", choices = private$.data$analysis_repeated_events, label = "Repeated events")),
+        addDiv = TRUE
+      )
+      private$.repeatedEventsPicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.repeatedEventsPicker)
+
+      # complete period
+      private$.completePeriodPicker <- InputPanel$new(
+        funs = list(complete_period = shinyWidgets::pickerInput),
+        args = list(complete_period = list(inputId = "complete_period", choices = private$.data$analysis_complete_database_intervals, label = "Complete period")),
+        addDiv = TRUE
+      )
+      private$.completePeriodPicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.completePeriodPicker)
+
+      # min counts
+      private$.minCountsPicker <- InputPanel$new(
+        funs = list(min_cell_count = shinyWidgets::pickerInput),
+        args = list(min_cell_count = list(inputId = "min_cell_count", choices = private$.data$analysis_min_cell_count, label = "Minimum counts")),
+        addDiv = TRUE
+      )
+      private$.minCountsPicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.minCountsPicker)
+
+      # interval
+      private$.intervalPicker <- InputPanel$new(
+        funs = list(interval = shinyWidgets::pickerInput),
+        args = list(interval = list(inputId = "interval", choices = private$.data$analysis_interval, label = "Interval", selected = unique(private$.data$analysis_interval)[1])),
+        addDiv = TRUE
+      )
+      private$.intervalPicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.intervalPicker)
+
+      # start date
+      private$.incStartDatePicker <- InputPanel$new(
+        funs = list(year = shinyWidgets::pickerInput),
+        args = list(year = list(inputId = "year", choices = private$.data$incidence_start_date, label = "Year")),
+        addDiv = TRUE
+      )
+      private$.incStartDatePicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.incStartDatePicker)
+
+      # plot pickers
+      plotDataChoices <- c("database", "outcome_cohort_name", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation",
+                           "denominator_start_date", "denominator_end_date", "analysis_outcome_washout", "analysis_repeated_events", "analysis_complete_database_intervals",
+                           "analysis_min_cell_count", "analysis_interval", "incidence_start_date")
+      # x-axis
+      private$.xAxisPicker <- InputPanel$new(
+        funs = list(x-axis = shinyWidgets::pickerInput),
+        args = list(x-axis = list(inputId = "x-axis", choices = plotDataChoices, label = "Incidence_start_date", selected = "incidence_start_date", multiple = F)),
+        addDiv = TRUE
+      )
+      private$.xAxisPicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.xAxisPicker)
+
+      # facet by
+      private$.facetByPicker <- InputPanel$new(
+        funs = list(facet_by = shinyWidgets::pickerInput),
+        args = list(facet_by = list(inputId = "facet_by", choices = plotDataChoices, label = "Facet by", selected = c("outcome_cohort_name", "database"))),
+        addDiv = TRUE
+      )
+      private$.facetByPicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.facetByPicker)
+
+      # color by
+      private$.colorByPicker <- InputPanel$new(
+        funs = list(color_by = shinyWidgets::pickerInput),
+        args = list(color_by = list(inputId = "color_by", choices = plotDataChoices, label = "Colour by", selected = c())),
+        addDiv = TRUE
+      )
+      private$.colorByPicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.colorByPicker)
+
+      # ribbon
+      private$.ribbonByPicker <- InputPanel$new(
+        funs = list(ribbon = shinyWidgets::pickerInput),
+        args = list(ribbon = list(inputId = "ribbon", choices = c(TRUE, FALSE), label = "Ribbon", selected = TRUE, multiple = FALSE)),
+        addDiv = TRUE
+      )
+      private$.ribbonPicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.ribbonPicker)
+
+      # confidence interval
+      private$.confIntervalPicker <- InputPanel$new(
+        funs = list(confidence_interval = shinyWidgets::pickerInput),
+        args = list(confidence_interval = list(inputId = "confidence_interval", choices = c(TRUE, FALSE), label = "Confidence interval", selected = FALSE, multiple = FALSE)),
+        addDiv = TRUE
+      )
+      private$.confIntervalPicker$parentNamespace <- self$namespace
+      private$.pickers <- append(private$.pickers, private$.confIntervalPicker)
     }
   )
 )
