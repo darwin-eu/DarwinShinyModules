@@ -37,7 +37,7 @@
 #'  ) {
 #'     inc <- readRDS(system.file(
 #'       package = "DarwinShinyModules",
-#'       "dummyData/IncidencePrevalence/0.9.0/incidence.rds"
+#'       "dummyData/IncidencePrevalence/1.2.0/incidence.csv"
 #'     ))
 #'
 #'     incMod <- Incidence$new(data = inc)
@@ -211,7 +211,7 @@ Incidence <- R6::R6Class(
           "incidenceEstimatesTable.csv"
         },
         content = function(file) {
-          write_csv(getIncidenceEstimates(), file)
+          utils::write.csv(getIncidenceEstimates(), file)
         }
       )
 
@@ -224,15 +224,8 @@ Incidence <- R6::R6Class(
           mutate(incidence_100000_pys = paste0(
             incidence_100000_pys, " (", incidence_100000_pys_95CI_lower, " to ",
             incidence_100000_pys_95CI_upper, " )"
-          ))
-
-        if ("treatment" %in% colnames(table)) {
-          table <- table %>%
-            select(database, treatment, outcome_cohort_name, denominator_cohort_name, denominator_age_group, denominator_sex, denominator_days_prior_observation, denominator_start_date, denominator_end_date, analysis_outcome_washout, analysis_repeated_events, analysis_complete_database_intervals, analysis_min_cell_count, analysis_interval, incidence_start_date, n_events, n_persons, person_years, incidence_100000_pys)
-        } else {
-          table <- table %>%
-            select(database, outcome_cohort_name, denominator_cohort_name, denominator_age_group, denominator_sex, denominator_days_prior_observation, denominator_start_date, denominator_end_date, analysis_outcome_washout, analysis_repeated_events, analysis_complete_database_intervals, analysis_min_cell_count, analysis_interval, incidence_start_date, n_events, n_persons, person_years, incidence_100000_pys)
-        }
+          )) %>%
+          select(database, outcome_cohort_name, denominator_cohort_name, denominator_age_group, denominator_sex, denominator_days_prior_observation, denominator_start_date, denominator_end_date, analysis_outcome_washout, analysis_repeated_events, analysis_complete_database_intervals, analysis_min_cell_count, analysis_interval, incidence_start_date, n_events, n_persons, person_years, incidence_100000_pys)
 
         DT::datatable(
           table,
@@ -258,22 +251,18 @@ Incidence <- R6::R6Class(
         table <- getIncidenceEstimates()
         shiny::validate(need(nrow(table) > 0, "No results for selected inputs"))
         class(table) <- c("IncidenceResult", "IncidencePrevalenceResult", class(table))
-        IncidencePrevalence:::plotEstimates(
+        private$plotEstimates(
           result = table,
-          x = input$incidence_estimates_plot_x,
+          x = private$.xAxisPicker$inputValues$xAxis,
           y = "incidence_100000_pys",
           ylim = c(0, NA),
           ytype = "count",
           ribbon = as.logical(private$.ribbonPicker$inputValues$ribbon),
           facet = private$.facetByPicker$inputValues$facet_by,
           colour = private$.colorByPicker$inputValues$color_by,
-          colour_name = paste0(input$incidence_estimates_plot_colour, collapse = "; "),
+          colour_name = paste0(private$.colorByPicker$inputValues$color_by, collapse = "; "),
           options = list("hideConfidenceInterval" = !as.logical(private$.confIntervalPicker$inputValues$conf_interval))
-        ) +
-          ggplot2::scale_fill_discrete(breaks = ageGroups) +
-          ggplot2::scale_color_discrete(breaks = ageGroups) +
-          guides(fill = "none")
-
+        )
       })
 
       ### download plot ----
@@ -285,9 +274,9 @@ Incidence <- R6::R6Class(
           ggplot2::ggsave(
             file,
             plotIncidenceEstimates(),
-            width = as.numeric(input$incidence_estimates_download_width),
-            height = as.numeric(input$incidence_estimates_download_height),
-            dpi = as.numeric(input$incidence_estimates_download_dpi),
+            width = as.numeric(input$download_width),
+            height = as.numeric(input$download_height),
+            dpi = as.numeric(input$download_dpi),
             units = "cm"
           )
         }
@@ -335,7 +324,8 @@ Incidence <- R6::R6Class(
       # cdm
       private$.cdmPicker <- InputPanel$new(
         funs = list(cdm = shinyWidgets::pickerInput),
-        args = list(cdm = list(inputId = "cdm", choices = private$.data$database, label = "Database")),
+        args = list(cdm = list(inputId = "cdm", label = "Database", choices = unique(private$.data$database), selected = unique(private$.data$database), multiple = TRUE,
+                               options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.cdmPicker$parentNamespace <- self$namespace
@@ -344,7 +334,8 @@ Incidence <- R6::R6Class(
       # outcome
       private$.outcomePicker <- InputPanel$new(
         funs = list(outcome = shinyWidgets::pickerInput),
-        args = list(outcome = list(inputId = "outcome", choices = private$.data$outcome_cohort_name, label = "Outcome")),
+        args = list(outcome = list(inputId = "outcome", label = "Outcome", choices = unique(private$.data$outcome_cohort_name), selected = unique(private$.data$outcome_cohort_name), multiple = TRUE,
+                                   options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.outcomePicker$parentNamespace <- self$namespace
@@ -353,7 +344,8 @@ Incidence <- R6::R6Class(
       # denominator age group
       private$.denomAgeGroupPicker <- InputPanel$new(
         funs = list(age_group = shinyWidgets::pickerInput),
-        args = list(age_group = list(inputId = "age_group", choices = private$.data$denominator_age_group, label = "Age group")),
+        args = list(age_group = list(inputId = "age_group", label = "Age group", choices = unique(private$.data$denominator_age_group), selected = unique(private$.data$denominator_age_group), multiple = TRUE,
+                                     options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.denomAgeGroupPicker$parentNamespace <- self$namespace
@@ -362,7 +354,8 @@ Incidence <- R6::R6Class(
       # denominator sex
       private$.denomSexPicker <- InputPanel$new(
         funs = list(denom_sex = shinyWidgets::pickerInput),
-        args = list(denom_sex = list(inputId = "denom_sex", choices = private$.data$denominator_sex, label = "Sex")),
+        args = list(denom_sex = list(inputId = "denom_sex", choices = unique(private$.data$denominator_sex), label = "Sex", selected = unique(private$.data$denominator_sex), multiple = TRUE,
+                                     options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.denomSexPicker$parentNamespace <- self$namespace
@@ -371,7 +364,8 @@ Incidence <- R6::R6Class(
       # prior observation
       private$.denomPriorObsPicker <- InputPanel$new(
         funs = list(prior_obs = shinyWidgets::pickerInput),
-        args = list(prior_obs = list(inputId = "prior_obs", choices = private$.data$denominator_days_prior_observation, label = "Prior observation")),
+        args = list(prior_obs = list(inputId = "prior_obs", choices = unique(private$.data$denominator_days_prior_observation), label = "Prior observation", selected = unique(private$.data$denominator_days_prior_observation), multiple = TRUE,
+                                     options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.denomPriorObsPicker$parentNamespace <- self$namespace
@@ -380,7 +374,8 @@ Incidence <- R6::R6Class(
       # denominator start date
       private$.denomStartDatePicker <- InputPanel$new(
         funs = list(start_date = shinyWidgets::pickerInput),
-        args = list(start_date = list(inputId = "start_date", choices = private$.data$denominator_start_date, label = "Start date")),
+        args = list(start_date = list(inputId = "start_date", choices = unique(private$.data$denominator_start_date), label = "Start date", selected = unique(private$.data$denominator_start_date), multiple = TRUE,
+                                      options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.denomStartDatePicker$parentNamespace <- self$namespace
@@ -389,7 +384,8 @@ Incidence <- R6::R6Class(
       # denominator end date
       private$.denomEndDatePicker <- InputPanel$new(
         funs = list(end_date = shinyWidgets::pickerInput),
-        args = list(end_date = list(inputId = "end_date", choices = private$.data$denominator_end_date, label = "End date")),
+        args = list(end_date = list(inputId = "end_date", choices = unique(private$.data$denominator_end_date), label = "End date", selected = unique(private$.data$denominator_end_date), multiple = TRUE,
+                                    options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.denomEndDatePicker$parentNamespace <- self$namespace
@@ -398,7 +394,8 @@ Incidence <- R6::R6Class(
       # washout
       private$.outcomeWashoutPicker <- InputPanel$new(
         funs = list(washout = shinyWidgets::pickerInput),
-        args = list(washout = list(inputId = "washout", choices = private$.data$analysis_outcome_washout, label = "Outcome washout")),
+        args = list(washout = list(inputId = "washout", choices = unique(private$.data$analysis_outcome_washout), label = "Outcome washout", selected = unique(private$.data$analysis_outcome_washout), multiple = TRUE,
+                                   options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.outcomeWashoutPicker$parentNamespace <- self$namespace
@@ -407,7 +404,8 @@ Incidence <- R6::R6Class(
       # repeated events
       private$.repeatedEventsPicker <- InputPanel$new(
         funs = list(repeated_events = shinyWidgets::pickerInput),
-        args = list(repeated_events = list(inputId = "repeated_events", choices = private$.data$analysis_repeated_events, label = "Repeated events")),
+        args = list(repeated_events = list(inputId = "repeated_events", choices = unique(private$.data$analysis_repeated_events), label = "Repeated events", selected = unique(private$.data$analysis_repeated_events), multiple = TRUE,
+                                           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.repeatedEventsPicker$parentNamespace <- self$namespace
@@ -416,7 +414,8 @@ Incidence <- R6::R6Class(
       # complete period
       private$.completePeriodPicker <- InputPanel$new(
         funs = list(complete_period = shinyWidgets::pickerInput),
-        args = list(complete_period = list(inputId = "complete_period", choices = private$.data$analysis_complete_database_intervals, label = "Complete period")),
+        args = list(complete_period = list(inputId = "complete_period", choices = unique(private$.data$analysis_complete_database_intervals), label = "Complete period", selected = unique(private$.data$analysis_complete_database_intervals), multiple = TRUE,
+                                           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.completePeriodPicker$parentNamespace <- self$namespace
@@ -425,7 +424,8 @@ Incidence <- R6::R6Class(
       # min counts
       private$.minCountsPicker <- InputPanel$new(
         funs = list(min_cell_count = shinyWidgets::pickerInput),
-        args = list(min_cell_count = list(inputId = "min_cell_count", choices = private$.data$analysis_min_cell_count, label = "Minimum counts")),
+        args = list(min_cell_count = list(inputId = "min_cell_count", choices = unique(private$.data$analysis_min_cell_count), label = "Minimum counts", selected = unique(private$.data$analysis_min_cell_count), multiple = TRUE,
+                                          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.minCountsPicker$parentNamespace <- self$namespace
@@ -434,7 +434,8 @@ Incidence <- R6::R6Class(
       # interval
       private$.intervalPicker <- InputPanel$new(
         funs = list(interval = shinyWidgets::pickerInput),
-        args = list(interval = list(inputId = "interval", choices = private$.data$analysis_interval, label = "Interval", selected = unique(private$.data$analysis_interval)[1])),
+        args = list(interval = list(inputId = "interval", choices = unique(private$.data$analysis_interval), label = "Interval", selected = unique(private$.data$analysis_interval)[1], multiple = TRUE,
+                                    options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.intervalPicker$parentNamespace <- self$namespace
@@ -443,7 +444,8 @@ Incidence <- R6::R6Class(
       # start date
       private$.incStartDatePicker <- InputPanel$new(
         funs = list(year = shinyWidgets::pickerInput),
-        args = list(year = list(inputId = "year", choices = private$.data$incidence_start_date, label = "Year")),
+        args = list(year = list(inputId = "year", choices = unique(private$.data$incidence_start_date), label = "Year", selected = unique(private$.data$incidence_start_date), multiple = TRUE,
+                                options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.incStartDatePicker$parentNamespace <- self$namespace
@@ -455,8 +457,9 @@ Incidence <- R6::R6Class(
                            "analysis_min_cell_count", "analysis_interval", "incidence_start_date")
       # x-axis
       private$.xAxisPicker <- InputPanel$new(
-        funs = list(x-axis = shinyWidgets::pickerInput),
-        args = list(x-axis = list(inputId = "x-axis", choices = plotDataChoices, label = "Incidence_start_date", selected = "incidence_start_date", multiple = F)),
+        funs = list(xAxis = shinyWidgets::pickerInput),
+        args = list(xAxis = list(inputId = "xAxis", choices = plotDataChoices, label = "Incidence_start_date", selected = "incidence_start_date", multiple = F,
+                                 options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.xAxisPicker$parentNamespace <- self$namespace
@@ -465,7 +468,8 @@ Incidence <- R6::R6Class(
       # facet by
       private$.facetByPicker <- InputPanel$new(
         funs = list(facet_by = shinyWidgets::pickerInput),
-        args = list(facet_by = list(inputId = "facet_by", choices = plotDataChoices, label = "Facet by", selected = c("outcome_cohort_name", "database"))),
+        args = list(facet_by = list(inputId = "facet_by", choices = plotDataChoices, label = "Facet by", selected = c("outcome_cohort_name", "database"), multiple = TRUE,
+                                    options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.facetByPicker$parentNamespace <- self$namespace
@@ -474,16 +478,18 @@ Incidence <- R6::R6Class(
       # color by
       private$.colorByPicker <- InputPanel$new(
         funs = list(color_by = shinyWidgets::pickerInput),
-        args = list(color_by = list(inputId = "color_by", choices = plotDataChoices, label = "Colour by", selected = c())),
+        args = list(color_by = list(inputId = "color_by", choices = plotDataChoices, label = "Colour by", selected = c(), multiple = TRUE,
+                                    options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.colorByPicker$parentNamespace <- self$namespace
       private$.pickers <- append(private$.pickers, private$.colorByPicker)
 
       # ribbon
-      private$.ribbonByPicker <- InputPanel$new(
+      private$.ribbonPicker <- InputPanel$new(
         funs = list(ribbon = shinyWidgets::pickerInput),
-        args = list(ribbon = list(inputId = "ribbon", choices = c(TRUE, FALSE), label = "Ribbon", selected = TRUE, multiple = FALSE)),
+        args = list(ribbon = list(inputId = "ribbon", choices = c(TRUE, FALSE), label = "Ribbon", selected = TRUE, multiple = FALSE,
+                                  options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.ribbonPicker$parentNamespace <- self$namespace
@@ -491,12 +497,159 @@ Incidence <- R6::R6Class(
 
       # confidence interval
       private$.confIntervalPicker <- InputPanel$new(
-        funs = list(confidence_interval = shinyWidgets::pickerInput),
-        args = list(confidence_interval = list(inputId = "confidence_interval", choices = c(TRUE, FALSE), label = "Confidence interval", selected = FALSE, multiple = FALSE)),
+        funs = list(conf_interval = shinyWidgets::pickerInput),
+        args = list(conf_interval = list(inputId = "conf_interval", choices = c(TRUE, FALSE), label = "Confidence interval", selected = FALSE, multiple = FALSE,
+                                         options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
       private$.confIntervalPicker$parentNamespace <- self$namespace
       private$.pickers <- append(private$.pickers, private$.confIntervalPicker)
+    },
+    # Plotting functions are copied from previous version of IncidencePrevalence,
+    # since newest version doesn't support options anymore
+    plotEstimates = function(result,
+                             x,
+                             y,
+                             ylim,
+                             ytype,
+                             ribbon,
+                             facet,
+                             colour,
+                             colour_name,
+                             options) {
+      errorMessage <- checkmate::makeAssertCollection()
+      checkmate::assertTRUE(inherits(result, "IncidencePrevalenceResult"))
+      checkmate::assertTRUE(all(c(x, y) %in% colnames(result)))
+      checkmate::assertList(options, add = errorMessage)
+      checkmate::reportAssertions(collection = errorMessage)
+
+      plot_data <- private$getPlotData(
+        estimates = result,
+        facetVars = facet,
+        colourVars = colour
+      )
+
+      if (is.null(colour)) {
+        plot <- plot_data %>%
+          ggplot2::ggplot(
+            ggplot2::aes(
+              x = !!rlang::sym(x),
+              y = !!rlang::sym(y)
+            )
+          )
+      } else {
+        plot <- plot_data %>%
+          ggplot2::ggplot(
+            ggplot2::aes(
+              x = !!rlang::sym(x),
+              y = !!rlang::sym(y),
+              group = .data$colour_vars,
+              colour = .data$colour_vars,
+              fill = .data$colour_vars
+            )
+          ) +
+          ggplot2::geom_point(size = 2.5) +
+          ggplot2::labs(
+            fill = colour_name,
+            colour = colour_name
+          )
+      }
+
+      hideConfidenceInterval <- "hideConfidenceInterval" %in% names(options) &&
+        options[["hideConfidenceInterval"]]
+      yLower <- ifelse(hideConfidenceInterval, y, paste0(y, "_95CI_lower"))
+      yUpper <- ifelse(hideConfidenceInterval, y, paste0(y, "_95CI_upper"))
+
+      plot <- plot +
+        ggplot2::geom_point(size = 2.5) +
+        ggplot2::geom_errorbar(
+          ggplot2::aes(
+            ymin = !!rlang::sym(yLower),
+            ymax = !!rlang::sym(yUpper)
+          ),
+          width = 0
+        )
+
+      if (is.null(ylim)) {
+        if (ytype == "count") {
+          plot <- plot +
+            ggplot2::scale_y_continuous(labels = scales::comma)
+        }
+        if (ytype == "percentage") {
+          plot <- plot +
+            ggplot2::scale_y_continuous(
+              labels =
+                scales::percent_format(accuracy = 0.1)
+            )
+        }
+      } else {
+        plot <- private$addYLimits(plot = plot, ylim = ylim, ytype = ytype)
+      }
+
+      if (!is.null(facet)) {
+        facetNcols <- NULL
+        if ("facetNcols" %in% names(options)) {
+          facetNcols <- options[["facetNcols"]]
+        }
+        plot <- plot +
+          ggplot2::facet_wrap(ggplot2::vars(.data$facet_var), ncol = facetNcols) +
+          ggplot2::theme_bw()
+      } else {
+        plot <- plot +
+          ggplot2::theme_minimal()
+      }
+      if (isTRUE(ribbon)) {
+        plot <- private$addRibbon(plot = plot, yLower = yLower, yUpper = yUpper)
+      }
+      return(plot)
+    },
+    getPlotData = function(estimates, facetVars, colourVars) {
+      plotData <- estimates
+      if (!is.null(facetVars)) {
+        plotData <- plotData %>%
+          tidyr::unite("facet_var",
+                       c(tidyselect::all_of(.env$facetVars)),
+                       remove = FALSE, sep = "; "
+          )
+      }
+      if (!is.null(colourVars)) {
+        plotData <- plotData %>%
+          tidyr::unite("colour_vars",
+                       c(tidyselect::all_of(.env$colourVars)),
+                       remove = FALSE, sep = "; "
+          )
+      }
+
+      return(plotData)
+    },
+    addYLimits = function(plot, ylim, ytype) {
+      if (ytype == "count") {
+        plot <- plot +
+          ggplot2::scale_y_continuous(
+            labels = scales::comma,
+            limits = ylim
+          )
+      }
+      if (ytype == "percentage") {
+        plot <- plot +
+          ggplot2::scale_y_continuous(
+            labels =
+              scales::percent_format(accuracy = 0.1),
+            limits = ylim
+          )
+      }
+      return(plot)
+    },
+    addRibbon = function(plot, yLower, yUpper) {
+      plot <- plot +
+        ggplot2::geom_ribbon(
+          ggplot2::aes(
+            ymin = !!rlang::sym(yLower),
+            ymax = !!rlang::sym(yUpper)
+          ),
+          alpha = .3, color = NA, show.legend = FALSE
+        ) +
+        ggplot2::geom_line(linewidth = 0.25)
     }
   )
 )
