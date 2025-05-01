@@ -70,7 +70,6 @@ Collate:
     'IncidencePrevalence.R'
     'InputPanel.R'
     'OhdsiModule.R'
-    'Picker.R'
     'Plot.R'
     'PlotPlotly.R'
     'PlotStatic.R'

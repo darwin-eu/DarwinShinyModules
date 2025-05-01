@@ -35,7 +35,7 @@
 #'      warn.conflicts = FALSE
 #'    )
 #'  ) {
-#'     inc <- readRDS(system.file(
+#'     inc <- omopgenerics::importSummarisedResult(system.file(
 #'       package = "DarwinShinyModules",
 #'       "dummyData/IncidencePrevalence/1.2.0/incidence.csv"
 #'     ))
@@ -234,17 +234,6 @@ Incidence <- R6::R6Class(
           options = list(scrollX = TRUE, scrollCollapse = TRUE)
         )
       })
-
-      #' Adds the given ribbon to the current previewItem string.
-      #'
-      #' @param previewItemString string representing the previewItem
-      #' @param ribbon ribbon value
-      #'
-      #' @return the updated preview item string
-      addPreviewItemRibbon <- function(previewItemString, ribbon) {
-        ribbonStr <- paste0("ribbon = ", ribbon)
-        return(gsub("ribbon", ribbonStr, previewItemString))
-      }
 
       ### make plot ----
       plotIncidenceEstimates <- reactive({

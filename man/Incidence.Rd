@@ -5,7 +5,6 @@
 \title{Incidence Module Class}
 \value{
 \code{self}
-Adds the given ribbon to the current previewItem string.
 }
 \description{
 Incidence module that shows incidence results from the IncidencePrevalence package.
@@ -23,9 +22,9 @@ Incidence module that shows incidence results from the IncidencePrevalence packa
      warn.conflicts = FALSE
    )
  ) {
-    inc <- readRDS(system.file(
+    inc <- omopgenerics::importSummarisedResult(system.file(
       package = "DarwinShinyModules",
-      "dummyData/IncidencePrevalence/0.9.0/incidence.rds"
+      "dummyData/IncidencePrevalence/1.2.0/incidence.csv"
     ))
 
     incMod <- Incidence$new(data = inc)
