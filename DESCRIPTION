@@ -34,6 +34,7 @@ Suggests:
     IncidencePrevalence,
     DrugExposureDiagnostics (>= 1.1.1),
     CohortSurvival,
+    omopgenerics,
     CDMConnector,
     networkD3,
     testthat (>= 3.0.0),
