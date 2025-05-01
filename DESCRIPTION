@@ -75,7 +75,6 @@ Collate:
     'PlotPlotly.R'
     'PlotStatic.R'
     'PlotWidget.R'
-    'Prevalence.R'
     'ShinydashboardApp.R'
     'StudyBackground.R'
     'Table.R'
