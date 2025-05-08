@@ -60,6 +60,25 @@ Incidence <- R6::R6Class(
   classname = "Incidence",
   inherit = DarwinShinyModules::ShinyModule,
 
+  # Active ----
+  active = list(
+    #' @field data (`summarisedResult`) SummarisedResult object from Incidence.
+    data = function(data) {
+      if (missing(data)) {
+        return(private$.data)
+      } else {
+        # Checks on data
+        checkmate::assertClass(data, "summarised_result")
+        private$.data <- data
+      }
+    },
+
+    #' @field pickers (`list`) List of pickers
+    pickers = function () {
+      return(private$.pickers)
+    }
+  ),
+
   # Public ----
   public = list(
 
