@@ -26,7 +26,7 @@ elements, and back-end code.
 1.  To install the latest stable version:
 
 ``` r
-install.packages(remotes)
+install.packages("remotes")
 remotes::install_github('darwin-eu-dev/DarwinShinyModules')
 ```
 

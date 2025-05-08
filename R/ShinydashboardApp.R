@@ -14,6 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+formatLabel <- function(label) {
+  stringr::str_replace_all(string = label, pattern = "[\\!\\@\\#\\$\\%\\^\\*\\:\\;\\'\\\"]", replacement = "") |>
+    stringr::str_replace_all(pattern = "[_]?\\s+", replacement = " ") |>
+    stringr::str_replace_all(pattern = "[\\s\\(\\&\\)\\[\\]\\.\\,]", replacement = "_")
+}
+
 ShinydashboardApp <- R6::R6Class(
   classname = "ShinydashboardApp",
   inherit = App,
@@ -56,7 +62,7 @@ ShinydashboardApp <- R6::R6Class(
             items <- append(
               items,
               list(shinydashboard::tabItem(
-                tabName = label,
+                tabName = formatLabel(label),
                 body
               ))
             )
@@ -70,7 +76,7 @@ ShinydashboardApp <- R6::R6Class(
                 items <- append(
                   items,
                   list(shinydashboard::tabItem(
-                    tabName = subLabel,
+                    tabName = formatLabel(subLabel),
                     body
                   ))
                 )
@@ -78,7 +84,7 @@ ShinydashboardApp <- R6::R6Class(
                 items <- append(
                   items,
                   list(shinydashboard::tabItem(
-                    tabName = subLabel,
+                    tabName = formatLabel(subLabel),
                     tabList[[i]][[subLabel]]$UI()
                   ))
                 )
@@ -105,22 +111,28 @@ ShinydashboardApp <- R6::R6Class(
         subItems <- if ("list" %in% class(tabList[[i]])) {
           labels <- names(tabList[[i]])
           lapply(labels, function(label) {
-            shinydashboard::menuItem(text = label, tabName = label)
+            print(sprintf("%s : %s", label, formatLabel(label)))
+            shinydashboard::menuItem(
+              text = label,
+              tabName = formatLabel(label)
+            )
           })
         } else {
           NULL
         }
 
         if (length(subItems) > 0) {
+          print(sprintf("%s : %s", menuLabel, formatLabel(menuLabel)))
           shinydashboard::menuItem(
-            text = stringr::str_replace_all(menuLabel, pattern = "_", replacement = " "),
-            tabName = menuLabel,
+            text = menuLabel,
+            tabName = formatLabel(menuLabel),
             shiny::tagList(subItems)
           )
         } else {
+          print(sprintf("%s : %s", menuLabel, formatLabel(menuLabel)))
           shinydashboard::menuItem(
-            text = stringr::str_replace_all(menuLabel, pattern = "_", replacement = " "),
-            tabName = menuLabel
+            text = menuLabel,
+            tabName = formatLabel(menuLabel)
           )
         }
       })
