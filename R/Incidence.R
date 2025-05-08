@@ -102,24 +102,6 @@ Incidence <- R6::R6Class(
   private = list(
     .data = NULL,
     .pickers = NULL,
-    .cdmPicker = NULL,
-    .outcomePicker = NULL,
-    .denomAgeGroupPicker = NULL,
-    .denomSexPicker = NULL,
-    .denomPriorObsPicker = NULL,
-    .denomStartDatePicker = NULL,
-    .denomEndDatePicker = NULL,
-    .outcomeWashoutPicker = NULL,
-    .repeatedEventsPicker = NULL,
-    .completePeriodPicker = NULL,
-    .minCountsPicker = NULL,
-    .intervalPicker = NULL,
-    .incStartDatePicker = NULL,
-    .treatmentPicker = NULL,
-    .xAxisPicker = NULL,
-    .facetByPicker = NULL,
-    .colorByPicker = NULL,
-    .ribbonPicker = NULL,
 
     .UI = function() {
       shiny::tagList(
@@ -128,22 +110,22 @@ Incidence <- R6::R6Class(
           shiny::h3("Incidence estimates"),
           shiny::p("Incidence estimates are shown below, please select configuration to filter them:"),
           shiny::p("Database and study outcome"),
-          private$.cdmPicker$UI(),
-          private$.outcomePicker$UI(),
+          private$.pickers[["cdm"]]$UI(),
+          private$.pickers[["outcome"]]$UI(),
           p("Denominator population settings"),
-          private$.denomAgeGroupPicker$UI(),
-          private$.denomSexPicker$UI(),
-          private$.denomPriorObsPicker$UI(),
-          private$.denomStartDatePicker$UI(),
-          private$.denomEndDatePicker$UI(),
+          private$.pickers[["denomAgeGroup"]]$UI(),
+          private$.pickers[["denomSex"]]$UI(),
+          private$.pickers[["denomPriorObs"]]$UI(),
+          private$.pickers[["denomStartDate"]]$UI(),
+          private$.pickers[["denomEndDate"]]$UI(),
           p("Analysis settings"),
-          private$.outcomeWashoutPicker$UI(),
-          private$.repeatedEventsPicker$UI(),
-          private$.completePeriodPicker$UI(),
-          private$.minCountsPicker$UI(),
+          private$.pickers[["washout"]]$UI(),
+          private$.pickers[["repeatedEvents"]]$UI(),
+          private$.pickers[["completePeriod"]]$UI(),
+          private$.pickers[["minCounts"]]$UI(),
           p("Dates"),
-          private$.intervalPicker$UI(),
-          private$.incStartDatePicker$UI(),
+          private$.pickers[["interval"]]$UI(),
+          private$.pickers[["startDate"]]$UI(),
 
           shiny::tabsetPanel(
             id = shiny::NS(private$.namespace, "tabsetPanel"),
@@ -156,10 +138,10 @@ Incidence <- R6::R6Class(
             shiny::tabPanel(
               "Plot of estimates",
               p("Plotting options"),
-              private$.xAxisPicker$UI(),
-              private$.facetByPicker$UI(),
-              private$.colorByPicker$UI(),
-              private$.ribbonPicker$UI(),
+              private$.pickers[["xAxis"]]$UI(),
+              private$.pickers[["facet"]]$UI(),
+              private$.pickers[["color"]]$UI(),
+              private$.pickers[["ribbon"]]$UI(),
               plotly::plotlyOutput(
                 shiny::NS(private$.namespace, "plot"),
                 height = "800px"
@@ -198,19 +180,19 @@ Incidence <- R6::R6Class(
       # Incidence
       getIncidenceEstimates <- reactive({
         result <- private$.data %>%
-          dplyr::filter(database %in% private$.cdmPicker$inputValues$cdm) %>%
-          dplyr::filter(outcome_cohort_name %in% private$.outcomePicker$inputValues$outcome) %>%
-          dplyr::filter(denominator_age_group %in% private$.denomAgeGroupPicker$inputValues$age_group) %>%
-          dplyr::filter(denominator_sex %in% private$.denomSexPicker$inputValues$denom_sex) %>%
-          dplyr::filter(denominator_days_prior_observation %in% private$.denomPriorObsPicker$inputValues$prior_obs) %>%
-          dplyr::filter(denominator_start_date %in% private$.denomStartDatePicker$inputValues$start_date) %>%
-          dplyr::filter(denominator_end_date %in% private$.denomEndDatePicker$inputValues$end_date) %>%
-          dplyr::filter(analysis_outcome_washout %in% private$.outcomeWashoutPicker$inputValues$washout) %>%
-          dplyr::filter(analysis_repeated_events %in% private$.repeatedEventsPicker$inputValues$repeated_events) %>%
-          dplyr::filter(analysis_complete_database_intervals %in% private$.completePeriodPicker$inputValues$complete_period) %>%
-          dplyr::filter(analysis_min_cell_count %in% private$.minCountsPicker$inputValues$min_cell_count) %>%
-          dplyr::filter(analysis_interval %in% private$.intervalPicker$inputValues$interval) %>%
-          dplyr::filter(incidence_start_date %in% private$.incStartDatePicker$inputValues$year) %>%
+          dplyr::filter(database %in% private$.pickers[["cdm"]]$inputValues$cdm) %>%
+          dplyr::filter(outcome_cohort_name %in% private$.pickers[["outcome"]]$inputValues$outcome) %>%
+          dplyr::filter(denominator_age_group %in% private$.pickers[["denomAgeGroup"]]$inputValues$age_group) %>%
+          dplyr::filter(denominator_sex %in% private$.pickers[["denomSex"]]$inputValues$denom_sex) %>%
+          dplyr::filter(denominator_days_prior_observation %in% private$.pickers[["denomPriorObs"]]$inputValues$prior_obs) %>%
+          dplyr::filter(denominator_start_date %in% private$.pickers[["denomStartDate"]]$inputValues$start_date) %>%
+          dplyr::filter(denominator_end_date %in% private$.pickers[["denomEndDate"]]$inputValues$end_date) %>%
+          dplyr::filter(analysis_outcome_washout %in% private$.pickers[["washout"]]$inputValues$washout) %>%
+          dplyr::filter(analysis_repeated_events %in% private$.pickers[["repeatedEvents"]]$inputValues$repeated_events) %>%
+          dplyr::filter(analysis_complete_database_intervals %in% private$.pickers[["completePeriod"]]$inputValues$complete_period) %>%
+          dplyr::filter(analysis_min_cell_count %in% private$.pickers[["minCounts"]]$inputValues$min_cell_count) %>%
+          dplyr::filter(analysis_interval %in% private$.pickers[["interval"]]$inputValues$interval) %>%
+          dplyr::filter(incidence_start_date %in% private$.pickers[["startDate"]]$inputValues$year) %>%
           dplyr::mutate(
             person_years = round(suppressWarnings(as.numeric(person_years))),
             person_days = round(suppressWarnings(as.numeric(person_days))),
@@ -260,15 +242,15 @@ Incidence <- R6::R6Class(
 
         IncidencePrevalence::plotIncidence(
           result = table,
-          x = private$.xAxisPicker$inputValues$xAxis,
+          x = private$.pickers[["xAxis"]]$inputValues$xAxis,
           y = "incidence_100000_pys",
           line = FALSE,
           point = TRUE,
-          ribbon = as.logical(private$.ribbonPicker$inputValues$ribbon),
+          ribbon = as.logical(private$.pickers[["ribbon"]]$inputValues$ribbon),
           ymin = "incidence_100000_pys_95CI_lower",
           ymax = "incidence_100000_pys_95CI_upper",
-          facet = private$.facetByPicker$inputValues$facet_by,
-          colour = private$.colorByPicker$inputValues$color_by
+          facet = private$.pickers[["facet"]]$inputValues$facet_by,
+          colour = private$.pickers[["color"]]$inputValues$color_by
         )
       })
 
@@ -330,178 +312,161 @@ Incidence <- R6::R6Class(
     },
     initPickers = function() {
       # cdm
-      private$.cdmPicker <- InputPanel$new(
+      private$.pickers[["cdm"]] <- InputPanel$new(
         funs = list(cdm = shinyWidgets::pickerInput),
         args = list(cdm = list(inputId = "cdm", label = "Database", choices = unique(private$.data$database), selected = unique(private$.data$database), multiple = TRUE,
                                options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
-      private$.cdmPicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.cdmPicker)
+      private$.pickers[["cdm"]]$parentNamespace <- self$namespace
 
       # outcome
-      private$.outcomePicker <- InputPanel$new(
+      private$.pickers[["outcome"]] <- InputPanel$new(
         funs = list(outcome = shinyWidgets::pickerInput),
         args = list(outcome = list(inputId = "outcome", label = "Outcome", choices = unique(private$.data$outcome_cohort_name), selected = unique(private$.data$outcome_cohort_name), multiple = TRUE,
                                    options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
-      private$.outcomePicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.outcomePicker)
+      private$.pickers[["outcome"]]$parentNamespace <- self$namespace
 
       # denominator age group
-      private$.denomAgeGroupPicker <- InputPanel$new(
+      private$.pickers[["denomAgeGroup"]] <- InputPanel$new(
         funs = list(age_group = shinyWidgets::pickerInput),
         args = list(age_group = list(inputId = "age_group", label = "Age group", choices = unique(private$.data$denominator_age_group), selected = unique(private$.data$denominator_age_group), multiple = TRUE,
                                      options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
-      private$.denomAgeGroupPicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.denomAgeGroupPicker)
+      private$.pickers[["denomAgeGroup"]]$parentNamespace <- self$namespace
 
       # denominator sex
-      private$.denomSexPicker <- InputPanel$new(
+      private$.pickers[["denomSex"]] <- InputPanel$new(
         funs = list(denom_sex = shinyWidgets::pickerInput),
         args = list(denom_sex = list(inputId = "denom_sex", choices = unique(private$.data$denominator_sex), label = "Sex", selected = unique(private$.data$denominator_sex), multiple = TRUE,
                                      options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
-      private$.denomSexPicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.denomSexPicker)
+      private$.pickers[["denomSex"]]$parentNamespace <- self$namespace
 
       # prior observation
-      private$.denomPriorObsPicker <- InputPanel$new(
+      private$.pickers[["denomPriorObs"]] <- InputPanel$new(
         funs = list(prior_obs = shinyWidgets::pickerInput),
         args = list(prior_obs = list(inputId = "prior_obs", choices = unique(private$.data$denominator_days_prior_observation), label = "Prior observation", selected = unique(private$.data$denominator_days_prior_observation), multiple = TRUE,
                                      options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
-      private$.denomPriorObsPicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.denomPriorObsPicker)
+      private$.pickers[["denomPriorObs"]]$parentNamespace <- self$namespace
 
       # denominator start date
-      private$.denomStartDatePicker <- InputPanel$new(
+      private$.pickers[["denomStartDate"]] <- InputPanel$new(
         funs = list(start_date = shinyWidgets::pickerInput),
         args = list(start_date = list(inputId = "start_date", choices = unique(private$.data$denominator_start_date), label = "Start date", selected = unique(private$.data$denominator_start_date), multiple = TRUE,
                                       options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
-      private$.denomStartDatePicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.denomStartDatePicker)
+      private$.pickers[["denomStartDate"]]$parentNamespace <- self$namespace
 
       # denominator end date
-      private$.denomEndDatePicker <- InputPanel$new(
+      private$.pickers[["denomEndDate"]] <- InputPanel$new(
         funs = list(end_date = shinyWidgets::pickerInput),
         args = list(end_date = list(inputId = "end_date", choices = unique(private$.data$denominator_end_date), label = "End date", selected = unique(private$.data$denominator_end_date), multiple = TRUE,
                                     options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
-      private$.denomEndDatePicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.denomEndDatePicker)
+      private$.pickers[["denomEndDate"]]$parentNamespace <- self$namespace
 
       # washout
-      private$.outcomeWashoutPicker <- InputPanel$new(
+      private$.pickers[["washout"]] <- InputPanel$new(
         funs = list(washout = shinyWidgets::pickerInput),
         args = list(washout = list(inputId = "washout", choices = unique(private$.data$analysis_outcome_washout), label = "Outcome washout", selected = unique(private$.data$analysis_outcome_washout), multiple = TRUE,
                                    options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
-      private$.outcomeWashoutPicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.outcomeWashoutPicker)
+      private$.pickers[["washout"]]$parentNamespace <- self$namespace
 
       # repeated events
-      private$.repeatedEventsPicker <- InputPanel$new(
+      private$.pickers[["repeatedEvents"]] <- InputPanel$new(
         funs = list(repeated_events = shinyWidgets::pickerInput),
         args = list(repeated_events = list(inputId = "repeated_events", choices = unique(private$.data$analysis_repeated_events), label = "Repeated events", selected = unique(private$.data$analysis_repeated_events), multiple = TRUE,
                                            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
-      private$.repeatedEventsPicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.repeatedEventsPicker)
+      private$.pickers[["repeatedEvents"]]$parentNamespace <- self$namespace
 
       # complete period
-      private$.completePeriodPicker <- InputPanel$new(
+      private$.pickers[["completePeriod"]] <- InputPanel$new(
         funs = list(complete_period = shinyWidgets::pickerInput),
         args = list(complete_period = list(inputId = "complete_period", choices = unique(private$.data$analysis_complete_database_intervals), label = "Complete period", selected = unique(private$.data$analysis_complete_database_intervals), multiple = TRUE,
                                            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
-      private$.completePeriodPicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.completePeriodPicker)
+      private$.pickers[["completePeriod"]]$parentNamespace <- self$namespace
 
       # min counts
-      private$.minCountsPicker <- InputPanel$new(
+      private$.pickers[["minCounts"]] <- InputPanel$new(
         funs = list(min_cell_count = shinyWidgets::pickerInput),
         args = list(min_cell_count = list(inputId = "min_cell_count", choices = unique(private$.data$analysis_min_cell_count), label = "Minimum counts", selected = unique(private$.data$analysis_min_cell_count), multiple = TRUE,
                                           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
-      private$.minCountsPicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.minCountsPicker)
+      private$.pickers[["minCounts"]]$parentNamespace <- self$namespace
 
       # interval
-      private$.intervalPicker <- InputPanel$new(
+      private$.pickers[["interval"]] <- InputPanel$new(
         funs = list(interval = shinyWidgets::pickerInput),
         args = list(interval = list(inputId = "interval", choices = unique(private$.data$analysis_interval), label = "Interval", selected = unique(private$.data$analysis_interval)[1], multiple = TRUE,
                                     options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
-      private$.intervalPicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.intervalPicker)
+      private$.pickers[["interval"]]$parentNamespace <- self$namespace
 
       # start date
-      private$.incStartDatePicker <- InputPanel$new(
+      private$.pickers[["startDate"]] <- InputPanel$new(
         funs = list(year = shinyWidgets::pickerInput),
         args = list(year = list(inputId = "year", choices = unique(private$.data$incidence_start_date), label = "Year", selected = unique(private$.data$incidence_start_date), multiple = TRUE,
                                 options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
-      private$.incStartDatePicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.incStartDatePicker)
+      private$.pickers[["startDate"]]$parentNamespace <- self$namespace
 
       # plot pickers
       plotDataChoices <- c("database", "outcome_cohort_name", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation",
                            "denominator_start_date", "denominator_end_date", "analysis_outcome_washout", "analysis_repeated_events", "analysis_complete_database_intervals",
                            "analysis_min_cell_count", "analysis_interval", "incidence_start_date")
       # x-axis
-      private$.xAxisPicker <- InputPanel$new(
+      private$.pickers[["xAxis"]] <- InputPanel$new(
         funs = list(xAxis = shinyWidgets::pickerInput),
         args = list(xAxis = list(inputId = "xAxis", choices = plotDataChoices, label = "Incidence_start_date", selected = "incidence_start_date", multiple = F,
                                  options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
-      private$.xAxisPicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.xAxisPicker)
+      private$.pickers[["xAxis"]]$parentNamespace <- self$namespace
 
       # facet by
-      private$.facetByPicker <- InputPanel$new(
+      private$.pickers[["facet"]] <- InputPanel$new(
         funs = list(facet_by = shinyWidgets::pickerInput),
         args = list(facet_by = list(inputId = "facet_by", choices = plotDataChoices, label = "Facet by", selected = c("outcome_cohort_name", "database"), multiple = TRUE,
                                     options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
-      private$.facetByPicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.facetByPicker)
+      private$.pickers[["facet"]]$parentNamespace <- self$namespace
 
       # color by
-      private$.colorByPicker <- InputPanel$new(
+      private$.pickers[["color"]] <- InputPanel$new(
         funs = list(color_by = shinyWidgets::pickerInput),
         args = list(color_by = list(inputId = "color_by", choices = plotDataChoices, label = "Colour by", selected = c(), multiple = TRUE,
                                     options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
-      private$.colorByPicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.colorByPicker)
+      private$.pickers[["color"]]$parentNamespace <- self$namespace
 
       # ribbon
-      private$.ribbonPicker <- InputPanel$new(
+      private$.pickers[["ribbon"]] <- InputPanel$new(
         funs = list(ribbon = shinyWidgets::pickerInput),
         args = list(ribbon = list(inputId = "ribbon", choices = c(TRUE, FALSE), label = "Ribbon", selected = TRUE, multiple = FALSE,
                                   options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         addDiv = TRUE
       )
-      private$.ribbonPicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.ribbonPicker)
+      private$.pickers[["ribbon"]]$parentNamespace <- self$namespace
     }
   )
 )
