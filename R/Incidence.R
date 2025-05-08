@@ -296,8 +296,9 @@ Incidence <- R6::R6Class(
     },
 
     assertInstall = function() {
-      if (!require("IncidencePrevalence", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)) {
-        answer <- readline(prompt = "`IncidencePrevalence` is not installed, would you like to install from CRAN? (y/n)")
+      if (!require("IncidencePrevalence", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE) ||
+          packageVersion("IncidencePrevalence") < "1.2.0") {
+        answer <- readline(prompt = "`IncidencePrevalence` >= 1.2.0 is not installed, would you like to install from CRAN? (y/n)")
         if (substr(tolower(answer), start = 1, stop = 1) == "y") {
           utils::install.packages("IncidencePrevalence")
         } else if (substr(tolower(answer), start = 1, stop = 1) == "n") {

@@ -47,6 +47,15 @@ Incidence module that shows incidence results from the IncidencePrevalence packa
 \section{Super class}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{Incidence}
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{data}}{(\code{summarisedResult}) SummarisedResult object from Incidence.}
+
+\item{\code{pickers}}{(\code{list}) List of pickers}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
