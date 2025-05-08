@@ -120,7 +120,6 @@ Incidence <- R6::R6Class(
     .facetByPicker = NULL,
     .colorByPicker = NULL,
     .ribbonPicker = NULL,
-    .confIntervalPicker = NULL,
 
     .UI = function() {
       shiny::tagList(
@@ -161,7 +160,6 @@ Incidence <- R6::R6Class(
               private$.facetByPicker$UI(),
               private$.colorByPicker$UI(),
               private$.ribbonPicker$UI(),
-              private$.confIntervalPicker$UI(),
               plotly::plotlyOutput(
                 shiny::NS(private$.namespace, "plot"),
                 height = "800px"
@@ -504,16 +502,6 @@ Incidence <- R6::R6Class(
       )
       private$.ribbonPicker$parentNamespace <- self$namespace
       private$.pickers <- append(private$.pickers, private$.ribbonPicker)
-
-      # confidence interval
-      private$.confIntervalPicker <- InputPanel$new(
-        funs = list(conf_interval = shinyWidgets::pickerInput),
-        args = list(conf_interval = list(inputId = "conf_interval", choices = c(TRUE, FALSE), label = "Confidence interval", selected = FALSE, multiple = FALSE,
-                                         options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
-        addDiv = TRUE
-      )
-      private$.confIntervalPicker$parentNamespace <- self$namespace
-      private$.pickers <- append(private$.pickers, private$.confIntervalPicker)
     }
   )
 )
