@@ -259,17 +259,18 @@ Incidence <- R6::R6Class(
         table <- getIncidenceEstimates()
         shiny::validate(need(nrow(table) > 0, "No results for selected inputs"))
         class(table) <- c("IncidenceResult", "IncidencePrevalenceResult", class(table))
-        private$plotEstimates(
+
+        IncidencePrevalence::plotIncidence(
           result = table,
           x = private$.xAxisPicker$inputValues$xAxis,
           y = "incidence_100000_pys",
-          ylim = c(0, NA),
-          ytype = "count",
+          line = FALSE,
+          point = TRUE,
           ribbon = as.logical(private$.ribbonPicker$inputValues$ribbon),
+          ymin = "incidence_100000_pys_95CI_lower",
+          ymax = "incidence_100000_pys_95CI_upper",
           facet = private$.facetByPicker$inputValues$facet_by,
-          colour = private$.colorByPicker$inputValues$color_by,
-          colour_name = paste0(private$.colorByPicker$inputValues$color_by, collapse = "; "),
-          options = list("hideConfidenceInterval" = !as.logical(private$.confIntervalPicker$inputValues$conf_interval))
+          colour = private$.colorByPicker$inputValues$color_by
         )
       })
 
@@ -513,152 +514,6 @@ Incidence <- R6::R6Class(
       )
       private$.confIntervalPicker$parentNamespace <- self$namespace
       private$.pickers <- append(private$.pickers, private$.confIntervalPicker)
-    },
-    # Plotting functions are copied from previous version of IncidencePrevalence,
-    # since newest version doesn't support options anymore
-    plotEstimates = function(result,
-                             x,
-                             y,
-                             ylim,
-                             ytype,
-                             ribbon,
-                             facet,
-                             colour,
-                             colour_name,
-                             options) {
-      errorMessage <- checkmate::makeAssertCollection()
-      checkmate::assertTRUE(inherits(result, "IncidencePrevalenceResult"))
-      checkmate::assertTRUE(all(c(x, y) %in% colnames(result)))
-      checkmate::assertList(options, add = errorMessage)
-      checkmate::reportAssertions(collection = errorMessage)
-
-      plot_data <- private$getPlotData(
-        estimates = result,
-        facetVars = facet,
-        colourVars = colour
-      )
-
-      if (is.null(colour)) {
-        plot <- plot_data %>%
-          ggplot2::ggplot(
-            ggplot2::aes(
-              x = !!rlang::sym(x),
-              y = !!rlang::sym(y)
-            )
-          )
-      } else {
-        plot <- plot_data %>%
-          ggplot2::ggplot(
-            ggplot2::aes(
-              x = !!rlang::sym(x),
-              y = !!rlang::sym(y),
-              group = .data$colour_vars,
-              colour = .data$colour_vars,
-              fill = .data$colour_vars
-            )
-          ) +
-          ggplot2::geom_point(size = 2.5) +
-          ggplot2::labs(
-            fill = colour_name,
-            colour = colour_name
-          )
-      }
-
-      hideConfidenceInterval <- "hideConfidenceInterval" %in% names(options) &&
-        options[["hideConfidenceInterval"]]
-      yLower <- ifelse(hideConfidenceInterval, y, paste0(y, "_95CI_lower"))
-      yUpper <- ifelse(hideConfidenceInterval, y, paste0(y, "_95CI_upper"))
-
-      plot <- plot +
-        ggplot2::geom_point(size = 2.5) +
-        ggplot2::geom_errorbar(
-          ggplot2::aes(
-            ymin = !!rlang::sym(yLower),
-            ymax = !!rlang::sym(yUpper)
-          ),
-          width = 0
-        )
-
-      if (is.null(ylim)) {
-        if (ytype == "count") {
-          plot <- plot +
-            ggplot2::scale_y_continuous(labels = scales::comma)
-        }
-        if (ytype == "percentage") {
-          plot <- plot +
-            ggplot2::scale_y_continuous(
-              labels =
-                scales::percent_format(accuracy = 0.1)
-            )
-        }
-      } else {
-        plot <- private$addYLimits(plot = plot, ylim = ylim, ytype = ytype)
-      }
-
-      if (!is.null(facet)) {
-        facetNcols <- NULL
-        if ("facetNcols" %in% names(options)) {
-          facetNcols <- options[["facetNcols"]]
-        }
-        plot <- plot +
-          ggplot2::facet_wrap(ggplot2::vars(.data$facet_var), ncol = facetNcols) +
-          ggplot2::theme_bw()
-      } else {
-        plot <- plot +
-          ggplot2::theme_minimal()
-      }
-      if (isTRUE(ribbon)) {
-        plot <- private$addRibbon(plot = plot, yLower = yLower, yUpper = yUpper)
-      }
-      return(plot)
-    },
-    getPlotData = function(estimates, facetVars, colourVars) {
-      plotData <- estimates
-      if (!is.null(facetVars)) {
-        plotData <- plotData %>%
-          tidyr::unite("facet_var",
-                       c(tidyselect::all_of(.env$facetVars)),
-                       remove = FALSE, sep = "; "
-          )
-      }
-      if (!is.null(colourVars)) {
-        plotData <- plotData %>%
-          tidyr::unite("colour_vars",
-                       c(tidyselect::all_of(.env$colourVars)),
-                       remove = FALSE, sep = "; "
-          )
-      }
-
-      return(plotData)
-    },
-    addYLimits = function(plot, ylim, ytype) {
-      if (ytype == "count") {
-        plot <- plot +
-          ggplot2::scale_y_continuous(
-            labels = scales::comma,
-            limits = ylim
-          )
-      }
-      if (ytype == "percentage") {
-        plot <- plot +
-          ggplot2::scale_y_continuous(
-            labels =
-              scales::percent_format(accuracy = 0.1),
-            limits = ylim
-          )
-      }
-      return(plot)
-    },
-    addRibbon = function(plot, yLower, yUpper) {
-      plot <- plot +
-        ggplot2::geom_ribbon(
-          ggplot2::aes(
-            ymin = !!rlang::sym(yLower),
-            ymax = !!rlang::sym(yUpper)
-          ),
-          alpha = .3, color = NA, show.legend = FALSE
-        ) +
-        ggplot2::geom_line(linewidth = 0.25)
     }
   )
 )
