@@ -40,14 +40,14 @@
 #'       "dummyData/IncidencePrevalence/1.2.0/prevalence.csv"
 #'     ))
 #'
-#'     incMod <- Prevalence$new(data = inc)
+#'     prevMod <- Prevalence$new(data = inc)
 #'
 #'     ui <- shiny::fluidPage(
-#'       incMod$UI()
+#'       prevMod$UI()
 #'     )
 #'
 #'     server <- function(input, output, session) {
-#'       incMod$server(input, output, session)
+#'       prevMod$server(input, output, session)
 #'     }
 #'
 #'     if (interactive()) {
@@ -119,9 +119,9 @@ Prevalence <- R6::R6Class(
           private$.pickers[["denomStartDate"]]$UI(),
           private$.pickers[["denomEndDate"]]$UI(),
           p("Analysis settings"),
-          private$.pickers[["washout"]]$UI(),
-          private$.pickers[["repeatedEvents"]]$UI(),
+          private$.pickers[["analysisType"]]$UI(),
           private$.pickers[["completePeriod"]]$UI(),
+          private$.pickers[["fullContribution"]]$UI(),
           private$.pickers[["minCounts"]]$UI(),
           p("Dates"),
           private$.pickers[["interval"]]$UI(),
@@ -187,19 +187,19 @@ Prevalence <- R6::R6Class(
           dplyr::filter(denominator_days_prior_observation %in% private$.pickers[["denomPriorObs"]]$inputValues$prior_obs) %>%
           dplyr::filter(denominator_start_date %in% private$.pickers[["denomStartDate"]]$inputValues$start_date) %>%
           dplyr::filter(denominator_end_date %in% private$.pickers[["denomEndDate"]]$inputValues$end_date) %>%
-          dplyr::filter(analysis_outcome_washout %in% private$.pickers[["washout"]]$inputValues$washout) %>%
-          dplyr::filter(analysis_repeated_events %in% private$.pickers[["repeatedEvents"]]$inputValues$repeated_events) %>%
+          dplyr::filter(analysis_type %in% private$.pickers[["analysisType"]]$inputValues$analysis_type) %>%
           dplyr::filter(analysis_complete_database_intervals %in% private$.pickers[["completePeriod"]]$inputValues$complete_period) %>%
+          dplyr::filter(analysis_full_contribution %in% private$.pickers[["fullContribution"]]$inputValues$full_contribution) %>%
           dplyr::filter(analysis_min_cell_count %in% private$.pickers[["minCounts"]]$inputValues$min_cell_count) %>%
           dplyr::filter(analysis_interval %in% private$.pickers[["interval"]]$inputValues$interval) %>%
           dplyr::filter(prevalence_start_date %in% private$.pickers[["startDate"]]$inputValues$year) %>%
           dplyr::mutate(
-            person_years = round(suppressWarnings(as.numeric(person_years))),
-            person_days = round(suppressWarnings(as.numeric(person_days))),
-            n_events = round(suppressWarnings(as.numeric(n_events))),
-            prevalence_100000_pys = round(suppressWarnings(as.numeric(prevalence_100000_pys))),
-            prevalence_100000_pys_95CI_lower = round(suppressWarnings(as.numeric(prevalence_100000_pys_95CI_lower))),
-            prevalence_100000_pys_95CI_upper = round(suppressWarnings(as.numeric(prevalence_100000_pys_95CI_upper)))
+            n_cases = round(suppressWarnings(as.numeric(n_cases))),
+            n_population = round(suppressWarnings(as.numeric(n_population))),
+            prevalence = round(suppressWarnings(as.numeric(prevalence)), 4),
+            prevalence_95CI_lower = round(suppressWarnings(as.numeric(prevalence_95CI_lower)), 4),
+            prevalence_95CI_upper = round(suppressWarnings(as.numeric(prevalence_95CI_upper)), 4),
+            prevalence_start_date = as.Date(prevalence_start_date)
           )
         return(result)
       })
@@ -220,11 +220,11 @@ Prevalence <- R6::R6Class(
         shiny::validate(need(nrow(table) > 0, "No results for selected inputs"))
 
         table <- table %>%
-          mutate(prevalence_100000_pys = paste0(
-            prevalence_100000_pys, " (", prevalence_100000_pys_95CI_lower, " to ",
-            prevalence_100000_pys_95CI_upper, " )"
+          mutate(`prevalence (%)` = paste0(
+            100 * prevalence, " (", 100 * prevalence_95CI_lower, " to ",
+            100 * prevalence_95CI_upper, " )"
           )) %>%
-          select(database, outcome_cohort_name, denominator_cohort_name, denominator_age_group, denominator_sex, denominator_days_prior_observation, denominator_start_date, denominator_end_date, analysis_outcome_washout, analysis_repeated_events, analysis_complete_database_intervals, analysis_min_cell_count, analysis_interval, prevalence_start_date, n_events, n_persons, person_years, prevalence_100000_pys)
+          select(database, outcome_cohort_name, denominator_age_group, denominator_sex, denominator_days_prior_observation, denominator_start_date, denominator_end_date, analysis_type, analysis_complete_database_intervals, analysis_full_contribution, analysis_min_cell_count, analysis_interval, prevalence_start_date, n_cases, n_population, "prevalence (%)")
 
         DT::datatable(
           table,
@@ -243,12 +243,12 @@ Prevalence <- R6::R6Class(
         IncidencePrevalence::plotPrevalence(
           result = table,
           x = private$.pickers[["xAxis"]]$inputValues$xAxis,
-          y = "prevalence_100000_pys",
+          y = "prevalence",
           line = FALSE,
           point = TRUE,
           ribbon = as.logical(private$.pickers[["ribbon"]]$inputValues$ribbon),
-          ymin = "prevalence_100000_pys_95CI_lower",
-          ymax = "prevalence_100000_pys_95CI_upper",
+          ymin = "prevalence_95CI_lower",
+          ymax = "prevalence_95CI_upper",
           facet = private$.pickers[["facet"]]$inputValues$facet_by,
           colour = private$.pickers[["color"]]$inputValues$color_by
         )
@@ -304,11 +304,11 @@ Prevalence <- R6::R6Class(
       minCellCount <- attr(data, "settings") %>%
         dplyr::pull(min_cell_count) %>%
         unique()
-      data <- IncidencePrevalence::asIncidenceResult(data) %>%
+      data <- IncidencePrevalence::asPrevalenceResult(data) %>%
         dplyr::mutate(analysis_min_cell_count = !!minCellCount) %>%
         dplyr::rename(database = cdm_name,
-                      n_events = outcome_count,
-                      n_persons = denominator_count)
+                      n_cases = outcome_count,
+                      n_population = denominator_count)
     },
     initPickers = function() {
       # cdm
@@ -374,23 +374,13 @@ Prevalence <- R6::R6Class(
       )
       private$.pickers[["denomEndDate"]]$parentNamespace <- self$namespace
 
-      # washout
-      private$.pickers[["washout"]] <- InputPanel$new(
-        funs = list(washout = shinyWidgets::pickerInput),
-        args = list(washout = list(inputId = "washout", choices = unique(private$.data$analysis_outcome_washout), label = "Outcome washout", selected = unique(private$.data$analysis_outcome_washout), multiple = TRUE,
-                                   options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
+      # analysis type
+      private$.pickers[["analysisType"]] <- InputPanel$new(
+        funs = list(analysis_type = shinyWidgets::pickerInput),
+        args = list(analysis_type = list(inputId = "analysis_type", choices = unique(private$.data$analysis_type), label = "Prevalence type", selected = unique(private$.data$analysis_type), multiple = FALSE)),
         addDiv = TRUE
       )
-      private$.pickers[["washout"]]$parentNamespace <- self$namespace
-
-      # repeated events
-      private$.pickers[["repeatedEvents"]] <- InputPanel$new(
-        funs = list(repeated_events = shinyWidgets::pickerInput),
-        args = list(repeated_events = list(inputId = "repeated_events", choices = unique(private$.data$analysis_repeated_events), label = "Repeated events", selected = unique(private$.data$analysis_repeated_events), multiple = TRUE,
-                                           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
-        addDiv = TRUE
-      )
-      private$.pickers[["repeatedEvents"]]$parentNamespace <- self$namespace
+      private$.pickers[["analysisType"]]$parentNamespace <- self$namespace
 
       # complete period
       private$.pickers[["completePeriod"]] <- InputPanel$new(
@@ -400,6 +390,15 @@ Prevalence <- R6::R6Class(
         addDiv = TRUE
       )
       private$.pickers[["completePeriod"]]$parentNamespace <- self$namespace
+
+      # full contribution
+      private$.pickers[["fullContribution"]] <- InputPanel$new(
+        funs = list(full_contribution = shinyWidgets::pickerInput),
+        args = list(full_contribution = list(inputId = "full_contribution", choices = unique(private$.data$analysis_full_contribution), label = "Repeated events", selected = unique(private$.data$analysis_full_contribution), multiple = TRUE,
+                                             options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
+        addDiv = TRUE
+      )
+      private$.pickers[["fullContribution"]]$parentNamespace <- self$namespace
 
       # min counts
       private$.pickers[["minCounts"]] <- InputPanel$new(
@@ -430,7 +429,7 @@ Prevalence <- R6::R6Class(
 
       # plot pickers
       plotDataChoices <- c("database", "outcome_cohort_name", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation",
-                           "denominator_start_date", "denominator_end_date", "analysis_outcome_washout", "analysis_repeated_events", "analysis_complete_database_intervals",
+                           "denominator_start_date", "denominator_end_date", "analysis_complete_database_intervals",
                            "analysis_min_cell_count", "analysis_interval", "prevalence_start_date")
       # x-axis
       private$.pickers[["xAxis"]] <- InputPanel$new(

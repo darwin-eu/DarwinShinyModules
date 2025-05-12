@@ -68,7 +68,7 @@ if (interactive()) {
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InputPanel$new(funs, args)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{InputPanel$new(funs, args, addDiv = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -77,6 +77,8 @@ Initializer method
 \item{\code{funs}}{(\code{list()}) Named list of xInput functions used \code{list(funA = shiny::selectInput)}.}
 
 \item{\code{args}}{(\code{list()}) Named list of arguments used by xInput functions \code{list(funA = list(inputId = "name", label = "name"))}}
+
+\item{\code{addDiv}}{if an additional div tag needs to be added in the UI}
 }
 \if{html}{\out{</div>}}
 }

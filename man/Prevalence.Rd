@@ -27,14 +27,14 @@ Prevalence module that shows prevalence results from the IncidencePrevalence pac
       "dummyData/IncidencePrevalence/1.2.0/prevalence.csv"
     ))
 
-    incMod <- Prevalence$new(data = inc)
+    prevMod <- Prevalence$new(data = inc)
 
     ui <- shiny::fluidPage(
-      incMod$UI()
+      prevMod$UI()
     )
 
     server <- function(input, output, session) {
-      incMod$server(input, output, session)
+      prevMod$server(input, output, session)
     }
 
     if (interactive()) {
