@@ -68,7 +68,7 @@ if (interactive()) {
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InputPanel$new(funs, args, addDiv = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{InputPanel$new(funs, args, growDirection = "vertical")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -78,7 +78,7 @@ Initializer method
 
 \item{\code{args}}{(\code{list()}) Named list of arguments used by xInput functions \code{list(funA = list(inputId = "name", label = "name"))}}
 
-\item{\code{addDiv}}{if an additional div tag needs to be added in the UI}
+\item{\code{growDirection}}{The direction in which this component will be placed, either "horizontal" or "vertical" (default)}
 }
 \if{html}{\out{</div>}}
 }
