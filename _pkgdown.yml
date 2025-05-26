@@ -60,6 +60,7 @@ reference:
   - CohortSurvival
   - DrugExposureDiagnostics
   - IncidencePrevalence
+  - Incidence
   - TreatmentPatterns
 
 - subtitle: Shiny App Generator Functions

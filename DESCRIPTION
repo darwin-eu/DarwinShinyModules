@@ -34,6 +34,7 @@ Suggests:
     IncidencePrevalence,
     DrugExposureDiagnostics (>= 1.1.1),
     CohortSurvival,
+    omopgenerics,
     CDMConnector,
     networkD3,
     testthat (>= 3.0.0),
@@ -46,7 +47,8 @@ Suggests:
     DatabaseConnector,
     DBI,
     dbplyr,
-    duckdb
+    duckdb,
+    RSQLite
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr
@@ -66,6 +68,7 @@ Collate:
     'DatabaseOverview.R'
     'DrugExposureDiagnostics.R'
     'GTTable.R'
+    'Incidence.R'
     'IncidencePrevalence.R'
     'InputPanel.R'
     'OhdsiModule.R'
