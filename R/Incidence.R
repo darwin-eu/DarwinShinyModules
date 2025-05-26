@@ -14,12 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' @title Prevalence Module Class
+#' @title Incidence Module Class
 #'
 #' @include ShinyModule.R
 #'
 #' @description
-#' Prevalence module that shows prevalence results from the IncidencePrevalence package.
+#' Incidence module that shows incidence results from the IncidencePrevalence package.
 #'
 #' @export
 #'
@@ -37,17 +37,17 @@
 #'  ) {
 #'     inc <- omopgenerics::importSummarisedResult(system.file(
 #'       package = "DarwinShinyModules",
-#'       "dummyData/IncidencePrevalence/1.2.0/prevalence.csv"
+#'       "dummyData/IncidencePrevalence/1.2.0/incidence.csv"
 #'     ))
 #'
-#'     prevMod <- Prevalence$new(data = inc)
+#'     incMod <- Incidence$new(data = inc)
 #'
 #'     ui <- shiny::fluidPage(
-#'       prevMod$UI()
+#'       incMod$UI()
 #'     )
 #'
 #'     server <- function(input, output, session) {
-#'       prevMod$server(input, output, session)
+#'       incMod$server(input, output, session)
 #'     }
 #'
 #'     if (interactive()) {
@@ -56,13 +56,13 @@
 #'   }
 #' }
 #' }
-Prevalence <- R6::R6Class(
-  classname = "Prevalence",
+Incidence <- R6::R6Class(
+  classname = "Incidence",
   inherit = DarwinShinyModules::ShinyModule,
 
   # Active ----
   active = list(
-    #' @field data (`summarisedResult`) SummarisedResult object from Prevalence.
+    #' @field data (`summarisedResult`) SummarisedResult object from Incidence.
     data = function(data) {
       if (missing(data)) {
         return(private$.data)
@@ -91,7 +91,7 @@ Prevalence <- R6::R6Class(
     initialize = function(data) {
       super$initialize()
       private$assertInstall()
-      private$assertPrevalenceData(data)
+      private$assertIncidenceData(data)
       private$.data <- private$transformData(data)
       private$initPickers()
       return(invisible(self))
@@ -106,9 +106,9 @@ Prevalence <- R6::R6Class(
     .UI = function() {
       shiny::tagList(
         shinydashboard::tabItem(
-          tabName = shiny::NS(private$.namespace, "prevalence"),
-          shiny::h3("Prevalence estimates"),
-          shiny::p("Prevalence estimates are shown below, please select configuration to filter them:"),
+          tabName = shiny::NS(private$.namespace, "incidence"),
+          shiny::h3("Incidence estimates"),
+          shiny::p("Incidence estimates are shown below, please select configuration to filter them:"),
           shiny::p("Database and study outcome"),
           private$.pickers[["cdm"]]$UI(),
           private$.pickers[["outcome"]]$UI(),
@@ -119,9 +119,9 @@ Prevalence <- R6::R6Class(
           private$.pickers[["denomStartDate"]]$UI(),
           private$.pickers[["denomEndDate"]]$UI(),
           p("Analysis settings"),
-          private$.pickers[["analysisType"]]$UI(),
+          private$.pickers[["washout"]]$UI(),
+          private$.pickers[["repeatedEvents"]]$UI(),
           private$.pickers[["completePeriod"]]$UI(),
-          private$.pickers[["fullContribution"]]$UI(),
           private$.pickers[["minCounts"]]$UI(),
           p("Dates"),
           private$.pickers[["interval"]]$UI(),
@@ -177,8 +177,8 @@ Prevalence <- R6::R6Class(
         module$server(input, output, session)
       }
 
-      # Prevalence
-      getPrevalenceEstimates <- reactive({
+      # Incidence
+      getIncidenceEstimates <- reactive({
         result <- private$.data %>%
           dplyr::filter(database %in% private$.pickers[["cdm"]]$inputValues$cdm) %>%
           dplyr::filter(outcome_cohort_name %in% private$.pickers[["outcome"]]$inputValues$outcome) %>%
@@ -187,19 +187,19 @@ Prevalence <- R6::R6Class(
           dplyr::filter(denominator_days_prior_observation %in% private$.pickers[["denomPriorObs"]]$inputValues$prior_obs) %>%
           dplyr::filter(denominator_start_date %in% private$.pickers[["denomStartDate"]]$inputValues$start_date) %>%
           dplyr::filter(denominator_end_date %in% private$.pickers[["denomEndDate"]]$inputValues$end_date) %>%
-          dplyr::filter(analysis_type %in% private$.pickers[["analysisType"]]$inputValues$analysis_type) %>%
+          dplyr::filter(analysis_outcome_washout %in% private$.pickers[["washout"]]$inputValues$washout) %>%
+          dplyr::filter(analysis_repeated_events %in% private$.pickers[["repeatedEvents"]]$inputValues$repeated_events) %>%
           dplyr::filter(analysis_complete_database_intervals %in% private$.pickers[["completePeriod"]]$inputValues$complete_period) %>%
-          dplyr::filter(analysis_full_contribution %in% private$.pickers[["fullContribution"]]$inputValues$full_contribution) %>%
           dplyr::filter(analysis_min_cell_count %in% private$.pickers[["minCounts"]]$inputValues$min_cell_count) %>%
           dplyr::filter(analysis_interval %in% private$.pickers[["interval"]]$inputValues$interval) %>%
-          dplyr::filter(prevalence_start_date %in% private$.pickers[["startDate"]]$inputValues$year) %>%
+          dplyr::filter(incidence_start_date %in% private$.pickers[["startDate"]]$inputValues$year) %>%
           dplyr::mutate(
-            n_cases = round(suppressWarnings(as.numeric(n_cases))),
-            n_population = round(suppressWarnings(as.numeric(n_population))),
-            prevalence = round(suppressWarnings(as.numeric(prevalence)), 4),
-            prevalence_95CI_lower = round(suppressWarnings(as.numeric(prevalence_95CI_lower)), 4),
-            prevalence_95CI_upper = round(suppressWarnings(as.numeric(prevalence_95CI_upper)), 4),
-            prevalence_start_date = as.Date(prevalence_start_date)
+            person_years = round(suppressWarnings(as.numeric(person_years))),
+            person_days = round(suppressWarnings(as.numeric(person_days))),
+            n_events = round(suppressWarnings(as.numeric(n_events))),
+            incidence_100000_pys = round(suppressWarnings(as.numeric(incidence_100000_pys))),
+            incidence_100000_pys_95CI_lower = round(suppressWarnings(as.numeric(incidence_100000_pys_95CI_lower))),
+            incidence_100000_pys_95CI_upper = round(suppressWarnings(as.numeric(incidence_100000_pys_95CI_upper)))
           )
         return(result)
       })
@@ -207,24 +207,24 @@ Prevalence <- R6::R6Class(
       ### download table ----
       output$download_table <- downloadHandler(
         filename = function() {
-          "prevalenceEstimatesTable.csv"
+          "incidenceEstimatesTable.csv"
         },
         content = function(file) {
-          utils::write.csv(getPrevalenceEstimates(), file)
+          utils::write.csv(getIncidenceEstimates(), file)
         }
       )
 
       ### table estimates ----
       output$table <- DT::renderDT({
-        table <- getPrevalenceEstimates()
+        table <- getIncidenceEstimates()
         shiny::validate(need(nrow(table) > 0, "No results for selected inputs"))
 
         table <- table %>%
-          mutate(`prevalence (%)` = paste0(
-            100 * prevalence, " (", 100 * prevalence_95CI_lower, " to ",
-            100 * prevalence_95CI_upper, " )"
+          mutate(incidence_100000_pys = paste0(
+            incidence_100000_pys, " (", incidence_100000_pys_95CI_lower, " to ",
+            incidence_100000_pys_95CI_upper, " )"
           )) %>%
-          select(database, outcome_cohort_name, denominator_age_group, denominator_sex, denominator_days_prior_observation, denominator_start_date, denominator_end_date, analysis_type, analysis_complete_database_intervals, analysis_full_contribution, analysis_min_cell_count, analysis_interval, prevalence_start_date, n_cases, n_population, "prevalence (%)")
+          select(database, outcome_cohort_name, denominator_cohort_name, denominator_age_group, denominator_sex, denominator_days_prior_observation, denominator_start_date, denominator_end_date, analysis_outcome_washout, analysis_repeated_events, analysis_complete_database_intervals, analysis_min_cell_count, analysis_interval, incidence_start_date, n_events, n_persons, person_years, incidence_100000_pys)
 
         DT::datatable(
           table,
@@ -235,20 +235,20 @@ Prevalence <- R6::R6Class(
       })
 
       ### make plot ----
-      plotPrevalenceEstimates <- reactive({
-        table <- getPrevalenceEstimates()
+      plotIncidenceEstimates <- reactive({
+        table <- getIncidenceEstimates()
         shiny::validate(need(nrow(table) > 0, "No results for selected inputs"))
-        class(table) <- c("PrevalenceResult", "IncidencePrevalenceResult", class(table))
+        class(table) <- c("IncidenceResult", "IncidencePrevalenceResult", class(table))
 
-        IncidencePrevalence::plotPrevalence(
+        IncidencePrevalence::plotIncidence(
           result = table,
           x = private$.pickers[["xAxis"]]$inputValues$xAxis,
-          y = "prevalence",
+          y = "incidence_100000_pys",
           line = FALSE,
           point = TRUE,
           ribbon = as.logical(private$.pickers[["ribbon"]]$inputValues$ribbon),
-          ymin = "prevalence_95CI_lower",
-          ymax = "prevalence_95CI_upper",
+          ymin = "incidence_100000_pys_95CI_lower",
+          ymax = "incidence_100000_pys_95CI_upper",
           facet = private$.pickers[["facet"]]$inputValues$facet_by,
           colour = private$.pickers[["color"]]$inputValues$color_by
         )
@@ -257,12 +257,12 @@ Prevalence <- R6::R6Class(
       ### download plot ----
       output$download_plot <- downloadHandler(
         filename = function() {
-          "prevalenceEstimatesPlot.png"
+          "incidenceEstimatesPlot.png"
         },
         content = function(file) {
           ggplot2::ggsave(
             file,
-            plotPrevalenceEstimates(),
+            plotIncidenceEstimates(),
             width = as.numeric(input$download_width),
             height = as.numeric(input$download_height),
             dpi = as.numeric(input$download_dpi),
@@ -272,7 +272,7 @@ Prevalence <- R6::R6Class(
       )
       ### plot ----
       output$plot <- renderPlotly({
-        plotPrevalenceEstimates()
+        plotIncidenceEstimates()
       })
     },
 
@@ -290,13 +290,13 @@ Prevalence <- R6::R6Class(
       }
     },
 
-    assertPrevalenceData = function(data) {
+    assertIncidenceData = function(data) {
       resSettings <- attr(data, "settings")
       if (is.null(resSettings)) {
         stop("Data does not appear to be a result object of `IncidencePrevalence`")
       }
-      if (!all(resSettings$result_type %in% c("prevalence", "prevalence_attrition"))) {
-        stop("Cannot assert `Prevalence` result")
+      if (!all(resSettings$result_type %in% c("incidence", "incidence_attrition"))) {
+        stop("Cannot assert `Incidence` result")
       }
     },
 
@@ -304,11 +304,11 @@ Prevalence <- R6::R6Class(
       minCellCount <- attr(data, "settings") %>%
         dplyr::pull(min_cell_count) %>%
         unique()
-      data <- IncidencePrevalence::asPrevalenceResult(data) %>%
+      data <- IncidencePrevalence::asIncidenceResult(data) %>%
         dplyr::mutate(analysis_min_cell_count = !!minCellCount) %>%
         dplyr::rename(database = cdm_name,
-                      n_cases = outcome_count,
-                      n_population = denominator_count)
+                      n_events = outcome_count,
+                      n_persons = denominator_count)
     },
     initPickers = function() {
       # cdm
@@ -374,13 +374,23 @@ Prevalence <- R6::R6Class(
       )
       private$.pickers[["denomEndDate"]]$parentNamespace <- self$namespace
 
-      # analysis type
-      private$.pickers[["analysisType"]] <- InputPanel$new(
-        funs = list(analysis_type = shinyWidgets::pickerInput),
-        args = list(analysis_type = list(inputId = "analysis_type", choices = unique(private$.data$analysis_type), label = "Prevalence type", selected = unique(private$.data$analysis_type), multiple = FALSE)),
+      # washout
+      private$.pickers[["washout"]] <- InputPanel$new(
+        funs = list(washout = shinyWidgets::pickerInput),
+        args = list(washout = list(inputId = "washout", choices = unique(private$.data$analysis_outcome_washout), label = "Outcome washout", selected = unique(private$.data$analysis_outcome_washout), multiple = TRUE,
+                                   options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         growDirection = "horizontal"
       )
-      private$.pickers[["analysisType"]]$parentNamespace <- self$namespace
+      private$.pickers[["washout"]]$parentNamespace <- self$namespace
+
+      # repeated events
+      private$.pickers[["repeatedEvents"]] <- InputPanel$new(
+        funs = list(repeated_events = shinyWidgets::pickerInput),
+        args = list(repeated_events = list(inputId = "repeated_events", choices = unique(private$.data$analysis_repeated_events), label = "Repeated events", selected = unique(private$.data$analysis_repeated_events), multiple = TRUE,
+                                           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
+        growDirection = "horizontal"
+      )
+      private$.pickers[["repeatedEvents"]]$parentNamespace <- self$namespace
 
       # complete period
       private$.pickers[["completePeriod"]] <- InputPanel$new(
@@ -390,15 +400,6 @@ Prevalence <- R6::R6Class(
         growDirection = "horizontal"
       )
       private$.pickers[["completePeriod"]]$parentNamespace <- self$namespace
-
-      # full contribution
-      private$.pickers[["fullContribution"]] <- InputPanel$new(
-        funs = list(full_contribution = shinyWidgets::pickerInput),
-        args = list(full_contribution = list(inputId = "full_contribution", choices = unique(private$.data$analysis_full_contribution), label = "Repeated events", selected = unique(private$.data$analysis_full_contribution), multiple = TRUE,
-                                             options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["fullContribution"]]$parentNamespace <- self$namespace
 
       # min counts
       private$.pickers[["minCounts"]] <- InputPanel$new(
@@ -421,7 +422,7 @@ Prevalence <- R6::R6Class(
       # start date
       private$.pickers[["startDate"]] <- InputPanel$new(
         funs = list(year = shinyWidgets::pickerInput),
-        args = list(year = list(inputId = "year", choices = unique(private$.data$prevalence_start_date), label = "Year", selected = unique(private$.data$prevalence_start_date), multiple = TRUE,
+        args = list(year = list(inputId = "year", choices = unique(private$.data$incidence_start_date), label = "Year", selected = unique(private$.data$incidence_start_date), multiple = TRUE,
                                 options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         growDirection = "horizontal"
       )
@@ -429,12 +430,12 @@ Prevalence <- R6::R6Class(
 
       # plot pickers
       plotDataChoices <- c("database", "outcome_cohort_name", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation",
-                           "denominator_start_date", "denominator_end_date", "analysis_complete_database_intervals",
-                           "analysis_min_cell_count", "analysis_interval", "prevalence_start_date")
+                           "denominator_start_date", "denominator_end_date", "analysis_outcome_washout", "analysis_repeated_events", "analysis_complete_database_intervals",
+                           "analysis_min_cell_count", "analysis_interval", "incidence_start_date")
       # x-axis
       private$.pickers[["xAxis"]] <- InputPanel$new(
         funs = list(xAxis = shinyWidgets::pickerInput),
-        args = list(xAxis = list(inputId = "xAxis", choices = plotDataChoices, label = "Incidence_start_date", selected = "prevalence_start_date", multiple = F,
+        args = list(xAxis = list(inputId = "xAxis", choices = plotDataChoices, label = "Incidence_start_date", selected = "incidence_start_date", multiple = F,
                                  options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3"))),
         growDirection = "horizontal"
       )

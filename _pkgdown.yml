@@ -60,6 +60,7 @@ reference:
   - CohortSurvival
   - DrugExposureDiagnostics
   - IncidencePrevalence
+  - Incidence
   - Prevalence
   - TreatmentPatterns
 

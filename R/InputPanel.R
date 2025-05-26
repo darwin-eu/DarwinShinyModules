@@ -77,14 +77,14 @@ InputPanel <- R6::R6Class(
     #'
     #' @param funs (`list()`) Named list of xInput functions used `list(funA = shiny::selectInput)`.
     #' @param args (`list()`) Named list of arguments used by xInput functions `list(funA = list(inputId = "name", label = "name"))`
-    #' @param addDiv if an additional div tag needs to be added in the UI
+    #' @param growDirection The direction in which this component will be placed, either "horizontal" or "vertical" (default)
     #'
     #' @return (`invisible(self)`)
-    initialize = function(funs, args, addDiv = FALSE) {
+    initialize = function(funs, args, growDirection = "vertical") {
       super$initialize()
       private$.funs <- funs
       private$.args <- args
-      private$.addDiv <- addDiv
+      private$.growDirection <- growDirection
       private$updateIds()
       self$validate()
       return(invisible(self))
@@ -104,10 +104,10 @@ InputPanel <- R6::R6Class(
     ## Fields ----
     .funs = NULL,
     .args = NULL,
-    .addDiv = FALSE,
+    .growDirection = "vertical",
 
     .UI = function() {
-      if (private$.addDiv) {
+      if (private$.growDirection == "horizontal") {
         result <- shiny::tagList(
           shiny::div(
             style = "display: inline-block;vertical-align:top; width: 150px;",
