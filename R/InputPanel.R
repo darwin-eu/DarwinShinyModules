@@ -77,12 +77,14 @@ InputPanel <- R6::R6Class(
     #'
     #' @param funs (`list()`) Named list of xInput functions used `list(funA = shiny::selectInput)`.
     #' @param args (`list()`) Named list of arguments used by xInput functions `list(funA = list(inputId = "name", label = "name"))`
+    #' @param growDirection The direction in which this component will be placed, either "horizontal" or "vertical" (default)
     #'
     #' @return (`invisible(self)`)
-    initialize = function(funs, args) {
+    initialize = function(funs, args, growDirection = "vertical") {
       super$initialize()
       private$.funs <- funs
       private$.args <- args
+      private$.growDirection <- growDirection
       private$updateIds()
       self$validate()
       return(invisible(self))
@@ -102,23 +104,33 @@ InputPanel <- R6::R6Class(
     ## Fields ----
     .funs = NULL,
     .args = NULL,
+    .growDirection = "vertical",
 
     .UI = function() {
-      shiny::tagList(
-        lapply(names(private$.funs), function(name) {
-          # shiny::column(
-          # width = 12L,
-          do.call(what = private$.funs[[name]], args = private$.args[[name]])
-          # )
-        })
-      )
+      if (private$.growDirection == "horizontal") {
+        result <- shiny::tagList(
+          shiny::div(
+            style = "display: inline-block;vertical-align:top; width: 150px;",
+            lapply(names(private$.funs), function(name) {
+              do.call(what = private$.funs[[name]], args = private$.args[[name]])
+            })
+          )
+        )
+      } else {
+        result <- shiny::tagList(
+          lapply(names(private$.funs), function(name) {
+            do.call(what = private$.funs[[name]], args = private$.args[[name]])
+          })
+        )
+      }
+      return(result)
     },
 
     .server = function(input, output, session) {
       lapply(names(private$.args), function(label) {
         shiny::observeEvent(input[[label]], {
           private$.reactiveValues[[label]] <- input[[label]]
-        })
+        }, ignoreNULL = FALSE)
       })
     },
 

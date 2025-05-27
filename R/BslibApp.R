@@ -25,7 +25,6 @@ BslibApp <- R6::R6Class(
       super$initialize(appStructure)
       private$.title <- title
     },
-
     UI = function() {
       bslib::page(
         do.call(bslib::navset_bar, private$parseModules())

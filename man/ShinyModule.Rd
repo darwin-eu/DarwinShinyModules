@@ -93,7 +93,6 @@ myModule <- MyModule$new()
 MyModule <- R6::R6Class(
   classname = "MyModule",
   inherit = ShinyModule,
-
   private = list(
     .UI = function() {
       # `private$.namespace` would also be valid.
@@ -116,7 +115,6 @@ if (interactive()) {
 MyModule <- R6::R6Class(
   classname = "MyModule",
   inherit = ShinyModule,
-
   public = list(
     UI = function() {
       # `private$.namespace` would also be valid.
@@ -130,11 +128,14 @@ MyModule <- R6::R6Class(
   )
 )
 
-tryCatch({
-  myModule <- MyModule$new()
-}, error = function(e) {
-  message(e)
-})
+tryCatch(
+  {
+    myModule <- MyModule$new()
+  },
+  error = function(e) {
+    message(e)
+  }
+)
 #> `self$server()` was overridden in `public = list(...)` override
 #> `private$.server()` instead in
 #> `private = list(.server = function(input,output, session) {})`
