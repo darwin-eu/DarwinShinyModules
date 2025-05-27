@@ -61,6 +61,7 @@ reference:
   - DrugExposureDiagnostics
   - IncidencePrevalence
   - Incidence
+  - Prevalence
   - TreatmentPatterns
 
 - subtitle: Shiny App Generator Functions
