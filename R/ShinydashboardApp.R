@@ -31,7 +31,6 @@ ShinydashboardApp <- R6::R6Class(
       super$initialize(appStructure)
       private$.title <- title
     },
-
     UI = function() {
       shinydashboard::dashboardPage(
         header = shinydashboard::dashboardHeader(title = private$.title),
@@ -103,7 +102,6 @@ ShinydashboardApp <- R6::R6Class(
       }
       do.call(shinydashboard::tabItems, items)
     },
-
     modulesSidebar = function(tabList) {
       lapply(seq_len(length(tabList)), function(i) {
         menuLabel <- names(tabList[i])
@@ -111,7 +109,6 @@ ShinydashboardApp <- R6::R6Class(
         subItems <- if ("list" %in% class(tabList[[i]])) {
           labels <- names(tabList[[i]])
           lapply(labels, function(label) {
-            print(sprintf("%s : %s", label, formatLabel(label)))
             shinydashboard::menuItem(
               text = label,
               tabName = formatLabel(label)
@@ -122,14 +119,12 @@ ShinydashboardApp <- R6::R6Class(
         }
 
         if (length(subItems) > 0) {
-          print(sprintf("%s : %s", menuLabel, formatLabel(menuLabel)))
           shinydashboard::menuItem(
             text = menuLabel,
             tabName = formatLabel(menuLabel),
             shiny::tagList(subItems)
           )
         } else {
-          print(sprintf("%s : %s", menuLabel, formatLabel(menuLabel)))
           shinydashboard::menuItem(
             text = menuLabel,
             tabName = formatLabel(menuLabel)

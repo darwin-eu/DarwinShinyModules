@@ -59,7 +59,6 @@ reference:
 - contents:
   - CohortSurvival
   - DrugExposureDiagnostics
-  - IncidencePrevalence
   - Incidence
   - Prevalence
   - TreatmentPatterns
