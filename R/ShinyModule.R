@@ -108,7 +108,6 @@
 #' MyModule <- R6::R6Class(
 #'   classname = "MyModule",
 #'   inherit = ShinyModule,
-#'
 #'   private = list(
 #'     .UI = function() {
 #'       # `private$.namespace` would also be valid.
@@ -131,7 +130,6 @@
 #' MyModule <- R6::R6Class(
 #'   classname = "MyModule",
 #'   inherit = ShinyModule,
-#'
 #'   public = list(
 #'     UI = function() {
 #'       # `private$.namespace` would also be valid.
@@ -145,11 +143,14 @@
 #'   )
 #' )
 #'
-#' tryCatch({
-#'   myModule <- MyModule$new()
-#' }, error = function(e) {
-#'   message(e)
-#' })
+#' tryCatch(
+#'   {
+#'     myModule <- MyModule$new()
+#'   },
+#'   error = function(e) {
+#'     message(e)
+#'   }
+#' )
 #' #> `self$server()` was overridden in `public = list(...)` override
 #' #> `private$.server()` instead in
 #' #> `private = list(.server = function(input,output, session) {})`
@@ -327,20 +328,27 @@ ShinyModule <- R6::R6Class(
       private$.reactiveValues <- shiny::reactiveValues()
       return(invisible(self))
     },
-
     .server = function(input, output, session) {},
-
     .UI = function(input, output, session) {},
-
+    assertInstall = function(pkgName, version) {
+      if (!require(pkgName, character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE) ||
+        packageVersion(pkgName) < version) {
+        answer <- readline(prompt = sprintf("`%s` >= %s is not installed, would you like to install from CRAN? (y/n)", pkgName, version))
+        if (substr(tolower(answer), start = 1, stop = 1) == "y") {
+          utils::install.packages(pkgName)
+        } else {
+          stop("Your answer was not `y` or `n`")
+        }
+      }
+      return(invisible(NULL))
+    },
     finalize = function() {
       return(NULL)
     },
-
     makeInstanceId = function(n = 20) {
       items <- c(letters, LETTERS, c(1:9), c("_"))
       paste0(sample(x = items, size = n), collapse = "")
     },
-
     checkMethodOverrides = function() {
       if (!is.null(self$.__enclos_env__$super)) {
         serverErr <- if (!identical(self$.__enclos_env__$super$server, self$server)) {
