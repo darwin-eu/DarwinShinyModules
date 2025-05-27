@@ -32,6 +32,7 @@ Suggests:
     shinydashboard,
     TreatmentPatterns,
     IncidencePrevalence,
+    visOmopResults,
     DrugExposureDiagnostics (>= 1.1.1),
     CohortSurvival,
     omopgenerics,
