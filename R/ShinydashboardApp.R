@@ -119,12 +119,14 @@ ShinydashboardApp <- R6::R6Class(
         }
 
         if (length(subItems) > 0) {
+          print(sprintf("%s : %s", menuLabel, formatLabel(menuLabel)))
           shinydashboard::menuItem(
             text = menuLabel,
             tabName = formatLabel(menuLabel),
             shiny::tagList(subItems)
           )
         } else {
+          print(sprintf("%s : %s", menuLabel, formatLabel(menuLabel)))
           shinydashboard::menuItem(
             text = menuLabel,
             tabName = formatLabel(menuLabel)
