@@ -8,6 +8,19 @@ code <- DarwinShinyModules::Text$new(
   )
 )
 
+abstract <- DarwinShinyModules::StudyBackground$new(
+  background = "
+  ## Introduction
+  Some nicly formatted markdown.
+
+  ## Methods
+  Either as a character vector, or from a markdown-file, i.e. `abstract.md`
+  ",
+  EUPAS = "EUR0000000000"
+)
+
+dataPartners <- DarwinShinyModules::DatabaseOverview$new("IPCI", "CPRD GOLD", "SIDIAP")
+
 # Table Modules ----
 tableIris <- DarwinShinyModules::Table$new(data = iris, title = "Iris Data")
 tableMtcars <- DarwinShinyModules::Table$new(data = mtcars, title = NULL, filter = "none")
@@ -58,88 +71,37 @@ inputPanel <- DarwinShinyModules::InputPanel$new(
 # TreatmentPatterns Module ----
 tp <- read.csv(system.file(
   package = "DarwinShinyModules",
-  "dummyData/TreatmentPatterns/2.7.0", "treatmentPathways.csv"
+  "dummyData/TreatmentPatterns/3.0.0", "treatment_pathways.csv"
 ))
 
-treatmentPatterns <- DarwinShinyModules::TreatmentPatterns$new(treatmentPathways = tp)
+tpMod <- DarwinShinyModules::TreatmentPatterns$new(treatmentPathways = tp)
 
 # IncidencePrevalence Module ----
-inc <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/0.9.0/incidence.rds"))
-pointPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/0.9.0/pointPrevalence.rds"))
-periodPrev <- readRDS(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/0.9.0/periodPrevalence.rds"))
+inc <- omopgenerics::importSummarisedResult(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/1.2.0/incidence.csv"))
+prev <- omopgenerics::importSummarisedResult(system.file(package = "DarwinShinyModules", "dummyData/IncidencePrevalence/1.2.0/prevalence.csv"))
 
-incMod <- IncidencePrevalence$new(data = inc)
-pointPrevMod <- IncidencePrevalence$new(data = pointPrev)
-periodPrevMod <- IncidencePrevalence$new(data = periodPrev)
+incMod <- Incidence$new(data = inc)
+prevMod <- Prevalence$new(data = prev)
 
-# UI ----
-ui <- shinydashboard::dashboardPage(
-  header = shinydashboard::dashboardHeader(
-    title = "Darwin Shiny Modules Showcase"
+appStructure <- list(
+  Code = code,
+  Abstract = abstract,
+  Databases = dataPartners,
+  Tables = list(
+    DT = list(tableIris, tableMtcars),
+    gt = gtTableAirquality
   ),
-
-  sidebar = shinydashboard::dashboardSidebar(
-    shinydashboard::sidebarMenu(
-      shinydashboard::menuItem(text = "Code", tabName = "code"),
-      shinydashboard::menuItem(text = "Tables", tabName = "tables"),
-      shinydashboard::menuItem(text = "Plots", tabName = "plots"),
-      shinydashboard::menuItem(text = "InputPanel", tabName = "inputPanel"),
-      shinydashboard::menuItem(text = "TreatmentPatterns", tabName = "treatmentPatterns"),
-      shinydashboard::menuItem(text = "IncidencePrevalence", tabName = "incidencePrevalence")
-    )
+  Plost = list(
+    Static = plotIris,
+    Plotly = plotIrisPlotly,
+    Widget = plotNetwork
   ),
-
-  body = shinydashboard::dashboardBody(
-    shinydashboard::tabItems(
-      shinydashboard::tabItem(
-        tabName = "code",
-        code$UI()
-      ),
-      shinydashboard::tabItem(
-        tabName = "tables",
-        tableIris$UI(),
-        tableMtcars$UI(),
-        gtTableAirquality$UI()
-      ),
-      shinydashboard::tabItem(
-        tabName = "plots",
-        plotIris$UI(),
-        plotIrisPlotly$UI(),
-        plotNetwork$UI()
-      ),
-      shinydashboard::tabItem(
-        tabName = "inputPanel",
-        inputPanel$UI()
-      ),
-      shinydashboard::tabItem(
-        tabName = "treatmentPatterns",
-        treatmentPatterns$UI()
-      ),
-      shinydashboard::tabItem(
-        tabName = "incidencePrevalence",
-        incMod$UI(),
-        pointPrevMod$UI(),
-        periodPrevMod$UI()
-      )
-    )
+  InputPanel = inputPanel,
+  `TreatmentPatterns` = tpMod,
+  `IncidencePrevalence` = list(
+    Incidence = incMod,
+    Prevalence = prevMod
   )
 )
 
-# Server ----
-server <- function(input, output, session) {
-  code$server(input, output, session)
-  tableIris$server(input, output, session)
-  tableMtcars$server(input, output, session)
-  gtTableAirquality$server(input, output, session)
-  plotIris$server(input, output, session)
-  plotIrisPlotly$server(input, output, session)
-  plotNetwork$server(input, output, session)
-  inputPanel$server(input, output, session)
-  treatmentPatterns$server(input, output, session)
-  incMod$server(input, output, session)
-  pointPrevMod$server(input, output, session)
-  periodPrevMod$server(input, output, session)
-}
-
-# Run ShinyApp ----
-shiny::shinyApp(ui = ui, server = server)
+launchDarwinDashboardApp(appStructure)
