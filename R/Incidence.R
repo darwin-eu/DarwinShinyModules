@@ -118,6 +118,7 @@ Incidence <- R6::R6Class(
           private$.pickers[["denomPriorObs"]]$UI(),
           private$.pickers[["denomStartDate"]]$UI(),
           private$.pickers[["denomEndDate"]]$UI(),
+          private$.pickers[["denomTimeAtRisk"]]$UI(),
           p("Analysis settings"),
           private$.pickers[["washout"]]$UI(),
           private$.pickers[["repeatedEvents"]]$UI(),
@@ -185,6 +186,7 @@ Incidence <- R6::R6Class(
           dplyr::filter(denominator_days_prior_observation %in% private$.pickers[["denomPriorObs"]]$inputValues$prior_obs) %>%
           dplyr::filter(denominator_start_date %in% private$.pickers[["denomStartDate"]]$inputValues$start_date) %>%
           dplyr::filter(denominator_end_date %in% private$.pickers[["denomEndDate"]]$inputValues$end_date) %>%
+          dplyr::filter(denominator_time_at_risk %in% private$.pickers[["denomTimeAtRisk"]]$inputValues$time_at_risk) %>%
           dplyr::filter(analysis_outcome_washout %in% private$.pickers[["washout"]]$inputValues$washout) %>%
           dplyr::filter(analysis_repeated_events %in% private$.pickers[["repeatedEvents"]]$inputValues$repeated_events) %>%
           dplyr::filter(analysis_complete_database_intervals %in% private$.pickers[["completePeriod"]]$inputValues$complete_period) %>%
@@ -222,7 +224,7 @@ Incidence <- R6::R6Class(
             incidence_100000_pys, " (", incidence_100000_pys_95CI_lower, " to ",
             incidence_100000_pys_95CI_upper, " )"
           )) %>%
-          select(database, outcome_cohort_name, denominator_cohort_name, denominator_age_group, denominator_sex, denominator_days_prior_observation, denominator_start_date, denominator_end_date, analysis_outcome_washout, analysis_repeated_events, analysis_complete_database_intervals, analysis_min_cell_count, analysis_interval, incidence_start_date, n_events, n_persons, person_years, incidence_100000_pys)
+          select(database, outcome_cohort_name, denominator_cohort_name, denominator_age_group, denominator_sex, denominator_days_prior_observation, denominator_start_date, denominator_end_date, denominator_time_at_risk, analysis_outcome_washout, analysis_repeated_events, analysis_complete_database_intervals, analysis_min_cell_count, analysis_interval, incidence_start_date, n_events, n_persons, person_years, incidence_100000_pys)
 
         DT::datatable(
           table,
@@ -372,6 +374,17 @@ Incidence <- R6::R6Class(
       )
       private$.pickers[["denomEndDate"]]$parentNamespace <- self$namespace
 
+      # denominator time at risk
+      private$.pickers[["denomTimeAtRisk"]] <- InputPanel$new(
+        funs = list(time_at_risk = shinyWidgets::pickerInput),
+        args = list(time_at_risk = list(
+          inputId = "time_at_risk", choices = unique(private$.data$denominator_time_at_risk), label = "Time at risk", selected = unique(private$.data$denominator_time_at_risk), multiple = TRUE,
+          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
+        )),
+        growDirection = "horizontal"
+      )
+      private$.pickers[["denomTimeAtRisk"]]$parentNamespace <- self$namespace
+
       # washout
       private$.pickers[["washout"]] <- InputPanel$new(
         funs = list(washout = shinyWidgets::pickerInput),
@@ -441,8 +454,8 @@ Incidence <- R6::R6Class(
       # plot pickers
       plotDataChoices <- c(
         "database", "outcome_cohort_name", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation",
-        "denominator_start_date", "denominator_end_date", "analysis_outcome_washout", "analysis_repeated_events", "analysis_complete_database_intervals",
-        "analysis_min_cell_count", "analysis_interval", "incidence_start_date"
+        "denominator_start_date", "denominator_end_date", "denominator_time_at_risk", "analysis_outcome_washout", "analysis_repeated_events",
+        "analysis_complete_database_intervals", "analysis_min_cell_count", "analysis_interval", "incidence_start_date"
       )
       # x-axis
       private$.pickers[["xAxis"]] <- InputPanel$new(

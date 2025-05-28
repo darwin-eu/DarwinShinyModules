@@ -98,7 +98,7 @@ appStructure <- list(
     DT = list(tableIris, tableMtcars),
     gt = gtTableAirquality
   ),
-  Plost = list(
+  Plots = list(
     Static = plotIris,
     Plotly = plotIrisPlotly,
     Widget = plotNetwork
