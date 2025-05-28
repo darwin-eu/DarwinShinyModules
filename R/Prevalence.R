@@ -118,6 +118,7 @@ Prevalence <- R6::R6Class(
           private$.pickers[["denomPriorObs"]]$UI(),
           private$.pickers[["denomStartDate"]]$UI(),
           private$.pickers[["denomEndDate"]]$UI(),
+          private$.pickers[["denomTimeAtRisk"]]$UI(),
           p("Analysis settings"),
           private$.pickers[["analysisType"]]$UI(),
           private$.pickers[["completePeriod"]]$UI(),
@@ -185,6 +186,7 @@ Prevalence <- R6::R6Class(
           dplyr::filter(denominator_days_prior_observation %in% private$.pickers[["denomPriorObs"]]$inputValues$prior_obs) %>%
           dplyr::filter(denominator_start_date %in% private$.pickers[["denomStartDate"]]$inputValues$start_date) %>%
           dplyr::filter(denominator_end_date %in% private$.pickers[["denomEndDate"]]$inputValues$end_date) %>%
+          dplyr::filter(denominator_time_at_risk %in% private$.pickers[["denomTimeAtRisk"]]$inputValues$time_at_risk) %>%
           dplyr::filter(analysis_type %in% private$.pickers[["analysisType"]]$inputValues$analysis_type) %>%
           dplyr::filter(analysis_complete_database_intervals %in% private$.pickers[["completePeriod"]]$inputValues$complete_period) %>%
           dplyr::filter(analysis_full_contribution %in% private$.pickers[["fullContribution"]]$inputValues$full_contribution) %>%
@@ -222,7 +224,7 @@ Prevalence <- R6::R6Class(
             100 * prevalence, " (", 100 * prevalence_95CI_lower, " to ",
             100 * prevalence_95CI_upper, " )"
           )) %>%
-          select(database, outcome_cohort_name, denominator_age_group, denominator_sex, denominator_days_prior_observation, denominator_start_date, denominator_end_date, analysis_type, analysis_complete_database_intervals, analysis_full_contribution, analysis_min_cell_count, analysis_interval, prevalence_start_date, n_cases, n_population, "prevalence (%)")
+          select(database, outcome_cohort_name, denominator_age_group, denominator_sex, denominator_days_prior_observation, denominator_start_date, denominator_end_date, denominator_time_at_risk, analysis_type, analysis_complete_database_intervals, analysis_full_contribution, analysis_min_cell_count, analysis_interval, prevalence_start_date, n_cases, n_population, "prevalence (%)")
 
         DT::datatable(
           table,
@@ -372,6 +374,17 @@ Prevalence <- R6::R6Class(
       )
       private$.pickers[["denomEndDate"]]$parentNamespace <- self$namespace
 
+      # denominator time at risk
+      private$.pickers[["denomTimeAtRisk"]] <- InputPanel$new(
+        funs = list(time_at_risk = shinyWidgets::pickerInput),
+        args = list(time_at_risk = list(
+          inputId = "time_at_risk", choices = unique(private$.data$denominator_time_at_risk), label = "Time at risk", selected = unique(private$.data$denominator_time_at_risk), multiple = TRUE,
+          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
+        )),
+        growDirection = "horizontal"
+      )
+      private$.pickers[["denomTimeAtRisk"]]$parentNamespace <- self$namespace
+
       # analysis type
       private$.pickers[["analysisType"]] <- InputPanel$new(
         funs = list(analysis_type = shinyWidgets::pickerInput),
@@ -438,7 +451,7 @@ Prevalence <- R6::R6Class(
       # plot pickers
       plotDataChoices <- c(
         "database", "outcome_cohort_name", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation",
-        "denominator_start_date", "denominator_end_date", "analysis_complete_database_intervals",
+        "denominator_start_date", "denominator_end_date", "denominator_time_at_risk", "analysis_complete_database_intervals",
         "analysis_min_cell_count", "analysis_interval", "prevalence_start_date"
       )
       # x-axis
