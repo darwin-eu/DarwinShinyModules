@@ -1,4 +1,11 @@
 library(DarwinShinyModules)
+library(TreatmentPatterns)
+library(IncidencePrevalence)
+library(visOmopResults)
+library(shinydashboard)
+library(bslib)
+library(shinycssloaders)
+
 # Text module ----
 code <- DarwinShinyModules::Text$new(
   markdown = c(
