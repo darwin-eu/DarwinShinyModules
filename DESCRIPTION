@@ -1,6 +1,6 @@
 Package: DarwinShinyModules
 Title: Repository of Shiny Modules for Darwin Result Viewers
-Version: 0.1.1
+Version: 0.2.2
 Authors@R: c(
     person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut"), comment = c(ORCID = "0000-0001-8993-8748")),
     person("Maarten", "van Kessel", email = "m.l.vankessel@erasmusmc.nl", role = c("aut", "cre"), comment = c(ORCID = "0009-0006-8832-6030")),
@@ -25,13 +25,18 @@ Imports:
     gt,
     promises,
     shinyWidgets,
-    stringr
+    stringr,
+    purrr
 Suggests:
     bslib,
     shinydashboard,
     TreatmentPatterns,
     IncidencePrevalence,
+    visOmopResults,
     DrugExposureDiagnostics (>= 1.1.1),
+    CohortSurvival,
+    omopgenerics,
+    CDMConnector,
     networkD3,
     testthat (>= 3.0.0),
     knitr,
@@ -39,7 +44,12 @@ Suggests:
     datasets,
     htmlwidgets,
     xml2,
-    shinycssloaders
+    shinycssloaders,
+    DatabaseConnector,
+    DBI,
+    dbplyr,
+    duckdb,
+    RSQLite
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr
@@ -49,19 +59,26 @@ Collate:
     'ShinyModule.R'
     'Bridge.R'
     'BslibApp.R'
+    'CohortSurvival.R'
     'DarwinBslibApp.R'
     'DarwinDashboardApp.R'
     'DarwinShinyModules.R'
+    'Database.R'
+    'DatabaseDBC.R'
+    'DatabaseDBI.R'
+    'DatabaseOverview.R'
     'DrugExposureDiagnostics.R'
     'GTTable.R'
-    'IncidencePrevalence.R'
+    'Incidence.R'
     'InputPanel.R'
     'OhdsiModule.R'
     'Plot.R'
     'PlotPlotly.R'
     'PlotStatic.R'
     'PlotWidget.R'
+    'Prevalence.R'
     'ShinydashboardApp.R'
+    'StudyBackground.R'
     'Table.R'
     'Text.R'
     'TreatmentPatterns.R'

@@ -1,3 +1,19 @@
+# Copyright 2024 DARWIN EU®
+#
+# This file is part of DarwinShinyModules
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 #' @title Module Decorator Class
 #'
 #' @description
@@ -92,7 +108,6 @@
 #' MyModule <- R6::R6Class(
 #'   classname = "MyModule",
 #'   inherit = ShinyModule,
-#'
 #'   private = list(
 #'     .UI = function() {
 #'       # `private$.namespace` would also be valid.
@@ -115,7 +130,6 @@
 #' MyModule <- R6::R6Class(
 #'   classname = "MyModule",
 #'   inherit = ShinyModule,
-#'
 #'   public = list(
 #'     UI = function() {
 #'       # `private$.namespace` would also be valid.
@@ -129,11 +143,14 @@
 #'   )
 #' )
 #'
-#' tryCatch({
-#'   myModule <- MyModule$new()
-#' }, error = function(e) {
-#'   message(e)
-#' })
+#' tryCatch(
+#'   {
+#'     myModule <- MyModule$new()
+#'   },
+#'   error = function(e) {
+#'     message(e)
+#'   }
+#' )
 #' #> `self$server()` was overridden in `public = list(...)` override
 #' #> `private$.server()` instead in
 #' #> `private = list(.server = function(input,output, session) {})`
@@ -193,6 +210,17 @@ ShinyModule <- R6::R6Class(
     #' environment.
     reactiveValues = function() {
       return(private$.reactiveValues)
+    },
+
+    #' @field async (`logical(1)`: `FALSE`) Logical parameter to switch
+    #' asynchronous mode on or off.
+    async = function(async) {
+      if (missing(async)) {
+        return(private$.async)
+      } else {
+        checkmate::assertLogical(x = async, len = 1)
+        private$.async <- async
+      }
     }
   ),
 
@@ -274,7 +302,11 @@ ShinyModule <- R6::R6Class(
     server = function(input, output, session) {
       shiny::moduleServer(id = self$moduleId, module = function(input, output, session) {
         private$.init()
-        private$.server(input, output, session)
+        if (private$.async) {
+          promises::future_promise(private$.server(input, output, session))
+        } else {
+          private$.server(input, output, session)
+        }
       })
       return(NULL)
     }
@@ -289,26 +321,34 @@ ShinyModule <- R6::R6Class(
     .parentNamespace = NULL,
     .namespace = "",
     .reactiveValues = NULL,
+    .async = FALSE,
 
     ## Methods ----
     .init = function() {
       private$.reactiveValues <- shiny::reactiveValues()
       return(invisible(self))
     },
-
     .server = function(input, output, session) {},
-
     .UI = function(input, output, session) {},
-
+    assertInstall = function(pkgName, version) {
+      if (!require(pkgName, character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE) ||
+        packageVersion(pkgName) < version) {
+        answer <- readline(prompt = sprintf("`%s` >= %s is not installed, would you like to install from CRAN? (y/n)", pkgName, version))
+        if (substr(tolower(answer), start = 1, stop = 1) == "y") {
+          utils::install.packages(pkgName)
+        } else {
+          stop("Your answer was not `y` or `n`")
+        }
+      }
+      return(invisible(NULL))
+    },
     finalize = function() {
       return(NULL)
     },
-
     makeInstanceId = function(n = 20) {
       items <- c(letters, LETTERS, c(1:9), c("_"))
       paste0(sample(x = items, size = n), collapse = "")
     },
-
     checkMethodOverrides = function() {
       if (!is.null(self$.__enclos_env__$super)) {
         serverErr <- if (!identical(self$.__enclos_env__$super$server, self$server)) {

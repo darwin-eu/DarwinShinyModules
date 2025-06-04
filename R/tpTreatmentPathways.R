@@ -1,4 +1,20 @@
-#' @title TreatmentPathways Module Class
+# Copyright 2024 DARWIN EU®
+#
+# This file is part of DarwinShinyModules
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#' @title TreatmentPatterns Module Class
 #'
 #' @include ShinyModule.R
 #'
@@ -40,7 +56,6 @@
 tpTreatmentPathways <- R6::R6Class(
   classname = "TreatmentPathways",
   inherit = ShinyModule,
-
   active = list(
     #' @field sankeyCols (`list(a = "#ff33cc")`) Colours for the Sankey diagram.
     sankeyCols = function(sankeyCols) {
@@ -66,7 +81,6 @@ tpTreatmentPathways <- R6::R6Class(
       }
     }
   ),
-
   public = list(
 
     #' @description
@@ -148,7 +162,6 @@ tpTreatmentPathways <- R6::R6Class(
         private$.table$UI()
       )
     },
-
     .server = function(input, output, session) {
       private$.inputPanel$server(input, output, session)
       private$.sunburst$server(input, output, session)
@@ -161,15 +174,16 @@ tpTreatmentPathways <- R6::R6Class(
           private$.inputPanel$inputValues$ageGroup,
           private$.inputPanel$inputValues$sexGroup,
           private$.inputPanel$inputValues$yearGroup
-        ), {
+        ),
+        {
           dataUpdated <- private$updateData(private$.treatmentPathways)
           # private$setColours(dataUpdated)
           private$updateTable(dataUpdated)
           private$updateSunburst(dataUpdated)
           private$updateSankey(dataUpdated)
-        })
+        }
+      )
     },
-
     assertInstall = function() {
       if (!require("TreatmentPathways", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)) {
         answer <- readline(prompt = "`TreatmentPathways` is not installed, would you like to install from CRAN? (y/n)")
@@ -182,25 +196,21 @@ tpTreatmentPathways <- R6::R6Class(
         }
       }
     },
-
     updateTable = function(data) {
       private$.table$data <- data %>%
         dplyr::arrange(dplyr::desc(.data$freq))
     },
-
     updateSunburst = function(data) {
       private$.sunburst$args$groupCombinations <- private$.inputPanel$inputValues$groupCombi
       private$.sunburst$args$legend <- list(w = 400)
       private$.sunburst$args$colors <- private$.sunburstCols
       private$.sunburst$args$treatmentPathways <- data
     },
-
     updateSankey = function(data) {
       private$.sankey$args$groupCombinations <- private$.inputPanel$inputValues$groupCombi
       private$.sankey$args$colors <- private$.sankeyCols
       private$.sankey$args$treatmentPathways <- data
     },
-
     updateData = function(data) {
       none <- private$getNone()
       data <- data %>%
@@ -212,7 +222,6 @@ tpTreatmentPathways <- R6::R6Class(
         )
       return(data)
     },
-
     setColours = function(data) {
       if (is.null(private$.sunburstCols) & is.null(private$.sankeyCols)) {
         colors <- c(
@@ -266,7 +275,6 @@ tpTreatmentPathways <- R6::R6Class(
         private$.sankeyCols <- cols
       }
     },
-
     getNone = function() {
       if (private$.inputPanel$inputValues$none) {
         return("")
@@ -274,7 +282,6 @@ tpTreatmentPathways <- R6::R6Class(
         return("None")
       }
     },
-
     initInputPanel = function() {
       private$.inputPanel <- InputPanel$new(
         funs = list(

@@ -1,3 +1,25 @@
+# Copyright 2024 DARWIN EU®
+#
+# This file is part of DarwinShinyModules
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+formatLabel <- function(label) {
+  stringr::str_replace_all(string = label, pattern = "[\\!\\@\\#\\$\\%\\^\\*\\:\\;\\'\\\"]", replacement = "") |>
+    stringr::str_replace_all(pattern = "[_]?\\s+", replacement = " ") |>
+    stringr::str_replace_all(pattern = "[\\s\\(\\&\\)\\[\\]\\.\\,]", replacement = "_")
+}
+
 ShinydashboardApp <- R6::R6Class(
   classname = "ShinydashboardApp",
   inherit = App,
@@ -9,7 +31,6 @@ ShinydashboardApp <- R6::R6Class(
       super$initialize(appStructure)
       private$.title <- title
     },
-
     UI = function() {
       shinydashboard::dashboardPage(
         header = shinydashboard::dashboardHeader(title = private$.title),
@@ -40,7 +61,7 @@ ShinydashboardApp <- R6::R6Class(
             items <- append(
               items,
               list(shinydashboard::tabItem(
-                tabName = label,
+                tabName = formatLabel(label),
                 body
               ))
             )
@@ -54,7 +75,7 @@ ShinydashboardApp <- R6::R6Class(
                 items <- append(
                   items,
                   list(shinydashboard::tabItem(
-                    tabName = subLabel,
+                    tabName = formatLabel(subLabel),
                     body
                   ))
                 )
@@ -62,7 +83,7 @@ ShinydashboardApp <- R6::R6Class(
                 items <- append(
                   items,
                   list(shinydashboard::tabItem(
-                    tabName = subLabel,
+                    tabName = formatLabel(subLabel),
                     tabList[[i]][[subLabel]]$UI()
                   ))
                 )
@@ -81,7 +102,6 @@ ShinydashboardApp <- R6::R6Class(
       }
       do.call(shinydashboard::tabItems, items)
     },
-
     modulesSidebar = function(tabList) {
       lapply(seq_len(length(tabList)), function(i) {
         menuLabel <- names(tabList[i])
@@ -89,22 +109,27 @@ ShinydashboardApp <- R6::R6Class(
         subItems <- if ("list" %in% class(tabList[[i]])) {
           labels <- names(tabList[[i]])
           lapply(labels, function(label) {
-            shinydashboard::menuItem(text = label, tabName = label)
+            shinydashboard::menuItem(
+              text = label,
+              tabName = formatLabel(label)
+            )
           })
         } else {
           NULL
         }
 
         if (length(subItems) > 0) {
+          print(sprintf("%s : %s", menuLabel, formatLabel(menuLabel)))
           shinydashboard::menuItem(
-            text = stringr::str_replace_all(menuLabel, pattern = "_", replacement = " "),
-            tabName = menuLabel,
+            text = menuLabel,
+            tabName = formatLabel(menuLabel),
             shiny::tagList(subItems)
           )
         } else {
+          print(sprintf("%s : %s", menuLabel, formatLabel(menuLabel)))
           shinydashboard::menuItem(
-            text = stringr::str_replace_all(menuLabel, pattern = "_", replacement = " "),
-            tabName = menuLabel
+            text = menuLabel,
+            tabName = formatLabel(menuLabel)
           )
         }
       })
