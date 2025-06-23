@@ -208,8 +208,12 @@ ShinyModule <- R6::R6Class(
     #' @field reactiveValues (`reactivevalues`) Reactive values. use
     #' `shiny::isolate()` to get a non-reactive item from the reactive
     #' environment.
-    reactiveValues = function() {
-      return(private$.reactiveValues)
+    reactiveValues = function(reactiveValues) {
+      if (missing(reactiveValues)) {
+        return(private$.reactiveValues)
+      } else {
+        private$.reactiveValues <- reactiveValues
+      }
     },
 
     #' @field async (`logical(1)`: `FALSE`) Logical parameter to switch

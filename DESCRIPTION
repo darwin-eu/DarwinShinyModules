@@ -89,4 +89,6 @@ Collate:
     'launchShinydashboardApp.R'
     'makeModule.R'
     'preview.R'
+    'tpSummaryEventDuration.R'
+    'tpTreatmentPathways.R'
 URL: https://darwin-eu-dev.github.io/DarwinShinyModules/
