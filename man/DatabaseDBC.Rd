@@ -16,6 +16,9 @@ This class extends the \code{Database} class, to query a database using
 \item \href{#method-DatabaseDBC-new}{\code{DatabaseDBC$new()}}
 \item \href{#method-DatabaseDBC-query}{\code{DatabaseDBC$query()}}
 \item \href{#method-DatabaseDBC-execute}{\code{DatabaseDBC$execute()}}
+\item \href{#method-DatabaseDBC-uploadTable}{\code{DatabaseDBC$uploadTable()}}
+\item \href{#method-DatabaseDBC-connect}{\code{DatabaseDBC$connect()}}
+\item \href{#method-DatabaseDBC-disconnect}{\code{DatabaseDBC$disconnect()}}
 \item \href{#method-DatabaseDBC-clone}{\code{DatabaseDBC$clone()}}
 }
 }
@@ -91,6 +94,45 @@ Execute method to execute a query on the database using \code{DatabaseConnector:
 \subsection{Returns}{
 \code{invisible(self)}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DatabaseDBC-uploadTable"></a>}}
+\if{latex}{\out{\hypertarget{method-DatabaseDBC-uploadTable}{}}}
+\subsection{Method \code{uploadTable()}}{
+Method to upload data to the database
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DatabaseDBC$uploadTable(tableName, data)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{tableName}}{(\code{character(1)}) Name of the table}
+
+\item{\code{data}}{(\code{data.frame}) data.frame like table to upload}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DatabaseDBC-connect"></a>}}
+\if{latex}{\out{\hypertarget{method-DatabaseDBC-connect}{}}}
+\subsection{Method \code{connect()}}{
+Method to connect to the database.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DatabaseDBC$connect()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DatabaseDBC-disconnect"></a>}}
+\if{latex}{\out{\hypertarget{method-DatabaseDBC-disconnect}{}}}
+\subsection{Method \code{disconnect()}}{
+Method to disconnect from the database.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DatabaseDBC$disconnect()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DatabaseDBC-clone"></a>}}

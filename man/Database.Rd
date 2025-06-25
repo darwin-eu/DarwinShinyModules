@@ -32,6 +32,9 @@ methods, while \code{DatabaseDBI} extends it with the \code{attachTables()} and
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
+\item \href{#method-Database-uploadTable}{\code{Database$uploadTable()}}
+\item \href{#method-Database-connect}{\code{Database$connect()}}
+\item \href{#method-Database-disconnect}{\code{Database$disconnect()}}
 \item \href{#method-Database-clone}{\code{Database$clone()}}
 }
 }
@@ -45,6 +48,45 @@ methods, while \code{DatabaseDBI} extends it with the \code{attachTables()} and
 </ul>
 </details>
 }}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Database-uploadTable"></a>}}
+\if{latex}{\out{\hypertarget{method-Database-uploadTable}{}}}
+\subsection{Method \code{uploadTable()}}{
+Method to upload tables to the database.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Database$uploadTable(tableName, data)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{tableName}}{(\code{character(1)}) Name of the table}
+
+\item{\code{data}}{(\code{data.frame}) data.frame like table to upload}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Database-connect"></a>}}
+\if{latex}{\out{\hypertarget{method-Database-connect}{}}}
+\subsection{Method \code{connect()}}{
+Method to connect to the database.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Database$connect()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Database-disconnect"></a>}}
+\if{latex}{\out{\hypertarget{method-Database-disconnect}{}}}
+\subsection{Method \code{disconnect()}}{
+Method to disconnect from the database.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Database$disconnect()}\if{html}{\out{</div>}}
+}
+
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Database-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-Database-clone}{}}}

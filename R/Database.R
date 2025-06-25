@@ -31,6 +31,26 @@ Database <- R6::R6Class(
     }
   ),
 
+  ## Public ----
+  public = list(
+    #' @description
+    #' Method to upload tables to the database.
+    #'
+    #' @param tableName (`character(1)`) Name of the table
+    #' @param data (`data.frame`) data.frame like table to upload
+    uploadTable = function(tableName, data) {
+      warning(sprintf("Not implemented for class: %s", class(self)[1]))
+    },
+
+    #' @description
+    #' Method to connect to the database.
+    connect = function() {},
+
+    #' @description
+    #' Method to disconnect from the database.
+    disconnect = function() {}
+  ),
+
   ## Private ----
   private = list(
     ### Fields ----
@@ -38,9 +58,8 @@ Database <- R6::R6Class(
 
     ### Methods ----
     finalize = function() {
-      private$disconnect()
+      self$disconnect()
     },
-
     .UI = function() {
       shiny::fluidRow(
         shiny::div(
@@ -70,11 +89,10 @@ Database <- R6::R6Class(
         )
       )
     },
-
     .server = function(input, output, session) {
       initConnect <- FALSE
       if (!initConnect & !self$connected) {
-        private$connect()
+        self$connect()
         initConnect <- TRUE
       }
 
@@ -100,7 +118,7 @@ Database <- R6::R6Class(
       })
 
       if (self$connected) {
-        shiny::onStop(private$disconnect)
+        shiny::onStop(self$disconnect)
 
         output$connected <- reactive({
           private$.reactiveValues$connected
@@ -112,17 +130,14 @@ Database <- R6::R6Class(
         })
 
         shiny::observeEvent(input$reconnect, {
-          private$connect()
+          self$connect()
           shiny::removeModal()
         })
 
         shiny::observeEvent(input$disconnect, {
-          private$disconnect()
+          self$disconnect()
         })
       }
-    },
-
-    connect = function() {},
-    disconnect = function() {}
+    }
   )
 )

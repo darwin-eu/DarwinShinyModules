@@ -1,3 +1,137 @@
+TPDataInterface <- R6::R6Class(
+  classname = "TPDataInterface",
+  inherit = ShinyModule,
+
+  # Active ----
+  active = list(
+    treatment_pathways = function() {
+      private$.tables$treatment_pathways <- private$.tables$treatment_pathways |>
+        private$checkConnection()
+      return(private$.tables$treatment_pathways)
+    },
+    cdm_source_info = function() {
+      private$.tables$cdm_source_info <- private$.tables$cdm_source_info |>
+        private$checkConnection()
+      return(private$.tables$cdm_source_info)
+    },
+    database = function() {
+      return(private$.database)
+    }
+  ),
+
+  # Public ----
+  public = list(
+    initialize = function(..., overwrite = TRUE) {
+      super$initialize()
+
+      private$.database <- DarwinShinyModules::DatabaseDBI$new(
+        driver = duckdb::duckdb(dbdir = private$.DBDIR)
+      )
+      private$.database$parentNamespace <- self$namespace
+
+      dots <- list(...)
+      private$loadResults(dots)
+    }
+  ),
+
+  # Private ----
+  private = list(
+    ## Constants ----
+    .DBDIR = file.path(tempdir(), "tp_mod"),
+    .FILENAMES = c(
+      "attrition.csv", "metadata.csv", "treatment_pathways.csv",
+      "summary_event_duration.csv", "counts_age.csv", "counts_sex.csv",
+      "counts_year.csv", "cdm_source_info.csv", "analyses.csv",
+      "arguments.csv"
+    ),
+
+    ## Nested Modules ----
+    .database = NULL,
+
+    ## Fields ----
+    .nResults = 0,
+    .tables = NULL,
+
+    ## Overrides ----
+    .UI = function() {
+      private$.database$UI()
+    },
+    .server = function(input, output, session) {
+      private$.database$server(input, output, session)
+    },
+
+    ## Methods ----
+    finalize = function() {
+      private$.database$disconnect()
+      unlink(private$.DBDIR, recursive = TRUE, force = TRUE)
+    },
+    checkConnection = function(tbl) {
+      if (private$.database$connected) {
+        if (!identical(private$.database$connection, tbl$src$con)) {
+          tbl$src$con <- private$.database$connection
+        }
+      }
+      return(tbl)
+    },
+    loadResults = function(dots) {
+      private$.database$connect()
+      on.exit(private$.database$disconnect())
+      private$.tables <- new.env()
+      for (arg in dots) {
+        private$.nResults <- private$.nResults + 1
+        if ("TreatmentPatternsResults" %in% class(arg)) {
+          private$loadFromTPR(arg)
+        } else if (dir.exists(arg)) {
+          private$loadFromCSV(arg)
+        } else if (file.exists(arg)) {
+          private$loadFromZIP(arg)
+        }
+      }
+    },
+    getLabel = function(file) {
+      substr(file, start = 1, stop = nchar(file) - 4)
+    },
+    loadFromTPR = function(tpr) {
+      for (i in seq_len(length(private$.FILENAMES))) {
+        file <- private$.FILENAMES[i]
+        label <- private$getLabel(file)
+        private$uploadFiles(
+          data = tpr[[label]],
+          label = label
+        )
+      }
+    },
+    loadFromCSV = function(dir) {
+      for (i in seq_len(length(private$.FILENAMES))) {
+        file <- private$.FILENAMES[i]
+        label <- private$getLabel(file)
+        private$uploadFiles(
+          data = read.csv(file.path(dir, file)),
+          label = label
+        )
+      }
+    },
+    loadFromZIP = function(zipFile) {
+      tempDir <- file.path(tempdir(), "tp-zip")
+      unzip(zipFile, exdir = tempDir)
+      private$loadFromCSV(tempDir)
+    },
+    uploadFiles = function(data, label) {
+      data <- data |>
+        dplyr::mutate(result_id = as.integer(private$.nResults))
+
+      if (is.null(private$.tables[[label]])) {
+        dplyr::copy_to(dest = private$.database$connection, df = data, name = label, overwrite = TRUE)
+        private$.tables[[label]] <- dplyr::tbl(private$.database$connection, label)
+      } else {
+        private$.tables[[label]] <- private$.tables[[label]] |>
+          dplyr::union_all(data, copy = TRUE) |>
+          dplyr::compute(name = label, temporary = FALSE)
+      }
+    }
+  )
+)
+
 TreatmentPatternsMod <- R6::R6Class(
   classname = "TreatmentPatternsMod",
   inherit = ShinyModule,
@@ -5,12 +139,16 @@ TreatmentPatternsMod <- R6::R6Class(
   # Active ----
   active = list(),
 
-  # Publc ----
+  # Public ----
   public = list(
     initialize = function(...) {
       super$initialize()
-      dots <- list(...)
-      private$loadResults(dots)
+      private$.dataInterface <- TPDataInterface$new(...)
+      private$.dataInterface$parentNamespace <- self$namespace
+
+      private$.dataInterface$database$connect()
+      on.exit(private$.dataInterface$database$disconnect())
+
       private$setColours()
       private$initSankey()
       private$initSunburst()
@@ -21,20 +159,11 @@ TreatmentPatternsMod <- R6::R6Class(
 
   # Private ----
   private = list(
-    ## Constant ----
-    .FILENAMES = c(
-      "attrition.csv", "metadata.csv", "treatment_pathways.csv",
-      "summary_event_duration.csv", "counts_age.csv", "counts_sex.csv",
-      "counts_year.csv", "cdm_source_info.csv", "analyses.csv",
-      "arguments.csv"
-    ),
-
     ## Fields ----
-    .nResults = 0,
-    .results = list(),
     .colours = NULL,
 
-    ## Sub Modules ----
+    ## Nested Modules ----
+    .dataInterface = NULL,
     .sunburst = NULL,
     .sankey = NULL,
     .inputPanel = NULL,
@@ -64,10 +193,33 @@ TreatmentPatternsMod <- R6::R6Class(
       )
     },
     .server = function(input, output, session) {
+      private$.dataInterface$server(input, output, session)
       private$.inputPanel$server(input, output, session)
       private$.sunburst$server(input, output, session)
       private$.sankey$server(input, output, session)
       private$.table$server(input, output, session)
+
+      dupes <- private$.dataInterface$cdm_source_info |>
+        dplyr::group_by(.data$cdm_source_abbreviation) |>
+        dplyr::summarise(n = n()) |>
+        dplyr::filter(.data$n > 1) |>
+        dplyr::pull(.data$cdm_source_abbreviation)
+
+      cdm_source_info <- private$.dataInterface$cdm_source_info |>
+        dplyr::group_by(.data$cdm_source_abbreviation) |>
+        dplyr::mutate(
+          cdm_source_abbreviation = case_when(
+            .data$cdm_source_abbreviation %in% dupes ~ paste0(.data$cdm_source_abbreviation, " - Analysis: ", .data$analysis_id, " Result: ", .data$result_id)
+          )
+        ) |>
+        dplyr::ungroup() |>
+        dplyr::collect()
+
+      shinyWidgets::updatePickerInput(
+        session = session,
+        inputId = shiny::NS(shiny::NS(private$.inputPanel$moduleName, private$.inputPanel$instanceId), "database"),
+        choices = cdm_source_info$cdm_source_abbreviation
+      )
 
       shiny::observeEvent(
         list(
@@ -79,90 +231,48 @@ TreatmentPatternsMod <- R6::R6Class(
           private$.inputPanel$inputValues$groupCombinations
         ),
         {
-          dat <- private$.results$cdm_source_info |>
+          dat <- cdm_source_info |>
             dplyr::inner_join(
-              private$.results$treatment_pathways,
+              private$.dataInterface$treatment_pathways,
               by = dplyr::join_by(
                 result_id == result_id,
                 analysis_id == analysis_id
-              )
+              ), copy = TRUE
             ) |>
             dplyr::filter(
-              .data$cdm_source_abbreviation == private$.inputPanel$inputValues$database
-            )
-
-          resultId <- dat |>
-            dplyr::pull(.data$result_id) |>
-            unique()
-
-          analysisId <- dat |>
-            dplyr::pull(.data$analysis_id) |>
-            unique()
-
-          filteredData <- private$.results$treatment_pathways |>
-            dplyr::filter(
+              .data$cdm_source_abbreviation == private$.inputPanel$inputValues$database,
               .data$age == private$.inputPanel$inputValues$age,
               .data$sex == private$.inputPanel$inputValues$sex,
               .data$index_year == private$.inputPanel$inputValues$indexYear,
-              .data$analysis_id == analysisId,
-              .data$result_id == resultId,
-              .data$freq >= private$.inputPanel$inputValues$minFreq,
-            )
+              .data$freq >= private$.inputPanel$inputValues$minFreq
+            ) |>
+            dplyr::select(
+              "pathway",
+              "freq",
+              "age",
+              "sex",
+              "index_year",
+              "analysis_id",
+              "target_cohort_id",
+              "target_cohort_name"
+            ) |>
+            dplyr::collect()
 
           private$.sunburst$args$groupCombinations <- private$.inputPanel$inputValues$groupCombinations
           private$.sankey$args$groupCombinations <- private$.inputPanel$inputValues$groupCombinations
 
-          private$.sunburst$args$treatmentPathways <- filteredData
-          private$.sankey$args$treatmentPathways <- filteredData
-          private$.table$reactiveValues$data <- filteredData
+          private$.sunburst$args$treatmentPathways <- dat
+          private$.sankey$args$treatmentPathways <- dat
+          private$.table$reactiveValues$data <- dat
         }
       )
     },
 
     ## Methods ----
-    loadResults = function(dots) {
-      for (arg in dots) {
-        private$.nResults <- private$.nResults + 1
-        if ("TreatmentPatternsResults" %in% class(arg)) {
-          private$loadFromTPR(arg)
-        } else if (dir.exists(arg)) {
-          private$loadFromCSV(arg)
-        } else if (file.exists(arg)) {
-          private$loadFromZIP(arg)
-        }
-      }
-    },
-    loadFromTPR = function(tpr) {
-      for (i in seq_len(length(private$.FILENAMES))) {
-        file <- private$.FILENAMES[i]
-        label <- substr(file, start = 1, stop = nchar(file) - 4)
-        private$.results[[label]] <- dplyr::bind_rows(
-          private$.results[[label]],
-          tpr[[label]] |>
-            dplyr::mutate(result_id = private$.nResults)
-        )
-      }
-    },
-    loadFromCSV = function(dir) {
-      for (i in seq_len(length(private$.FILENAMES))) {
-        file <- private$.FILENAMES[i]
-        label <- substr(file, start = 1, stop = nchar(file) - 4)
-        private$.results[[label]] <- dplyr::bind_rows(
-          private$.results[[label]],
-          read.csv(file.path(dir, file)) |>
-            dplyr::mutate(result_id = private$.nResults)
-        )
-      }
-    },
-    loadFromZIP = function(zipFile) {
-      tempDir <- file.path(tempdir(), "tp-zip")
-      unzip(zipFile, exdir = tempDir)
-      private$loadFromCSV(tempDir)
-    },
     initInputPanel = function() {
-      databaseLabels <- private$.results$cdm_source_info |>
+      databaseLabels <- private$.dataInterface$cdm_source_info |>
         dplyr::inner_join(
-          private$.results$treatment_pathways,
+          private$.dataInterface$treatment_pathways,
           by = dplyr::join_by(
             result_id == result_id,
             analysis_id == analysis_id
@@ -191,30 +301,42 @@ TreatmentPatternsMod <- R6::R6Class(
           age = list(
             inputId = shiny::NS(self$namespace, "age"),
             label = "Age",
-            choices = unique(private$.results$treatment_pathways$age),
+            choices = private$.dataInterface$treatment_pathways |>
+              dplyr::pull(.data$age) |>
+              unique(),
             selected = "all",
             multiple = FALSE
           ),
           sex = list(
             inputId = shiny::NS(self$namespace, "sex"),
             label = "Sex",
-            choices = unique(private$.results$treatment_pathways$sex),
+            choices = private$.dataInterface$treatment_pathways |>
+              dplyr::pull(.data$sex) |>
+              unique(),
             selected = "all",
             multiple = FALSE
           ),
           indexYear = list(
             inputId = shiny::NS(self$namespace, "indexYear"),
             label = "Index Year",
-            choices = unique(private$.results$treatment_pathways$index_year),
+            choices = private$.dataInterface$treatment_pathways |>
+              dplyr::pull(.data$index_year) |>
+              unique(),
             selected = "all",
             multiple = FALSE
           ),
           minFreq = list(
             inputId = shiny::NS(self$namespace, "minFreq"),
             label = "Minimum Frequency",
-            min = min(private$.results$treatment_pathways$freq),
-            max = max(private$.results$treatment_pathways$freq),
-            value = min(private$.results$treatment_pathways$freq)
+            min = private$.dataInterface$treatment_pathways |>
+              dplyr::pull(.data$freq) |>
+              min(),
+            max = private$.dataInterface$treatment_pathways |>
+              dplyr::pull(.data$freq) |>
+              max(),
+            value = private$.dataInterface$treatment_pathways |>
+              dplyr::pull(.data$freq) |>
+              min()
           ),
           groupCombinations = list(
             inputId = shiny::NS(self$namespace, "groupCombinations"),
@@ -240,7 +362,8 @@ TreatmentPatternsMod <- R6::R6Class(
     },
     setColours = function() {
       if (is.null(private$.colours)) {
-        nodes <- private$.results$treatment_pathways$pathway |>
+        nodes <- private$.dataInterface$treatment_pathways |>
+          dplyr::pull(.data$pathway) |>
           stringr::str_split(pattern = "-") |>
           unlist() |>
           unique()
@@ -292,23 +415,3 @@ TreatmentPatternsMod <- R6::R6Class(
     }
   )
 )
-
-
-
-tpr <- TreatmentPatterns::TreatmentPatternsResults$new(filePath = "./inst/dummyData/TreatmentPatterns/3.0.0/output.zip")
-# tpr2 <- TreatmentPatterns::TreatmentPatternsResults$new(filePath = "./inst/dummyData/TreatmentPatterns/3.0.0/output.zip")
-
-mod1 <- TreatmentPatternsMod$new(tpr)
-# mod2 <- TreatmentPatternsMod$new(tpr2)
-
-# mod1$instanceId
-# mod2$instanceId
-#
-# mod1$namespace
-# mod2$namespace
-
-DarwinShinyModules::launchDarwinDashboardApp(
-  list(TreatmentPatterns = list(mod1))
-)
-
-# tprTp$.__enclos_env__$private$.results$meta

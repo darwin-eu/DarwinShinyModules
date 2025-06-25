@@ -56,15 +56,19 @@ DatabaseDBC <- R6::R6Class(
         ...
       )
       return(invisible(self))
-    }
-  ),
+    },
 
-  ## Private ----
-  private = list(
-    ### Fields ----
-    .connectionDetails = NULL,
+    #' @description
+    #' Method to upload data to the database
+    #'
+    #' @param tableName (`character(1)`) Name of the table
+    #' @param data (`data.frame`) data.frame like table to upload
+    uploadTable = function(tableName, data) {
+      DatabaseConnector::dbWriteTable(conn = private$.connection, name = tableName, value = data)
+    },
 
-    ### Methods ----
+    #' @description
+    #' Method to connect to the database.
     connect = function() {
       if (!self$connected) {
         private$.connection <- DatabaseConnector::connect(private$.connectionDetails)
@@ -78,6 +82,8 @@ DatabaseDBC <- R6::R6Class(
       }
     },
 
+    #' @description
+    #' Method to disconnect from the database.
     disconnect = function() {
       if (self$connected) {
         DatabaseConnector::disconnect(private$.connection)
@@ -87,5 +93,11 @@ DatabaseDBC <- R6::R6Class(
         message("Disconnected from database")
       }
     }
+  ),
+
+  ## Private ----
+  private = list(
+    ### Fields ----
+    .connectionDetails = NULL
   )
 )
