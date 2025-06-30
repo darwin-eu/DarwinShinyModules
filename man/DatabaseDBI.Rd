@@ -15,6 +15,8 @@ This class extends the \code{Database} class, to query a database using
 \describe{
 \item{\code{connection}}{(\verb{DBI Connection}) A DBI connection.}
 
+\item{\code{driver}}{(\code{driver}) Driver used to connect to the database.}
+
 \item{\code{connectArgs}}{(\code{list(n)}) Named list of additional arguments used in \code{DBI::dbConnect()}}
 
 \item{\code{disconnectArgs}}{(\code{list(n)}) Named list of additional arguments used in \code{DBI::dbDisconnect()}}

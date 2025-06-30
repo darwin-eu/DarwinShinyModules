@@ -417,11 +417,11 @@ TreatmentPatterns <- R6::R6Class(
   )
 )
 
-tpr1 <- TreatmentPatterns::TreatmentPatternsResults$new(filePath = "./inst/dummyData/TreatmentPatterns/3.0.0/")
-tpr2 <- TreatmentPatterns::TreatmentPatternsResults$new(filePath = "./inst/dummyData/TreatmentPatterns/3.0.0/")
-mod <- TreatmentPatterns$new(tpr1, tpr2)
-
-preview(mod)
+# tpr1 <- TreatmentPatterns::TreatmentPatternsResults$new(filePath = "./inst/dummyData/TreatmentPatterns/3.0.0/")
+# tpr2 <- TreatmentPatterns::TreatmentPatternsResults$new(filePath = "./inst/dummyData/TreatmentPatterns/3.0.0/")
+# mod <- TreatmentPatterns$new(tpr1, tpr2)
+#
+# preview(mod)
 #
 # dir.exists(mod$.__enclos_env__$private$.dataInterface$.__enclos_env__$private$.DBDIR)
 #

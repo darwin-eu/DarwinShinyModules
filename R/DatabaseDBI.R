@@ -17,6 +17,8 @@ DatabaseDBI <- R6::R6Class(
     connection = function() {
       return(private$.connection)
     },
+
+    #' @field driver (`driver`) Driver used to connect to the database.
     driver = function() {
       return(private$.driver)
     },
