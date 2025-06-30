@@ -17,6 +17,9 @@ DatabaseDBI <- R6::R6Class(
     connection = function() {
       return(private$.connection)
     },
+    driver = function() {
+      return(private$.driver)
+    },
 
     #' @field connectArgs (`list(n)`) Named list of additional arguments used in `DBI::dbConnect()`
     connectArgs = function(connectArgs) {
