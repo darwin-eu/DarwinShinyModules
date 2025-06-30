@@ -93,15 +93,17 @@ DatabaseDBI <- R6::R6Class(
           args = append(list(drv = private$.driver), private$.connectArgs)
         )
         private$.reactiveValues$connected <- TRUE
-        dbName <- tryCatch({
-          private$.connection@dbname
-        }, error = function(e) {
-          basename(private$.connection@driver@dbdir)
-        })
+        dbName <- tryCatch(
+          {
+            private$.connection@dbname
+          },
+          error = function(e) {
+            basename(private$.connection@driver@dbdir)
+          }
+        )
         private$.reactiveValues$databaseName <- dbName
       }
     },
-
     disconnect = function() {
       if (self$connected) {
         do.call(
