@@ -79,6 +79,7 @@ Collate:
     'Prevalence.R'
     'ShinydashboardApp.R'
     'StudyBackground.R'
+    'TPDataInterface.R'
     'Table.R'
     'Text.R'
     'TreatmentPatterns.R'
