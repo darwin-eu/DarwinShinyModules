@@ -1,3 +1,11 @@
+#' @title TPDataInterface class
+#'
+#' @description
+#' Module that deals with how data is loaded and exposed to other
+#' `TreatmentPatterns` related modules
+#'
+#' @noMd
+#' @noRd
 TPDataInterface <- R6::R6Class(
   classname = "TPDataInterface",
   inherit = ShinyModule,
