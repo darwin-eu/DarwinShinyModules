@@ -89,7 +89,11 @@ Bridge <- R6::R6Class(
     initialize = function(..., bridgeFun = NULL) {
       super$initialize(...)
       dots <- list(...)
-      private$.modules <- dots[names(dots) %in% ""]
+      if (!is.null(names(dots))) {
+        private$.modules <- dots[names(dots) %in% ""]
+      } else {
+        private$.modules <- dots
+      }
 
       if (is.null(bridgeFun)) {
         private$.bridgeFun <- function(input, output, session) {}
