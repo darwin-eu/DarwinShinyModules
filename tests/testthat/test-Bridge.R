@@ -16,6 +16,13 @@ test_that("Creation", {
 
   f <- function() {}
 
+  bridge <- Bridge$new(inputPanel, table, bridgeFun = f)
+
+  expect_true(class(bridge$birdgeFun) == "function")
+  for (module in bridge$modules) {
+    expect_true("ShinyModule" %in% class(module))
+  }
+
   bridge <- Bridge$new(inputPanel, table, parentNamespace = "foo", bridgeFun = f)
 
   expect_true(class(bridge$birdgeFun) == "function")
