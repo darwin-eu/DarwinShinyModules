@@ -289,6 +289,7 @@ Prevalence <- R6::R6Class(
         dplyr::pull(min_cell_count) %>%
         unique()
       data <- IncidencePrevalence::asPrevalenceResult(data) %>%
+        { if (!"analysis_interval" %in% names(.)) dplyr::mutate(., analysis_interval = "overall") else .} %>%
         dplyr::mutate(analysis_min_cell_count = !!minCellCount) %>%
         dplyr::rename(
           database = cdm_name,
