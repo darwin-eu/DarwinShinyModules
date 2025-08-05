@@ -44,6 +44,8 @@ Initializer method
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{connectionDetails}}{(\code{ConnectionDetails}) Connection Details from \code{DatabaseConnector::createConnectionDetails}}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }
 \if{html}{\out{</div>}}
 }

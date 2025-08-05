@@ -51,6 +51,7 @@ DatabaseDBI <- R6::R6Class(
     #' Initializer method
     #'
     #' @param driver Driver to use to connect to the database with `DBI::dbConnect()`
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @return `invisible(self)`
     initialize = function(driver, ...) {

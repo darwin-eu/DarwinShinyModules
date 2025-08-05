@@ -61,6 +61,7 @@ StudyBackground <- R6::R6Class(
     #' @param background (`character(n)`) Either a direct background description
     #' or a file path pointing to a markdown (.md) file.
     #' @param EUPAS (`character(1)`) EUPAS belonging to the study.
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @returns `invisible(self)`
     initialize = function(background, EUPAS, ...) {

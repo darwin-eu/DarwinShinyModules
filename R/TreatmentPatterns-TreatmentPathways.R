@@ -17,8 +17,7 @@
 #' @title TreatmentPathways
 #'
 #' @description
-#' Internal module that displays the Treatment Pathways from the
-#' `TreatmentPatterns` package.
+#' Module that displays the Treatment Pathways from the `TreatmentPatterns` package.
 #'
 #' @examples{
 #'   if (interactive()) {
@@ -73,6 +72,8 @@ TreatmentPathways <- R6::R6Class(
     sunburstOverview = function() {
       return(private$.sunburstOverview)
     },
+
+    #' @field treatmentPathways (`data.frame`)
     treatmentPathways = function(treatmentPathways) {
       if (missing(treatmentPathways)) {
         return(private$.treatmentPathways)
@@ -80,6 +81,8 @@ TreatmentPathways <- R6::R6Class(
         private$.treatmentPathways <- treatmentPathways
       }
     },
+
+    #' @field cdmSourceInfo (`data.frame`)
     cdmSourceInfo = function(cdmSourceInfo) {
       if (missing(cdmSourceInfo)) {
         return(private$.cdmSourceInfo)
@@ -94,8 +97,11 @@ TreatmentPathways <- R6::R6Class(
     #' @description
     #' Initializer method
     #'
-    #' @param ... One ore more `TreatmentPatternsResults` objects, path to
-    #' csv-files or zip-files. In any combination.
+    #' @param treatmentPathways (`data.frame`) `treatment_pathways` field from the `TreatmentPatternsResult` object.
+    #' @param cdmSourceInfo (`data.frame`) `cdm_source_info` field from the `TreatmentPatternsResult` object.
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
+    #'
+    #' @return `self`
     initialize = function(treatmentPathways, cdmSourceInfo, ...) {
       super$initialize(...)
       private$assertInstall("TreatmentPatterns", "3.0.0")
@@ -107,6 +113,8 @@ TreatmentPathways <- R6::R6Class(
       private$initSunburst()
       private$initInputPanel()
       private$initTable()
+
+      return(invisible(self))
     }
   ),
 

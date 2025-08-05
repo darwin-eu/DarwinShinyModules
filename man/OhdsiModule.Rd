@@ -97,6 +97,8 @@ Initializer method
 \item{\code{serverFun}}{(\code{function}) Server function to use from \code{OhdsiShinyModules}.}
 
 \item{\code{resultDatabaseSettings}}{(\code{list}) Named List of table prefixes like \code{ShinyAppBuilder::createDefaultResultDatabaseSettings()} creates.}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }
 \if{html}{\out{</div>}}
 }

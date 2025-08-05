@@ -18,6 +18,7 @@ DatabaseDBC <- R6::R6Class(
     #' Initializer method
     #'
     #' @param connectionDetails (`ConnectionDetails`) Connection Details from `DatabaseConnector::createConnectionDetails`
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @return `invisible(self)`
     initialize = function(connectionDetails, ...) {

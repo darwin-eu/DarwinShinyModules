@@ -4,8 +4,7 @@
 \alias{TreatmentPathways}
 \title{TreatmentPathways}
 \description{
-Internal module that displays the Treatment Pathways from the
-\code{TreatmentPatterns} package.
+Module that displays the Treatment Pathways from the \code{TreatmentPatterns} package.
 }
 \examples{
 {
@@ -44,6 +43,10 @@ Sankey Diagrams.}
 \item{\code{table}}{Table displaying the \code{treatment_pathways} csv-file.}
 
 \item{\code{sunburstOverview}}{(\code{list}) Containing Sunburst \code{PlotWidget} modules.}
+
+\item{\code{treatmentPathways}}{(\code{data.frame})}
+
+\item{\code{cdmSourceInfo}}{(\code{data.frame})}
 }
 \if{html}{\out{</div>}}
 }
@@ -75,10 +78,16 @@ Initializer method
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{One ore more \code{TreatmentPatternsResults} objects, path to
-csv-files or zip-files. In any combination.}
+\item{\code{treatmentPathways}}{(\code{data.frame}) \code{treatment_pathways} field from the \code{TreatmentPatternsResult} object.}
+
+\item{\code{cdmSourceInfo}}{(\code{data.frame}) \code{cdm_source_info} field from the \code{TreatmentPatternsResult} object.}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self}
 }
 }
 \if{html}{\out{<hr>}}

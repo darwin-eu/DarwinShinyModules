@@ -85,6 +85,8 @@ Initializer method
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data}}{(\code{summarised_result}) Result object from the \code{IncidencePrevalence} package.}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }
 \if{html}{\out{</div>}}
 }

@@ -17,8 +17,9 @@
 #' @title EventDuration
 #'
 #' @description
-#' Internal module that displays the Event Duration from the
-#' `TreatmentPatterns` package.
+#' Module that displays the Event Duration from the `TreatmentPatterns` package.
+#'
+#' @export
 #'
 #' @examples{
 #'   if (interactive()) {
@@ -42,10 +43,51 @@ EventDuration <- R6::R6Class(
   inherit = ShinyModule,
 
   # Active ----
-  active = list(),
+  active = list(
+    #' @field plot (`PlotPlotly`) module.
+    plot = function() {
+      return(private$.plot)
+    },
+
+    #' @field table (`Table`) module.
+    table = function() {
+      return(private$.table)
+    },
+
+    #' @field inputPanel (`InputPanel`) module.
+    inputPanel = function() {
+      return(private$.inputPanel)
+    },
+
+    #' @field summaryEventDuration (`data.table`)
+    summaryEventDuration = function(summaryEventDuration) {
+      if (missing(summaryEventDuration)) {
+        return(private$.summaryEventDuration)
+      } else {
+        private$.summaryEventDuration <- summaryEventDuration
+      }
+    },
+
+    #' @field cdmSourceInfo (`data.frame`)
+    cdmSourceInfo = function(cdmSourceInfo) {
+      if (missing(cdmSourceInfo)) {
+        return(private$.cdmSourceInfo)
+      } else {
+        private$.cdmSourceInfo <- cdmSourceInfo
+      }
+    }
+  ),
 
   # Public ----
   public = list(
+    #' @description
+    #' Initializer method
+    #'
+    #' @param summaryEventDuration (`data.frame`) `summary_event_duration` field from the `TreatmentPatternsResult` object.
+    #' @param cdmSourceInfo (`data.frame`) `cdm_source_info` field from the `TreatmentPatternsResult` object.
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
+    #'
+    #' @return `self`
     initialize = function(summaryEventDuration, cdmSourceInfo, ...) {
       super$initialize(...)
 
@@ -57,6 +99,8 @@ EventDuration <- R6::R6Class(
       private$initPlot()
       private$initTable()
       private$initInputPanel()
+
+      return(invisible(self))
     }
   ),
 

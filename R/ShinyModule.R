@@ -234,6 +234,8 @@ ShinyModule <- R6::R6Class(
     #' @description
     #' Initializer method
     #'
+    #' @param ... Additional parameters to set fields.
+    #'
     #' @return
     #' (`self`)
     initialize = function(...) {

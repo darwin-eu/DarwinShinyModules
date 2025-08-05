@@ -55,6 +55,8 @@ Initializer method
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{driver}}{Driver to use to connect to the database with \code{DBI::dbConnect()}}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }
 \if{html}{\out{</div>}}
 }

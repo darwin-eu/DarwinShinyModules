@@ -60,6 +60,7 @@ GTTable <- R6::R6Class(
     #'
     #' @param fun (`function`) Function to produce a `gt` table with, i.e `gt::gt`.
     #' @param args (`list()`) Arguments for said function as a named list i.e. `list(data = iris)`.
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @returns `self`
     initialize = function(fun, args, ...) {

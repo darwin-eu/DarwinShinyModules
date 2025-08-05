@@ -187,6 +187,13 @@ Initializer method
 \if{html}{\out{<div class="r">}}\preformatted{ShinyModule$new(...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Additional parameters to set fields.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 (\code{self})
 }

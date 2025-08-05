@@ -108,6 +108,7 @@ Table <- R6::R6Class(
     #' the table like search box, pagination, etc. Only display the table using
     #' list(dom = '')
     #' @param filter (`character`: `"top"`) filter option, it can be either `"none"`, `"bottom"` or `"top"` (default)
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @return `self`
     initialize = function(data, title = "Table", options = list(scrollX = TRUE), filter = "top", ...) {

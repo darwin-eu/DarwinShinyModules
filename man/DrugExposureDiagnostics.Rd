@@ -62,6 +62,8 @@ Initializer method
 \item{\code{resultList}}{(\code{list}) List containing the output of the checks}
 
 \item{\code{database_id}}{(\code{character}) Database identifier (optional)}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }
 \if{html}{\out{</div>}}
 }

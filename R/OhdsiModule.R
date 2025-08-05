@@ -87,6 +87,7 @@ OhdsiModule <- R6::R6Class(
     #' @param viewerFun (`function`) Viewer function to use from `OhdsiShinyModules`.
     #' @param serverFun (`function`) Server function to use from `OhdsiShinyModules`.
     #' @param resultDatabaseSettings (`list`) Named List of table prefixes like `ShinyAppBuilder::createDefaultResultDatabaseSettings()` creates.
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @returns `self`
     initialize = function(connectionHandler, viewerFun, serverFun, resultDatabaseSettings = ShinyAppBuilder::createDefaultResultDatabaseSettings(), ...) {

@@ -79,6 +79,8 @@ Initializer method
 \item{\code{args}}{(\code{list()}) Named list of arguments used by xInput functions \code{list(funA = list(inputId = "name", label = "name"))}}
 
 \item{\code{growDirection}}{The direction in which this component will be placed, either "horizontal" or "vertical" (default)}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }
 \if{html}{\out{</div>}}
 }

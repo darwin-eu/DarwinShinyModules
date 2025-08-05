@@ -86,6 +86,7 @@ Prevalence <- R6::R6Class(
     #' Initializer method
     #'
     #' @param data (`summarised_result`) Result object from the `IncidencePrevalence` package.
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @returns `self`
     initialize = function(data, ...) {

@@ -100,6 +100,8 @@ Initializer function
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data}}{(\code{SummarisedResults}) Summarised result object from \code{CohortSurvival}}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }
 \if{html}{\out{</div>}}
 }

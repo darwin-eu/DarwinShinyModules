@@ -84,6 +84,7 @@ InputPanel <- R6::R6Class(
     #' @param funs (`list()`) Named list of xInput functions used `list(funA = shiny::selectInput)`.
     #' @param args (`list()`) Named list of arguments used by xInput functions `list(funA = list(inputId = "name", label = "name"))`
     #' @param growDirection The direction in which this component will be placed, either "horizontal" or "vertical" (default)
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @return (`invisible(self)`)
     initialize = function(funs, args, growDirection = "vertical", ...) {

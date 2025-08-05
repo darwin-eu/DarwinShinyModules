@@ -68,6 +68,8 @@ initializer method
 or a file path pointing to a markdown (.md) file.}
 
 \item{\code{EUPAS}}{(\code{character(1)}) EUPAS belonging to the study.}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }
 \if{html}{\out{</div>}}
 }

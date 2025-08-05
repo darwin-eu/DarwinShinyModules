@@ -95,6 +95,7 @@ Text <- R6::R6Class(
     #' @description initialize
     #'
     #' @param markdown (`character(n)`) Markdown.
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @return `self`
     initialize = function(markdown, ...) {

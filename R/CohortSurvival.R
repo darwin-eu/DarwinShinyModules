@@ -116,6 +116,7 @@ CohortSurvival <- R6::R6Class(
     #' Initializer function
     #'
     #' @param data (`SummarisedResults`) Summarised result object from `CohortSurvival`
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @return `invisible(self)`
     initialize = function(data, ...) {

@@ -63,6 +63,8 @@ initialize
 \item{\code{args}}{(\code{list}) Named list of arguments to pass to \code{fun}.}
 
 \item{\code{title}}{(\code{character(1)}) Title of the plot. When set to \code{NULL}, no title is shown.}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }
 \if{html}{\out{</div>}}
 }

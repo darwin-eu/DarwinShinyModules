@@ -4,8 +4,7 @@
 \alias{EventDuration}
 \title{EventDuration}
 \description{
-Internal module that displays the Event Duration from the
-\code{TreatmentPatterns} package.
+Module that displays the Event Duration from the \code{TreatmentPatterns} package.
 }
 \examples{
 {
@@ -29,6 +28,21 @@ Internal module that displays the Event Duration from the
 \section{Super class}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{EventDuration}
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{plot}}{(\code{PlotPlotly}) module.}
+
+\item{\code{table}}{(\code{Table}) module.}
+
+\item{\code{inputPanel}}{(\code{InputPanel}) module.}
+
+\item{\code{summaryEventDuration}}{(\code{data.table})}
+
+\item{\code{cdmSourceInfo}}{(\code{data.frame})}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -49,10 +63,25 @@ Internal module that displays the Event Duration from the
 \if{html}{\out{<a id="method-EventDuration-new"></a>}}
 \if{latex}{\out{\hypertarget{method-EventDuration-new}{}}}
 \subsection{Method \code{new()}}{
+Initializer method
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{EventDuration$new(summaryEventDuration, cdmSourceInfo, ...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{summaryEventDuration}}{(\code{data.frame}) \code{summary_event_duration} field from the \code{TreatmentPatternsResult} object.}
+
+\item{\code{cdmSourceInfo}}{(\code{data.frame}) \code{cdm_source_info} field from the \code{TreatmentPatternsResult} object.}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-EventDuration-clone"></a>}}

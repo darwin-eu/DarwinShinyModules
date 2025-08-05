@@ -65,6 +65,8 @@ Initializer method.
 \item{\code{fun}}{(\code{function}) Function to produce a \code{gt} table with, i.e \code{gt::gt}.}
 
 \item{\code{args}}{(\code{list()}) Arguments for said function as a named list i.e. \code{list(data = iris)}.}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }
 \if{html}{\out{</div>}}
 }
