@@ -58,7 +58,7 @@ contents of a markdown (.md) file.}
 \subsection{Method \code{new()}}{
 initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{StudyBackground$new(background, EUPAS)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{StudyBackground$new(background, EUPAS, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

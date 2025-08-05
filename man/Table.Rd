@@ -83,7 +83,8 @@ initialize
   data,
   title = "Table",
   options = list(scrollX = TRUE),
-  filter = "top"
+  filter = "top",
+  ...
 )}\if{html}{\out{</div>}}
 }
 

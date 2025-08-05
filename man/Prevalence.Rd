@@ -78,7 +78,7 @@ Prevalence module that shows prevalence results from the IncidencePrevalence pac
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Prevalence$new(data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Prevalence$new(data, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

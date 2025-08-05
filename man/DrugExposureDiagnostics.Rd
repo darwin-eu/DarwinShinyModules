@@ -53,7 +53,7 @@ warn.conflicts = FALSE)) {
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DrugExposureDiagnostics$new(resultList, database_id = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DrugExposureDiagnostics$new(resultList, database_id = NULL, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

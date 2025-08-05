@@ -93,7 +93,7 @@ The module consists of the following:
 \subsection{Method \code{new()}}{
 Initializer function
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CohortSurvival$new(data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{CohortSurvival$new(data, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

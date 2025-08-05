@@ -78,7 +78,7 @@ Incidence module that shows incidence results from the IncidencePrevalence packa
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Incidence$new(data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Incidence$new(data, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

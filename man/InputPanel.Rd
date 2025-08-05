@@ -68,7 +68,7 @@ if (interactive()) {
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InputPanel$new(funs, args, growDirection = "vertical")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{InputPanel$new(funs, args, growDirection = "vertical", ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

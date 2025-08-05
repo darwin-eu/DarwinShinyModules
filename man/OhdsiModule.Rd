@@ -82,7 +82,8 @@ Initializer method
   connectionHandler,
   viewerFun,
   serverFun,
-  resultDatabaseSettings = ShinyAppBuilder::createDefaultResultDatabaseSettings()
+  resultDatabaseSettings = ShinyAppBuilder::createDefaultResultDatabaseSettings(),
+  ...
 )}\if{html}{\out{</div>}}
 }
 

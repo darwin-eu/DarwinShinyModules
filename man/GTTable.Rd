@@ -18,7 +18,7 @@ gtTable <- GTTable$new(
   args = list(data = iris)
 )
 
-if(interactive()) {
+if (interactive()) {
   preview(gtTable)
 }
 }
@@ -56,7 +56,7 @@ if(interactive()) {
 \subsection{Method \code{new()}}{
 Initializer method.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{GTTable$new(fun, args)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{GTTable$new(fun, args, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

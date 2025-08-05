@@ -52,7 +52,7 @@ to override the private \code{.UI()} and \code{.server()} methods.
 \subsection{Method \code{new()}}{
 initialize
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Plot$new(fun, args, title = "Plot")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Plot$new(fun, args, title = "Plot", ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

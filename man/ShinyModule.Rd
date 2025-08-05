@@ -184,7 +184,7 @@ asynchronous mode on or off.}
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyModule$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyModule$new(...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{

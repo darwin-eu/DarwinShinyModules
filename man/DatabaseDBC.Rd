@@ -37,7 +37,7 @@ This class extends the \code{Database} class, to query a database using
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatabaseDBC$new(connectionDetails)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DatabaseDBC$new(connectionDetails, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
