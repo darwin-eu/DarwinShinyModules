@@ -37,7 +37,6 @@
 StudyBackground <- R6::R6Class(
   classname = "StudyBackground",
   inherit = ShinyModule,
-
   active = list(
     #' @field background (`character(n)`) Either the direct background, or the
     #' contents of a markdown (.md) file.
@@ -55,7 +54,6 @@ StudyBackground <- R6::R6Class(
       return(private$.text)
     }
   ),
-
   public = list(
     #' @description
     #' initializer method
@@ -65,8 +63,8 @@ StudyBackground <- R6::R6Class(
     #' @param EUPAS (`character(1)`) EUPAS belonging to the study.
     #'
     #' @returns `invisible(self)`
-    initialize = function(background, EUPAS) {
-      super$initialize()
+    initialize = function(background, EUPAS, ...) {
+      super$initialize(...)
       private$.background <- private$parseSection(background)
       private$.EUPAS <- EUPAS
 
@@ -82,18 +80,15 @@ StudyBackground <- R6::R6Class(
       return(invisible(self))
     }
   ),
-
   private = list(
     .background = "",
     .EUPAS = "",
     .text = NULL,
-
     .UI = function() {
       shiny::wellPanel(
         private$.text$UI()
       )
     },
-
     parseSection = function(section) {
       if (all(file.exists(section))) {
         readLines(section)

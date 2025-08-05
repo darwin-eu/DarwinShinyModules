@@ -236,12 +236,13 @@ ShinyModule <- R6::R6Class(
     #'
     #' @return
     #' (`self`)
-    initialize = function() {
+    initialize = function(...) {
       private$checkMethodOverrides()
       private$.moduleName <- class(self)[1]
       private$.instanceId <- private$makeInstanceId()
       private$.moduleId <- sprintf("%s-%s", private$.moduleName, private$.instanceId)
       private$.namespace <- c(private$.parentNamespace, private$.moduleId)
+      private$setDotArgs(...)
       return(invisible(self))
     },
 
@@ -365,6 +366,18 @@ ShinyModule <- R6::R6Class(
 
         if (any(!is.null(c(serverErr, uiErr)))) {
           stop(c(serverErr, "\n  ", uiErr))
+        }
+      }
+    },
+    setDotArgs = function(...) {
+      dots <- list(...)
+      if (!is.null(names(dots))) {
+        dots <- dots[!names(dots) %in% ""]
+        if (!is.null(dots$parentNamespace)) {
+          self$parentNamespace <- dots$parentNamespace
+        }
+        if (!is.null(dots$async)) {
+          self$async <- dots$async
         }
       }
     }

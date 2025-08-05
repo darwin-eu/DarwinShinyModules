@@ -32,7 +32,7 @@
 #'   args = list(data = iris)
 #' )
 #'
-#' if(interactive()) {
+#' if (interactive()) {
 #'   preview(gtTable)
 #' }
 GTTable <- R6::R6Class(
@@ -62,8 +62,8 @@ GTTable <- R6::R6Class(
     #' @param args (`list()`) Arguments for said function as a named list i.e. `list(data = iris)`.
     #'
     #' @returns `self`
-    initialize = function(fun, args) {
-      super$initialize()
+    initialize = function(fun, args, ...) {
+      super$initialize(...)
       private$assertGtInstall()
       private$.fun <- fun
       private$.args <- args
@@ -75,19 +75,16 @@ GTTable <- R6::R6Class(
   private = list(
     .fun = NULL,
     .args = NULL,
-
     .UI = function() {
       shiny::tagList(
         gt::gt_output(outputId = shiny::NS(private$.namespace, "gtTable"))
       )
     },
-
     .server = function(input, output, session) {
       output$gtTable <- gt::render_gt({
         do.call(private$.fun, private$.args)
       })
     },
-
     assertGtInstall = function() {
       if (!require("gt", quietly = TRUE, character.only = TRUE, warn.conflicts = FALSE)) {
         stop("Required package: `gt` is not installed")

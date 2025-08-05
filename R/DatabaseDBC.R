@@ -20,9 +20,9 @@ DatabaseDBC <- R6::R6Class(
     #' @param connectionDetails (`ConnectionDetails`) Connection Details from `DatabaseConnector::createConnectionDetails`
     #'
     #' @return `invisible(self)`
-    initialize = function(connectionDetails) {
+    initialize = function(connectionDetails, ...) {
       rlang::check_installed("DatabaseConnector")
-      super$initialize()
+      super$initialize(...)
       private$.connectionDetails <- connectionDetails
       return(invisible(self))
     },

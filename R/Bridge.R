@@ -33,7 +33,7 @@
 #'
 #' inputPanel <- InputPanel$new(
 #'   funs = list(
-#'   inputSpecies = shiny::selectInput
+#'     inputSpecies = shiny::selectInput
 #'   ),
 #'   args = list(
 #'     inputSpecies = list(
@@ -87,8 +87,9 @@ Bridge <- R6::R6Class(
     #'
     #' @returns `self`
     initialize = function(..., bridgeFun = NULL) {
-      super$initialize()
-      private$.modules <- list(...)
+      super$initialize(...)
+      dots <- list(...)
+      private$.modules <- dots[names(dots) %in% ""]
 
       if (is.null(bridgeFun)) {
         private$.bridgeFun <- function(input, output, session) {}
@@ -117,7 +118,6 @@ Bridge <- R6::R6Class(
         })
       )
     },
-
     .server = function(input, output, session) {
       for (module in private$.modules) {
         module$server(input, output, session)

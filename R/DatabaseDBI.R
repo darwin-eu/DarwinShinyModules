@@ -53,9 +53,9 @@ DatabaseDBI <- R6::R6Class(
     #' @param driver Driver to use to connect to the database with `DBI::dbConnect()`
     #'
     #' @return `invisible(self)`
-    initialize = function(driver) {
+    initialize = function(driver, ...) {
       rlang::check_installed("DBI")
-      super$initialize()
+      super$initialize(...)
       private$.driver <- driver
       return(invisible(self))
     },

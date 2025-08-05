@@ -60,13 +60,19 @@ InputPanel <- R6::R6Class(
     },
 
     #' @field funs (`list()`) Named list of xInput functions used `list(funA = shiny::selectInput)`.
-    funs = function() return(private$.funs),
+    funs = function() {
+      return(private$.funs)
+    },
 
     #' @field args (`list()`) Named list of arguments used by xInput functions `list(funA = list(inputId = "name", label = "name"))`.
-    args = function() return(private$.args),
+    args = function() {
+      return(private$.args)
+    },
 
     #' @field inputValues (`reactiveValues`) Values passed from the input fields.
-    inputValues = function() return(private$.reactiveValues)
+    inputValues = function() {
+      return(private$.reactiveValues)
+    }
   ),
 
   # Public ----
@@ -80,8 +86,8 @@ InputPanel <- R6::R6Class(
     #' @param growDirection The direction in which this component will be placed, either "horizontal" or "vertical" (default)
     #'
     #' @return (`invisible(self)`)
-    initialize = function(funs, args, growDirection = "vertical") {
-      super$initialize()
+    initialize = function(funs, args, growDirection = "vertical", ...) {
+      super$initialize(...)
       private$.funs <- funs
       private$.args <- args
       private$.growDirection <- growDirection
@@ -105,7 +111,6 @@ InputPanel <- R6::R6Class(
     .funs = NULL,
     .args = NULL,
     .growDirection = "vertical",
-
     .UI = function() {
       if (private$.growDirection == "horizontal") {
         result <- shiny::tagList(
@@ -125,15 +130,16 @@ InputPanel <- R6::R6Class(
       }
       return(result)
     },
-
     .server = function(input, output, session) {
       lapply(names(private$.args), function(label) {
-        shiny::observeEvent(input[[label]], {
-          private$.reactiveValues[[label]] <- input[[label]]
-        }, ignoreNULL = FALSE)
+        shiny::observeEvent(input[[label]],
+          {
+            private$.reactiveValues[[label]] <- input[[label]]
+          },
+          ignoreNULL = FALSE
+        )
       })
     },
-
     updateIds = function() {
       for (name in names(private$.args)) {
         if (!is.null(private$.args[[name]]$inputId)) {

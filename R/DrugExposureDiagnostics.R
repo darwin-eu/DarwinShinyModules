@@ -55,8 +55,8 @@ DrugExposureDiagnostics <- R6::R6Class(
     #' @param database_id (`character`) Database identifier (optional)
     #'
     #' @return (`invisible(self)`)
-    initialize = function(resultList, database_id = NULL) {
-      super$initialize()
+    initialize = function(resultList, database_id = NULL, ...) {
+      super$initialize(...)
       private$.resultList <- resultList
       if (!is.null(database_id)) {
         private$.database_id <- database_id

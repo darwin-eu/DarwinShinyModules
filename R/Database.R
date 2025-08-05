@@ -90,11 +90,7 @@ Database <- R6::R6Class(
       )
     },
     .server = function(input, output, session) {
-      initConnect <- FALSE
-      if (!initConnect & !self$connected) {
-        self$connect()
-        initConnect <- TRUE
-      }
+      self$connect()
 
       shiny::observeEvent(private$.reactiveValues$connected, {
         if (!private$.reactiveValues$connected) {

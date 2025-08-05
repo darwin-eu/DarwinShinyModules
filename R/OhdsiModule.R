@@ -89,8 +89,8 @@ OhdsiModule <- R6::R6Class(
     #' @param resultDatabaseSettings (`list`) Named List of table prefixes like `ShinyAppBuilder::createDefaultResultDatabaseSettings()` creates.
     #'
     #' @returns `self`
-    initialize = function(connectionHandler, viewerFun, serverFun, resultDatabaseSettings = ShinyAppBuilder::createDefaultResultDatabaseSettings()) {
-      super$initialize()
+    initialize = function(connectionHandler, viewerFun, serverFun, resultDatabaseSettings = ShinyAppBuilder::createDefaultResultDatabaseSettings(), ...) {
+      super$initialize(...)
       private$.connectionHandler <- connectionHandler
       private$.viewerFun <- viewerFun
       private$.serverFun <- serverFun
@@ -118,7 +118,6 @@ OhdsiModule <- R6::R6Class(
         )
       )
     },
-
     .server = function(input, output, session) {
       do.call(
         what = private$.serverFun,

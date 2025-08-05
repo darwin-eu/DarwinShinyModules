@@ -26,7 +26,6 @@
 GenericModule <- R6::R6Class(
   classname = "GenericModule",
   inherit = ShinyModule,
-
   active = list(
     #' @field moduleId (`character`) Overwrite from `ShinyModule`
     moduleId = function(moduleId) {
@@ -48,7 +47,6 @@ GenericModule <- R6::R6Class(
       return(private$.varServer)
     }
   ),
-
   public = list(
     #' @description
     #' Initializer method
@@ -57,21 +55,19 @@ GenericModule <- R6::R6Class(
     #' @param server (`function`) Server function passed to the `makeModule()` function
     #'
     #' @return `self`
-    initialize = function(server, ui) {
+    initialize = function(server, ui, ...) {
+      super$initialize(...)
       private$.varUI <- ui
       private$.varServer <- server
       return(invisible(self))
     }
   ),
-
   private = list(
     .varUI = NULL,
     .varServer = NULL,
-
     .UI = function() {
       private$.varUI
     },
-
     .server = function(input, output, session = shiny::getDefaultReactiveDomain()) {
       serverFunArgs <- list(args(private$.varServer))
       if ("session" %in% serverFunArgs) {
