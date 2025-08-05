@@ -30,11 +30,7 @@ Imports:
 Suggests:
     bslib,
     shinydashboard,
-    TreatmentPatterns,
-    IncidencePrevalence,
     visOmopResults,
-    DrugExposureDiagnostics (>= 1.1.1),
-    CohortSurvival,
     omopgenerics,
     CDMConnector,
     networkD3,
@@ -79,10 +75,13 @@ Collate:
     'Prevalence.R'
     'ShinydashboardApp.R'
     'StudyBackground.R'
-    'TPDataInterface.R'
     'Table.R'
     'Text.R'
+    'TreatmentPatterns.DataInterface.R'
+    'TreatmentPatterns.EventDuration.R'
     'TreatmentPatterns.R'
+    'TreatmentPatterns.TreatmentPathways.R'
+    'TreatmentPatterns.Utils.R'
     'appBuilderUtils.R'
     'launchBslibApp.R'
     'launchDarwinBslibApp.R'
@@ -90,6 +89,9 @@ Collate:
     'launchShinydashboardApp.R'
     'makeModule.R'
     'preview.R'
-    'tpSummaryEventDuration.R'
-    'tpTreatmentPathways.R'
 URL: https://darwin-eu-dev.github.io/DarwinShinyModules/
+Enhances: 
+    TreatmentPatterns,
+    IncidencePrevalence,
+    DrugExposureDiagnostics (>= 1.1.1),
+    CohortSurvival
