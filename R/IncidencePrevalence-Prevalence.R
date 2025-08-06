@@ -143,6 +143,7 @@ Prevalence <- R6::R6Class(
               private$.pickers[["facet"]]$UI(),
               private$.pickers[["color"]]$UI(),
               private$.pickers[["ribbon"]]$UI(),
+              private$.pickers[["confInterval"]]$UI(),
               plotly::plotlyOutput(
                 shiny::NS(private$.namespace, "plot"),
                 height = "800px"
@@ -241,7 +242,7 @@ Prevalence <- R6::R6Class(
         shiny::validate(need(nrow(table) > 0, "No results for selected inputs"))
         class(table) <- c("PrevalenceResult", "IncidencePrevalenceResult", class(table))
 
-        IncidencePrevalence::plotPrevalence(
+        plot <- IncidencePrevalence::plotPrevalence(
           result = table,
           x = private$.pickers[["xAxis"]]$inputValues$xAxis,
           y = "prevalence",
@@ -253,6 +254,14 @@ Prevalence <- R6::R6Class(
           facet = private$.pickers[["facet"]]$inputValues$facet_by,
           colour = private$.pickers[["color"]]$inputValues$color_by
         )
+        # remove confidence interval
+        if (!as.logical(private$.pickers[["confInterval"]]$inputValues$confInterval)) {
+          plot$layers <- plot$layers[2]
+          if (as.logical(private$.pickers[["ribbon"]]$inputValues$ribbon)) {
+            plot <- plot + ggplot2::geom_line()
+          }
+        }
+        plot
       })
 
       ### download plot ----
@@ -499,6 +508,17 @@ Prevalence <- R6::R6Class(
         growDirection = "horizontal"
       )
       private$.pickers[["ribbon"]]$parentNamespace <- self$namespace
+
+      # confidence interval
+      private$.pickers[["confInterval"]] <- InputPanel$new(
+        funs = list(confInterval = shinyWidgets::pickerInput),
+        args = list(confInterval = list(
+          inputId = "confInterval", choices = c(TRUE, FALSE), label = "Confidence interval", selected = TRUE, multiple = FALSE,
+          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
+        )),
+        growDirection = "horizontal"
+      )
+      private$.pickers[["confInterval"]]$parentNamespace <- self$namespace
     }
   )
 )

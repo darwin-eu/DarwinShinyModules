@@ -257,6 +257,9 @@ Incidence <- R6::R6Class(
         # remove confidence interval
         if (!as.logical(private$.pickers[["confInterval"]]$inputValues$confInterval)) {
           plot$layers <- plot$layers[2]
+          if (as.logical(private$.pickers[["ribbon"]]$inputValues$ribbon)) {
+            plot <- plot + ggplot2::geom_line()
+          }
         }
         plot
       })
