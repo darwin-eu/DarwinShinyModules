@@ -60,7 +60,9 @@ Table <- R6::R6Class(
   active = list(
     ## Reactive ----
     #' @field bindings (`reactiveValues`) Reactive bindings for `DT::datatable`.
-    bindings = function() return(private$.bindings),
+    bindings = function() {
+      return(private$.bindings)
+    },
 
     ## Non-reactive ----
     #' @field data (`data.frame`) Reactive data, use `shiny::isolate()` to get the non-reactive data.
@@ -85,10 +87,14 @@ Table <- R6::R6Class(
     },
 
     #' @field options (`list(n)`) List of options used by `DT::datatable`.
-    options = function() return(private$.options),
+    options = function() {
+      return(private$.options)
+    },
 
     #' @field filter (`character(1)`) Filter option used by `DT::datatable`.
-    filter = function() return(private$.filter)
+    filter = function() {
+      return(private$.filter)
+    }
   ),
 
   # Public ----
@@ -102,10 +108,11 @@ Table <- R6::R6Class(
     #' the table like search box, pagination, etc. Only display the table using
     #' list(dom = '')
     #' @param filter (`character`: `"top"`) filter option, it can be either `"none"`, `"bottom"` or `"top"` (default)
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @return `self`
-    initialize = function(data, title = "Table", options = list(scrollX = TRUE), filter = "top") {
-      super$initialize()
+    initialize = function(data, title = "Table", options = list(scrollX = TRUE), filter = "top", ...) {
+      super$initialize(...)
       private$.data <- data
       private$.title <- title
       private$.options <- options
@@ -167,7 +174,6 @@ Table <- R6::R6Class(
       private$downloader(output)
       private$setBindings(input)
     },
-
     .UI = function() {
       shiny::tagList(
         shiny::h3(private$.title),
@@ -175,7 +181,6 @@ Table <- R6::R6Class(
         shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "csv")
       )
     },
-
     setBindings = function(input) {
       shiny::observeEvent(eventExpr = input$table_cells_selected, {
         private$.bindings$cells_selected <- input$table_cells_selected
@@ -221,7 +226,6 @@ Table <- R6::R6Class(
         private$.bindings$state <- input$table_state
       })
     },
-
     renderTable = function(output) {
       output$table <- DT::renderDT(
         expr = private$.reactiveValues$data,
@@ -229,18 +233,15 @@ Table <- R6::R6Class(
         options = private$.options
       )
     },
-
     downloader = function(output) {
       output$dlButton <- shiny::downloadHandler(
         filename = private$dlFilename,
         content = private$dlContent
       )
     },
-
     dlFilename = function() {
       return(sprintf("%s.csv", private$.title))
     },
-
     dlContent = function(file) {
       write.csv(isolate(private$.reactiveValues$data), file)
     }

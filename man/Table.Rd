@@ -83,7 +83,8 @@ initialize
   data,
   title = "Table",
   options = list(scrollX = TRUE),
-  filter = "top"
+  filter = "top",
+  ...
 )}\if{html}{\out{</div>}}
 }
 
@@ -99,6 +100,8 @@ the table like search box, pagination, etc. Only display the table using
 list(dom = '')}
 
 \item{\code{filter}}{(\code{character}: \code{"top"}) filter option, it can be either \code{"none"}, \code{"bottom"} or \code{"top"} (default)}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }
 \if{html}{\out{</div>}}
 }

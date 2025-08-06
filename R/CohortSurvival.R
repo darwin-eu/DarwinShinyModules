@@ -116,11 +116,12 @@ CohortSurvival <- R6::R6Class(
     #' Initializer function
     #'
     #' @param data (`SummarisedResults`) Summarised result object from `CohortSurvival`
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @return `invisible(self)`
-    initialize = function(data) {
+    initialize = function(data, ...) {
       checkmate::assertClass(x = data, classes = c("summarised_result", "omop_result"))
-      super$initialize()
+      super$initialize(...)
       private$.data <- data
       private$initInputValues()
       private$initPlot()
@@ -162,7 +163,6 @@ CohortSurvival <- R6::R6Class(
         )
       )
     },
-
     .server = function(input, output, session) {
       private$.inputPanel$server(input, output, session)
       private$.plot$server(input, output, session)
@@ -171,7 +171,6 @@ CohortSurvival <- R6::R6Class(
 
       private$updatePlotArgs()
     },
-
     updatePlotArgs = function() {
       shiny::observeEvent(private$.inputPanel$inputValues$plotFacet, {
         private$.plot$args$facet <- private$.inputPanel$inputValues$plotFacet
@@ -181,22 +180,21 @@ CohortSurvival <- R6::R6Class(
         private$.plot$args$colour <- private$.inputPanel$inputValues$plotColour
       })
     },
-
     getInputOptions = function() {
-      c(private$.data %>%
-        filter(
-          .data$variable_name == "outcome",
-          .data$strata_name != "overall",
-          !grepl(pattern = "&&&", x = strata_name)
-        ) %>%
-        pull(.data$strata_name) %>%
-        unique(),
+      c(
+        private$.data %>%
+          filter(
+            .data$variable_name == "outcome",
+            .data$strata_name != "overall",
+            !grepl(pattern = "&&&", x = strata_name)
+          ) %>%
+          pull(.data$strata_name) %>%
+          unique(),
 
         # Additional options
         "target_cohort"
       )
     },
-
     initInputValues = function() {
       inputOptions <- private$getInputOptions()
 
@@ -222,13 +220,12 @@ CohortSurvival <- R6::R6Class(
       )
       private$.inputPanel$parentNamespace <- self$namespace
     },
-
     initPlot = function() {
       args <- if (
         (private$.data %>%
-         dplyr::filter(.data$group_name == "target_cohort") %>%
-         dplyr::distinct(.data$group_level) %>%
-         nrow() / 2) > 1
+          dplyr::filter(.data$group_name == "target_cohort") %>%
+          dplyr::distinct(.data$group_level) %>%
+          nrow() / 2) > 1
       ) {
         list(result = private$.data, colour = "target_cohort")
       } else {
@@ -242,7 +239,6 @@ CohortSurvival <- R6::R6Class(
       )
       private$.plot$parentNamespace <- self$namespace
     },
-
     initTidyTable = function() {
       private$.tidyTable <- GTTable$new(
         fun = CohortSurvival::tableSurvival,
@@ -250,7 +246,6 @@ CohortSurvival <- R6::R6Class(
       )
       private$.tidyTable$parentNamespace <- self$namespace
     },
-
     initTable = function() {
       private$.table <- Table$new(
         title = NULL,

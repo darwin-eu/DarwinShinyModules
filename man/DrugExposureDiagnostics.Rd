@@ -53,7 +53,7 @@ warn.conflicts = FALSE)) {
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DrugExposureDiagnostics$new(resultList, database_id = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DrugExposureDiagnostics$new(resultList, database_id = NULL, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -62,6 +62,8 @@ Initializer method
 \item{\code{resultList}}{(\code{list}) List containing the output of the checks}
 
 \item{\code{database_id}}{(\code{character}) Database identifier (optional)}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }
 \if{html}{\out{</div>}}
 }

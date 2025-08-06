@@ -52,7 +52,7 @@ to override the private \code{.UI()} and \code{.server()} methods.
 \subsection{Method \code{new()}}{
 initialize
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Plot$new(fun, args, title = "Plot")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Plot$new(fun, args, title = "Plot", ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -63,6 +63,8 @@ initialize
 \item{\code{args}}{(\code{list}) Named list of arguments to pass to \code{fun}.}
 
 \item{\code{title}}{(\code{character(1)}) Title of the plot. When set to \code{NULL}, no title is shown.}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }
 \if{html}{\out{</div>}}
 }

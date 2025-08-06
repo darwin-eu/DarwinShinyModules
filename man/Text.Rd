@@ -13,35 +13,24 @@ md <- c(
   "# H1
   ## H2
   ### H3",
-
   "**bold text**",
-
   "*italicized text*",
-
   "> blockquote",
-
   "1. First item
   2. Second item
   3. Third item",
-
   "- First item
   - Second item
   - Third item",
-
   "`code`",
-
   "---",
-
   "[link](https://www.markdownguide.org/cheat-sheet/)",
-
   "![alt text](https://mdg.imgix.net/assets/images/
    san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=1080)",
-
   "| Syntax | Description |
   | ----------- | ----------- |
   | Header | Title |
   | Paragraph | Text |",
-
   "```r
     foo <- function(bar, baz) {
       return(bar ** baz)
@@ -49,24 +38,17 @@ md <- c(
 
     foo(2, 3)
   ```",
-
   "	Here's a sentence with a footnote. [^1]
 
   [^1]: This is the footnote.",
-
   "### My Great Heading {#custom-id}",
-
   "term
   : definition",
-
   "~~The world is flat.~~",
-
   "- [x] Write the press release
   - [ ] Update the website
   - [ ] Contact the media",
-
   "That is so funny! :joy:",
-
   "I need to highlight these ==very important words==.",
   "H~2~O",
   "X^2^"
@@ -110,13 +92,15 @@ if (interactive()) {
 \subsection{Method \code{new()}}{
 initialize
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Text$new(markdown)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Text$new(markdown, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{markdown}}{(\code{character(n)}) Markdown.}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }
 \if{html}{\out{</div>}}
 }

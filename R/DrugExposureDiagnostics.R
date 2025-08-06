@@ -53,10 +53,11 @@ DrugExposureDiagnostics <- R6::R6Class(
     #'
     #' @param resultList (`list`) List containing the output of the checks
     #' @param database_id (`character`) Database identifier (optional)
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @return (`invisible(self)`)
-    initialize = function(resultList, database_id = NULL) {
-      super$initialize()
+    initialize = function(resultList, database_id = NULL, ...) {
+      super$initialize(...)
       private$.resultList <- resultList
       if (!is.null(database_id)) {
         private$.database_id <- database_id

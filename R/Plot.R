@@ -80,11 +80,11 @@ Plot <- R6::R6Class(
     #' @param fun (`function()`) Function to plot with.
     #' @param args (`list`) Named list of arguments to pass to `fun`.
     #' @param title (`character(1)`) Title of the plot. When set to `NULL`, no title is shown.
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @return `self`
-    initialize = function(fun, args, title = "Plot") {
-      super$initialize()
-      private$.data <- data
+    initialize = function(fun, args, title = "Plot", ...) {
+      super$initialize(...)
       private$.fun <- fun
       private$.args <- args
       private$.title <- title
@@ -119,7 +119,6 @@ Plot <- R6::R6Class(
       }
       shiny::onStop(fun = private$finalize)
     },
-
     finalize = function() {
       self$args <- isolate(shiny::reactiveValuesToList(self$args))
     }

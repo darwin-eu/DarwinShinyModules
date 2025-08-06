@@ -19,7 +19,7 @@ table <- Table$new(data = mtcars)
 
 inputPanel <- InputPanel$new(
   funs = list(
-  inputSpecies = shiny::selectInput
+    inputSpecies = shiny::selectInput
   ),
   args = list(
     inputSpecies = list(
