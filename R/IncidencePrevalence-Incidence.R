@@ -565,7 +565,7 @@ Incidence <- R6::R6Class(
       private$.pickers[["ribbon"]]$parentNamespace <- self$namespace
 
       # headerColumn
-      headerColumnOptions <- c("estimate_name")
+      headerColumnOptions <- c("cdm_name", "estimate_name")
       private$.pickers[["headerColumn"]] <- InputPanel$new(
         funs = list(headerColumn = shinyWidgets::pickerInput),
         args = list(headerColumn = list(
