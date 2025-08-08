@@ -135,11 +135,13 @@ Incidence <- R6::R6Class(
             type = "tabs",
             shiny::tabPanel(
               "Table",
-              # private$.pickers[["headerColumn"]]$UI(),
-              # private$.pickers[["groupColumn"]]$UI(),
-              # private$.pickers[["settingsColumn"]]$UI(),
-              # private$.pickers[["hideColumn"]]$UI(),
-              #shiny::downloadButton(shiny::NS(private$.namespace, "download_table"), "Download current estimates"),
+              private$.pickers[["headerColumn"]]$UI(),
+              private$.pickers[["groupColumn"]]$UI(),
+              private$.pickers[["settingsColumn"]]$UI(),
+              private$.pickers[["hideColumn"]]$UI(),
+              p(),
+              shiny::downloadButton(shiny::NS(private$.namespace, "downloadTable"), "Download table"),
+              p(),
               gt::gt_output(shiny::NS(private$.namespace, "table")) %>% shinycssloaders::withSpinner()
             ),
             shiny::tabPanel(
@@ -241,10 +243,10 @@ Incidence <- R6::R6Class(
       summarised_gt_table <- reactive({
         req(summarised_result_data())
         IncidencePrevalence::tableIncidence(result = summarised_result_data(),
-                                            # header = input$header,
-                                            # groupColumn = input$groupColumn,
-                                            # settingsColumn = input$settingsColumn,
-                                            # hide = input$hide,
+                                            header = private$.pickers[["headerColumn"]]$inputValues$headerColumn,
+                                            groupColumn = private$.pickers[["groupColumn"]]$inputValues$groupColumn,
+                                            settingsColumn = private$.pickers[["settingColumn"]]$inputValues$settingColumn,
+                                            hide = private$.pickers[["hideColumn"]]$inputValues$hideColumn,
                                             .options = list(style = "darwin"))
       })
 
@@ -253,6 +255,16 @@ Incidence <- R6::R6Class(
         req(summarised_gt_table())
         summarised_gt_table()
       })
+
+      # TABLE
+      output$downloadTable <- downloadHandler(
+        filename = function() {
+          "Incidence-Table.docx"
+        },
+        content = function(file) {
+          gt::gtsave(summarised_gt_table(), file)
+        }
+      )
 
       ### download table ----
       output$downloadTidyTable <- downloadHandler(
@@ -551,6 +563,54 @@ Incidence <- R6::R6Class(
         growDirection = "horizontal"
       )
       private$.pickers[["ribbon"]]$parentNamespace <- self$namespace
+
+      # headerColumn
+      headerColumnOptions <- c("estimate_name")
+      private$.pickers[["headerColumn"]] <- InputPanel$new(
+        funs = list(headerColumn = shinyWidgets::pickerInput),
+        args = list(headerColumn = list(
+          inputId = "headerColumn", choices = headerColumnOptions, label = "Header", selected = headerColumnOptions, multiple = TRUE,
+          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
+        )),
+        growDirection = "horizontal"
+      )
+      private$.pickers[["headerColumn"]]$parentNamespace <- self$namespace
+
+      # groupColumn
+      groupColumnOptions <- c("outcome_cohort_name", "cdm_name")
+      private$.pickers[["groupColumn"]] <- InputPanel$new(
+        funs = list(groupColumn = shinyWidgets::pickerInput),
+        args = list(groupColumn = list(
+          inputId = "groupColumn", choices = groupColumnOptions, label = "Group columns", selected = groupColumnOptions[1], multiple = TRUE,
+          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
+        )),
+        growDirection = "horizontal"
+      )
+      private$.pickers[["groupColumn"]]$parentNamespace <- self$namespace
+
+      # settingsColumn
+      settingColumnOptions <- c("denominator_time_at_risk", "denominator_age_group", "denominator_sex")
+      private$.pickers[["settingsColumn"]] <- InputPanel$new(
+        funs = list(settingsColumn = shinyWidgets::pickerInput),
+        args = list(settingsColumn = list(
+          inputId = "settingsColumn", choices = settingColumnOptions, label = "Settings columns", selected = settingColumnOptions, multiple = TRUE,
+          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
+        )),
+        growDirection = "horizontal"
+      )
+      private$.pickers[["settingsColumn"]]$parentNamespace <- self$namespace
+
+      # hideColumn
+      hideColumnOptions <- c("denominator_time_at_risk", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "analysis_interval")
+      private$.pickers[["hideColumn"]] <- InputPanel$new(
+        funs = list(hideColumn = shinyWidgets::pickerInput),
+        args = list(hideColumn = list(
+          inputId = "hideColumn", choices = hideColumnOptions, label = "Hide columns", selected = hideColumnOptions, multiple = TRUE,
+          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
+        )),
+        growDirection = "horizontal"
+      )
+      private$.pickers[["hideColumn"]]$parentNamespace <- self$namespace
     }
   )
 )
