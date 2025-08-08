@@ -220,16 +220,20 @@ Incidence <- R6::R6Class(
       summarised_result_data <- reactive({
         private$.data %>%
           dplyr::filter(
-          # variable_level %in% NA,
           cdm_name %in% private$.pickers[["cdm"]]$inputValues$cdm) %>%
-          # group_level %in% input$group_level,
-          #strata_level %in% input$strata_level) %>%
           omopgenerics::filterSettings(
-            # analysis_type %in% input$analysis_type,
+            analysis_repeated_events %in% private$.pickers[["repeatedEvents"]]$inputValues$repeated_events,
+            analysis_outcome_washout %in% private$.pickers[["washout"]]$inputValues$washout,
+            analysis_complete_database_intervals %in% private$.pickers[["completePeriod"]]$inputValues$complete_period,
+            min_cell_count %in% private$.pickers[["minCounts"]]$inputValues$min_cell_count,
+            denominator_start_date %in% private$.pickers[["denomStartDate"]]$inputValues$start_date,
+            denominator_end_date %in% private$.pickers[["denomEndDate"]]$inputValues$end_date,
+            denominator_days_prior_observation %in% private$.pickers[["denomPriorObs"]]$inputValues$prior_obs,
             denominator_sex %in% private$.pickers[["denomSex"]]$inputValues$denom_sex,
             denominator_age_group %in% private$.pickers[["denomAgeGroup"]]$inputValues$age_group,
             denominator_time_at_risk %in% private$.pickers[["denomTimeAtRisk"]]$inputValues$time_at_risk) %>%
-          omopgenerics::filterAdditional(analysis_interval == private$.pickers[["interval"]]$inputValues$interval) %>%
+          omopgenerics::filterAdditional(analysis_interval == private$.pickers[["interval"]]$inputValues$interval,
+                                         incidence_start_date %in% private$.pickers[["startDate"]]$inputValues$year) %>%
           omopgenerics::filterGroup(outcome_cohort_name %in% private$.pickers[["outcome"]]$inputValues$outcome)
       })
 
