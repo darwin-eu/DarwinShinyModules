@@ -106,7 +106,6 @@ Prevalence <- R6::R6Class(
   private = list(
     .data = NULL,
     .strata = NULL,
-    .strataColumn = NULL,
     .pickers = NULL,
     .UI = function() {
       shiny::tagList(
@@ -301,18 +300,29 @@ Prevalence <- R6::R6Class(
       }
     },
     transformData = function(data) {
+      # set strata
+      strataColumn <- unique(settings(data) %>% dplyr::filter(strata != "reason") %>% dplyr::pull(strata))
+      private$.strata <- unique(data %>% dplyr::filter(strata_name != "reason") %>% dplyr::pull(strata_level))
+
+      # transform to readable format
       minCellCount <- attr(data, "settings") %>%
         dplyr::pull(min_cell_count) %>%
         unique()
-      data <- IncidencePrevalence::asPrevalenceResult(data) %>%
+      data <- IncidencePrevalence::asIncidenceResult(data) %>%
         { if (!"analysis_interval" %in% names(.)) dplyr::mutate(., analysis_interval = "overall") else .} %>%
         dplyr::mutate(analysis_min_cell_count = !!minCellCount) %>%
         dplyr::rename(
-          strata = private$.strataColumn,
           database = cdm_name,
-          n_cases = outcome_count,
-          n_population = denominator_count
+          n_events = outcome_count,
+          n_persons = denominator_count
         )
+      # add strata column
+      if (strataColumn == "") {
+        data <- data %>% dplyr::mutate(strata = "overall")
+      } else {
+        data <- data %>% dplyr::rename(strata = strataColumn)
+      }
+      return(data)
     },
     initPickers = function() {
       # cdm
