@@ -489,7 +489,7 @@ Prevalence <- R6::R6Class(
 
       # plot pickers
       plotDataChoices <- c(
-        "database", "outcome_cohort_name", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation",
+        "database", "outcome_cohort_name", "strata", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation",
         "denominator_start_date", "denominator_end_date", "denominator_time_at_risk", "analysis_complete_database_intervals",
         "analysis_min_cell_count", "analysis_interval", "prevalence_start_date"
       )
