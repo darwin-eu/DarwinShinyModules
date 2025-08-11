@@ -19,6 +19,8 @@
 #' @description
 #' Module that displays the Treatment Pathways from the `TreatmentPatterns` package.
 #'
+#' @export
+#'
 #' @examples{
 #'   if (interactive()) {
 #'     library(DarwinShinyModules)
