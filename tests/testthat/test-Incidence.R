@@ -18,7 +18,7 @@ test_that("Creation: Incidence", {
   lapply(names(incMod$pickers), FUN = function(pickerName) {
     expect_identical(class(incMod$pickers[[pickerName]]), c("InputPanel", "ShinyModule", "R6"))
   })
-  expect_identical(class(incMod$data), c("tidy_incidence", "tbl_df", "tbl", "data.frame"))
+  expect_identical(class(incMod$data), c("summarised_result", "omop_result", "tbl_df", "tbl", "data.frame"))
   expect_identical(incMod$moduleName, "Incidence")
 
   # UI
