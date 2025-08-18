@@ -136,15 +136,15 @@ Incidence <- R6::R6Class(
             id = shiny::NS(private$.namespace, "tabsetPanel"),
             type = "tabs",
             shiny::tabPanel(
-              "Table",
+              "Tidy table",
               private$.pickers[["headerColumn"]]$UI(),
               private$.pickers[["groupColumn"]]$UI(),
               private$.pickers[["settingsColumn"]]$UI(),
               private$.pickers[["hideColumn"]]$UI(),
               p(),
-              shiny::downloadButton(shiny::NS(private$.namespace, "downloadTable"), "Download table"),
+              shiny::downloadButton(shiny::NS(private$.namespace, "downloadTidyTable"), "Download table"),
               p(),
-              gt::gt_output(shiny::NS(private$.namespace, "table")) %>% shinycssloaders::withSpinner()
+              gt::gt_output(shiny::NS(private$.namespace, "tidyTable")) %>% shinycssloaders::withSpinner()
             ),
             shiny::tabPanel(
               "Plot",
@@ -180,9 +180,9 @@ Incidence <- R6::R6Class(
               shiny::downloadButton(shiny::NS(private$.namespace, "download_plot"), "Download plot")
             ),
             shiny::tabPanel(
-              "Tidy Table",
-              shiny::downloadButton(shiny::NS(private$.namespace, "downloadTidyTable"), "Download current estimates"),
-              DT::DTOutput(shiny::NS(private$.namespace, "tidyTable")) %>% shinycssloaders::withSpinner()
+              "Table",
+              shiny::downloadButton(shiny::NS(private$.namespace, "downloadTable"), "Download current estimates"),
+              DT::DTOutput(shiny::NS(private$.namespace, "table")) %>% shinycssloaders::withSpinner()
             )
           )
         )
@@ -254,14 +254,14 @@ Incidence <- R6::R6Class(
                                             .options = list(style = "darwin"))
       })
 
-      # TABLE
-      output$table <- gt::render_gt({
+      # Tidy table
+      output$tidyTable <- gt::render_gt({
         req(summarised_gt_table())
         summarised_gt_table()
       })
 
-      # TABLE
-      output$downloadTable <- downloadHandler(
+      # Download tidy table
+      output$downloadTidyTable <- downloadHandler(
         filename = function() {
           "Incidence-Table.docx"
         },
@@ -271,7 +271,7 @@ Incidence <- R6::R6Class(
       )
 
       ### download table ----
-      output$downloadTidyTable <- downloadHandler(
+      output$downloadTable <- downloadHandler(
         filename = function() {
           "incidenceEstimatesTable.csv"
         },
@@ -281,7 +281,7 @@ Incidence <- R6::R6Class(
       )
 
       ### table estimates ----
-      output$tidyTable <- DT::renderDT({
+      output$table <- DT::renderDT({
         table <- getIncidenceEstimates()
         shiny::validate(need(nrow(table) > 0, "No results for selected inputs"))
 
