@@ -94,8 +94,6 @@ Prevalence <- R6::R6Class(
       private$assertInstall("IncidencePrevalence", "1.2.0")
       private$assertInstall("visOmopResults", "1.0.2")
       private$assertPrevalenceData(data)
-      private$.strataColumn <- unique(settings(data) %>% dplyr::filter(strata != "reason") %>% dplyr::pull(strata))
-      private$.strata <- unique(data %>% dplyr::filter(strata_name != "reason") %>% dplyr::pull(strata_level))
       private$.data <- private$transformData(data)
       private$initPickers()
       return(invisible(self))
@@ -308,13 +306,13 @@ Prevalence <- R6::R6Class(
       minCellCount <- attr(data, "settings") %>%
         dplyr::pull(min_cell_count) %>%
         unique()
-      data <- IncidencePrevalence::asIncidenceResult(data) %>%
+      data <- IncidencePrevalence::asPrevalenceResult(data) %>%
         { if (!"analysis_interval" %in% names(.)) dplyr::mutate(., analysis_interval = "overall") else .} %>%
         dplyr::mutate(analysis_min_cell_count = !!minCellCount) %>%
         dplyr::rename(
           database = cdm_name,
-          n_events = outcome_count,
-          n_persons = denominator_count
+          n_cases = outcome_count,
+          n_population = denominator_count
         )
       # add strata column
       if (strataColumn == "") {
