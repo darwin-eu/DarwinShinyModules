@@ -105,6 +105,7 @@ Prevalence <- R6::R6Class(
   private = list(
     .data = NULL,
     .tidyData = NULL,
+    .strata = NULL,
     .pickers = NULL,
     .UI = function() {
       shiny::tagList(
@@ -112,9 +113,10 @@ Prevalence <- R6::R6Class(
           tabName = shiny::NS(private$.namespace, "prevalence"),
           shiny::h3("Prevalence estimates"),
           shiny::p("Prevalence estimates are shown below, please select configuration to filter them:"),
-          shiny::p("Database and study outcome"),
+          shiny::p("Database, study outcome and strata"),
           private$.pickers[["cdm"]]$UI(),
           private$.pickers[["outcome"]]$UI(),
+          private$.pickers[["strata"]]$UI(),
           p("Denominator population settings"),
           private$.pickers[["denomAgeGroup"]]$UI(),
           private$.pickers[["denomSex"]]$UI(),
@@ -196,6 +198,7 @@ Prevalence <- R6::R6Class(
         result <- private$.tidyData %>%
           dplyr::filter(database %in% private$.pickers[["cdm"]]$inputValues$cdm) %>%
           dplyr::filter(outcome_cohort_name %in% private$.pickers[["outcome"]]$inputValues$outcome) %>%
+          dplyr::filter(strata %in% private$.pickers[["strata"]]$inputValues$strata) %>%
           dplyr::filter(denominator_age_group %in% private$.pickers[["denomAgeGroup"]]$inputValues$age_group) %>%
           dplyr::filter(denominator_sex %in% private$.pickers[["denomSex"]]$inputValues$denom_sex) %>%
           dplyr::filter(denominator_days_prior_observation %in% private$.pickers[["denomPriorObs"]]$inputValues$prior_obs) %>%
@@ -287,7 +290,7 @@ Prevalence <- R6::R6Class(
             100 * prevalence, " (", 100 * prevalence_95CI_lower, " to ",
             100 * prevalence_95CI_upper, " )"
           )) %>%
-          select(database, outcome_cohort_name, denominator_age_group, denominator_sex, denominator_days_prior_observation, denominator_start_date, denominator_end_date, denominator_time_at_risk, analysis_type, analysis_complete_database_intervals, analysis_full_contribution, analysis_min_cell_count, analysis_interval, prevalence_start_date, n_cases, n_population, "prevalence (%)")
+          select(database, outcome_cohort_name, strata, denominator_age_group, denominator_sex, denominator_days_prior_observation, denominator_start_date, denominator_end_date, denominator_time_at_risk, analysis_type, analysis_complete_database_intervals, analysis_full_contribution, analysis_min_cell_count, analysis_interval, prevalence_start_date, n_cases, n_population, "prevalence (%)")
 
         DT::datatable(
           table,
@@ -356,6 +359,11 @@ Prevalence <- R6::R6Class(
       }
     },
     transformData = function(data) {
+      # set strata
+      strataColumn <- unique(settings(data) %>% dplyr::filter(strata != "reason") %>% dplyr::pull(strata))
+      private$.strata <- unique(data %>% dplyr::filter(strata_name != "reason") %>% dplyr::pull(strata_level))
+
+      # transform to readable format
       minCellCount <- attr(data, "settings") %>%
         dplyr::pull(min_cell_count) %>%
         unique()
@@ -367,6 +375,13 @@ Prevalence <- R6::R6Class(
           n_cases = outcome_count,
           n_population = denominator_count
         )
+      # add strata column
+      if (strataColumn == "") {
+        data <- data %>% dplyr::mutate(strata = "overall")
+      } else {
+        data <- data %>% dplyr::rename(strata = strataColumn)
+      }
+      return(data)
     },
     initPickers = function() {
       # cdm
@@ -390,6 +405,17 @@ Prevalence <- R6::R6Class(
         growDirection = "horizontal"
       )
       private$.pickers[["outcome"]]$parentNamespace <- self$namespace
+
+      # strata
+      private$.pickers[["strata"]] <- InputPanel$new(
+        funs = list(strata = shinyWidgets::pickerInput),
+        args = list(strata = list(
+          inputId = "strata", label = "Strata", choices = unique(private$.strata), selected = unique(private$.strata), multiple = TRUE,
+          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
+        )),
+        growDirection = "horizontal"
+      )
+      private$.pickers[["strata"]]$parentNamespace <- self$namespace
 
       # denominator age group
       private$.pickers[["denomAgeGroup"]] <- InputPanel$new(
@@ -522,7 +548,7 @@ Prevalence <- R6::R6Class(
 
       # plot pickers
       plotDataChoices <- c(
-        "database", "outcome_cohort_name", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation",
+        "database", "outcome_cohort_name", "strata", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation",
         "denominator_start_date", "denominator_end_date", "denominator_time_at_risk", "analysis_complete_database_intervals",
         "analysis_min_cell_count", "analysis_interval", "prevalence_start_date"
       )
