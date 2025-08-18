@@ -47,8 +47,12 @@ GTTable <- R6::R6Class(
     },
 
     #' @field args (`list`) Arguments for said function as a named list i.e. `list(data = iris)`.
-    args = function() {
-      return(private$.args)
+    args = function(args) {
+      if (missing(args)) {
+        return(private$.args)
+      } else {
+        private$.args <- args
+      }
     }
   ),
 
