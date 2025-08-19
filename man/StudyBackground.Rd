@@ -58,7 +58,7 @@ contents of a markdown (.md) file.}
 \subsection{Method \code{new()}}{
 initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{StudyBackground$new(background, EUPAS)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{StudyBackground$new(background, EUPAS, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -68,6 +68,8 @@ initializer method
 or a file path pointing to a markdown (.md) file.}
 
 \item{\code{EUPAS}}{(\code{character(1)}) EUPAS belonging to the study.}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }
 \if{html}{\out{</div>}}
 }

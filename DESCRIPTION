@@ -1,6 +1,6 @@
 Package: DarwinShinyModules
 Title: Repository of Shiny Modules for Darwin Result Viewers
-Version: 0.2.2
+Version: 0.3.0
 Authors@R: c(
     person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut"), comment = c(ORCID = "0000-0001-8993-8748")),
     person("Maarten", "van Kessel", email = "m.l.vankessel@erasmusmc.nl", role = c("aut", "cre"), comment = c(ORCID = "0009-0006-8832-6030")),
@@ -30,11 +30,7 @@ Imports:
 Suggests:
     bslib,
     shinydashboard,
-    TreatmentPatterns,
-    IncidencePrevalence,
     visOmopResults,
-    DrugExposureDiagnostics (>= 1.1.1),
-    CohortSurvival,
     omopgenerics,
     CDMConnector,
     networkD3,
@@ -49,7 +45,11 @@ Suggests:
     DBI,
     dbplyr,
     duckdb,
-    RSQLite
+    RSQLite,
+    TreatmentPatterns,
+    IncidencePrevalence,
+    DrugExposureDiagnostics (>= 1.1.1),
+    CohortSurvival
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr
@@ -69,19 +69,21 @@ Collate:
     'DatabaseOverview.R'
     'DrugExposureDiagnostics.R'
     'GTTable.R'
-    'Incidence.R'
+    'IncidencePrevalence-Incidence.R'
+    'IncidencePrevalence-Prevalence.R'
     'InputPanel.R'
     'OhdsiModule.R'
     'Plot.R'
     'PlotPlotly.R'
     'PlotStatic.R'
     'PlotWidget.R'
-    'Prevalence.R'
     'ShinydashboardApp.R'
     'StudyBackground.R'
     'Table.R'
     'Text.R'
-    'TreatmentPatterns.R'
+    'TreatmentPatterns-EventDuration.R'
+    'TreatmentPatterns-TreatmentPathways.R'
+    'TreatmentPatterns-Utils.R'
     'appBuilderUtils.R'
     'launchBslibApp.R'
     'launchDarwinBslibApp.R'

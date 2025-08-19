@@ -208,8 +208,12 @@ ShinyModule <- R6::R6Class(
     #' @field reactiveValues (`reactivevalues`) Reactive values. use
     #' `shiny::isolate()` to get a non-reactive item from the reactive
     #' environment.
-    reactiveValues = function() {
-      return(private$.reactiveValues)
+    reactiveValues = function(reactiveValues) {
+      if (missing(reactiveValues)) {
+        return(private$.reactiveValues)
+      } else {
+        private$.reactiveValues <- reactiveValues
+      }
     },
 
     #' @field async (`logical(1)`: `FALSE`) Logical parameter to switch
@@ -230,14 +234,17 @@ ShinyModule <- R6::R6Class(
     #' @description
     #' Initializer method
     #'
+    #' @param ... Additional parameters to set fields.
+    #'
     #' @return
     #' (`self`)
-    initialize = function() {
+    initialize = function(...) {
       private$checkMethodOverrides()
       private$.moduleName <- class(self)[1]
       private$.instanceId <- private$makeInstanceId()
       private$.moduleId <- sprintf("%s-%s", private$.moduleName, private$.instanceId)
       private$.namespace <- c(private$.parentNamespace, private$.moduleId)
+      private$setDotArgs(...)
       return(invisible(self))
     },
 
@@ -361,6 +368,18 @@ ShinyModule <- R6::R6Class(
 
         if (any(!is.null(c(serverErr, uiErr)))) {
           stop(c(serverErr, "\n  ", uiErr))
+        }
+      }
+    },
+    setDotArgs = function(...) {
+      dots <- list(...)
+      if (!is.null(names(dots))) {
+        dots <- dots[!names(dots) %in% ""]
+        if (!is.null(dots$parentNamespace)) {
+          self$parentNamespace <- dots$parentNamespace
+        }
+        if (!is.null(dots$async)) {
+          self$async <- dots$async
         }
       }
     }

@@ -35,14 +35,12 @@
 DatabaseOverview <- R6::R6Class(
   classname = "DatabaseOverview",
   inherit = ShinyModule,
-
   active = list(
     #' @field table (`Table`) Table module
     table = function() {
       return(private$.table)
     }
   ),
-
   public = list(
     #' @description Initializer method
     #'
@@ -66,7 +64,11 @@ DatabaseOverview <- R6::R6Class(
     #'   \item{V}{"VID"}
     #' }
     initialize = function(...) {
-      dots <- c(...)
+      super$initialize(...)
+      dots <- list(...)
+      if (!is.null(names(dots))) {
+        dots <- dots[names(dots) %in% ""]
+      }
       dps <- readRDS(system.file(package = "DarwinShinyModules", "datapartners.RDS"))
       dpChoices <- unique(dps$DB_name)
       dots <- sapply(dots, checkmate::assertChoice, choices = dpChoices, .var.name = "datapartners")
@@ -84,13 +86,15 @@ DatabaseOverview <- R6::R6Class(
         dplyr::group_by(.data$DB_ID) %>%
         dplyr::reframe(across(everything(), ~ na.omit(.x))) %>%
         dplyr::select(-"DB_ID", -"DB_name", -"QuestionNumber", -"Answer", -"field") %>%
-        distinct()
+        dplyr::distinct()
 
-      private$.table <- GTTable$new(fun = private$fun, args = list(data = data))
-      private$.table$parentNamespace <- self$namespace
+      private$.table <- GTTable$new(
+        fun = private$fun,
+        args = list(data = data),
+        parentNamespace = self$namespace
+      )
     }
   ),
-
   private = list(
     ## Fields ----
     .table = NULL,
@@ -99,11 +103,9 @@ DatabaseOverview <- R6::R6Class(
     .UI = function() {
       private$.table$UI()
     },
-
     .server = function(input, output, session) {
       private$.table$server(input, output, session)
     },
-
     fun = function(data) {
       data %>%
         dplyr::mutate(
