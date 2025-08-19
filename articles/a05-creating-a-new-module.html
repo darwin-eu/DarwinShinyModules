@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DarwinShinyModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -225,7 +225,7 @@ the module instance:</p>
 <span><span class="co">#&gt;     async: active binding</span></span>
 <span><span class="co">#&gt;     clone: function (deep = FALSE) </span></span>
 <span><span class="co">#&gt;     data: active binding</span></span>
-<span><span class="co">#&gt;     initialize: function () </span></span>
+<span><span class="co">#&gt;     initialize: function (...) </span></span>
 <span><span class="co">#&gt;     instanceId: active binding</span></span>
 <span><span class="co">#&gt;     moduleId: active binding</span></span>
 <span><span class="co">#&gt;     moduleName: active binding</span></span>
@@ -250,7 +250,8 @@ the module instance:</p>
 <span><span class="co">#&gt;     assertInstall: function (pkgName, version) </span></span>
 <span><span class="co">#&gt;     checkMethodOverrides: function () </span></span>
 <span><span class="co">#&gt;     finalize: function () </span></span>
-<span><span class="co">#&gt;     makeInstanceId: function (n = 20)</span></span></code></pre></div>
+<span><span class="co">#&gt;     makeInstanceId: function (n = 20) </span></span>
+<span><span class="co">#&gt;     setDotArgs: function (...)</span></span></code></pre></div>
 <p>There are several items listed under Public: <code>appId</code>,
 <code>clone()</code>, <code>data</code>, <code>id()</code>
 <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">initialize()</a></code>, <code>instanceId</code>,

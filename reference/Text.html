@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DarwinShinyModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,13 +73,17 @@
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>initialize</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/Text.html">Text</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">markdown</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/Text.html">Text</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">markdown</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>markdown</code></dt>
 <dd><p>(<code>character(n)</code>) Markdown.</p></dd>
+
+
+<dt><code>...</code></dt>
+<dd><p>Additional parameters to set fields from the <code>ShinyModule</code> parent.</p></dd>
 
 
 </dl><p></p></div>
@@ -129,35 +133,24 @@
 <span class="r-in"><span>  <span class="st">"# H1</span></span></span>
 <span class="r-in"><span><span class="st">  ## H2</span></span></span>
 <span class="r-in"><span><span class="st">  ### H3"</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"**bold text**"</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"*italicized text*"</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"&gt; blockquote"</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"1. First item</span></span></span>
 <span class="r-in"><span><span class="st">  2. Second item</span></span></span>
 <span class="r-in"><span><span class="st">  3. Third item"</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"- First item</span></span></span>
 <span class="r-in"><span><span class="st">  - Second item</span></span></span>
 <span class="r-in"><span><span class="st">  - Third item"</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"`code`"</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"---"</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"[link](https://www.markdownguide.org/cheat-sheet/)"</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"![alt text](https://mdg.imgix.net/assets/images/</span></span></span>
 <span class="r-in"><span><span class="st">   san-juan-mountains.jpg?auto=format&amp;fit=clip&amp;q=40&amp;w=1080)"</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"| Syntax | Description |</span></span></span>
 <span class="r-in"><span><span class="st">  | ----------- | ----------- |</span></span></span>
 <span class="r-in"><span><span class="st">  | Header | Title |</span></span></span>
 <span class="r-in"><span><span class="st">  | Paragraph | Text |"</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"```r</span></span></span>
 <span class="r-in"><span><span class="st">    foo &lt;- function(bar, baz) {</span></span></span>
 <span class="r-in"><span><span class="st">      return(bar ** baz)</span></span></span>
@@ -165,24 +158,17 @@
 <span class="r-in"><span><span class="st"></span></span></span>
 <span class="r-in"><span><span class="st">    foo(2, 3)</span></span></span>
 <span class="r-in"><span><span class="st">  ```"</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"  Here's a sentence with a footnote. [^1]</span></span></span>
 <span class="r-in"><span><span class="st"></span></span></span>
 <span class="r-in"><span><span class="st">  [^1]: This is the footnote."</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"### My Great Heading {#custom-id}"</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"term</span></span></span>
 <span class="r-in"><span><span class="st">  : definition"</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"~~The world is flat.~~"</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"- [x] Write the press release</span></span></span>
 <span class="r-in"><span><span class="st">  - [ ] Update the website</span></span></span>
 <span class="r-in"><span><span class="st">  - [ ] Contact the media"</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"That is so funny! :joy:"</span>,</span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="st">"I need to highlight these ==very important words==."</span>,</span></span>
 <span class="r-in"><span>  <span class="st">"H~2~O"</span>,</span></span>
 <span class="r-in"><span>  <span class="st">"X^2^"</span></span></span>

@@ -11,7 +11,7 @@ support any module from OhdsiShinyModules."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">DarwinShinyModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,7 +99,8 @@ support any module from <code>OhdsiShinyModules</code>.</p>
 <span>  <span class="va">connectionHandler</span>,</span>
 <span>  <span class="va">viewerFun</span>,</span>
 <span>  <span class="va">serverFun</span>,</span>
-<span>  resultDatabaseSettings <span class="op">=</span> <span class="fu">ShinyAppBuilder</span><span class="fu">::</span><span class="fu">createDefaultResultDatabaseSettings</span><span class="op">(</span><span class="op">)</span></span>
+<span>  resultDatabaseSettings <span class="op">=</span> <span class="fu">ShinyAppBuilder</span><span class="fu">::</span><span class="fu">createDefaultResultDatabaseSettings</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -119,6 +120,10 @@ support any module from <code>OhdsiShinyModules</code>.</p>
 
 <dt><code>resultDatabaseSettings</code></dt>
 <dd><p>(<code>list</code>) Named List of table prefixes like <code>ShinyAppBuilder::createDefaultResultDatabaseSettings()</code> creates.</p></dd>
+
+
+<dt><code>...</code></dt>
+<dd><p>Additional parameters to set fields from the <code>ShinyModule</code> parent.</p></dd>
 
 
 </dl><p></p></div>

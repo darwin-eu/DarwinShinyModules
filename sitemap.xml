@@ -18,6 +18,7 @@
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/DatabaseDBI.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/DatabaseOverview.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/DrugExposureDiagnostics.html</loc></url>
+<url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/EventDuration.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/GTTable.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Incidence.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/InputPanel.html</loc></url>
@@ -31,7 +32,7 @@
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/StudyBackground.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Table.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Text.html</loc></url>
-<url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/TreatmentPatterns.html</loc></url>
+<url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/TreatmentPathways.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/index.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/launchBslibApp.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/launchDarwinBslibApp.html</loc></url>

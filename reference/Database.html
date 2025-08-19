@@ -9,7 +9,7 @@ inherited by other modules, like DatabaseDBC and DatabaseDBI."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">DarwinShinyModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,20 +78,59 @@ methods, while <code>DatabaseDBI</code> extends it with the <code>attachTables()
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
-<ul><li><p><a href="#method-Database-clone"><code>Database$clone()</code></a></p></li>
+<ul><li><p><a href="#method-Database-uploadTable"><code>Database$uploadTable()</code></a></p></li>
+<li><p><a href="#method-Database-connect"><code>Database$connect()</code></a></p></li>
+<li><p><a href="#method-Database-disconnect"><code>Database$disconnect()</code></a></p></li>
+<li><p><a href="#method-Database-clone"><code>Database$clone()</code></a></p></li>
 </ul></div><p><details open><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href="ShinyModule.html#method-UI"><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="initialize"><a href="ShinyModule.html#method-initialize"><code>DarwinShinyModules::ShinyModule$initialize()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href="ShinyModule.html#method-server"><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href="ShinyModule.html#method-validate"><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
-</ul></details></p><hr><a id="method-Database-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
-<p>The objects of this class are cloneable with this method.</p><div class="section">
+</ul></details></p><hr><a id="method-Database-uploadTable"></a><div class="section">
+<h3 id="method-uploadtable-">Method <code>uploadTable()</code><a class="anchor" aria-label="anchor" href="#method-uploadtable-"></a></h3>
+<p>Method to upload tables to the database.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">Database</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">Database</span><span class="op">$</span><span class="fu">uploadTable</span><span class="op">(</span><span class="va">tableName</span>, <span class="va">data</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>tableName</code></dt>
+<dd><p>(<code>character(1)</code>) Name of the table</p></dd>
+
+
+<dt><code>data</code></dt>
+<dd><p>(<code>data.frame</code>) data.frame like table to upload</p></dd>
+
+
+</dl><p></p></div>
+</div>
+
+</div><p></p><hr><a id="method-Database-connect"></a><div class="section">
+<h3 id="method-connect-">Method <code>connect()</code><a class="anchor" aria-label="anchor" href="#method-connect-"></a></h3>
+<p>Method to connect to the database.</p><div class="section">
+<h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">Database</span><span class="op">$</span><span class="fu">connect</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
+</div><p></p><hr><a id="method-Database-disconnect"></a><div class="section">
+<h3 id="method-disconnect-">Method <code>disconnect()</code><a class="anchor" aria-label="anchor" href="#method-disconnect-"></a></h3>
+<p>Method to disconnect from the database.</p><div class="section">
+<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">Database</span><span class="op">$</span><span class="fu">disconnect</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
+</div><p></p><hr><a id="method-Database-clone"></a><div class="section">
+<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
+<p>The objects of this class are cloneable with this method.</p><div class="section">
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">Database</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 

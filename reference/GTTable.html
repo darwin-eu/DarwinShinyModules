@@ -9,7 +9,7 @@ gt::render_gt() and gt::gt_output()."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">DarwinShinyModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@ gt::render_gt() and gt::gt_output()."></head><body>
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Initializer method.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/GTTable.html">GTTable</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">fun</span>, <span class="va">args</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/GTTable.html">GTTable</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">fun</span>, <span class="va">args</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -95,6 +95,10 @@ gt::render_gt() and gt::gt_output()."></head><body>
 
 <dt><code>args</code></dt>
 <dd><p>(<code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>) Arguments for said function as a named list i.e. <code>list(data = iris)</code>.</p></dd>
+
+
+<dt><code>...</code></dt>
+<dd><p>Additional parameters to set fields from the <code>ShinyModule</code> parent.</p></dd>
 
 
 </dl><p></p></div>
@@ -129,7 +133,7 @@ gt::render_gt() and gt::gt_output()."></head><body>
 <span class="r-in"><span>  args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="preview.html">preview</a></span><span class="op">(</span><span class="va">gtTable</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
