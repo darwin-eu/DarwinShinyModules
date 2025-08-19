@@ -1,14 +1,11 @@
 test_that("CohortSurvival: Server", {
-  skip_if_not(
-    all(
-      require("CohortSurvival", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
-      require("CDMConnector", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
-    )
+  skip_if_not_installed(
+    c("survival", "CDMConnector", "CohortSurvival")
   )
 
   cdm <- CohortSurvival::mockMGUS2cdm()
 
-  MGUS_death <- estimateSingleEventSurvival(
+  MGUS_death <- CohortSurvival::estimateSingleEventSurvival(
     cdm,
     targetCohortTable = "mgus_diagnosis",
     outcomeCohortTable = "death_cohort",
