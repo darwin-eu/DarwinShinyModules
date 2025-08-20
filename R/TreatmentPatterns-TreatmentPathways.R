@@ -198,9 +198,7 @@ TreatmentPathways <- R6::R6Class(
           private$.sunburst$args$treatmentPathways <- detailDat
           private$.sankey$args$treatmentPathways <- detailDat
           private$.table$reactiveValues$data <- detailDat
-        },
-        ignoreInit = TRUE,
-        ignoreNULL = TRUE
+        }
       )
     },
 
