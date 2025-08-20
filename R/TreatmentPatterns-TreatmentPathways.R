@@ -204,13 +204,6 @@ TreatmentPathways <- R6::R6Class(
 
     ## Methods ----
     filterOverview = function(cdmSourceInfo) {
-      # if (
-      #   !is.null(private$.inputPanel$inputValues$targetCohort) &
-      #     !is.null(private$.inputPanel$inputValues$age) &
-      #     !is.null(private$.inputPanel$inputValues$sex) &
-      #     !is.null(private$.inputPanel$inputValues$indexYear) &
-      #     !is.null(private$.inputPanel$inputValues$minFreq)
-      # ) {
       cdmSourceInfo |>
         dplyr::inner_join(
           private$.treatmentPathways,
@@ -286,13 +279,6 @@ TreatmentPathways <- R6::R6Class(
       })
     },
     filterDetail = function(cdmSourceInfo) {
-      # if (
-      #   !is.null(private$.inputPanel$inputValues$targetCohort) &
-      #     !is.null(private$.inputPanel$inputValues$age) &
-      #     !is.null(private$.inputPanel$inputValues$sex) &
-      #     !is.null(private$.inputPanel$inputValues$indexYear) &
-      #     !is.null(private$.inputPanel$inputValues$minFreq)
-      # ) {
       cdmSourceInfo |>
         dplyr::inner_join(
           private$.treatmentPathways,
@@ -452,7 +438,6 @@ TreatmentPathways <- R6::R6Class(
     },
     initSunburst = function() {
       # Drop "Stopped"
-      # colours <- private$.colours[-length(private$.colours)]
       private$.sunburst <- PlotWidget$new(
         fun = TreatmentPatterns::createSunburstPlot,
         args = list(
@@ -487,12 +472,3 @@ TreatmentPathways <- R6::R6Class(
     }
   )
 )
-
-# mod$.__enclos_env__$private$.dataInterface$database$connect()
-# mod2 <- TPTreatmentPathways$new(
-#   treatmentPathways = mod$.__enclos_env__$private$.dataInterface$treatmentPathways,
-#   cdmSourceInfo = mod$.__enclos_env__$private$.dataInterface$cdmSourceInfo
-# )
-# mod$.__enclos_env__$private$.dataInterface$database$disconnect()
-#
-# preview(mod2)
