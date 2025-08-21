@@ -26,12 +26,12 @@
 #'     library(DarwinShinyModules)
 #'
 #'     tpr <- TreatmentPatterns::TreatmentPatternsResults$new(
-#'       filePath = "./inst/dummyData/TreatmentPatterns/3.0.0"
+#'       filePath = system.file(package = "DarwinShinyModules", "dummyData/TreatmentPatterns/3.0.0/")
 #'     )
 #'
 #'     treatmentPathways <- TreatmentPathways$new(
 #'       treatmentPathways = tpr$treatment_pathways,
-#'       dmSourceInfo = tpr$cdm_source_info
+#'       cdmSourceInfo = tpr$cdm_source_info
 #'     )
 #'
 #'     preview(treatmentPathways)
@@ -136,7 +136,7 @@ TreatmentPathways <- R6::R6Class(
 
     ## Overrided ----
     .UI = function() {
-      shiny::tagList(
+      shiny::fluidPage(
         shiny::column(
           width = 2,
           private$.inputPanel$UI()
@@ -198,21 +198,12 @@ TreatmentPathways <- R6::R6Class(
           private$.sunburst$args$treatmentPathways <- detailDat
           private$.sankey$args$treatmentPathways <- detailDat
           private$.table$reactiveValues$data <- detailDat
-        },
-        ignoreInit = TRUE,
-        ignoreNULL = TRUE
+        }
       )
     },
 
     ## Methods ----
     filterOverview = function(cdmSourceInfo) {
-      # if (
-      #   !is.null(private$.inputPanel$inputValues$targetCohort) &
-      #     !is.null(private$.inputPanel$inputValues$age) &
-      #     !is.null(private$.inputPanel$inputValues$sex) &
-      #     !is.null(private$.inputPanel$inputValues$indexYear) &
-      #     !is.null(private$.inputPanel$inputValues$minFreq)
-      # ) {
       cdmSourceInfo |>
         dplyr::inner_join(
           private$.treatmentPathways,
@@ -261,10 +252,9 @@ TreatmentPathways <- R6::R6Class(
             height = "70vh",
             width = "40vw"
           ),
-          title = unique(df$cdm_source_abbreviation)
+          title = unique(df$cdm_source_abbreviation),
+          parentNamespace = self$namespace
         )
-        mod$parentNamespace <- self$namespace
-        mod$async <- TRUE
         return(mod)
       })
       # }
@@ -288,13 +278,6 @@ TreatmentPathways <- R6::R6Class(
       })
     },
     filterDetail = function(cdmSourceInfo) {
-      # if (
-      #   !is.null(private$.inputPanel$inputValues$targetCohort) &
-      #     !is.null(private$.inputPanel$inputValues$age) &
-      #     !is.null(private$.inputPanel$inputValues$sex) &
-      #     !is.null(private$.inputPanel$inputValues$indexYear) &
-      #     !is.null(private$.inputPanel$inputValues$minFreq)
-      # ) {
       cdmSourceInfo |>
         dplyr::inner_join(
           private$.treatmentPathways,
@@ -404,8 +387,7 @@ TreatmentPathways <- R6::R6Class(
           )
         ),
         growDirection = "vertical",
-        parentNamespace = self$namespace,
-        async = TRUE
+        parentNamespace = self$namespace
       )
     },
     fetchColours = function(ncolor, s = 0.5, v = 0.95, seed = 40) {
@@ -448,13 +430,11 @@ TreatmentPathways <- R6::R6Class(
           width = "50vw"
         ),
         title = NULL,
-        parentNamespace = self$namespace,
-        async = TRUE
+        parentNamespace = self$namespace
       )
     },
     initSunburst = function() {
       # Drop "Stopped"
-      # colours <- private$.colours[-length(private$.colours)]
       private$.sunburst <- PlotWidget$new(
         fun = TreatmentPatterns::createSunburstPlot,
         args = list(
@@ -467,8 +447,7 @@ TreatmentPathways <- R6::R6Class(
           width = "50vw"
         ),
         title = NULL,
-        parentNamespace = self$namespace,
-        async = TRUE
+        parentNamespace = self$namespace
       )
     },
     initTable = function() {
@@ -476,8 +455,7 @@ TreatmentPathways <- R6::R6Class(
         data = NULL,
         title = NULL,
         filter = "none",
-        parentNamespace = self$namespace,
-        async = TRUE
+        parentNamespace = self$namespace
       )
     },
     updatePickers = function(cdmSourceInfo, session) {
@@ -489,12 +467,3 @@ TreatmentPathways <- R6::R6Class(
     }
   )
 )
-
-# mod$.__enclos_env__$private$.dataInterface$database$connect()
-# mod2 <- TPTreatmentPathways$new(
-#   treatmentPathways = mod$.__enclos_env__$private$.dataInterface$treatmentPathways,
-#   cdmSourceInfo = mod$.__enclos_env__$private$.dataInterface$cdmSourceInfo
-# )
-# mod$.__enclos_env__$private$.dataInterface$database$disconnect()
-#
-# preview(mod2)
