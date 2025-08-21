@@ -12,12 +12,12 @@ Module that displays the Treatment Pathways from the \code{TreatmentPatterns} pa
     library(DarwinShinyModules)
 
     tpr <- TreatmentPatterns::TreatmentPatternsResults$new(
-      filePath = "./inst/dummyData/TreatmentPatterns/3.0.0"
+      filePath = system.file(package = "DarwinShinyModules", "dummyData/TreatmentPatterns/3.0.0/")
     )
 
     treatmentPathways <- TreatmentPathways$new(
       treatmentPathways = tpr$treatment_pathways,
-      dmSourceInfo = tpr$cdm_source_info
+      cdmSourceInfo = tpr$cdm_source_info
     )
 
     preview(treatmentPathways)

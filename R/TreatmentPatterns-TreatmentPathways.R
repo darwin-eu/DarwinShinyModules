@@ -26,12 +26,12 @@
 #'     library(DarwinShinyModules)
 #'
 #'     tpr <- TreatmentPatterns::TreatmentPatternsResults$new(
-#'       filePath = "./inst/dummyData/TreatmentPatterns/3.0.0"
+#'       filePath = system.file(package = "DarwinShinyModules", "dummyData/TreatmentPatterns/3.0.0/")
 #'     )
 #'
 #'     treatmentPathways <- TreatmentPathways$new(
 #'       treatmentPathways = tpr$treatment_pathways,
-#'       dmSourceInfo = tpr$cdm_source_info
+#'       cdmSourceInfo = tpr$cdm_source_info
 #'     )
 #'
 #'     preview(treatmentPathways)
@@ -136,7 +136,7 @@ TreatmentPathways <- R6::R6Class(
 
     ## Overrided ----
     .UI = function() {
-      shiny::tagList(
+      shiny::fluidPage(
         shiny::column(
           width = 2,
           private$.inputPanel$UI()
