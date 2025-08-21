@@ -26,12 +26,12 @@
 #'     library(DarwinShinyModules)
 #'
 #'     tpr <- TreatmentPatterns::TreatmentPatternsResults$new(
-#'       filePath = "./inst/dummyData/TreatmentPatterns/3.0.0"
+#'       filePath = system.file(package = "DarwinShinyModules", "dummyData/TreatmentPatterns/3.0.0/")
 #'     )
 #'
 #'     treatmentPathways <- EventDuration$new(
 #'       treatmentPathways = tpr$treatment_pathways,
-#'       dmSourceInfo = tpr$cdm_source_info
+#'       cdmSourceInfo = tpr$cdm_source_info
 #'     )
 #'
 #'     preview(treatmentPathways)
@@ -115,7 +115,7 @@ EventDuration <- R6::R6Class(
 
     ## Overrides ----
     .UI = function() {
-      shiny::tagList(
+      shiny::fluidPage(
         shiny::column(
           width = 2,
           private$.inputPanel$UI()
@@ -204,8 +204,7 @@ EventDuration <- R6::R6Class(
         data = NULL,
         title = NULL,
         filter = "none",
-        parentNamespace = self$namespace,
-        async = TRUE
+        parentNamespace = self$namespace
       )
     },
     initInputPanel = function() {
@@ -253,8 +252,7 @@ EventDuration <- R6::R6Class(
           )
         ),
         growDirection = "vertical",
-        parentNamespace = self$namespace,
-        async = TRUE
+        parentNamespace = self$namespace
       )
     },
     updatePickers = function(cdmSourceInfo, dat, session) {

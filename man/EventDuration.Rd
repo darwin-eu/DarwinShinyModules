@@ -12,12 +12,12 @@ Module that displays the Event Duration from the \code{TreatmentPatterns} packag
     library(DarwinShinyModules)
 
     tpr <- TreatmentPatterns::TreatmentPatternsResults$new(
-      filePath = "./inst/dummyData/TreatmentPatterns/3.0.0"
+      filePath = system.file(package = "DarwinShinyModules", "dummyData/TreatmentPatterns/3.0.0/")
     )
 
     treatmentPathways <- EventDuration$new(
       treatmentPathways = tpr$treatment_pathways,
-      dmSourceInfo = tpr$cdm_source_info
+      cdmSourceInfo = tpr$cdm_source_info
     )
 
     preview(treatmentPathways)
