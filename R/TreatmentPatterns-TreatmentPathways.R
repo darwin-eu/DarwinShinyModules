@@ -252,10 +252,9 @@ TreatmentPathways <- R6::R6Class(
             height = "70vh",
             width = "40vw"
           ),
-          title = unique(df$cdm_source_abbreviation)
+          title = unique(df$cdm_source_abbreviation),
+          parentNamespace = self$namespace
         )
-        mod$parentNamespace <- self$namespace
-        mod$async <- TRUE
         return(mod)
       })
       # }
@@ -388,8 +387,7 @@ TreatmentPathways <- R6::R6Class(
           )
         ),
         growDirection = "vertical",
-        parentNamespace = self$namespace,
-        async = TRUE
+        parentNamespace = self$namespace
       )
     },
     fetchColours = function(ncolor, s = 0.5, v = 0.95, seed = 40) {
@@ -432,8 +430,7 @@ TreatmentPathways <- R6::R6Class(
           width = "50vw"
         ),
         title = NULL,
-        parentNamespace = self$namespace,
-        async = TRUE
+        parentNamespace = self$namespace
       )
     },
     initSunburst = function() {
@@ -450,8 +447,7 @@ TreatmentPathways <- R6::R6Class(
           width = "50vw"
         ),
         title = NULL,
-        parentNamespace = self$namespace,
-        async = TRUE
+        parentNamespace = self$namespace
       )
     },
     initTable = function() {
@@ -459,8 +455,7 @@ TreatmentPathways <- R6::R6Class(
         data = NULL,
         title = NULL,
         filter = "none",
-        parentNamespace = self$namespace,
-        async = TRUE
+        parentNamespace = self$namespace
       )
     },
     updatePickers = function(cdmSourceInfo, session) {
