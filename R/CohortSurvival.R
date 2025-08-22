@@ -237,6 +237,10 @@ CohortSurvival <- R6::R6Class(
             unlist() |>
             as.numeric()
 
+          if (!is.numeric(survTimes) | length(survTimes) == 0) {
+            survTimes <- NULL
+          }
+
           private$.survTable$args$times <- survTimes
           private$.survTable$args$header <- private$.survInputPanel$inputValues$survHeader
           private$.survTable$args$groupColumn <- private$.survInputPanel$inputValues$survGroupColumn
