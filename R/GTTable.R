@@ -82,6 +82,7 @@ GTTable <- R6::R6Class(
     .args = NULL,
     .UI = function() {
       shiny::tagList(
+        shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "docx"),
         gt::gt_output(outputId = shiny::NS(private$.namespace, "gtTable"))
       )
     },
@@ -89,11 +90,25 @@ GTTable <- R6::R6Class(
       output$gtTable <- gt::render_gt({
         do.call(private$.fun, private$.args)
       })
+      private$downloader(output)
     },
     assertGtInstall = function() {
       if (!require("gt", quietly = TRUE, character.only = TRUE, warn.conflicts = FALSE)) {
         stop("Required package: `gt` is not installed")
       }
+    },
+    downloader = function(output) {
+      output$dlButton <- shiny::downloadHandler(
+        filename = private$dlFilename,
+        content = private$dlContent
+      )
+    },
+    dlFilename = function() {
+      return("table.docx")
+    },
+    dlContent = function(file) {
+      do.call(private$.fun, private$.args) |>
+        gt::gtsave(filename = file)
     }
   )
 )
