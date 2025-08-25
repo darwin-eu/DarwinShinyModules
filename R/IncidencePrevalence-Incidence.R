@@ -391,11 +391,15 @@ Incidence <- R6::R6Class(
     },
     initPickers = function() {
       # cdm
-      # TODO defaults
+      allDatabases <- unique(private$.tidyData$database)
+      selectedDatabases <- allDatabases
+      if ("database" %in% names(private$.defaults) && private$.defaults[["database"]] %in% allDatabases) {
+        selectedDatabases <- private$.defaults[["database"]]
+      }
       private$.pickers[["cdm"]] <- InputPanel$new(
         funs = list(cdm = shinyWidgets::pickerInput),
         args = list(cdm = list(
-          inputId = "cdm", label = "Database", choices = unique(private$.tidyData$database), selected = unique(private$.tidyData$database), multiple = TRUE,
+          inputId = "cdm", label = "Database", choices = allDatabases, selected = selectedDatabases, multiple = TRUE,
           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
         )),
         growDirection = "horizontal"
@@ -403,11 +407,15 @@ Incidence <- R6::R6Class(
       private$.pickers[["cdm"]]$parentNamespace <- self$namespace
 
       # outcome
-      # TODO defaults
+      allOutcomes <- unique(private$.tidyData$outcome_cohort_name)
+      selectedOutcomes <- allOutcomes
+      if ("outcome" %in% names(private$.defaults) && private$.defaults[["outcome"]] %in% allOutcomes) {
+        selectedOutcomes <- private$.defaults[["outcome"]]
+      }
       private$.pickers[["outcome"]] <- InputPanel$new(
         funs = list(outcome = shinyWidgets::pickerInput),
         args = list(outcome = list(
-          inputId = "outcome", label = "Outcome", choices = unique(private$.tidyData$outcome_cohort_name), selected = unique(private$.tidyData$outcome_cohort_name), multiple = TRUE,
+          inputId = "outcome", label = "Outcome", choices = allOutcomes, selected = selectedOutcomes, multiple = TRUE,
           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
         )),
         growDirection = "horizontal"
@@ -415,11 +423,15 @@ Incidence <- R6::R6Class(
       private$.pickers[["outcome"]]$parentNamespace <- self$namespace
 
       # strata
-      # TODO defaults
+      allStrata <- unique(private$.strata)
+      selectedStrata <- allStrata
+      if ("strata" %in% names(private$.defaults) && private$.defaults[["strata"]] %in% allStrata) {
+        selectedStrata <- private$.defaults[["strata"]]
+      }
       private$.pickers[["strata"]] <- InputPanel$new(
         funs = list(strata = shinyWidgets::pickerInput),
         args = list(strata = list(
-          inputId = "strata", label = "Strata", choices = unique(private$.strata), selected = unique(private$.strata), multiple = TRUE,
+          inputId = "strata", label = "Strata", choices = allStrata, selected = selectedStrata, multiple = TRUE,
           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
         )),
         growDirection = "horizontal"
@@ -427,11 +439,15 @@ Incidence <- R6::R6Class(
       private$.pickers[["strata"]]$parentNamespace <- self$namespace
 
       # denominator age group
-      # TODO defaults
+      allAgeGroups <- unique(private$.tidyData$denominator_age_group)
+      selectedAgeGroups <- allAgeGroups
+      if ("ageGroup" %in% names(private$.defaults) && private$.defaults[["ageGroup"]] %in% allAgeGroups) {
+        selectedAgeGroups <- private$.defaults[["ageGroup"]]
+      }
       private$.pickers[["denomAgeGroup"]] <- InputPanel$new(
         funs = list(age_group = shinyWidgets::pickerInput),
         args = list(age_group = list(
-          inputId = "age_group", label = "Age group", choices = unique(private$.tidyData$denominator_age_group), selected = unique(private$.tidyData$denominator_age_group), multiple = TRUE,
+          inputId = "age_group", label = "Age group", choices = allAgeGroups, selected = selectedAgeGroups, multiple = TRUE,
           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
         )),
         growDirection = "horizontal"
@@ -439,11 +455,15 @@ Incidence <- R6::R6Class(
       private$.pickers[["denomAgeGroup"]]$parentNamespace <- self$namespace
 
       # denominator sex
-      # TODO defaults
+      allSex <- unique(private$.tidyData$denominator_sex)
+      selectedSex <- allSex
+      if ("sex" %in% names(private$.defaults) && private$.defaults[["sex"]] %in% allAgeGroups) {
+        selectedSex <- private$.defaults[["sex"]]
+      }
       private$.pickers[["denomSex"]] <- InputPanel$new(
         funs = list(denom_sex = shinyWidgets::pickerInput),
         args = list(denom_sex = list(
-          inputId = "denom_sex", choices = unique(private$.tidyData$denominator_sex), label = "Sex", selected = unique(private$.tidyData$denominator_sex), multiple = TRUE,
+          inputId = "denom_sex", choices = allSex, label = "Sex", selected = selectedSex, multiple = TRUE,
           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
         )),
         growDirection = "horizontal"
@@ -451,11 +471,15 @@ Incidence <- R6::R6Class(
       private$.pickers[["denomSex"]]$parentNamespace <- self$namespace
 
       # prior observation
-      # TODO defaults
+      allPO <- unique(private$.tidyData$denominator_days_prior_observation)
+      selectedPO <- allPO
+      if ("prior_observation" %in% names(private$.defaults) && private$.defaults[["prior_observation"]] %in% allAgeGroups) {
+        selectedPO <- private$.defaults[["prior_observation"]]
+      }
       private$.pickers[["denomPriorObs"]] <- InputPanel$new(
         funs = list(prior_obs = shinyWidgets::pickerInput),
         args = list(prior_obs = list(
-          inputId = "prior_obs", choices = unique(private$.tidyData$denominator_days_prior_observation), label = "Prior observation", selected = unique(private$.tidyData$denominator_days_prior_observation), multiple = TRUE,
+          inputId = "prior_obs", choices = allPO, label = "Prior observation", selected = selectedPO, multiple = TRUE,
           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
         )),
         growDirection = "horizontal"
