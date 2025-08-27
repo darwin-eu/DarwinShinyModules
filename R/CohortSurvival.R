@@ -189,26 +189,23 @@ CohortSurvival <- R6::R6Class(
       private$.inputPanel$server(input, output, session)
       private$.riskInputPanel$server(input, output, session)
       private$.survInputPanel$server(input, output, session)
-      private$.plot$server(input, output, session)
       private$.table$server(input, output, session)
 
       private$updatePlotArgs()
     },
     updatePlotArgs = function() {
-      shiny::observeEvent(private$.inputPanel$inputValues$plotFacet, {
+      shiny::observeEvent(
+        list(
+          private$.inputPanel$inputValues$plotFacet,
+          private$.inputPanel$inputValues$plotColour,
+          private$.inputPanel$inputValues$plotRibbon,
+          private$.inputPanel$inputValues$plotCumFail
+        ), {
         private$.plot$args$facet <- private$.inputPanel$inputValues$plotFacet
-      })
-
-      shiny::observeEvent(private$.inputPanel$inputValues$plotColour, {
         private$.plot$args$colour <- private$.inputPanel$inputValues$plotColour
-      })
-
-      shiny::observeEvent(private$.inputPanel$inputValues$plotRibbon, {
         private$.plot$args$ribbon <- private$.inputPanel$inputValues$plotRibbon
-      })
-
-      shiny::observeEvent(private$.inputPanel$inputValues$plotCumFail, {
         private$.plot$args$cumulativeFailure <- private$.inputPanel$inputValues$plotCumFail
+        private$.plot$server(input, output, session)
       })
 
       shiny::observeEvent(
