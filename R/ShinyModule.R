@@ -337,8 +337,9 @@ ShinyModule <- R6::R6Class(
 
     ## Methods ----
     .init = function(session) {
-      print(session$token)
-      private$.reactiveValues[[session$token]] <- shiny::reactiveValues()
+      if (is.null(private$.reactiveValues[[session$token]])) {
+        private$.reactiveValues[[session$token]] <- shiny::reactiveValues()
+      }
       return(invisible(self))
     },
     .server = function(input, output, session) {},
