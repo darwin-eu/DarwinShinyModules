@@ -168,8 +168,6 @@ TreatmentPathways <- R6::R6Class(
     },
     .server = function(input, output, session) {
       private$.inputPanel$server(input, output, session)
-      private$.sunburst$server(input, output, session)
-      private$.sankey$server(input, output, session)
       private$.table$server(input, output, session)
 
       cdmSourceInfo <- renameDatabases(private$.cdmSourceInfo)
@@ -198,6 +196,9 @@ TreatmentPathways <- R6::R6Class(
           private$.sunburst$args$treatmentPathways <- detailDat
           private$.sankey$args$treatmentPathways <- detailDat
           private$.table$reactiveValues$data <- detailDat
+
+          private$.sunburst$server(input, output, session)
+          private$.sankey$server(input, output, session)
         }
       )
     },
@@ -230,15 +231,14 @@ TreatmentPathways <- R6::R6Class(
           "cdm_source_abbreviation"
         ) |>
         dplyr::collect()
-      # }
     },
     createSunbursts = function(data) {
-      # if (!is.null(data)) {
+      session <- shiny::getDefaultReactiveDomain()
       dfs <- data |>
         dplyr::group_by(.data$cdm_source_abbreviation) |>
         dplyr::group_split()
 
-      private$.sunburstOverview <- lapply(dfs, function(df) {
+      private$.sunburstOverview[[session$token]] <- lapply(dfs, function(df) {
         mod <- PlotWidget$new(
           fun = TreatmentPatterns::createSunburstPlot,
           args = list(
@@ -260,7 +260,8 @@ TreatmentPathways <- R6::R6Class(
       # }
     },
     renderOverview = function(output) {
-      uis <- lapply(private$.sunburstOverview, function(mod) {
+      session <- shiny::getDefaultReactiveDomain()
+      uis <- lapply(private$.sunburstOverview[[session$token]], function(mod) {
         mod$server(input, output, session)
         mod$UI()
       })
