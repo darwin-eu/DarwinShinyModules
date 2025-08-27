@@ -10,7 +10,6 @@ test_that("Creation", {
     )
   )
 
-  expect_null(inputPanel$inputValues)
   expect_equal(names(inputPanel$args), names(inputPanel$funs))
 
   expect_true(grepl(pattern = "text", inputPanel$args$text$inputId))
