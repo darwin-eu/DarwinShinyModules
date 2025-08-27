@@ -77,13 +77,12 @@ PlotPlotly <- R6::R6Class(
     },
 
     .server = function(input, output, session) {
+      super$.server(input, output, session)
       output$plot <- plotly::renderPlotly({
-        if (length(private$.args) > 0) {
-          private$.plot <- do.call(what = private$.fun, args = private$.args)
-          plotly::event_register(p = private$.plot, event = "plotly_selected")
-          private$updateBindings()
-          return(private$.plot)
-        }
+        plot <- do.call(what = private$.fun, args = self$args)
+        plotly::event_register(p = private$.plot, event = "plotly_selected")
+        private$updateBindings()
+        return(plot)
       })
     },
 

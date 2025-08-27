@@ -57,7 +57,17 @@ Plot <- R6::R6Class(
       }
     },
 
-    #' @field args (`reactiveValues`) Arguments used for plot.
+    #' @field reactiveArgs (`reactive`) Arguments used for plot.
+    reactiveArgs = function(reactiveArgs) {
+      session <- shiny::getDefaultReactiveDomain()
+      if (missing(reactiveArgs)) {
+        return(private$.reactiveArgs[[session$token]])
+      } else {
+        private$.reactiveArgs[[session$token]] <- reactiveArgs
+      }
+    },
+
+    #' @field args (`list`) Arguments used for plot.
     args = function(args) {
       if (missing(args)) {
         return(private$.args)
@@ -111,10 +121,14 @@ Plot <- R6::R6Class(
     .title = "",
     .data = NULL,
     .plot = NULL,
+    .reactiveArgs = NULL,
 
     ## Methods ----
+    .server = function(input, output, session) {
+      private$.reactiveArgs[[session$token]] <- do.call(shiny::reactiveValues, self$args)
+    },
     finalize = function() {
-      self$args <- isolate(shiny::reactiveValuesToList(self$args))
+      # self$args <- isolate(shiny::reactiveValuesToList(self$args))
     }
   )
 )
