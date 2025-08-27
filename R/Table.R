@@ -72,7 +72,7 @@ Table <- R6::R6Class(
       } else {
         checkmate::assertDataFrame(data)
         private$.data <- data
-        private$.reactiveValues$data <- data
+        self$reactiveValues$data <- data
       }
     },
 
@@ -169,7 +169,7 @@ Table <- R6::R6Class(
 
     ## Methods ----
     .server = function(input, output, session) {
-      private$.reactiveValues$data <- private$.data
+      self$reactiveValues$data <- private$.data
       private$renderTable(output)
       private$downloader(output)
       private$setBindings(input)
@@ -228,7 +228,7 @@ Table <- R6::R6Class(
     },
     renderTable = function(output) {
       output$table <- DT::renderDT(
-        expr = private$.reactiveValues$data,
+        expr = self$reactiveValues$data,
         filter = private$.filter,
         options = private$.options
       )
@@ -243,7 +243,7 @@ Table <- R6::R6Class(
       return(sprintf("%s.csv", private$.title))
     },
     dlContent = function(file) {
-      write.csv(isolate(private$.reactiveValues$data), file)
+      write.csv(isolate(self$reactiveValues$data), file)
     }
   )
 )
