@@ -29,12 +29,12 @@
 #'       filePath = system.file(package = "DarwinShinyModules", "dummyData/TreatmentPatterns/3.0.0/")
 #'     )
 #'
-#'     treatmentPathways <- EventDuration$new(
-#'       treatmentPathways = tpr$treatment_pathways,
+#'     eventDuration <- EventDuration$new(
+#'       summaryEventDuration = tpr$summary_event_duration,
 #'       cdmSourceInfo = tpr$cdm_source_info
 #'     )
 #'
-#'     preview(treatmentPathways)
+#'     preview(eventDuration)
 #'   }
 #' }
 #'
@@ -129,7 +129,6 @@ EventDuration <- R6::R6Class(
     },
     .server = function(input, output, session) {
       private$.inputPanel$server(input, output, session)
-      private$.plot$server(input, output, session)
       private$.table$server(input, output, session)
 
       cdmSourceInfo <- renameDatabases(private$.cdmSourceInfo)
@@ -171,6 +170,8 @@ EventDuration <- R6::R6Class(
           private$.plot$args$includeOverall <- private$.inputPanel$inputValues$overall
           private$.plot$args$xmin <- private$.inputPanel$inputValues$time[1]
           private$.plot$args$xmax <- private$.inputPanel$inputValues$time[2]
+
+          private$.plot$server(input, output, session)
         },
         ignoreInit = TRUE,
         ignoreNULL = TRUE
