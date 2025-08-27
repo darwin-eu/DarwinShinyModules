@@ -209,10 +209,11 @@ ShinyModule <- R6::R6Class(
     #' `shiny::isolate()` to get a non-reactive item from the reactive
     #' environment.
     reactiveValues = function(reactiveValues) {
+      session <- getDefaultReactiveDomain()
       if (missing(reactiveValues)) {
-        return(private$.reactiveValues)
+        return(self$getReactiveValues(session))
       } else {
-        private$.reactiveValues <- reactiveValues
+        private$.reactiveValues[[session$token]] <- reactiveValues
       }
     },
 
@@ -288,6 +289,10 @@ ShinyModule <- R6::R6Class(
       return(invisible(self))
     },
 
+    getReactiveValues = function(session = getDefaultReactiveDomain()) {
+      return(private$.reactiveValues[[session$token]])
+    },
+
     #' @description
     #' Method to include a \link[shiny]{tagList} to include the body.
     #'
@@ -308,7 +313,7 @@ ShinyModule <- R6::R6Class(
     #' (`NULL`)
     server = function(input, output, session) {
       shiny::moduleServer(id = self$moduleId, module = function(input, output, session) {
-        private$.init()
+        private$.init(session)
         if (private$.async) {
           promises::future_promise(private$.server(input, output, session))
         } else {
@@ -327,19 +332,20 @@ ShinyModule <- R6::R6Class(
     .moduleId = "",
     .parentNamespace = NULL,
     .namespace = "",
-    .reactiveValues = NULL,
+    .reactiveValues = list(),
     .async = FALSE,
 
     ## Methods ----
-    .init = function() {
-      private$.reactiveValues <- shiny::reactiveValues()
+    .init = function(session) {
+      print(session$token)
+      private$.reactiveValues[[session$token]] <- shiny::reactiveValues()
       return(invisible(self))
     },
     .server = function(input, output, session) {},
     .UI = function(input, output, session) {},
     assertInstall = function(pkgName, version) {
       if (!require(pkgName, character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE) ||
-        packageVersion(pkgName) < version) {
+          packageVersion(pkgName) < version) {
         answer <- readline(prompt = sprintf("`%s` >= %s is not installed, would you like to install from CRAN? (y/n)", pkgName, version))
         if (substr(tolower(answer), start = 1, stop = 1) == "y") {
           utils::install.packages(pkgName)
