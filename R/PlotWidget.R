@@ -66,12 +66,9 @@ PlotWidget <- R6::R6Class(
     },
 
     .server = function(input, output, session) {
-      # super$.server(input, output, session)
+      super$.server(input, output, session)
       output$plot <- shiny::renderUI({
-        if (length(private$.args) > 0) {
-          private$.plot <- do.call(private$.fun, private$.args)
-          return(private$.plot)
-        }
+        do.call(private$.fun, shiny::reactiveValuesToList(self$reactiveArgs))
       })
       private$dlHtml(output)
       private$dlPng(output)
