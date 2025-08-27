@@ -71,7 +71,7 @@ InputPanel <- R6::R6Class(
 
     #' @field inputValues (`reactiveValues`) Values passed from the input fields.
     inputValues = function() {
-      return(private$.reactiveValues)
+      return(self$getReactiveValues())
     }
   ),
 
@@ -135,7 +135,8 @@ InputPanel <- R6::R6Class(
       lapply(names(private$.args), function(label) {
         shiny::observeEvent(input[[label]],
           {
-            private$.reactiveValues[[label]] <- input[[label]]
+            private$.reactiveValues[[session$token]][[label]] <- input[[label]]
+            # private$.reactiveValues[[label]] <- input[[label]]
           },
           ignoreNULL = FALSE
         )
