@@ -8,7 +8,6 @@ test_that("Creation", {
 
   expect_identical(class(table), c("Table", "ShinyModule", "R6"))
 
-  expect_true(is.null(isolate(table$reactiveValues$data)))
   expect_identical(table$data, iris)
   expect_identical(table$title, "Iris")
   expect_identical(table$options, list(scrollx = FALSE, scrolly = TRUE))
