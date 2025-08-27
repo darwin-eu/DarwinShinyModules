@@ -113,12 +113,6 @@ Plot <- R6::R6Class(
     .plot = NULL,
 
     ## Methods ----
-    .server = function(input, output, session) {
-      if (!shiny::is.reactivevalues(private$.args)) {
-        private$.args <- do.call(shiny::reactiveValues, private$.args)
-      }
-      shiny::onStop(fun = private$finalize)
-    },
     finalize = function() {
       self$args <- isolate(shiny::reactiveValuesToList(self$args))
     }
