@@ -61,10 +61,9 @@ PlotStatic <- R6::R6Class(
     },
 
     .server = function(input, output, session) {
-      super$.server(input, output, session)
       output$plot <- shiny::renderPlot({
-        if (length(shiny::reactiveValuesToList(private$.args)) > 0) {
-          private$.plot <- expr(do.call(private$.fun, shiny::reactiveValuesToList(private$.args)))
+        if (length(private$.args) > 0) {
+          private$.plot <- expr(do.call(private$.fun, private$.args))
           return(eval(private$.plot))
         }
       })
