@@ -60,6 +60,7 @@ Collate:
     'Bridge.R'
     'BslibApp.R'
     'CohortSurvival.R'
+    'Darwin-Utils.R'
     'DarwinBslibApp.R'
     'DarwinDashboardApp.R'
     'DarwinShinyModules.R'
