@@ -126,9 +126,6 @@ Plot <- R6::R6Class(
     ## Methods ----
     .server = function(input, output, session) {
       private$.reactiveArgs[[session$token]] <- do.call(shiny::reactiveValues, self$args)
-    },
-    finalize = function() {
-      # self$args <- isolate(shiny::reactiveValuesToList(self$args))
     }
   )
 )
