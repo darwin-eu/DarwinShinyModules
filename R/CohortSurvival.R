@@ -226,7 +226,6 @@ CohortSurvival <- R6::R6Class(
           private$.survInputPanel$inputValues$survHeader,
           private$.survInputPanel$inputValues$survGroupColumn
         ), {
-          print(private$.survInputPanel$inputValues$survTimes)
           private$.survTable$args$timeScale <- private$.survInputPanel$inputValues$survTimeScale
 
           survTimes <- private$.survInputPanel$inputValues$survTimes |>
