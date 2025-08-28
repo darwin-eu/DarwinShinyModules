@@ -15,7 +15,7 @@ Creates the DARWIN EU (c) header banner.
 \examples{
 ui <- shiny::fluidPage(
   darwinHeader(),
-  shiny::p("Content")
+  shiny::p("Content"),
   darwinFooter()
 )
 

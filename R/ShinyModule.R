@@ -289,6 +289,10 @@ ShinyModule <- R6::R6Class(
       return(invisible(self))
     },
 
+    #' @description
+    #' Method to get reactive values for a specific session.
+    #'
+    #' @return `reactiveValues`
     getReactiveValues = function(session = getDefaultReactiveDomain()) {
       return(private$.reactiveValues[[session$token]])
     },

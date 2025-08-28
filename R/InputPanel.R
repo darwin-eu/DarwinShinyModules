@@ -70,8 +70,12 @@ InputPanel <- R6::R6Class(
     },
 
     #' @field inputValues (`reactiveValues`) Values passed from the input fields.
-    inputValues = function() {
-      return(self$getReactiveValues())
+    inputValues = function(inputValues) {
+      if (missing(inputValues)) {
+        return(self$getReactiveValues())
+      } else {
+        self$reactiveValues <- inputValues
+      }
     }
   ),
 

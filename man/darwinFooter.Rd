@@ -15,7 +15,7 @@ Creates the DARWIN EU (c) footer.
 \examples{
 ui <- shiny::fluidPage(
   darwinHeader(),
-  shiny::p("Content")
+  shiny::p("Content"),
   darwinFooter()
 )
 
