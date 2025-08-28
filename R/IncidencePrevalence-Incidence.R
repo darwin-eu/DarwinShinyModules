@@ -457,7 +457,7 @@ Incidence <- R6::R6Class(
       # denominator sex
       allSex <- unique(private$.tidyData$denominator_sex)
       selectedSex <- allSex
-      if ("sex" %in% names(private$.defaults) && private$.defaults[["sex"]] %in% allAgeGroups) {
+      if ("sex" %in% names(private$.defaults) && private$.defaults[["sex"]] %in% allSex) {
         selectedSex <- private$.defaults[["sex"]]
       }
       private$.pickers[["denomSex"]] <- InputPanel$new(
@@ -473,7 +473,7 @@ Incidence <- R6::R6Class(
       # prior observation
       allPO <- unique(private$.tidyData$denominator_days_prior_observation)
       selectedPO <- allPO
-      if ("prior_observation" %in% names(private$.defaults) && private$.defaults[["prior_observation"]] %in% allAgeGroups) {
+      if ("prior_observation" %in% names(private$.defaults) && private$.defaults[["prior_observation"]] %in% allPO) {
         selectedPO <- private$.defaults[["prior_observation"]]
       }
       private$.pickers[["denomPriorObs"]] <- InputPanel$new(
