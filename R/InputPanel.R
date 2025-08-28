@@ -136,7 +136,6 @@ InputPanel <- R6::R6Class(
         shiny::observeEvent(input[[label]],
           {
             private$.reactiveValues[[session$token]][[label]] <- input[[label]]
-            # private$.reactiveValues[[label]] <- input[[label]]
           },
           ignoreNULL = FALSE
         )
