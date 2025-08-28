@@ -8,7 +8,7 @@
 #' @examples
 #' ui <- shiny::fluidPage(
 #'   darwinHeader(),
-#'   shiny::p("Content")
+#'   shiny::p("Content"),
 #'   darwinFooter()
 #' )
 #'
@@ -61,7 +61,7 @@ darwinHeader <- function() {
 #' @examples
 #' ui <- shiny::fluidPage(
 #'   darwinHeader(),
-#'   shiny::p("Content")
+#'   shiny::p("Content"),
 #'   darwinFooter()
 #' )
 #'

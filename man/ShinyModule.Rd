@@ -216,6 +216,7 @@ Validator method
 \if{html}{\out{<a id="method-ShinyModule-getReactiveValues"></a>}}
 \if{latex}{\out{\hypertarget{method-ShinyModule-getReactiveValues}{}}}
 \subsection{Method \code{getReactiveValues()}}{
+Method to get reactive values for a specific session.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ShinyModule$getReactiveValues(session = getDefaultReactiveDomain())}\if{html}{\out{</div>}}
 }
@@ -226,6 +227,9 @@ Validator method
 \item{\code{session}}{(\code{session}) Session from the server function.}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{reactiveValues}
 }
 }
 \if{html}{\out{<hr>}}
