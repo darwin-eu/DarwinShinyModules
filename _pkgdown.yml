@@ -68,3 +68,8 @@ reference:
 - contents:
   - launchDarwinBslibApp
   - launchDarwinDashboardApp
+
+- subtitle: Helper Functions
+- contents:
+  - darwinHeader
+  - darwinFooter
