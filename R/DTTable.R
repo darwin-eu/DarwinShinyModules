@@ -14,29 +14,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' @title GTTable Module Class
+#' @title DTTable Module Class
 #'
 #' @include ShinyModule.R
 #'
 #' @description
-#' GTTable module that displays tables using `gt` that are supported by
-#' `gt::render_gt()` and `gt::gt_output()`.
+#' GTTable module that displays tables using `DT` that are supported by
+#' `DT::renderDT()` and `DT::DTOutput()`.
 #'
 #' @export
 #'
 #' @examples
 #' library(DarwinShinyModules)
 #'
-#' gtTable <- GTTable$new(
-#'   fun = gt::gt,
+#' dtTable <- DTTable$new(
+#'   fun = DT::datatable,
 #'   args = list(data = iris)
 #' )
 #'
 #' if (interactive()) {
-#'   preview(gtTable)
+#'   preview(dtTable)
 #' }
-GTTable <- R6::R6Class(
-  classname = "GTTable",
+DTTable <- R6::R6Class(
+  classname = "DTTable",
   inherit = DarwinShinyModules::ShinyModule,
 
   # Active ----
@@ -69,7 +69,7 @@ GTTable <- R6::R6Class(
     #' @returns `self`
     initialize = function(fun, args, ...) {
       super$initialize(...)
-      private$assertInstall("gt", as.package_version("0.0.0"))
+      private$assertInstall("DT", as.package_version("0.0.0"))
       private$.fun <- fun
       private$.args <- args
       return(invisible(self))
@@ -82,12 +82,12 @@ GTTable <- R6::R6Class(
     .args = NULL,
     .UI = function() {
       shiny::tagList(
-        shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "docx"),
-        gt::gt_output(outputId = shiny::NS(private$.namespace, "gtTable"))
+        shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "csv"),
+        DT::DTOutput(outputId = shiny::NS(private$.namespace, "table"))
       )
     },
     .server = function(input, output, session) {
-      output$gtTable <- gt::render_gt({
+      output$table <- DT::renderDT({
         do.call(private$.fun, private$.args)
       })
       private$downloader(output)
@@ -99,11 +99,10 @@ GTTable <- R6::R6Class(
       )
     },
     dlFilename = function() {
-      return("table.docx")
+      return("table.csv")
     },
     dlContent = function(file) {
-      do.call(private$.fun, private$.args) |>
-        gt::gtsave(filename = file)
+      write.csv(isolate(self$reactiveValues$data), file)
     }
   )
 )
