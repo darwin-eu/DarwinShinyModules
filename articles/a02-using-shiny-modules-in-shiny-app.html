@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DarwinShinyModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -109,6 +109,7 @@ need to create a Table module:</p>
 <span><span class="co">#&gt;     clone: function (deep = FALSE) </span></span>
 <span><span class="co">#&gt;     data: active binding</span></span>
 <span><span class="co">#&gt;     filter: active binding</span></span>
+<span><span class="co">#&gt;     getReactiveValues: function (session = getDefaultReactiveDomain()) </span></span>
 <span><span class="co">#&gt;     initialize: function (data, title = "Table", options = list(scrollX = TRUE), </span></span>
 <span><span class="co">#&gt;     instanceId: active binding</span></span>
 <span><span class="co">#&gt;     moduleId: active binding</span></span>
@@ -126,14 +127,14 @@ need to create a Table module:</p>
 <span><span class="co">#&gt;     .bindings: reactivevalues</span></span>
 <span><span class="co">#&gt;     .data: data.frame</span></span>
 <span><span class="co">#&gt;     .filter: top</span></span>
-<span><span class="co">#&gt;     .init: function () </span></span>
+<span><span class="co">#&gt;     .init: function (session) </span></span>
 <span><span class="co">#&gt;     .instanceId: SwlKLU5Ed6ieYxombQ_X</span></span>
 <span><span class="co">#&gt;     .moduleId: Table-SwlKLU5Ed6ieYxombQ_X</span></span>
 <span><span class="co">#&gt;     .moduleName: Table</span></span>
 <span><span class="co">#&gt;     .namespace: Table-SwlKLU5Ed6ieYxombQ_X</span></span>
 <span><span class="co">#&gt;     .options: list</span></span>
 <span><span class="co">#&gt;     .parentNamespace: NULL</span></span>
-<span><span class="co">#&gt;     .reactiveValues: NULL</span></span>
+<span><span class="co">#&gt;     .reactiveValues: list</span></span>
 <span><span class="co">#&gt;     .server: function (input, output, session) </span></span>
 <span><span class="co">#&gt;     .title: Table</span></span>
 <span><span class="co">#&gt;     .UI: function () </span></span>
@@ -220,6 +221,7 @@ from another package, without breaking compatibility.</p>
 <span><span class="co">#&gt;     async: active binding</span></span>
 <span><span class="co">#&gt;     clone: function (deep = FALSE) </span></span>
 <span><span class="co">#&gt;     funs: active binding</span></span>
+<span><span class="co">#&gt;     getReactiveValues: function (session = getDefaultReactiveDomain()) </span></span>
 <span><span class="co">#&gt;     initialize: function (funs, args, growDirection = "vertical", ...) </span></span>
 <span><span class="co">#&gt;     inputValues: active binding</span></span>
 <span><span class="co">#&gt;     instanceId: active binding</span></span>
@@ -236,13 +238,13 @@ from another package, without breaking compatibility.</p>
 <span><span class="co">#&gt;     .async: FALSE</span></span>
 <span><span class="co">#&gt;     .funs: list</span></span>
 <span><span class="co">#&gt;     .growDirection: vertical</span></span>
-<span><span class="co">#&gt;     .init: function () </span></span>
+<span><span class="co">#&gt;     .init: function (session) </span></span>
 <span><span class="co">#&gt;     .instanceId: uRHfdV8IyvQgF7i1jX4q</span></span>
 <span><span class="co">#&gt;     .moduleId: InputPanel-uRHfdV8IyvQgF7i1jX4q</span></span>
 <span><span class="co">#&gt;     .moduleName: InputPanel</span></span>
 <span><span class="co">#&gt;     .namespace: InputPanel-uRHfdV8IyvQgF7i1jX4q</span></span>
 <span><span class="co">#&gt;     .parentNamespace: NULL</span></span>
-<span><span class="co">#&gt;     .reactiveValues: NULL</span></span>
+<span><span class="co">#&gt;     .reactiveValues: list</span></span>
 <span><span class="co">#&gt;     .server: function (input, output, session) </span></span>
 <span><span class="co">#&gt;     .UI: function () </span></span>
 <span><span class="co">#&gt;     assertInstall: function (pkgName, version) </span></span>
