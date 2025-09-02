@@ -87,11 +87,10 @@ Incidence <- R6::R6Class(
     #'
     #' @param data (`summarised_result`) Result object from the `IncidencePrevalence` package.
     #' @param defaults list of default values for the pickers
-    #' @param hideSingleValuePickers hide pickers that contain only a single value, default TRUE
     #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @returns `self`
-    initialize = function(data, defaults = list(), hideSingleValuePickers = TRUE, ...) {
+    initialize = function(data, defaults = list(), ...) {
       super$initialize(...)
       private$assertInstall("IncidencePrevalence", "1.2.0")
       private$assertInstall("visOmopResults", "1.0.2")
@@ -99,7 +98,6 @@ Incidence <- R6::R6Class(
       private$.data <- data
       private$.tidyData <- private$transformData(data)
       private$.defaults <- defaults
-      private$.hideSingleValuePickers <- hideSingleValuePickers
       private$initPickers()
       return(invisible(self))
     }
@@ -112,7 +110,6 @@ Incidence <- R6::R6Class(
     .strata = NULL,
     .pickers = NULL,
     .defaults = NULL,
-    .hideSingleValuePickers = NULL,
     .UI = function() {
       shiny::tagList(
         shinydashboard::tabItem(
