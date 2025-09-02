@@ -22,12 +22,13 @@ Prevalence module that shows prevalence results from the IncidencePrevalence pac
      warn.conflicts = FALSE
    )
  ) {
-    inc <- omopgenerics::importSummarisedResult(system.file(
+    prev <- omopgenerics::importSummarisedResult(system.file(
       package = "DarwinShinyModules",
       "dummyData/IncidencePrevalence/1.2.0/prevalence.csv"
     ))
 
-    prevMod <- Prevalence$new(data = inc)
+    prevMod <- Prevalence$new(data = prev,
+                              defaults = list(sex = "Both"))
 
     ui <- shiny::fluidPage(
       prevMod$UI()
@@ -79,13 +80,15 @@ Prevalence module that shows prevalence results from the IncidencePrevalence pac
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Prevalence$new(data, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Prevalence$new(data, defaults, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data}}{(\code{summarised_result}) Result object from the \code{IncidencePrevalence} package.}
+
+\item{\code{defaults}}{list of default values for the pickers}
 
 \item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }

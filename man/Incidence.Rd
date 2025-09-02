@@ -27,7 +27,8 @@ Incidence module that shows incidence results from the IncidencePrevalence packa
       "dummyData/IncidencePrevalence/1.2.0/incidence.csv"
     ))
 
-    incMod <- Incidence$new(data = inc)
+    incMod <- Incidence$new(data = inc,
+                            defaults = list(sex = "Both"))
 
     ui <- shiny::fluidPage(
       incMod$UI()
@@ -79,13 +80,15 @@ Incidence module that shows incidence results from the IncidencePrevalence packa
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Incidence$new(data, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Incidence$new(data, defaults = list(), ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data}}{(\code{summarised_result}) Result object from the \code{IncidencePrevalence} package.}
+
+\item{\code{defaults}}{list of default values for the pickers}
 
 \item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }

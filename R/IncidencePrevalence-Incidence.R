@@ -40,7 +40,8 @@
 #'       "dummyData/IncidencePrevalence/1.2.0/incidence.csv"
 #'     ))
 #'
-#'     incMod <- Incidence$new(data = inc)
+#'     incMod <- Incidence$new(data = inc,
+#'                             defaults = list(sex = "Both"))
 #'
 #'     ui <- shiny::fluidPage(
 #'       incMod$UI()
@@ -391,7 +392,7 @@ Incidence <- R6::R6Class(
       allDatabases <- unique(private$.tidyData$database)
       selectedDatabases <- allDatabases
       databaseStr <- "database"
-      if (databaseStr %in% names(private$.defaults) && private$.defaults[[databaseStr]] %in% allDatabases) {
+      if (databaseStr %in% names(private$.defaults) && all(private$.defaults[[databaseStr]] %in% allDatabases)) {
         selectedDatabases <- private$.defaults[[databaseStr]]
       }
       private$.pickers[["cdm"]] <- InputPanel$new(
@@ -408,7 +409,7 @@ Incidence <- R6::R6Class(
       allOutcomes <- unique(private$.tidyData$outcome_cohort_name)
       selectedOutcomes <- allOutcomes
       outcomeStr <- "outcome"
-      if (outcomeStr %in% names(private$.defaults) && private$.defaults[[outcomeStr]] %in% allOutcomes) {
+      if (outcomeStr %in% names(private$.defaults) && all(private$.defaults[[outcomeStr]] %in% allOutcomes)) {
         selectedOutcomes <- private$.defaults[[outcomeStr]]
       }
       private$.pickers[["outcome"]] <- InputPanel$new(
@@ -425,7 +426,7 @@ Incidence <- R6::R6Class(
       allStrata <- unique(private$.strata)
       strataStr <- "strata"
       selectedStrata <- allStrata
-      if (strataStr %in% names(private$.defaults) && private$.defaults[[strataStr]] %in% allStrata) {
+      if (strataStr %in% names(private$.defaults) && all(private$.defaults[[strataStr]] %in% allStrata)) {
         selectedStrata <- private$.defaults[[strataStr]]
       }
       private$.pickers[["strata"]] <- InputPanel$new(
@@ -442,7 +443,7 @@ Incidence <- R6::R6Class(
       allAgeGroups <- unique(private$.tidyData$denominator_age_group)
       selectedAgeGroups <- allAgeGroups
       ageGroupStr <- "ageGroup"
-      if (ageGroupStr %in% names(private$.defaults) && private$.defaults[[ageGroupStr]] %in% allAgeGroups) {
+      if (ageGroupStr %in% names(private$.defaults) && all(private$.defaults[[ageGroupStr]] %in% allAgeGroups)) {
         selectedAgeGroups <- private$.defaults[[ageGroupStr]]
       }
       private$.pickers[["denomAgeGroup"]] <- InputPanel$new(
@@ -459,7 +460,7 @@ Incidence <- R6::R6Class(
       allSex <- unique(private$.tidyData$denominator_sex)
       selectedSex <- allSex
       sexStr <- "sex"
-      if (sexStr %in% names(private$.defaults) && private$.defaults[[sexStr]] %in% allSex) {
+      if (sexStr %in% names(private$.defaults) && all(private$.defaults[[sexStr]] %in% allSex)) {
         selectedSex <- private$.defaults[[sexStr]]
       }
       private$.pickers[["denomSex"]] <- InputPanel$new(
@@ -476,7 +477,7 @@ Incidence <- R6::R6Class(
       allPO <- unique(private$.tidyData$denominator_days_prior_observation)
       selectedPO <- allPO
       priorObservationStr <- "prior_observation"
-      if (priorObservationStr %in% names(private$.defaults) && private$.defaults[[priorObservationStr]] %in% allPO) {
+      if (priorObservationStr %in% names(private$.defaults) && all(private$.defaults[[priorObservationStr]] %in% allPO)) {
         selectedPO <- private$.defaults[[priorObservationStr]]
       }
       private$.pickers[["denomPriorObs"]] <- InputPanel$new(
@@ -493,7 +494,7 @@ Incidence <- R6::R6Class(
       allDenomStartDates <- unique(private$.tidyData$denominator_start_date)
       selectedDenomStartDate <- allDenomStartDates
       startDateStr <- "start_date"
-      if (startDateStr %in% names(private$.defaults) && private$.defaults[[startDateStr]] %in% allDenomStartDates) {
+      if (startDateStr %in% names(private$.defaults) && all(private$.defaults[[startDateStr]] %in% allDenomStartDates)) {
         selectedDenomStartDate <- private$.defaults[[startDateStr]]
       }
       private$.pickers[["denomStartDate"]] <- InputPanel$new(
@@ -510,7 +511,7 @@ Incidence <- R6::R6Class(
       allDenomEndDates <- unique(private$.tidyData$denominator_end_date)
       selectedDenomEndDate <- allDenomEndDates
       endDateStr <- "end_date"
-      if (endDateStr %in% names(private$.defaults) && private$.defaults[[endDateStr]] %in% allDenomEndDates) {
+      if (endDateStr %in% names(private$.defaults) && all(private$.defaults[[endDateStr]] %in% allDenomEndDates)) {
         selectedDenomEndDate <- private$.defaults[[endDateStr]]
       }
       private$.pickers[["denomEndDate"]] <- InputPanel$new(
@@ -527,7 +528,7 @@ Incidence <- R6::R6Class(
       allTimeAtRisk <- unique(private$.tidyData$denominator_time_at_risk)
       selectedTimeAtRisk <- allTimeAtRisk
       timeAtRiskStr <- "time_at_risk"
-      if (timeAtRiskStr %in% names(private$.defaults) && private$.defaults[[timeAtRiskStr]] %in% allTimeAtRisk) {
+      if (timeAtRiskStr %in% names(private$.defaults) && all(private$.defaults[[timeAtRiskStr]] %in% allTimeAtRisk)) {
         selectedTimeAtRisk <- private$.defaults[[timeAtRiskStr]]
       }
       private$.pickers[["denomTimeAtRisk"]] <- InputPanel$new(
@@ -544,7 +545,7 @@ Incidence <- R6::R6Class(
       allWashout <- unique(private$.tidyData$analysis_outcome_washout)
       selectedWashout <- allWashout
       washoutStr <- "washout"
-      if (washoutStr %in% names(private$.defaults) && private$.defaults[[washoutStr]] %in% allWashout) {
+      if (washoutStr %in% names(private$.defaults) && all(private$.defaults[[washoutStr]] %in% allWashout)) {
         selectedWashout <- private$.defaults[[washoutStr]]
       }
       private$.pickers[["washout"]] <- InputPanel$new(
@@ -561,7 +562,7 @@ Incidence <- R6::R6Class(
       allRepeatedEvents <- unique(private$.tidyData$analysis_repeated_events)
       selectedRepeatedEvents <- allRepeatedEvents
       repeatedEventsStr <- "repeated_events"
-      if (repeatedEventsStr %in% names(private$.defaults) && private$.defaults[[repeatedEventsStr]] %in% allRepeatedEvents) {
+      if (repeatedEventsStr %in% names(private$.defaults) && all(private$.defaults[[repeatedEventsStr]] %in% allRepeatedEvents)) {
         selectedRepeatedEvents <- private$.defaults[[repeatedEventsStr]]
       }
       private$.pickers[["repeatedEvents"]] <- InputPanel$new(
@@ -578,7 +579,7 @@ Incidence <- R6::R6Class(
       allCompletePeriod <- unique(private$.tidyData$analysis_complete_database_intervals)
       selectedCompletePeriod <- allCompletePeriod
       completePeriodStr <- "complete_period"
-      if (completePeriodStr %in% names(private$.defaults) && private$.defaults[[completePeriodStr]] %in% allCompletePeriod) {
+      if (completePeriodStr %in% names(private$.defaults) && all(private$.defaults[[completePeriodStr]] %in% allCompletePeriod)) {
         selectedCompletePeriod <- private$.defaults[[completePeriodStr]]
       }
       private$.pickers[["completePeriod"]] <- InputPanel$new(
@@ -613,7 +614,7 @@ Incidence <- R6::R6Class(
       allIntervals <- na.omit(allIntervals[order(match(allIntervals, c("overall", "years", "quarters", "months", "weeks")))])
       selectedInterval <- allIntervals[1]
       intervalStr <- "interval"
-      if (intervalStr %in% names(private$.defaults) && private$.defaults[[intervalStr]] %in% allIntervals) {
+      if (intervalStr %in% names(private$.defaults) && all(private$.defaults[[intervalStr]] %in% allIntervals)) {
         selectedInterval <- private$.defaults[[intervalStr]]
       }
       private$.pickers[["interval"]] <- InputPanel$new(
@@ -630,7 +631,7 @@ Incidence <- R6::R6Class(
       allStartDates <- unique(private$.tidyData$incidence_start_date)
       selectedStartDate <- allStartDates
       intervalStartDateStr <- "interval_start_date"
-      if (intervalStartDateStr %in% names(private$.defaults) && private$.defaults[[intervalStartDateStr]] %in% allStartDates) {
+      if (intervalStartDateStr %in% names(private$.defaults) && all(private$.defaults[[intervalStartDateStr]] %in% allStartDates)) {
         selectedStartDate <- private$.defaults[[intervalStartDateStr]]
       }
       private$.pickers[["startDate"]] <- InputPanel$new(
@@ -652,7 +653,7 @@ Incidence <- R6::R6Class(
       # x-axis
       xAxisStr <- "x_axis"
       selectedXAxis <- "incidence_start_date"
-      if (xAxisStr %in% names(private$.defaults) && private$.defaults[[xAxisStr]] %in% plotDataChoices) {
+      if (xAxisStr %in% names(private$.defaults) && all(private$.defaults[[xAxisStr]] %in% plotDataChoices)) {
         selectedXAxis <- private$.defaults[[xAxisStr]]
       }
       private$.pickers[["xAxis"]] <- InputPanel$new(
@@ -668,7 +669,7 @@ Incidence <- R6::R6Class(
       # facet by
       facetStr <- "facet"
       selectedFacetBy <- c("outcome_cohort_name", "database")
-      if (facetStr %in% names(private$.defaults) && private$.defaults[[facetStr]] %in% plotDataChoices) {
+      if (facetStr %in% names(private$.defaults) && all(private$.defaults[[facetStr]] %in% plotDataChoices)) {
         selectedFacetBy <- private$.defaults[[facetStr]]
       }
       private$.pickers[["facet"]] <- InputPanel$new(
@@ -684,7 +685,7 @@ Incidence <- R6::R6Class(
       # color by
       colorStr <- "color"
       selectedColorBy <- c()
-      if (colorStr %in% names(private$.defaults) && private$.defaults[[colorStr]] %in% plotDataChoices) {
+      if (colorStr %in% names(private$.defaults) && all(private$.defaults[[colorStr]] %in% plotDataChoices)) {
         selectedColorBy <- private$.defaults[[colorStr]]
       }
       private$.pickers[["color"]] <- InputPanel$new(
@@ -703,7 +704,7 @@ Incidence <- R6::R6Class(
       # ribbon
       ribbonStr <- "ribbon"
       selectedRibbon <- TRUE
-      if (ribbonStr %in% names(private$.defaults) && private$.defaults[[ribbonStr]] %in% allBooleanOptions) {
+      if (ribbonStr %in% names(private$.defaults) && all(private$.defaults[[ribbonStr]] %in% allBooleanOptions)) {
         selectedRibbon <- private$.defaults[[ribbonStr]]
       }
       private$.pickers[["ribbon"]] <- InputPanel$new(
@@ -719,7 +720,7 @@ Incidence <- R6::R6Class(
       # confidence interval
       confIntervalStr <- "confidence_interval"
       selectedConfInterval <- TRUE
-      if (confIntervalStr %in% names(private$.defaults) && private$.defaults[[confIntervalStr]] %in% allBooleanOptions) {
+      if (confIntervalStr %in% names(private$.defaults) && all(private$.defaults[[confIntervalStr]] %in% allBooleanOptions)) {
         selectedConfInterval <- private$.defaults[[confIntervalStr]]
       }
       private$.pickers[["confInterval"]] <- InputPanel$new(
@@ -736,7 +737,7 @@ Incidence <- R6::R6Class(
       allHeaderColumnOptions <- c("cdm_name", "estimate_name")
       headerColumnsStr <- "header_columns"
       selectedHeaderColumnOptions <- allHeaderColumnOptions
-      if (headerColumnsStr %in% names(private$.defaults) && private$.defaults[[headerColumnsStr]] %in% allHeaderColumnOptions) {
+      if (headerColumnsStr %in% names(private$.defaults) && all(private$.defaults[[headerColumnsStr]] %in% allHeaderColumnOptions)) {
         selectedHeaderColumnOptions <- private$.defaults[[headerColumnsStr]]
       }
       private$.pickers[["headerColumn"]] <- InputPanel$new(
@@ -753,7 +754,7 @@ Incidence <- R6::R6Class(
       allGroupColumnOptions <- c("outcome_cohort_name", "cdm_name")
       groupColumnsStr <- "group_columns"
       selectedGroupColumnOptions <- allGroupColumnOptions[1]
-      if (groupColumnsStr %in% names(private$.defaults) && private$.defaults[[groupColumnsStr]] %in% allGroupColumnOptions) {
+      if (groupColumnsStr %in% names(private$.defaults) && all(private$.defaults[[groupColumnsStr]] %in% allGroupColumnOptions)) {
         selectedGroupColumnOptions <- private$.defaults[[groupColumnsStr]]
       }
       private$.pickers[["groupColumn"]] <- InputPanel$new(
@@ -770,7 +771,7 @@ Incidence <- R6::R6Class(
       allSettingsColumnOptions <- c("denominator_time_at_risk", "denominator_age_group", "denominator_sex")
       settingColumnsStr <- "setting_columns"
       selectedSettingsColumnOptions <- allSettingsColumnOptions
-      if (settingColumnsStr %in% names(private$.defaults) && private$.defaults[[settingColumnsStr]] %in% allSettingsColumnOptions) {
+      if (settingColumnsStr %in% names(private$.defaults) && all(private$.defaults[[settingColumnsStr]] %in% allSettingsColumnOptions)) {
         selectedSettingsColumnOptions <- private$.defaults[[settingColumnsStr]]
       }
       private$.pickers[["settingsColumn"]] <- InputPanel$new(
@@ -787,7 +788,7 @@ Incidence <- R6::R6Class(
       allHideColumnOptions <- c("denominator_time_at_risk", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "analysis_interval")
       hideColumnsStr <- "hide_columns"
       selectedHideColumnOptions <- allHideColumnOptions
-      if (hideColumnsStr %in% names(private$.defaults) && private$.defaults[[hideColumnsStr]] %in% allHideColumnOptions) {
+      if (hideColumnsStr %in% names(private$.defaults) && all(private$.defaults[[hideColumnsStr]] %in% allHideColumnOptions)) {
         selectedHideColumnOptions <- private$.defaults[[hideColumnsStr]]
       }
       private$.pickers[["hideColumn"]] <- InputPanel$new(
