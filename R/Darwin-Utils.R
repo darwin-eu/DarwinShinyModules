@@ -39,7 +39,7 @@ darwinHeader <- function() {
             shiny::tags$a(
               href = "/", class = "g-logo darwin-eu-logo", target = "_self", title = "", rel = "home",
               shiny::tags$img(
-                src = "https://darwin-eu.org/templates/rt_horizon/custom/images/darwin-eu-logo.png",
+                src =  "img/darwin-eu-logo.png",
                 height = "100px",
                 alt = ""
               )

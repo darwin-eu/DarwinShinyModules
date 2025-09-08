@@ -92,4 +92,5 @@ Collate:
     'launchShinydashboardApp.R'
     'makeModule.R'
     'preview.R'
+    'zzz.R'
 URL: https://darwin-eu-dev.github.io/DarwinShinyModules/
