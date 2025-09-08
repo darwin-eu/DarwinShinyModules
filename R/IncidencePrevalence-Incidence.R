@@ -390,7 +390,7 @@ Incidence <- R6::R6Class(
     initPickers = function() {
       # cdm
       allDatabases <- unique(private$.tidyData$database)
-      selectedDatabases <- allDatabases
+      selectedDatabases <- allDatabases[1]
       databaseStr <- "database"
       if (databaseStr %in% names(private$.defaults) && all(private$.defaults[[databaseStr]] %in% allDatabases)) {
         selectedDatabases <- private$.defaults[[databaseStr]]
@@ -407,7 +407,7 @@ Incidence <- R6::R6Class(
 
       # outcome
       allOutcomes <- unique(private$.tidyData$outcome_cohort_name)
-      selectedOutcomes <- allOutcomes
+      selectedOutcomes <- allOutcomes[1]
       outcomeStr <- "outcome"
       if (outcomeStr %in% names(private$.defaults) && all(private$.defaults[[outcomeStr]] %in% allOutcomes)) {
         selectedOutcomes <- private$.defaults[[outcomeStr]]
@@ -425,7 +425,7 @@ Incidence <- R6::R6Class(
       # strata
       allStrata <- unique(private$.strata)
       strataStr <- "strata"
-      selectedStrata <- allStrata
+      selectedStrata <- allStrata[1]
       if (strataStr %in% names(private$.defaults) && all(private$.defaults[[strataStr]] %in% allStrata)) {
         selectedStrata <- private$.defaults[[strataStr]]
       }
@@ -441,7 +441,7 @@ Incidence <- R6::R6Class(
 
       # denominator age group
       allAgeGroups <- unique(private$.tidyData$denominator_age_group)
-      selectedAgeGroups <- allAgeGroups
+      selectedAgeGroups <- allAgeGroups[1]
       ageGroupStr <- "ageGroup"
       if (ageGroupStr %in% names(private$.defaults) && all(private$.defaults[[ageGroupStr]] %in% allAgeGroups)) {
         selectedAgeGroups <- private$.defaults[[ageGroupStr]]
@@ -458,7 +458,7 @@ Incidence <- R6::R6Class(
 
       # denominator sex
       allSex <- unique(private$.tidyData$denominator_sex)
-      selectedSex <- allSex
+      selectedSex <- allSex[1]
       sexStr <- "sex"
       if (sexStr %in% names(private$.defaults) && all(private$.defaults[[sexStr]] %in% allSex)) {
         selectedSex <- private$.defaults[[sexStr]]
@@ -475,7 +475,7 @@ Incidence <- R6::R6Class(
 
       # prior observation
       allPO <- unique(private$.tidyData$denominator_days_prior_observation)
-      selectedPO <- allPO
+      selectedPO <- allPO[1]
       priorObservationStr <- "prior_observation"
       if (priorObservationStr %in% names(private$.defaults) && all(private$.defaults[[priorObservationStr]] %in% allPO)) {
         selectedPO <- private$.defaults[[priorObservationStr]]
@@ -492,7 +492,7 @@ Incidence <- R6::R6Class(
 
       # denominator start date
       allDenomStartDates <- unique(private$.tidyData$denominator_start_date)
-      selectedDenomStartDate <- allDenomStartDates
+      selectedDenomStartDate <- allDenomStartDates[1]
       startDateStr <- "start_date"
       if (startDateStr %in% names(private$.defaults) && all(private$.defaults[[startDateStr]] %in% allDenomStartDates)) {
         selectedDenomStartDate <- private$.defaults[[startDateStr]]
@@ -509,7 +509,7 @@ Incidence <- R6::R6Class(
 
       # denominator end date
       allDenomEndDates <- unique(private$.tidyData$denominator_end_date)
-      selectedDenomEndDate <- allDenomEndDates
+      selectedDenomEndDate <- allDenomEndDates[1]
       endDateStr <- "end_date"
       if (endDateStr %in% names(private$.defaults) && all(private$.defaults[[endDateStr]] %in% allDenomEndDates)) {
         selectedDenomEndDate <- private$.defaults[[endDateStr]]
@@ -526,7 +526,7 @@ Incidence <- R6::R6Class(
 
       # denominator time at risk
       allTimeAtRisk <- unique(private$.tidyData$denominator_time_at_risk)
-      selectedTimeAtRisk <- allTimeAtRisk
+      selectedTimeAtRisk <- allTimeAtRisk[1]
       timeAtRiskStr <- "time_at_risk"
       if (timeAtRiskStr %in% names(private$.defaults) && all(private$.defaults[[timeAtRiskStr]] %in% allTimeAtRisk)) {
         selectedTimeAtRisk <- private$.defaults[[timeAtRiskStr]]
@@ -543,7 +543,7 @@ Incidence <- R6::R6Class(
 
       # washout
       allWashout <- unique(private$.tidyData$analysis_outcome_washout)
-      selectedWashout <- allWashout
+      selectedWashout <- allWashout[1]
       washoutStr <- "washout"
       if (washoutStr %in% names(private$.defaults) && all(private$.defaults[[washoutStr]] %in% allWashout)) {
         selectedWashout <- private$.defaults[[washoutStr]]
@@ -560,7 +560,7 @@ Incidence <- R6::R6Class(
 
       # repeated events
       allRepeatedEvents <- unique(private$.tidyData$analysis_repeated_events)
-      selectedRepeatedEvents <- allRepeatedEvents
+      selectedRepeatedEvents <- allRepeatedEvents[1]
       repeatedEventsStr <- "repeated_events"
       if (repeatedEventsStr %in% names(private$.defaults) && all(private$.defaults[[repeatedEventsStr]] %in% allRepeatedEvents)) {
         selectedRepeatedEvents <- private$.defaults[[repeatedEventsStr]]
@@ -577,7 +577,7 @@ Incidence <- R6::R6Class(
 
       # complete period
       allCompletePeriod <- unique(private$.tidyData$analysis_complete_database_intervals)
-      selectedCompletePeriod <- allCompletePeriod
+      selectedCompletePeriod <- allCompletePeriod[1]
       completePeriodStr <- "complete_period"
       if (completePeriodStr %in% names(private$.defaults) && all(private$.defaults[[completePeriodStr]] %in% allCompletePeriod)) {
         selectedCompletePeriod <- private$.defaults[[completePeriodStr]]
@@ -594,7 +594,7 @@ Incidence <- R6::R6Class(
 
       # min counts
       allMinCounts <- unique(private$.tidyData$analysis_min_cell_count)
-      selectedMinCounts <- allMinCounts
+      selectedMinCounts <- allMinCounts[1]
       minCellCountStr <- "min_cell_count"
       if (minCellCountStr %in% names(private$.defaults) && private$.defaults[[minCellCountStr]] %in% allMinCounts) {
         selectedMinCounts <- private$.defaults[[minCellCountStr]]
@@ -629,7 +629,7 @@ Incidence <- R6::R6Class(
 
       # start date
       allStartDates <- unique(private$.tidyData$incidence_start_date)
-      selectedStartDate <- allStartDates
+      selectedStartDate <- allStartDates[1]
       intervalStartDateStr <- "interval_start_date"
       if (intervalStartDateStr %in% names(private$.defaults) && all(private$.defaults[[intervalStartDateStr]] %in% allStartDates)) {
         selectedStartDate <- private$.defaults[[intervalStartDateStr]]
@@ -651,15 +651,10 @@ Incidence <- R6::R6Class(
         "analysis_complete_database_intervals", "analysis_min_cell_count", "analysis_interval", "incidence_start_date"
       )
       # x-axis
-      xAxisStr <- "x_axis"
-      selectedXAxis <- "incidence_start_date"
-      if (xAxisStr %in% names(private$.defaults) && all(private$.defaults[[xAxisStr]] %in% plotDataChoices)) {
-        selectedXAxis <- private$.defaults[[xAxisStr]]
-      }
       private$.pickers[["xAxis"]] <- InputPanel$new(
         funs = list(xAxis = shinyWidgets::pickerInput),
         args = list(xAxis = list(
-          inputId = "xAxis", choices = plotDataChoices, label = "Incidence_start_date", selected = selectedXAxis, multiple = F,
+          inputId = "xAxis", choices = plotDataChoices, label = "Incidence_start_date", selected = "incidence_start_date", multiple = F,
           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
         )),
         growDirection = "horizontal"
@@ -667,15 +662,10 @@ Incidence <- R6::R6Class(
       private$.pickers[["xAxis"]]$parentNamespace <- self$namespace
 
       # facet by
-      facetStr <- "facet"
-      selectedFacetBy <- c("outcome_cohort_name", "database")
-      if (facetStr %in% names(private$.defaults) && all(private$.defaults[[facetStr]] %in% plotDataChoices)) {
-        selectedFacetBy <- private$.defaults[[facetStr]]
-      }
       private$.pickers[["facet"]] <- InputPanel$new(
         funs = list(facet_by = shinyWidgets::pickerInput),
         args = list(facet_by = list(
-          inputId = "facet_by", choices = plotDataChoices, label = "Facet by", selected = selectedFacetBy, multiple = TRUE,
+          inputId = "facet_by", choices = plotDataChoices, label = "Facet by", selected = c("outcome_cohort_name", "database"), multiple = TRUE,
           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
         )),
         growDirection = "horizontal"
@@ -683,34 +673,21 @@ Incidence <- R6::R6Class(
       private$.pickers[["facet"]]$parentNamespace <- self$namespace
 
       # color by
-      colorStr <- "color"
-      selectedColorBy <- c()
-      if (colorStr %in% names(private$.defaults) && all(private$.defaults[[colorStr]] %in% plotDataChoices)) {
-        selectedColorBy <- private$.defaults[[colorStr]]
-      }
       private$.pickers[["color"]] <- InputPanel$new(
         funs = list(color_by = shinyWidgets::pickerInput),
         args = list(color_by = list(
-          inputId = "color_by", choices = plotDataChoices, label = "Colour by", selected = selectedColorBy, multiple = TRUE,
+          inputId = "color_by", choices = plotDataChoices, label = "Colour by", selected = c(), multiple = TRUE,
           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
         )),
         growDirection = "horizontal"
       )
       private$.pickers[["color"]]$parentNamespace <- self$namespace
 
-      # for boolean pickers
-      allBooleanOptions <- c(TRUE, FALSE)
-
       # ribbon
-      ribbonStr <- "ribbon"
-      selectedRibbon <- TRUE
-      if (ribbonStr %in% names(private$.defaults) && all(private$.defaults[[ribbonStr]] %in% allBooleanOptions)) {
-        selectedRibbon <- private$.defaults[[ribbonStr]]
-      }
       private$.pickers[["ribbon"]] <- InputPanel$new(
         funs = list(ribbon = shinyWidgets::pickerInput),
         args = list(ribbon = list(
-          inputId = "ribbon", choices = allBooleanOptions, label = "Ribbon", selected = selectedRibbon, multiple = FALSE,
+          inputId = "ribbon", choices = c(TRUE, FALSE), label = "Ribbon", selected = TRUE, multiple = FALSE,
           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
         )),
         growDirection = "horizontal"
@@ -718,15 +695,10 @@ Incidence <- R6::R6Class(
       private$.pickers[["ribbon"]]$parentNamespace <- self$namespace
 
       # confidence interval
-      confIntervalStr <- "confidence_interval"
-      selectedConfInterval <- TRUE
-      if (confIntervalStr %in% names(private$.defaults) && all(private$.defaults[[confIntervalStr]] %in% allBooleanOptions)) {
-        selectedConfInterval <- private$.defaults[[confIntervalStr]]
-      }
       private$.pickers[["confInterval"]] <- InputPanel$new(
         funs = list(confInterval = shinyWidgets::pickerInput),
         args = list(confInterval = list(
-          inputId = "confInterval", choices = allBooleanOptions, label = "Confidence interval", selected = selectedConfInterval, multiple = FALSE,
+          inputId = "confInterval", choices = c(TRUE, FALSE), label = "Confidence interval", selected = TRUE, multiple = FALSE,
           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
         )),
         growDirection = "horizontal"
@@ -734,16 +706,11 @@ Incidence <- R6::R6Class(
       private$.pickers[["confInterval"]]$parentNamespace <- self$namespace
 
       # headerColumn
-      allHeaderColumnOptions <- c("cdm_name", "estimate_name")
-      headerColumnsStr <- "header_columns"
-      selectedHeaderColumnOptions <- allHeaderColumnOptions
-      if (headerColumnsStr %in% names(private$.defaults) && all(private$.defaults[[headerColumnsStr]] %in% allHeaderColumnOptions)) {
-        selectedHeaderColumnOptions <- private$.defaults[[headerColumnsStr]]
-      }
+      headerColumnOptions <- c("cdm_name", "estimate_name")
       private$.pickers[["headerColumn"]] <- InputPanel$new(
         funs = list(headerColumn = shinyWidgets::pickerInput),
         args = list(headerColumn = list(
-          inputId = "headerColumn", choices = allHeaderColumnOptions, label = "Header", selected = selectedHeaderColumnOptions, multiple = TRUE,
+          inputId = "headerColumn", choices = headerColumnOptions, label = "Header", selected = headerColumnOptions, multiple = TRUE,
           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
         )),
         growDirection = "horizontal"
@@ -751,16 +718,11 @@ Incidence <- R6::R6Class(
       private$.pickers[["headerColumn"]]$parentNamespace <- self$namespace
 
       # groupColumn
-      allGroupColumnOptions <- c("outcome_cohort_name", "cdm_name")
-      groupColumnsStr <- "group_columns"
-      selectedGroupColumnOptions <- allGroupColumnOptions[1]
-      if (groupColumnsStr %in% names(private$.defaults) && all(private$.defaults[[groupColumnsStr]] %in% allGroupColumnOptions)) {
-        selectedGroupColumnOptions <- private$.defaults[[groupColumnsStr]]
-      }
+      groupColumnOptions <- c("outcome_cohort_name", "cdm_name")
       private$.pickers[["groupColumn"]] <- InputPanel$new(
         funs = list(groupColumn = shinyWidgets::pickerInput),
         args = list(groupColumn = list(
-          inputId = "groupColumn", choices = allGroupColumnOptions, label = "Group columns", selected = selectedGroupColumnOptions, multiple = TRUE,
+          inputId = "groupColumn", choices = groupColumnOptions, label = "Group columns", selected = groupColumnOptions[1], multiple = TRUE,
           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
         )),
         growDirection = "horizontal"
@@ -768,16 +730,11 @@ Incidence <- R6::R6Class(
       private$.pickers[["groupColumn"]]$parentNamespace <- self$namespace
 
       # settingsColumn
-      allSettingsColumnOptions <- c("denominator_time_at_risk", "denominator_age_group", "denominator_sex")
-      settingColumnsStr <- "setting_columns"
-      selectedSettingsColumnOptions <- allSettingsColumnOptions
-      if (settingColumnsStr %in% names(private$.defaults) && all(private$.defaults[[settingColumnsStr]] %in% allSettingsColumnOptions)) {
-        selectedSettingsColumnOptions <- private$.defaults[[settingColumnsStr]]
-      }
+      settingColumnOptions <- c("denominator_time_at_risk", "denominator_age_group", "denominator_sex")
       private$.pickers[["settingsColumn"]] <- InputPanel$new(
         funs = list(settingsColumn = shinyWidgets::pickerInput),
         args = list(settingsColumn = list(
-          inputId = "settingsColumn", choices = allSettingsColumnOptions, label = "Settings columns", selected = selectedSettingsColumnOptions, multiple = TRUE,
+          inputId = "settingsColumn", choices = settingColumnOptions, label = "Settings columns", selected = settingColumnOptions, multiple = TRUE,
           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
         )),
         growDirection = "horizontal"
@@ -785,16 +742,11 @@ Incidence <- R6::R6Class(
       private$.pickers[["settingsColumn"]]$parentNamespace <- self$namespace
 
       # hideColumn
-      allHideColumnOptions <- c("denominator_time_at_risk", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "analysis_interval")
-      hideColumnsStr <- "hide_columns"
-      selectedHideColumnOptions <- allHideColumnOptions
-      if (hideColumnsStr %in% names(private$.defaults) && all(private$.defaults[[hideColumnsStr]] %in% allHideColumnOptions)) {
-        selectedHideColumnOptions <- private$.defaults[[hideColumnsStr]]
-      }
+      hideColumnOptions <- c("denominator_time_at_risk", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "analysis_interval")
       private$.pickers[["hideColumn"]] <- InputPanel$new(
         funs = list(hideColumn = shinyWidgets::pickerInput),
         args = list(hideColumn = list(
-          inputId = "hideColumn", choices = allHideColumnOptions, label = "Hide columns", selected = selectedHideColumnOptions, multiple = TRUE,
+          inputId = "hideColumn", choices = hideColumnOptions, label = "Hide columns", selected = hideColumnOptions, multiple = TRUE,
           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
         )),
         growDirection = "horizontal"
