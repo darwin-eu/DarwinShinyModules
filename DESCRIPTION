@@ -26,7 +26,8 @@ Imports:
     promises,
     shinyWidgets,
     stringr,
-    purrr
+    purrr,
+    usethis
 Suggests:
     bslib,
     shinydashboard,
