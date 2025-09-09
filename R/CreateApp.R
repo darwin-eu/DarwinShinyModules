@@ -20,8 +20,6 @@
 #' @param appStructure application structure as a list
 #' @param theme theme as a character
 #' @param additionalFiles optional vector of files to be copied
-#' @param createProject if the path should be made into a project
-#' @param openProject if, after creation of the project, the project should be opened
 #'
 #' @export
 #'
@@ -55,11 +53,12 @@
 #'             appStructure = appStructure,
 #'             theme = 'shinymodules-darwin')
 #' }
-createApp <- function(path, appStructure, theme, additionalFiles = c(), createProject = FALSE, openProject = FALSE) {
+createApp <- function(path, appStructure, theme, additionalFiles = c()) {
 
   if (!dir.exists(path)) {
     dir.create(path, recursive = T)
   }
+  usethis::create_project(path = path, open = FALSE)
 
   themeFun <- switch(
     theme,
@@ -69,20 +68,18 @@ createApp <- function(path, appStructure, theme, additionalFiles = c(), createPr
     "shinymodules-darwin" = "DarwinShinyModules::launchDarwinDashboardApp(appStructure)"
   )
 
-  saveRDS(appStructure, file.path(path, "appStructure.rds"))
+  appStructureFile <- "appStructure.rds"
+  saveRDS(appStructure, file.path(path, appStructureFile))
 
   writeLines(
     c("library(DarwinShinyModules)",
-      "appStructure <- readRDS('./appStructure.rds')",
+      "sapply(list.files('R', full.names = T), source)",
+      sprintf("appStructure <- readRDS('./%s')", appStructureFile),
       themeFun),
     file.path(path, "app.R")
   )
 
   for (file in additionalFiles) (
-    file.copy(from = file, to = file.path(path, basename(file)), recursive = TRUE, overwrite = TRUE)
+    file.copy(from = file, to = file.path(path, "R", basename(file)), overwrite = TRUE)
   )
-
-  if (createProject) {
-    usethis::create_project(path = path, open = openProject)
-  }
 }

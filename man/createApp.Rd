@@ -4,14 +4,7 @@
 \alias{createApp}
 \title{Function that creates a stand-alone shiny app from a given app structure.}
 \usage{
-createApp(
-  path,
-  appStructure,
-  theme,
-  additionalFiles = c(),
-  createProject = FALSE,
-  openProject = FALSE
-)
+createApp(path, appStructure, theme, additionalFiles = c())
 }
 \arguments{
 \item{path}{path where shiny app will be stored}
@@ -21,10 +14,6 @@ createApp(
 \item{theme}{theme as a character}
 
 \item{additionalFiles}{optional vector of files to be copied}
-
-\item{createProject}{if the path should be made into a project}
-
-\item{openProject}{if, after creation of the project, the project should be opened}
 }
 \description{
 Function that creates a stand-alone shiny app from a given app structure.
