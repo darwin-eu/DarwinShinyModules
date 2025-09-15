@@ -1,3 +1,5 @@
+library(ggplot2)
+
 test_that("Creation", {
   f <- function(data) {
       ggplot(data = data, mapping = aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
