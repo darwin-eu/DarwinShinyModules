@@ -18,7 +18,8 @@
 #'
 #' @param path path where shiny app will be stored
 #' @param appStructure application structure as a list
-#' @param theme theme as a character
+#' @param theme theme as a character, it can be one of
+#' 'shinymodules' (default), 'bslib', 'bslib-darwin' or 'shinymodules-darwin'
 #' @param additionalFiles optional vector of files to be copied
 #'
 #' @export
@@ -53,7 +54,8 @@
 #'             appStructure = appStructure,
 #'             theme = 'shinymodules-darwin')
 #' }
-createApp <- function(path, appStructure, theme, additionalFiles = c()) {
+createApp <- function(path, appStructure, theme = "shinymodules", additionalFiles = c()) {
+  checkmate::assertChoice(x = theme, c("bslib", "shinymodules", "bslib-darwin", "shinymodules-darwin"))
 
   if (!dir.exists(path)) {
     dir.create(path, recursive = T)

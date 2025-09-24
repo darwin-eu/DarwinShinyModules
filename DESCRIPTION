@@ -26,8 +26,7 @@ Imports:
     promises,
     shinyWidgets,
     stringr,
-    purrr,
-    usethis
+    purrr
 Suggests:
     bslib,
     shinydashboard,
@@ -50,7 +49,8 @@ Suggests:
     TreatmentPatterns,
     IncidencePrevalence,
     DrugExposureDiagnostics (>= 1.1.1),
-    CohortSurvival
+    CohortSurvival,
+    usethis
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr

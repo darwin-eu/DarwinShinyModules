@@ -4,14 +4,15 @@
 \alias{createApp}
 \title{Function that creates a stand-alone shiny app from a given app structure.}
 \usage{
-createApp(path, appStructure, theme, additionalFiles = c())
+createApp(path, appStructure, theme = "shinymodules", additionalFiles = c())
 }
 \arguments{
 \item{path}{path where shiny app will be stored}
 
 \item{appStructure}{application structure as a list}
 
-\item{theme}{theme as a character}
+\item{theme}{theme as a character, it can be one of
+'shinymodules' (default), 'bslib', 'bslib-darwin' or 'shinymodules-darwin'}
 
 \item{additionalFiles}{optional vector of files to be copied}
 }
