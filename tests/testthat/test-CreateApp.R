@@ -1,4 +1,5 @@
 test_that("CreateApp", {
+  skip_if_not_installed(c("usethis"))
 
   appPath <- file.path(tempdir(), "app")
 
