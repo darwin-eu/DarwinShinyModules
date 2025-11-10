@@ -90,14 +90,16 @@ Plot <- R6::R6Class(
     #' @param fun (`function()`) Function to plot with.
     #' @param args (`list`) Named list of arguments to pass to `fun`.
     #' @param title (`character(1)`) Title of the plot. When set to `NULL`, no title is shown.
+    #' @param height (`character(1)`) Height of the plot.
     #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @return `self`
-    initialize = function(fun, args, title = "Plot", ...) {
+    initialize = function(fun, args, title = "Plot", height = "400px", ...) {
       super$initialize(...)
       private$.fun <- fun
       private$.args <- args
       private$.title <- title
+      private$.height <- height
       self$validate()
     },
 
@@ -119,6 +121,7 @@ Plot <- R6::R6Class(
     .fun = NULL,
     .args = NULL,
     .title = "",
+    .height = NULL,
     .data = NULL,
     .plot = NULL,
     .reactiveArgs = NULL,
