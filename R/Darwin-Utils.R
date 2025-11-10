@@ -72,7 +72,7 @@ darwinHeader <- function() {
 #' }
 darwinFooter <- function() {
   shiny::tags$footer(
-    style = "padding: 0px; text-align: center; position: fixed; bottom: 0; width: 100%;",
+    style = "padding: 5px 0px 0px 0px; text-align: center; bottom: 0; width: 100%;",
     shiny::h6(
       sprintf(
         "Generated with DarwinShinyModules %s | Deployed on: %s | (c) %s - 2023 European Medicines Agency. All rights reserved. Certain parts are licensed under conditions to the European Medicines Agency.",
