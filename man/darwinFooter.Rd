@@ -4,7 +4,10 @@
 \alias{darwinFooter}
 \title{darwinFooter}
 \usage{
-darwinFooter()
+darwinFooter(type = "shinydashboard")
+}
+\arguments{
+\item{type}{for which app type the footer should be generated}
 }
 \value{
 \code{tagList}

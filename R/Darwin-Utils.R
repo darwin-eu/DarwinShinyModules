@@ -55,6 +55,8 @@ darwinHeader <- function() {
 #'
 #' Creates the DARWIN EU (c) footer.
 #'
+#' @param type for which app type the footer should be generated
+#'
 #' @returns `tagList`
 #' @export
 #'
@@ -70,9 +72,16 @@ darwinHeader <- function() {
 #' if (interactive()) {
 #'   shiny::shinyApp(ui, server)
 #' }
-darwinFooter <- function() {
+darwinFooter <- function(type = "shinydashboard") {
+  assertions <- checkmate::makeAssertCollection()
+  checkmate::assertChoice(type, c("shinydashboard", "bslib"), add = assertions)
+  checkmate::reportAssertions(assertions)
+
+  darwinStyle <- ifelse(type == "shinydashboard",
+                        "padding: 5px 0px 0px 0px; text-align: center; bottom: 0; width: 100%;",
+                        "padding: 0px; text-align: center; position: fixed; bottom: 0; width: 100%;")
   shiny::tags$footer(
-    style = "padding: 5px 0px 0px 0px; text-align: center; bottom: 0; width: 100%;",
+    style = darwinStyle,
     shiny::h6(
       sprintf(
         "Generated with DarwinShinyModules %s | Deployed on: %s | (c) %s - 2023 European Medicines Agency. All rights reserved. Certain parts are licensed under conditions to the European Medicines Agency.",

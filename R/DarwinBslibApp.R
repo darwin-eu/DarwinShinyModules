@@ -36,7 +36,7 @@ DarwinBslibApp <- R6::R6Class(
           theme = private$theme(),
           fillable = FALSE,
           do.call(bslib::navset_bar, private$parseModules()),
-          darwinFooter()
+          darwinFooter(type = "bslib")
         )
       )
     }
