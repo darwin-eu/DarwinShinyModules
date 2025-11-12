@@ -56,7 +56,7 @@ PlotStatic <- R6::R6Class(
     .UI = function() {
       shiny::tagList(
         shiny::h3(private$.title),
-        shiny::plotOutput(shiny::NS(private$.namespace, "plot"), height = private$.height)
+        do.call(shiny::plotOutput, args = append(list(outputId = shiny::NS(private$.namespace, "plot")), private$.dots))
       )
     },
 

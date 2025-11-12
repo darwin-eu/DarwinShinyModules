@@ -72,7 +72,7 @@ PlotPlotly <- R6::R6Class(
     .UI = function() {
       shiny::tagList(
         shiny::h3(private$.title),
-        plotly::plotlyOutput(shiny::NS(private$.namespace, "plot"), height = private$.height)
+        do.call(plotly::plotlyOutput, args = append(list(outputId = shiny::NS(private$.namespace, "plot")), private$.dots))
       )
     },
 
