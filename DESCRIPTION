@@ -71,6 +71,7 @@ Collate:
     'DatabaseDBI.R'
     'DatabaseOverview.R'
     'DrugExposureDiagnostics.R'
+    'Flextable.R'
     'GTTable.R'
     'IncidencePrevalence-Incidence.R'
     'IncidencePrevalence-Prevalence.R'
