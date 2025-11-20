@@ -158,6 +158,7 @@ Prevalence <- R6::R6Class(
               private$.pickers[["color"]]$UI(),
               private$.pickers[["ribbon"]]$UI(),
               private$.pickers[["confInterval"]]$UI(),
+              private$.pickers[["rotateXLabels"]]$UI(),
               plotly::plotlyOutput(
                 shiny::NS(private$.namespace, "plot"),
                 height = "800px"
@@ -327,6 +328,9 @@ Prevalence <- R6::R6Class(
           if (as.logical(private$.pickers[["ribbon"]]$inputValues$ribbon)) {
             plot <- plot + ggplot2::geom_line()
           }
+        }
+        if (as.logical(private$.pickers[["rotateXLabels"]]$inputValues$rotateXLabels)) {
+          plot <- plot + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 1))
         }
         plot
       })
@@ -700,6 +704,16 @@ Prevalence <- R6::R6Class(
         growDirection = "horizontal"
       )
       private$.pickers[["confInterval"]]$parentNamespace <- self$namespace
+
+      # rotate x-axis labels
+      private$.pickers[["rotateXLabels"]] <- InputPanel$new(
+        funs = list(rotateXLabels = shinyWidgets::pickerInput),
+        args = list(rotateXLabels = list(
+          inputId = "rotateXLabels", choices = c(TRUE, FALSE), label = "Rotate x-axis labels", selected = FALSE
+        )),
+        growDirection = "horizontal"
+      )
+      private$.pickers[["rotateXLabels"]]$parentNamespace <- self$namespace
 
       # headerColumn
       headerColumnOptions <- c("cdm_name", "estimate_name")
