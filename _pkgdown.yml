@@ -15,6 +15,7 @@ reference:
 - contents:
   - Table
   - GTTable
+  - Flextable
 
 - subtitle: Plots
 - desc: Documentation for modules that decorate the `Plot` decorator module
