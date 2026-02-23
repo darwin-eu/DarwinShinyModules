@@ -27,6 +27,7 @@
 #' @import promises
 #' @import shinyWidgets
 #' @import stringr
+#' @import flextable
 #' @importFrom purrr map
 #' @importFrom gt render_gt gt_output
 #' @importFrom DT DTOutput renderDT

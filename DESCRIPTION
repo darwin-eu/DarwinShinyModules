@@ -23,6 +23,7 @@ Imports:
     plotly,
     DT,
     gt,
+    flextable,
     promises,
     shinyWidgets,
     stringr,
@@ -74,6 +75,7 @@ Collate:
     'DrugUtilisation-DrugRestart.R'
     'DrugUtilisation-DrugUtilisation.R'
     'DrugUtilisation-Indication.R'
+    'Flextable.R'
     'GTTable.R'
     'IncidencePrevalence-Incidence.R'
     'IncidencePrevalence-Prevalence.R'
