@@ -57,7 +57,17 @@ Plot <- R6::R6Class(
       }
     },
 
-    #' @field args (`reactiveValues`) Arguments used for plot.
+    #' @field reactiveArgs (`reactive`) Arguments used for plot.
+    reactiveArgs = function(reactiveArgs) {
+      session <- shiny::getDefaultReactiveDomain()
+      if (missing(reactiveArgs)) {
+        return(private$.reactiveArgs[[session$token]])
+      } else {
+        private$.reactiveArgs[[session$token]] <- reactiveArgs
+      }
+    },
+
+    #' @field args (`list`) Arguments used for plot.
     args = function(args) {
       if (missing(args)) {
         return(private$.args)
@@ -80,14 +90,16 @@ Plot <- R6::R6Class(
     #' @param fun (`function()`) Function to plot with.
     #' @param args (`list`) Named list of arguments to pass to `fun`.
     #' @param title (`character(1)`) Title of the plot. When set to `NULL`, no title is shown.
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @return `self`
-    initialize = function(fun, args, title = "Plot") {
-      super$initialize()
-      private$.data <- data
+    initialize = function(fun, args, title = "Plot", ...) {
+      super$initialize(...)
       private$.fun <- fun
       private$.args <- args
       private$.title <- title
+      private$.dots <- list(...)
+      private$.dots <- private$.dots[!names(private$.dots) %in% c("parentNamespace", "async")]
       self$validate()
     },
 
@@ -109,19 +121,14 @@ Plot <- R6::R6Class(
     .fun = NULL,
     .args = NULL,
     .title = "",
+    .dots = NULL,
     .data = NULL,
     .plot = NULL,
+    .reactiveArgs = NULL,
 
     ## Methods ----
     .server = function(input, output, session) {
-      if (!shiny::is.reactivevalues(private$.args)) {
-        private$.args <- do.call(shiny::reactiveValues, private$.args)
-      }
-      shiny::onStop(fun = private$finalize)
-    },
-
-    finalize = function() {
-      self$args <- isolate(shiny::reactiveValuesToList(self$args))
+      private$.reactiveArgs[[session$token]] <- do.call(shiny::reactiveValues, self$args)
     }
   )
 )

@@ -173,6 +173,7 @@ asynchronous mode on or off.}
 \itemize{
 \item \href{#method-ShinyModule-new}{\code{ShinyModule$new()}}
 \item \href{#method-ShinyModule-validate}{\code{ShinyModule$validate()}}
+\item \href{#method-ShinyModule-getReactiveValues}{\code{ShinyModule$getReactiveValues()}}
 \item \href{#method-ShinyModule-UI}{\code{ShinyModule$UI()}}
 \item \href{#method-ShinyModule-server}{\code{ShinyModule$server()}}
 \item \href{#method-ShinyModule-clone}{\code{ShinyModule$clone()}}
@@ -184,9 +185,16 @@ asynchronous mode on or off.}
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyModule$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ShinyModule$new(...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{Additional parameters to set fields.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 (\code{self})
 }
@@ -202,6 +210,26 @@ Validator method
 
 \subsection{Returns}{
 (\code{self})
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ShinyModule-getReactiveValues"></a>}}
+\if{latex}{\out{\hypertarget{method-ShinyModule-getReactiveValues}{}}}
+\subsection{Method \code{getReactiveValues()}}{
+Method to get reactive values for a specific session.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ShinyModule$getReactiveValues(session = getDefaultReactiveDomain())}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{session}}{(\code{session}) Session from the server function.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{reactiveValues}
 }
 }
 \if{html}{\out{<hr>}}

@@ -13,9 +13,14 @@ DatabaseDBI <- R6::R6Class(
 
   ## Active ----
   active = list(
-    #' @field tables (`list(n)`) List of `tbl_dbi` tables for the respective driver.
-    tables = function() {
-      return(private$.tables)
+    #' @field connection (`DBI Connection`) A DBI connection.
+    connection = function() {
+      return(private$.connection)
+    },
+
+    #' @field driver (`driver`) Driver used to connect to the database.
+    driver = function() {
+      return(private$.driver)
     },
 
     #' @field connectArgs (`list(n)`) Named list of additional arguments used in `DBI::dbConnect()`
@@ -46,46 +51,18 @@ DatabaseDBI <- R6::R6Class(
     #' Initializer method
     #'
     #' @param driver Driver to use to connect to the database with `DBI::dbConnect()`
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @return `invisible(self)`
-    initialize = function(driver) {
+    initialize = function(driver, ...) {
       rlang::check_installed("DBI")
-      super$initialize()
+      super$initialize(...)
       private$.driver <- driver
       return(invisible(self))
     },
 
     #' @description
-    #' Method to attach tables from the database in the `tables` field.
-    #'
-    #' @param ... (`character()`) Names of tables to attach.
-    attachTables = function(...) {
-      tableNames <- c(...)
-      private$.tables <- lapply(tableNames, function(table) {
-        dplyr::tbl(src = private$.connection, table)
-      })
-      names(private$.tables) <- tableNames
-    },
-
-    #' @description
-    #' Method to detatch tables from the `tables` field.
-    #'
-    #' @param ... (`character()`) Names of the tables to detatch.
-    detatchTables = function(...) {
-      tableNames <- c(...)
-      private$.tables <- private$.tables[!names(private$.tables) %in% tableNames]
-    }
-  ),
-
-  ## Private ----
-  private = list(
-    ### Fields ----
-    .driver = NULL,
-    .tables = list(),
-    .connectArgs = list(),
-    .disconnectArgs = list(),
-
-    ### Methods ----
+    #' Method to connect to the database.
     connect = function() {
       if (!self$connected) {
         private$.connection <- do.call(
@@ -93,15 +70,20 @@ DatabaseDBI <- R6::R6Class(
           args = append(list(drv = private$.driver), private$.connectArgs)
         )
         private$.reactiveValues$connected <- TRUE
-        dbName <- tryCatch({
-          private$.connection@dbname
-        }, error = function(e) {
-          basename(private$.connection@driver@dbdir)
-        })
+        dbName <- tryCatch(
+          {
+            private$.connection@dbname
+          },
+          error = function(e) {
+            basename(private$.connection@driver@dbdir)
+          }
+        )
         private$.reactiveValues$databaseName <- dbName
       }
     },
 
+    #' @description
+    #' Method to disconnect from the database.
     disconnect = function() {
       if (self$connected) {
         do.call(
@@ -114,5 +96,13 @@ DatabaseDBI <- R6::R6Class(
         message("Disconnected from database")
       }
     }
+  ),
+
+  ## Private ----
+  private = list(
+    ### Fields ----
+    .driver = NULL,
+    .connectArgs = list(),
+    .disconnectArgs = list()
   )
 )

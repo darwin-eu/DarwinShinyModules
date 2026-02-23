@@ -56,17 +56,14 @@ PlotStatic <- R6::R6Class(
     .UI = function() {
       shiny::tagList(
         shiny::h3(private$.title),
-        shiny::plotOutput(shiny::NS(private$.namespace, "plot"))
+        do.call(shiny::plotOutput, args = append(list(outputId = shiny::NS(private$.namespace, "plot")), private$.dots))
       )
     },
 
     .server = function(input, output, session) {
       super$.server(input, output, session)
       output$plot <- shiny::renderPlot({
-        if (length(shiny::reactiveValuesToList(private$.args)) > 0) {
-          private$.plot <- expr(do.call(private$.fun, shiny::reactiveValuesToList(private$.args)))
-          return(eval(private$.plot))
-        }
+        do.call(private$.fun, self$args)
       })
     }
   )

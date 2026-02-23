@@ -208,8 +208,13 @@ ShinyModule <- R6::R6Class(
     #' @field reactiveValues (`reactivevalues`) Reactive values. use
     #' `shiny::isolate()` to get a non-reactive item from the reactive
     #' environment.
-    reactiveValues = function() {
-      return(private$.reactiveValues)
+    reactiveValues = function(reactiveValues) {
+      session <- getDefaultReactiveDomain()
+      if (missing(reactiveValues)) {
+        return(self$getReactiveValues(session))
+      } else {
+        private$.reactiveValues[[session$token]] <- reactiveValues
+      }
     },
 
     #' @field async (`logical(1)`: `FALSE`) Logical parameter to switch
@@ -230,14 +235,17 @@ ShinyModule <- R6::R6Class(
     #' @description
     #' Initializer method
     #'
+    #' @param ... Additional parameters to set fields.
+    #'
     #' @return
     #' (`self`)
-    initialize = function() {
+    initialize = function(...) {
       private$checkMethodOverrides()
       private$.moduleName <- class(self)[1]
       private$.instanceId <- private$makeInstanceId()
       private$.moduleId <- sprintf("%s-%s", private$.moduleName, private$.instanceId)
       private$.namespace <- c(private$.parentNamespace, private$.moduleId)
+      private$setDotArgs(...)
       return(invisible(self))
     },
 
@@ -282,6 +290,14 @@ ShinyModule <- R6::R6Class(
     },
 
     #' @description
+    #' Method to get reactive values for a specific session.
+    #'
+    #' @return `reactiveValues`
+    getReactiveValues = function(session = getDefaultReactiveDomain()) {
+      return(private$.reactiveValues[[session$token]])
+    },
+
+    #' @description
     #' Method to include a \link[shiny]{tagList} to include the body.
     #'
     #' @return
@@ -301,7 +317,7 @@ ShinyModule <- R6::R6Class(
     #' (`NULL`)
     server = function(input, output, session) {
       shiny::moduleServer(id = self$moduleId, module = function(input, output, session) {
-        private$.init()
+        private$.init(session)
         if (private$.async) {
           promises::future_promise(private$.server(input, output, session))
         } else {
@@ -320,19 +336,21 @@ ShinyModule <- R6::R6Class(
     .moduleId = "",
     .parentNamespace = NULL,
     .namespace = "",
-    .reactiveValues = NULL,
+    .reactiveValues = list(),
     .async = FALSE,
 
     ## Methods ----
-    .init = function() {
-      private$.reactiveValues <- shiny::reactiveValues()
+    .init = function(session) {
+      if (is.null(private$.reactiveValues[[session$token]])) {
+        private$.reactiveValues[[session$token]] <- shiny::reactiveValues()
+      }
       return(invisible(self))
     },
     .server = function(input, output, session) {},
     .UI = function(input, output, session) {},
     assertInstall = function(pkgName, version) {
       if (!require(pkgName, character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE) ||
-        packageVersion(pkgName) < version) {
+          packageVersion(pkgName) < version) {
         answer <- readline(prompt = sprintf("`%s` >= %s is not installed, would you like to install from CRAN? (y/n)", pkgName, version))
         if (substr(tolower(answer), start = 1, stop = 1) == "y") {
           utils::install.packages(pkgName)
@@ -361,6 +379,18 @@ ShinyModule <- R6::R6Class(
 
         if (any(!is.null(c(serverErr, uiErr)))) {
           stop(c(serverErr, "\n  ", uiErr))
+        }
+      }
+    },
+    setDotArgs = function(...) {
+      dots <- list(...)
+      if (!is.null(names(dots))) {
+        dots <- dots[!names(dots) %in% ""]
+        if (!is.null(dots$parentNamespace)) {
+          self$parentNamespace <- dots$parentNamespace
+        }
+        if (!is.null(dots$async)) {
+          self$async <- dots$async
         }
       }
     }

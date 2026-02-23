@@ -72,19 +72,17 @@ PlotPlotly <- R6::R6Class(
     .UI = function() {
       shiny::tagList(
         shiny::h3(private$.title),
-        plotly::plotlyOutput(shiny::NS(private$.namespace, "plot"))
+        do.call(plotly::plotlyOutput, args = append(list(outputId = shiny::NS(private$.namespace, "plot")), private$.dots))
       )
     },
 
     .server = function(input, output, session) {
       super$.server(input, output, session)
       output$plot <- plotly::renderPlotly({
-        if (length(shiny::reactiveValuesToList(private$.args)) > 0) {
-          private$.plot <- do.call(what = private$.fun, args = shiny::reactiveValuesToList(private$.args))
-          plotly::event_register(p = private$.plot, event = "plotly_selected")
-          private$updateBindings()
-          return(private$.plot)
-        }
+        plot <- do.call(what = private$.fun, args = self$args)
+        plotly::event_register(p = private$.plot, event = "plotly_selected")
+        private$updateBindings()
+        return(plot)
       })
     },
 

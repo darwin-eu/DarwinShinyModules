@@ -7,7 +7,6 @@ test_that("Creation", {
   expect_true(grepl(pattern = mod$moduleName, x = mod$moduleId))
   expect_true(grepl(pattern = mod$instanceId, x = mod$moduleId))
   expect_true(grepl(pattern = mod$moduleId, x = mod$namespace))
-  expect_true(is.null(mod$reactiveValues))
 })
 
 test_that("Namespacing", {

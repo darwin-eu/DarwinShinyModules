@@ -18,7 +18,7 @@ gtTable <- GTTable$new(
   args = list(data = iris)
 )
 
-if(interactive()) {
+if (interactive()) {
   preview(gtTable)
 }
 }
@@ -45,6 +45,7 @@ if(interactive()) {
 <details open><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>DarwinShinyModules::ShinyModule$getReactiveValues()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
 </ul>
@@ -56,7 +57,7 @@ if(interactive()) {
 \subsection{Method \code{new()}}{
 Initializer method.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{GTTable$new(fun, args)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{GTTable$new(fun, args, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -65,6 +66,8 @@ Initializer method.
 \item{\code{fun}}{(\code{function}) Function to produce a \code{gt} table with, i.e \code{gt::gt}.}
 
 \item{\code{args}}{(\code{list()}) Arguments for said function as a named list i.e. \code{list(data = iris)}.}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
 }
 \if{html}{\out{</div>}}
 }

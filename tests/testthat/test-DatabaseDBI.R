@@ -28,16 +28,14 @@ test_that("DatabaseDBI", {
 
   testServer(modServer, {
     expect_true(db$connected)
-    db$attachTables("iris")
+    iris <- DBI::dbReadTable(conn = db$connection, name = "iris")
     expect_equal(
-      db$tables$iris |>
+      iris |>
         dplyr::collect() |>
         head(n = 10) |>
         nrow(),
       10
     )
-    db$detatchTables("iris")
-    expect_null(db$tables$iris)
   })
   expect_false(db$connected)
 })

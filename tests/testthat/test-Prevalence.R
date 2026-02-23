@@ -6,7 +6,7 @@ test_that("Creation: Prevalence", {
     package = "DarwinShinyModules",
     "dummyData/IncidencePrevalence/1.2.0/prevalence.csv"
   ))
-  prevMod <- Prevalence$new(data = prev)
+  prevMod <- Prevalence$new(data = prev, defaults = list(sex = "Both"))
 
   expect_identical(class(prevMod), c("Prevalence", "ShinyModule", "R6"))
 
@@ -18,7 +18,7 @@ test_that("Creation: Prevalence", {
   lapply(names(prevMod$pickers), FUN = function(pickerName) {
     expect_identical(class(prevMod$pickers[[pickerName]]), c("InputPanel", "ShinyModule", "R6"))
   })
-  expect_identical(class(prevMod$data), c("tidy_prevalence", "tbl_df", "tbl", "data.frame"))
+  expect_identical(class(prevMod$data), c("summarised_result", "omop_result", "tbl_df", "tbl", "data.frame"))
   expect_identical(prevMod$moduleName, "Prevalence")
 
   # UI

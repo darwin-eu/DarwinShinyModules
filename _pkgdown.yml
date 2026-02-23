@@ -61,9 +61,16 @@ reference:
   - DrugExposureDiagnostics
   - Incidence
   - Prevalence
-  - TreatmentPatterns
+  - TreatmentPathways
+  - EventDuration
 
 - subtitle: Shiny App Generator Functions
 - contents:
   - launchDarwinBslibApp
   - launchDarwinDashboardApp
+
+- subtitle: Helper Functions
+- contents:
+  - darwinHeader
+  - darwinFooter
+  - createApp
