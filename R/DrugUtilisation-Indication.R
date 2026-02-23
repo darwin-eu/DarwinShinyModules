@@ -11,47 +11,25 @@ Indication <- R6::R6Class(
 
   # Public ----
   public = list(
-    initialize = function(filePath) {
-      super$initialize()
-      private$.data <- omopgenerics::importSummarisedResult(
-        path = file.path(filePath)
-      )
+    initialize = function(result, ...) {
+      super$initialize(...)
+      private$.result <- result
+      private$.table <- Table$new(data = rawDat, title = NULL, filter = "top", parentNamespace = self$namespace)
 
-      rawDat <- omopgenerics::tidy(private$.data) %>%
-        dplyr::mutate(
-          cdm_name = factor(.data$cdm_name, levels = unique(.data$cdm_name)),
-          cohort_name = factor(.data$cohort_name, levels = unique(.data$cohort_name)),
-          age_group = factor(.data$age_group, levels = unique(.data$age_group)),
-          pregnancy_period = factor(.data$pregnancy_period, levels = unique(.data$pregnancy_period)),
-          variable_name = factor(.data$variable_name, levels = unique(.data$variable_name)),
-          variable_level = factor(.data$variable_level, levels = unique(.data$variable_level)),
-          window_name = factor(.data$window_name, levels = unique(.data$window_name))
-        )
-
-      private$.view_2Mod <- Table$new(data = rawDat, title = NULL, filter = "top")
-      private$.view_2Mod$parentNamespace <- self$namespace
+      private$.tableMod <- DarwinShinyModules::Flextable$new(fun = )
     }
   ),
 
   # Private ----
   private = list(
     ## Fields ----
-    .data = NULL,
-    .view_2Mod = NULL,
+    .result = NULL,
+    .table = NULL,
 
     ## Methods ----
     .UI = function() {
       shiny::tagList(
-        shiny::tabsetPanel(
-          shiny::tabPanel(
-            title = "View 1",
-            gt::gt_output(outputId = shiny::NS(self$namespace, "view_1"))
-          ),
-          shiny::tabPanel(
-            title = "View 2",
-            private$.view_2Mod$UI()
-          )
-        )
+
       )
     },
     .server = function(input, output, session) {
