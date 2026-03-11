@@ -82,13 +82,12 @@ Flextable <- R6::R6Class(
     .args = NULL,
     .UI = function() {
       shiny::tagList(
-        uiOutput(outputId = shiny::NS(private$.namespace, "FlexTable")),
+        shiny::uiOutput(outputId = shiny::NS(private$.namespace, "FlexTable")),
         shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "docx")
       )
     },
     .server = function(input, output, session) {
-      output$FlexTable <- renderUI({
-        # browser()
+      output$FlexTable <- shiny::renderUI({
         flextable::htmltools_value(do.call(private$.fun, private$.args))
       })
       private$downloader(output)
