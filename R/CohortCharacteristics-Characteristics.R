@@ -1,9 +1,74 @@
+# Copyright 2024 DARWIN EU®
+#
+# This file is part of DarwinShinyModules
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#' @title Characterisitcs Module Class
+#'
+#' @include ShinyModule.R
+#'
+#' @description
+#' Characteristics module that shows characteristics results (table and plot) from the CohortCharacteristics package.
+#'
+#' @export
+#'
+#' @examples{
+#' \donttest{
+#'  library(DarwinShinyModules)
+#'
+#'  if (
+#'    require(
+#'      "CohortCharacteristics",
+#'      character.only = TRUE,
+#'      quietly = TRUE,
+#'      warn.conflicts = FALSE
+#'    )
+#'  ) {
+#'     result <- omopgenerics::importSummarisedResult(system.file(
+#'       package = "DarwinShinyModules",
+#'       "dummyData/CohortCharacteristics/1.1.1/characteristics.csv"
+#'     ))
+#'
+#'     charMod <- Characteristics$new(result = result)
+#'
+#'     ui <- shiny::fluidPage(
+#'       charMod$UI()
+#'     )
+#'
+#'     server <- function(input, output, session) {
+#'       charMod$server(input, output, session)
+#'     }
+#'
+#'     if (interactive()) {
+#'       shiny::shinyApp(ui = ui, server = server)
+#'     }
+#'   }
+#' }
+#' }
 Characteristics <- R6::R6Class(
   classname = "Characteristics",
   inherit = DarwinShinyModules::ShinyModule,
 
   # Public ----
   public = list(
+    #' @description
+    #' Initializer method
+    #'
+    #' @param result (`summarised_result`) Result of `CohortCharacteristics::summariseCharacteristics()`.
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
+    #'
+    #' @returns `self`
     initialize = function(result = NULL, ...) {
       super$initialize(...)
       private$.result <- result
@@ -23,6 +88,7 @@ Characteristics <- R6::R6Class(
         args = list(style = "darwin"),
         parentNamespace = self$namespace
       )
+      return(invisible(self))
     }
   ),
 
@@ -164,5 +230,22 @@ Characteristics <- R6::R6Class(
   ),
 
   # Active ----
-  active = list()
+  active = list(
+    #' @field result (`summarised_result`) Result of `CohortCharacteristics::summariseCharacteristics()`.
+    result = function(result) {
+      if (missing(result)) {
+        return(private$.result)
+      } else {
+        collection <- checkmate::makeAssertCollection()
+        checkmate::assertClass(x = result, classes = c("summarised_result", "omop_result", "tbl_df", "tbl", "data.frame"), add = collection)
+        try({
+          settings <- omopgenerics::settings(result)
+          checkmate::assertTRUE(settings$result_type == "summarise_characteristics", add = collection)
+          checkmate::assertTRUE(settings$package_name == "CohortCharacteristics", add = collection)
+        }, silent = TRUE)
+        checkmate::reportAssertions(collection)
+        private$.result <- result
+      }
+    }
+  )
 )

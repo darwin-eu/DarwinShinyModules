@@ -14,13 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' @title DTTable Module Class
+#' @title ReactableTable Module Class
 #'
 #' @include ShinyModule.R
 #'
 #' @description
-#' GTTable module that displays tables using `DT` that are supported by
-#' `DT::renderDT()` and `DT::DTOutput()`.
+#' ReactableTable module that displays tables using `reactable` that are supported by
+#' `reactable::renderReactable()` and `reactable::reactableOutput()`.
 #'
 #' @export
 #'

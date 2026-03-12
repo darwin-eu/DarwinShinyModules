@@ -24,6 +24,7 @@ Imports:
     DT,
     gt,
     flextable,
+    reactable,
     promises,
     shinyWidgets,
     stringr,
@@ -31,9 +32,6 @@ Imports:
 Suggests:
     bslib,
     shinydashboard,
-    visOmopResults,
-    omopgenerics,
-    CDMConnector,
     networkD3,
     testthat (>= 3.0.0),
     knitr,
@@ -47,10 +45,14 @@ Suggests:
     dbplyr,
     duckdb,
     RSQLite,
+    visOmopResults,
+    omopgenerics,
+    CDMConnector,
     TreatmentPatterns,
     IncidencePrevalence,
     DrugExposureDiagnostics (>= 1.1.1),
     CohortSurvival,
+    CohortCharacteristics,
     usethis
 Config/testthat/edition: 3
 Config/testthat/parallel: true

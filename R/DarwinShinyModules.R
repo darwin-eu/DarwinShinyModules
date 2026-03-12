@@ -28,6 +28,7 @@
 #' @import shinyWidgets
 #' @import stringr
 #' @import flextable
+#' @import reactable
 #' @importFrom purrr map
 #' @importFrom gt render_gt gt_output
 #' @importFrom DT DTOutput renderDT
