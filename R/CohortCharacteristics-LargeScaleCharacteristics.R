@@ -168,8 +168,15 @@ LargeScaleCharacteristics <- R6::R6Class(
             multiple = FALSE
           ),
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "c_plot_facet"),
-            label = "Facet",
+            inputId = shiny::NS(self$namespace, "c_plot_facet_x"),
+            label = "Facet X",
+            choices = CohortCharacteristics::availablePlotColumns(private$.result),
+            selected = NULL,
+            multiple = TRUE
+          ),
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "c_plot_facet_y"),
+            label = "Facet Y",
             choices = CohortCharacteristics::availablePlotColumns(private$.result),
             selected = NULL,
             multiple = TRUE
@@ -186,50 +193,10 @@ LargeScaleCharacteristics <- R6::R6Class(
       private$.serverUpdateComaprePlotPickers(input, output, session)
       private$.serverUpdateTablePickers(input, output, session)
 
-      shiny::observeEvent(list(
-        input$tbl_compareBy,
-        input$tbl_hide,
-        input$tbl_smdReference,
-        input$tbl_cdm_name,
-        input$tbl_cohort_name
-      ), {
-        private$.table$args$compareBy <- input$tbl_compareBy
-        private$.table$args$hide <- input$tbl_hide
-        private$.table$args$smdReference <- input$tbl_smdReference
-
-        private$.table$args$result <- private$.result |>
-          dplyr::filter(
-            .data$cdm_name %in% input$tbl_cdm_name,
-            .data$group_level %in% input$tbl_cohort_name
-          )
-
-        private$.table$server(input, output, session)
-      })
-
-      shiny::observeEvent(input$top_n, {
-        private$.topTable$args$topConcepts <- input$top_n
-        private$.topTable$server(input, output, session)
-      })
-
-      shiny::observeEvent(list(
-        input$plot_facet,
-        input$plot_colour
-      ), {
-        private$.plot$args$facet <- input$plot_facet
-        private$.plot$args$colour <- input$plot_colour
-        private$.plot$server(input, output, session)
-      })
-
-      shiny::observeEvent(list(
-        input$c_plot_colour,
-        input$c_plot_reference,
-        input$c_plot_facet
-      ), {
-        private$.comparePlot$args$colour <- input$c_plot_colour
-        private$.comparePlot$args$reference <- input$c_plot_reference
-        private$.comparePlot$args$facet <- input$c_plot_facet
-        private$.comparePlot$server(input, output, session)
-      })
+      private$.serverTable(input, output, session)
+      private$.serverTopTable(input, output, session)
+      private$.serverPlot(input, output, session)
+      private$.serverComparePlot(input, output, session)
     },
 
     .serverUpdateComaprePlotPickers = function(input, output, session) {
@@ -299,6 +266,86 @@ LargeScaleCharacteristics <- R6::R6Class(
       })
     },
 
+    .serverTable = function(input, output, session) {
+      shiny::observeEvent(list(
+        input$tbl_compareBy,
+        input$tbl_hide,
+        input$tbl_smdReference,
+        input$tbl_cdm_name,
+        input$tbl_cohort_name
+      ), {
+        private$.table$args$compareBy <- input$tbl_compareBy
+        private$.table$args$hide <- input$tbl_hide
+        private$.table$args$smdReference <- input$tbl_smdReference
+
+        private$.table$args$result <- private$.result |>
+          dplyr::filter(
+            .data$cdm_name %in% input$tbl_cdm_name,
+            .data$group_level %in% input$tbl_cohort_name
+          )
+
+        private$.table$server(input, output, session)
+      })
+    },
+
+    .serverTopTable = function(input, output, session) {
+      shiny::observeEvent(input$top_n, {
+        private$.topTable$args$topConcepts <- input$top_n
+        private$.topTable$server(input, output, session)
+      })
+    },
+
+    .serverPlot = function(input, output, session) {
+      shiny::observeEvent(list(
+        input$plot_facet,
+        input$plot_colour
+      ), {
+        private$.plot$args$facet <- input$plot_facet
+        private$.plot$args$colour <- input$plot_colour
+        private$.plot$server(input, output, session)
+      })
+    },
+
+    .serverComparePlot = function(input, output, session) {
+      shiny::observeEvent(list(
+        input$c_plot_colour,
+        input$c_plot_reference,
+        input$c_plot_facet_x,
+        input$c_plot_facet_y
+      ), {
+        private$.comparePlot$args$colour <- input$c_plot_colour
+        private$.comparePlot$args$reference <- input$c_plot_reference
+
+        f <- sprintf(
+          "%s ~ %s",
+          paste(input$c_plot_facet_y, collapse = " + "),
+          paste(input$c_plot_facet_x, collapse = " + ")
+        )
+
+        private$.comparePlot$args$facet <- if (f == " ~ ") {
+          NULL
+        } else if (stringr::str_detect(string = f, pattern = "^ \\~")) {
+          as.formula(paste0(".", f))
+        } else if (stringr::str_detect(string = f, pattern = "\\~ $")) {
+          as.formula(paste0(f, "."))
+        } else {
+          as.formula(f)
+        }
+
+        facets <- unique(c(input$c_plot_facet_x, input$c_plot_facet_y))
+
+        if (is.null(facets)) {
+          private$.comparePlot$args$result <- private$.result |>
+            dplyr::filter(.data$strata_name == "overall")
+        } else {
+          private$.comparePlot$args$result <- private$.result |>
+            dplyr::filter(.data$strata_name %in% c("overall", facets))
+        }
+
+        private$.comparePlot$server(input, output, session)
+      })
+    },
+
     checkNone = function(val) {
       if (val == "none") {
         NULL
@@ -307,7 +354,7 @@ LargeScaleCharacteristics <- R6::R6Class(
       }
     },
     initTable = function() {
-      private$.table <- DTTable$new(
+      private$.table <- DarwinShinyModules::DTTable$new(
         fun = CohortCharacteristics::tableLargeScaleCharacteristics,
         args = list(result = private$.result, type = "DT"),
         parentNamespace = self$namespace
@@ -336,7 +383,7 @@ LargeScaleCharacteristics <- R6::R6Class(
 
       private$.comparePlot <- PlotPlotly$new(
         fun = plotFun,
-        args = list(result = private$.result),
+        args = list(result = private$.result, style = "darwin"),
         width = "108vh",
         height = "90vh",
         inline = TRUE,
