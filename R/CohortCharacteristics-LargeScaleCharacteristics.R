@@ -20,24 +20,26 @@ LargeScaleCharacteristics <- R6::R6Class(
         stop("Data has to be of class: `summarised_result`")
       }
 
-      private$initTable()
-      private$initTopTable()
-      private$initPlot()
-      private$initComparePlot()
+      private$.initTable()
+      private$.initTableTop()
+      private$.initPlot()
+      private$.initPlotCompared()
     }
   ),
 
   # Private ----
   private = list(
+    ## Fields ----
     .result = NULL,
     .tidyResult = NULL,
 
     # Nested modules
     .table = NULL,
-    .topTable = NULL,
+    .tableTop = NULL,
     .plot = NULL,
-    .comparePlot = NULL,
+    .plotCompared = NULL,
 
+    ## UI ----
     .UI = function() {
       shiny::tagList(
         shiny::tabsetPanel(
@@ -55,7 +57,7 @@ LargeScaleCharacteristics <- R6::R6Class(
           ),
           shiny::tabPanel(
             title = "Compare Plot",
-            private$.plotCompareUI()
+            private$.plotComparedUI()
           )
         )
       )
@@ -75,21 +77,21 @@ LargeScaleCharacteristics <- R6::R6Class(
         shiny::column(
           width = 2,
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "tbl_cdm_name"),
+            inputId = shiny::NS(self$namespace, "tableCDMName"),
             label = "CDM Name",
             choices = cdmNames,
             selected = cdmNames[1],
             multiple = TRUE,
           ),
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "tbl_cohort_name"),
+            inputId = shiny::NS(self$namespace, "tableCohortName"),
             label = "Cohort Name",
             choices = cohortNames,
             selected = cohortNames[1],
             multiple = TRUE
           ),
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "tbl_compareBy"),
+            inputId = shiny::NS(self$namespace, "tableCompareBy"),
             label = "Compare By",
             choices = c(
               "cdm_name", "cohort_name", "variable_level", "type",
@@ -100,12 +102,12 @@ LargeScaleCharacteristics <- R6::R6Class(
             selected = "cdm_name"
           ),
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "tbl_smdReference"),
+            inputId = shiny::NS(self$namespace, "tableSMDReference"),
             label = "SMD reference",
             choices = c()
           ),
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "tbl_hide"),
+            inputId = shiny::NS(self$namespace, "tableHide"),
             label = "Columns to hide",
             choices = CohortCharacteristics::availableTableColumns(private$.result),
             multiple = TRUE
@@ -116,14 +118,62 @@ LargeScaleCharacteristics <- R6::R6Class(
     },
 
     .tableTopUI = function() {
+      cdmNames <- private$.result |>
+        dplyr::distinct(.data$cdm_name) |>
+        dplyr::pull(.data$cdm_name)
+
+      cohortNames <- private$.result |>
+        dplyr::filter(.data$group_name == "cohort_name") |>
+        dplyr::distinct(.data$group_level) |>
+        dplyr::pull(.data$group_level)
+
+      strata <- private$.result |>
+        dplyr::distinct(.data$strata_name) |>
+        dplyr::pull(.data$strata_name)
+
+      windows <- private$.result |>
+        dplyr::distinct(.data$variable_level) |>
+        dplyr::pull(.data$variable_level)
+
       shiny::tagList(
-        shinyWidgets::pickerInput(
-          inputId = shiny::NS(self$namespace, "top_n"),
-          label = "Top Concepts",
-          choices = c(5, 10, 25, 50, 100),
-          selected = 5
+        shiny::column(
+          width = 3,
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "tableTopCDMName"),
+            label = "CDM Name",
+            choices = cdmNames,
+            selected = cdmNames[1],
+            multiple = TRUE
+          ),
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "tableTopCohortName"),
+            label = "Cohort Name",
+            choices = cohortNames,
+            selected = cohortNames[1],
+            multiple = TRUE
+          ),
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "tableTopStrata"),
+            label = "Strata",
+            choices = strata,
+            selected = strata[1],
+            multiple = TRUE
+          ),
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "tableTopVariableLevel"),
+            label = "Window",
+            choices = windows,
+            selected = windows[1],
+            multiple = TRUE
+          ),
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "tableTopN"),
+            label = "Top Concepts",
+            choices = c(5, 10, 25, 50, 100),
+            selected = 5
+          )
         ),
-        private$.topTable$UI()
+        private$.tableTop$UI()
       )
     },
 
@@ -132,14 +182,14 @@ LargeScaleCharacteristics <- R6::R6Class(
         shiny::column(
           width = 3,
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "plot_facet"),
+            inputId = shiny::NS(self$namespace, "plotFacet"),
             label = "Facet",
             choices = CohortCharacteristics::availablePlotColumns(private$.result),
             selected = NULL,
             multiple = TRUE
           ),
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "plot_colour"),
+            inputId = shiny::NS(self$namespace, "plotColour"),
             label = "Colour",
             choices = c("cdm_name", "cohort_name", "variable_level", "type"),
             selected = NULL,
@@ -150,33 +200,33 @@ LargeScaleCharacteristics <- R6::R6Class(
       )
     },
 
-    .plotCompareUI = function() {
+    .plotComparedUI = function() {
       shiny::tagList(
         shiny::column(
           width = 3,
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "c_plot_colour"),
+            inputId = shiny::NS(self$namespace, "plotComparedColour"),
             label = "Colour",
             choices = c("cdm_name", "cohort_name", "variable_level", "type"),
             selected = "cdm_name",
             multiple = FALSE
           ),
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "c_plot_reference"),
+            inputId = shiny::NS(self$namespace, "plotComparedReference"),
             label = "Reference",
             choices = c(),
             multiple = FALSE
           ),
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "c_plot_facet_x"),
-            label = "Facet X",
+            inputId = shiny::NS(self$namespace, "plotComparedFacetX"),
+            label = "Horizontal Facet",
             choices = CohortCharacteristics::availablePlotColumns(private$.result),
             selected = NULL,
             multiple = TRUE
           ),
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "c_plot_facet_y"),
-            label = "Facet Y",
+            inputId = shiny::NS(self$namespace, "plotComparedFacetY"),
+            label = "Vertical Facet",
             choices = CohortCharacteristics::availablePlotColumns(private$.result),
             selected = NULL,
             multiple = TRUE
@@ -184,14 +234,15 @@ LargeScaleCharacteristics <- R6::R6Class(
         ),
         shiny::column(
           width = 9,
-          private$.comparePlot$UI()
+          private$.plotCompared$UI()
         )
       )
     },
 
+    ## Server ----
     .server = function(input, output, session) {
-      private$.serverUpdateComaprePlotPickers(input, output, session)
-      private$.serverUpdateTablePickers(input, output, session)
+      private$.updateTable(input, output, session)
+      private$.updatePlotCompared(input, output, session)
 
       private$.serverTable(input, output, session)
       private$.serverTopTable(input, output, session)
@@ -199,20 +250,60 @@ LargeScaleCharacteristics <- R6::R6Class(
       private$.serverComparePlot(input, output, session)
     },
 
-    .serverUpdateComaprePlotPickers = function(input, output, session) {
-      shiny::observeEvent(input$c_plot_colour, {
-        choices <- if (input$c_plot_colour == "cdm_name") {
+    .updateTable = function(input, output, session) {
+      shiny::observeEvent(list(input$tableCompareBy, input$tableCDMName, input$tableCohortName), {
+        strata <- result |>
+          dplyr::distinct(.data$strata_name) |>
+          dplyr::pull(.data$strata_name)
+
+        choices <- if (input$tableCompareBy == "cdm_name") {
+          cdmNames <- private$.result |>
+            dplyr::distinct(.data$cdm_name) |>
+            dplyr::pull(.data$cdm_name)
+          cdmNames[cdmNames %in% input$tableCDMName]
+        } else if (input$tableCompareBy == "cohort_name") {
+          cohortNames <- private$.result |>
+            dplyr::filter(.data$group_name == "cohort_name") |>
+            dplyr::distinct(.data$group_level) |>
+            dplyr::pull(.data$group_level)
+          cohortNames[cohortNames %in% input$tableCohortName]
+        } else if (input$tableCompareBy == "variable_level") {
+          private$.result |>
+            dplyr::distinct(.data$variable_level) |>
+            dplyr::pull(.data$variable_level)
+        } else if (input$tableCompareBy == "type") {
+          settings <- omopgenerics::settings(private$.result)
+          settings$type |>
+            unique()
+        } else if (input$tableCompareBy %in% strata) {
+          private$.result |>
+            dplyr::filter(.data$strata_name == input$tableCompareBy) |>
+            dplyr::distinct(.data$strata_level) |>
+            dplyr::pull(.data$strata_level)
+        }
+
+        shinyWidgets::updatePickerInput(
+          session = session,
+          inputId = "tableSMDReference",
+          choices = choices
+        )
+      })
+    },
+
+    .updatePlotCompared = function(input, output, session) {
+      shiny::observeEvent(input$plotComparedColour, {
+        choices <- if (input$plotComparedColour == "cdm_name") {
           unique(result$cdm_name)
-        } else if (input$c_plot_colour == "cohort_name") {
+        } else if (input$plotComparedColour == "cohort_name") {
           result |>
             dplyr::filter(.data$group_name == "cohort_name") |>
             dplyr::pull(.data$group_level) |>
             unique()
-        } else if (input$c_plot_colour == "variable_level") {
+        } else if (input$plotComparedColour == "variable_level") {
           result |>
             dplyr::pull(.data$variable_level) |>
             unique()
-        } else if (input$c_plot_colour == "type") {
+        } else if (input$plotComparedColour == "type") {
           settings <- omopgenerics::settings(result)
           settings$type |>
             unique()
@@ -220,47 +311,7 @@ LargeScaleCharacteristics <- R6::R6Class(
 
         shinyWidgets::updatePickerInput(
           session = session,
-          inputId = "c_plot_reference",
-          choices = choices
-        )
-      })
-    },
-
-    .serverUpdateTablePickers = function(input, output, session) {
-      shiny::observeEvent(list(input$tbl_compareBy, input$tbl_cdm_name, input$tbl_cohort_name), {
-        strata <- result |>
-          dplyr::distinct(.data$strata_name) |>
-          dplyr::pull(.data$strata_name)
-
-        choices <- if (input$tbl_compareBy == "cdm_name") {
-          cdmNames <- private$.result |>
-            dplyr::distinct(.data$cdm_name) |>
-            dplyr::pull(.data$cdm_name)
-          cdmNames[cdmNames %in% input$tbl_cdm_name]
-        } else if (input$tbl_compareBy == "cohort_name") {
-          cohortNames <- private$.result |>
-            dplyr::filter(.data$group_name == "cohort_name") |>
-            dplyr::distinct(.data$group_level) |>
-            dplyr::pull(.data$group_level)
-          cohortNames[cohortNames %in% input$tbl_cohort_name]
-        } else if (input$tbl_compareBy == "variable_level") {
-          private$.result |>
-            dplyr::distinct(.data$variable_level) |>
-            dplyr::pull(.data$variable_level)
-        } else if (input$tbl_compareBy == "type") {
-          settings <- omopgenerics::settings(private$.result)
-          settings$type |>
-            unique()
-        } else if (input$tbl_compareBy %in% strata) {
-          private$.result |>
-            dplyr::filter(.data$strata_name == input$tbl_compareBy) |>
-            dplyr::distinct(.data$strata_level) |>
-            dplyr::pull(.data$strata_level)
-        }
-
-        shinyWidgets::updatePickerInput(
-          session = session,
-          inputId = "tbl_smdReference",
+          inputId = "plotComparedReference",
           choices = choices
         )
       })
@@ -268,20 +319,20 @@ LargeScaleCharacteristics <- R6::R6Class(
 
     .serverTable = function(input, output, session) {
       shiny::observeEvent(list(
-        input$tbl_compareBy,
-        input$tbl_hide,
-        input$tbl_smdReference,
-        input$tbl_cdm_name,
-        input$tbl_cohort_name
+        input$tableCompareBy,
+        input$tableHide,
+        input$tableSMDReference,
+        input$tableCDMName,
+        input$tableCohortName
       ), {
-        private$.table$args$compareBy <- input$tbl_compareBy
-        private$.table$args$hide <- input$tbl_hide
-        private$.table$args$smdReference <- input$tbl_smdReference
+        private$.table$args$compareBy <- input$tableCompareBy
+        private$.table$args$hide <- input$tableHide
+        private$.table$args$smdReference <- input$tableSMDReference
 
         private$.table$args$result <- private$.result |>
           dplyr::filter(
-            .data$cdm_name %in% input$tbl_cdm_name,
-            .data$group_level %in% input$tbl_cohort_name
+            .data$cdm_name %in% input$tableCDMName,
+            .data$group_level %in% input$tableCohortName
           )
 
         private$.table$server(input, output, session)
@@ -289,40 +340,54 @@ LargeScaleCharacteristics <- R6::R6Class(
     },
 
     .serverTopTable = function(input, output, session) {
-      shiny::observeEvent(input$top_n, {
-        private$.topTable$args$topConcepts <- input$top_n
-        private$.topTable$server(input, output, session)
+      shiny::observeEvent(list(
+        input$tableTopN,
+        input$tableTopCDMName,
+        input$tableTopCohortName,
+        input$tableTopStrata,
+        input$tableTopVariableLevel
+      ), {
+        private$.tableTop$args$result <- private$.result |>
+          dplyr::filter(
+            .data$cdm_name %in% input$tableTopCDMName,
+            .data$strata_name %in% input$tableTopStrata,
+            .data$variable_level %in% input$tableTopVariableLevel
+          ) |>
+          omopgenerics::filterGroup(.data$cohort_name %in% input$tableTopCohortName)
+
+        private$.tableTop$args$topConcepts <- input$tableTopN
+        private$.tableTop$server(input, output, session)
       })
     },
 
     .serverPlot = function(input, output, session) {
       shiny::observeEvent(list(
-        input$plot_facet,
-        input$plot_colour
+        input$plotFacet,
+        input$plotColour
       ), {
-        private$.plot$args$facet <- input$plot_facet
-        private$.plot$args$colour <- input$plot_colour
+        private$.plot$args$facet <- input$plotFacet
+        private$.plot$args$colour <- input$plotColour
         private$.plot$server(input, output, session)
       })
     },
 
     .serverComparePlot = function(input, output, session) {
       shiny::observeEvent(list(
-        input$c_plot_colour,
-        input$c_plot_reference,
-        input$c_plot_facet_x,
-        input$c_plot_facet_y
+        input$plotComparedColour,
+        input$plotComparedReference,
+        input$plotComparedFacetX,
+        input$plotComparedFacetY
       ), {
-        private$.comparePlot$args$colour <- input$c_plot_colour
-        private$.comparePlot$args$reference <- input$c_plot_reference
+        private$.plotCompared$args$colour <- input$plotComparedColour
+        private$.plotCompared$args$reference <- input$plotComparedReference
 
         f <- sprintf(
           "%s ~ %s",
-          paste(input$c_plot_facet_y, collapse = " + "),
-          paste(input$c_plot_facet_x, collapse = " + ")
+          paste(input$plotComparedFacetY, collapse = " + "),
+          paste(input$plotComparedFacetX, collapse = " + ")
         )
 
-        private$.comparePlot$args$facet <- if (f == " ~ ") {
+        private$.plotCompared$args$facet <- if (f == " ~ ") {
           NULL
         } else if (stringr::str_detect(string = f, pattern = "^ \\~")) {
           as.formula(paste0(".", f))
@@ -332,28 +397,22 @@ LargeScaleCharacteristics <- R6::R6Class(
           as.formula(f)
         }
 
-        facets <- unique(c(input$c_plot_facet_x, input$c_plot_facet_y))
+        facets <- unique(c(input$plotComparedFacetX, input$plotComparedFacetY))
 
         if (is.null(facets)) {
-          private$.comparePlot$args$result <- private$.result |>
+          private$.plotCompared$args$result <- private$.result |>
             dplyr::filter(.data$strata_name == "overall")
         } else {
-          private$.comparePlot$args$result <- private$.result |>
+          private$.plotCompared$args$result <- private$.result |>
             dplyr::filter(.data$strata_name %in% c("overall", facets))
         }
 
-        private$.comparePlot$server(input, output, session)
+        private$.plotCompared$server(input, output, session)
       })
     },
 
-    checkNone = function(val) {
-      if (val == "none") {
-        NULL
-      } else {
-        val
-      }
-    },
-    initTable = function() {
+    ## Init ----
+    .initTable = function() {
       private$.table <- DarwinShinyModules::DTTable$new(
         fun = CohortCharacteristics::tableLargeScaleCharacteristics,
         args = list(result = private$.result, type = "DT"),
@@ -361,27 +420,29 @@ LargeScaleCharacteristics <- R6::R6Class(
       )
     },
 
-    initTopTable = function() {
-      private$.topTable <- GTTable$new(
+    .initTableTop = function() {
+      private$.tableTop <- DarwinShinyModules::Flextable$new(
         fun = CohortCharacteristics::tableTopLargeScaleCharacteristics,
-        args = list(result = private$.result),
+        args = list(result = private$.result, type = "flextable", style = "darwin"),
         parentNamespace = self$namespace
       )
     },
-    initPlot = function() {
-      private$.plot <- PlotPlotly$new(
+
+    .initPlot = function() {
+      private$.plot <- DarwinShinyModules::PlotPlotly$new(
         fun = CohortCharacteristics::plotLargeScaleCharacteristics,
-        args = list(result = private$.result),
+        args = list(result = private$.result, style = "darwin"),
         parentNamespace = self$namespace
       )
     },
-    initComparePlot = function() {
+
+    .initPlotCompared = function() {
       plotFun <- function(...) {
         CohortCharacteristics::plotComparedLargeScaleCharacteristics(...) +
           ggplot2::coord_fixed(ratio = 1 / 1)
       }
 
-      private$.comparePlot <- PlotPlotly$new(
+      private$.plotCompared <- DarwinShinyModules::PlotPlotly$new(
         fun = plotFun,
         args = list(result = private$.result, style = "darwin"),
         width = "108vh",
