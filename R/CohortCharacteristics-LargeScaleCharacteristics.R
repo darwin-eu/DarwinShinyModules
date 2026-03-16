@@ -182,8 +182,15 @@ LargeScaleCharacteristics <- R6::R6Class(
         shiny::column(
           width = 3,
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "plotFacet"),
-            label = "Facet",
+            inputId = shiny::NS(self$namespace, "plotFacetX"),
+            label = "Horizontal Facet",
+            choices = CohortCharacteristics::availablePlotColumns(private$.result),
+            selected = NULL,
+            multiple = TRUE
+          ),
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "plotFacetY"),
+            label = "Vertical Facet",
             choices = CohortCharacteristics::availablePlotColumns(private$.result),
             selected = NULL,
             multiple = TRUE
@@ -362,10 +369,25 @@ LargeScaleCharacteristics <- R6::R6Class(
 
     .serverPlot = function(input, output, session) {
       shiny::observeEvent(list(
-        input$plotFacet,
+        input$plotFacetX,
+        input$plotFacetY,
         input$plotColour
       ), {
-        private$.plot$args$facet <- input$plotFacet
+        private$.plot$args$facet <- private$.makeFacetFormula(
+          facetX = input$plotFacetX,
+          facetY = input$plotFacetY
+        )
+
+        facets <- unique(c(input$plotFacetX, input$plotFacetY))
+
+        private$.plot$args$result <- if (is.null(facets)) {
+          private$.result |>
+            dplyr::filter(.data$strata_name == "overall")
+        } else {
+          private$.result |>
+            dplyr::filter(.data$strata_name %in% c("overall", facets))
+        }
+
         private$.plot$args$colour <- input$plotColour
         private$.plot$server(input, output, session)
       })
@@ -381,29 +403,18 @@ LargeScaleCharacteristics <- R6::R6Class(
         private$.plotCompared$args$colour <- input$plotComparedColour
         private$.plotCompared$args$reference <- input$plotComparedReference
 
-        f <- sprintf(
-          "%s ~ %s",
-          paste(input$plotComparedFacetY, collapse = " + "),
-          paste(input$plotComparedFacetX, collapse = " + ")
+        private$.plotCompared$args$facet <- private$.makeFacetFormula(
+          facetX = input$plotComparedFacetX,
+          facetY = input$plotComparedFacetY
         )
-
-        private$.plotCompared$args$facet <- if (f == " ~ ") {
-          NULL
-        } else if (stringr::str_detect(string = f, pattern = "^ \\~")) {
-          as.formula(paste0(".", f))
-        } else if (stringr::str_detect(string = f, pattern = "\\~ $")) {
-          as.formula(paste0(f, "."))
-        } else {
-          as.formula(f)
-        }
 
         facets <- unique(c(input$plotComparedFacetX, input$plotComparedFacetY))
 
-        if (is.null(facets)) {
-          private$.plotCompared$args$result <- private$.result |>
+        private$.plotCompared$args$result <- if (is.null(facets)) {
+          private$.result |>
             dplyr::filter(.data$strata_name == "overall")
         } else {
-          private$.plotCompared$args$result <- private$.result |>
+          private$.result |>
             dplyr::filter(.data$strata_name %in% c("overall", facets))
         }
 
@@ -432,6 +443,7 @@ LargeScaleCharacteristics <- R6::R6Class(
       private$.plot <- DarwinShinyModules::PlotPlotly$new(
         fun = CohortCharacteristics::plotLargeScaleCharacteristics,
         args = list(result = private$.result, style = "darwin"),
+        height = "90vh",
         parentNamespace = self$namespace
       )
     },
@@ -451,6 +463,25 @@ LargeScaleCharacteristics <- R6::R6Class(
         title = NULL,
         parentNamespace = self$namespace
       )
+    },
+
+    # Helpers ----
+    .makeFacetFormula = function(facetX, facetY) {
+      f <- sprintf(
+        "%s ~ %s",
+        paste(facetY, collapse = " + "),
+        paste(facetX, collapse = " + ")
+      )
+
+      if (f == " ~ ") {
+        NULL
+      } else if (stringr::str_detect(string = f, pattern = "^ \\~")) {
+        as.formula(paste0(".", f))
+      } else if (stringr::str_detect(string = f, pattern = "\\~ $")) {
+        as.formula(paste0(f, "."))
+      } else {
+        as.formula(f)
+      }
     }
   )
 )
