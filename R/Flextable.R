@@ -1,4 +1,4 @@
-# Copyright 2024 DARWIN EU®
+# Copyright 2026 DARWIN EU®
 #
 # This file is part of DarwinShinyModules
 #
@@ -72,6 +72,8 @@ Flextable <- R6::R6Class(
       private$assertFlextableInstall()
       private$.fun <- fun
       private$.args <- args
+      private$.dots <- list(...)
+      private$.dots <- private$.dots[!names(private$.dots) %in% c("parentNamespace", "async")]
       return(invisible(self))
     }
   ),
@@ -80,32 +82,45 @@ Flextable <- R6::R6Class(
   private = list(
     .fun = NULL,
     .args = NULL,
+    .dots = list(),
+
     .UI = function() {
       shiny::tagList(
-        shiny::uiOutput(outputId = shiny::NS(private$.namespace, "FlexTable")),
+        do.call(
+          what = shiny::uiOutput,
+          args = append(
+            list(outputId = shiny::NS(private$.namespace, "FlexTable")),
+            private$.dots
+          )
+        ),
         shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "docx")
       )
     },
+
     .server = function(input, output, session) {
       output$FlexTable <- shiny::renderUI({
         flextable::htmltools_value(do.call(private$.fun, private$.args))
       })
       private$downloader(output)
     },
+
     assertFlextableInstall = function() {
       if (!require("flextable", quietly = TRUE, character.only = TRUE, warn.conflicts = FALSE)) {
         stop("Required package: `flextable` is not installed")
       }
     },
+
     downloader = function(output) {
       output$dlButton <- shiny::downloadHandler(
         filename = private$dlFilename,
         content = private$dlContent
       )
     },
+
     dlFilename = function() {
       return("flextable.docx")
     },
+
     dlContent = function(file) {
       do.call(private$.fun, private$.args) |>
         flextable::save_as_docx(path = file)
