@@ -107,6 +107,8 @@ LargeScaleCharacteristics <- R6::R6Class(
       private$.initTableTop()
       private$.initPlot()
       private$.initPlotCompared()
+
+      return(invisible(self))
     }
   ),
 
