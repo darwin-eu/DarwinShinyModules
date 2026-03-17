@@ -1,16 +1,99 @@
+# Copyright 2026 DARWIN EU®
+#
+# This file is part of DarwinShinyModules
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#' @title LargeScaleCharacteristics Module Class
+#'
+#' @include ShinyModule.R
+#'
+#' @description
+#' LargeScaleCharacteristics module that displays tables and plots of the
+#' `summarised_result` object created by `CohortCharacteristics::summariseLargeScaleCharacteristics()`.
+#'
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   CDMConnector::requireEunomia()
+#'    con <- DBI::dbConnect(duckdb::duckdb(), CDMConnector::eunomiaDir())
+#'    cdm <- CDMConnector::cdmFromCon(con = con, cdmSchema = "main", writeSchema = "main")
+#'
+#'    cdm <- DrugUtilisation::generateIngredientCohortSet(cdm = cdm, name = "my_cohort", ingredient = c("warfarin", "acetaminophen"))
+#'
+#'    cdm$my_cohort <- cdm$my_cohort |>
+#'      PatientProfiles::addAge(ageGroup = list(
+#'       `0 to 17` = c(0, 17),
+#'       `>=18` = c(18, Inf)
+#'     )) |>
+#'     PatientProfiles::addSex()
+#'
+#'   result <- CohortCharacteristics::summariseLargeScaleCharacteristics(
+#'     cohort = cdm$my_cohort,
+#'     eventInWindow = "condition_occurrence",
+#'     strata = list("age_group", "sex")
+#'   )
+#'
+#'   lscMod <- LargeScaleCharacteristics$new(result = result)
+#'   DarwinShinyModules::preview(lscMod)
+#' }
 LargeScaleCharacteristics <- R6::R6Class(
   classname = "LargeScaleCharacteristics",
   inherit = DarwinShinyModules::ShinyModule,
 
   # Active ----
   active = list(
+    #' @field result (`summarised_result`)
     result = function() {
       return(private$.result)
+    },
+
+    #' @field tidyResult (`tbl_df`)
+    tidyResult = function() {
+      return(private$.tidyResult)
+    },
+
+    #' @field cdmNames (`character(n)`)
+    cdmNames = function() {
+      return(private$.cdmNames)
+    },
+
+    #' @field cohortNames (`character(n)`)
+    cohortNames = function() {
+      return(private$.cohortNames)
+    },
+
+    #' @field strata (`character(n)`)
+    strata = function() {
+      return(private$.strata)
+    },
+
+    #' @field windows (`character(n)`)
+    windows = function() {
+      return(private$.windows)
     }
   ),
 
   # Public ----
   public = list(
+    #' @description
+    #' Initializer method.
+    #'
+    #' @param result (`summarised_result`) Object created by `CohortCharacteristics::summariseLargeScaleCharacteristics()`.
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
+    #'
+    #' @returns `self`
     initialize = function(result, ...) {
       super$initialize(...)
       if ("summarised_result" %in% class(result)) {
@@ -39,6 +122,12 @@ LargeScaleCharacteristics <- R6::R6Class(
     .plot = NULL,
     .plotCompared = NULL,
 
+    # Filter values
+    .cdmNames = NULL,
+    .cohortNames = NULL,
+    .strata = NULL,
+    .windows = NULL,
+
     ## UI ----
     .UI = function() {
       shiny::tagList(
@@ -64,30 +153,21 @@ LargeScaleCharacteristics <- R6::R6Class(
     },
 
     .tableUI = function() {
-      cdmNames <- private$.result |>
-        dplyr::distinct(.data$cdm_name) |>
-        dplyr::pull(.data$cdm_name)
-
-      cohortNames <- private$.result |>
-        dplyr::filter(.data$group_name == "cohort_name") |>
-        dplyr::distinct(.data$group_level) |>
-        dplyr::pull(.data$group_level)
-
       shiny::tagList(
         shiny::column(
           width = 2,
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tableCDMName"),
             label = "CDM Name",
-            choices = cdmNames,
-            selected = cdmNames[1],
+            choices = private$.cdmNames,
+            selected = private$.cdmNames[1],
             multiple = TRUE,
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tableCohortName"),
             label = "Cohort Name",
-            choices = cohortNames,
-            selected = cohortNames[1],
+            choices = private$.cohortNames,
+            selected = private$.cohortNames[1],
             multiple = TRUE
           ),
           shinyWidgets::pickerInput(
@@ -118,52 +198,35 @@ LargeScaleCharacteristics <- R6::R6Class(
     },
 
     .tableTopUI = function() {
-      cdmNames <- private$.result |>
-        dplyr::distinct(.data$cdm_name) |>
-        dplyr::pull(.data$cdm_name)
-
-      cohortNames <- private$.result |>
-        dplyr::filter(.data$group_name == "cohort_name") |>
-        dplyr::distinct(.data$group_level) |>
-        dplyr::pull(.data$group_level)
-
-      strata <- private$.result |>
-        dplyr::distinct(.data$strata_name) |>
-        dplyr::pull(.data$strata_name)
-
-      windows <- private$.result |>
-        dplyr::distinct(.data$variable_level) |>
-        dplyr::pull(.data$variable_level)
-
       shiny::tagList(
         shiny::column(
-          width = 3,
+          width = 2,
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tableTopCDMName"),
             label = "CDM Name",
-            choices = cdmNames,
-            selected = cdmNames[1],
+            choices = private$.cdmNames,
+            selected = private$.cdmNames[1],
             multiple = TRUE
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tableTopCohortName"),
             label = "Cohort Name",
-            choices = cohortNames,
-            selected = cohortNames[1],
+            choices = private$.cohortNames,
+            selected = private$.cohortNames[1],
             multiple = TRUE
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tableTopStrata"),
             label = "Strata",
-            choices = strata,
-            selected = strata[1],
+            choices = private$.strata,
+            selected = private$.strata[1],
             multiple = TRUE
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tableTopVariableLevel"),
             label = "Window",
-            choices = windows,
-            selected = windows[1],
+            choices = private$.windows,
+            selected = private$.windows[1],
             multiple = TRUE
           ),
           shinyWidgets::pickerInput(
@@ -173,14 +236,31 @@ LargeScaleCharacteristics <- R6::R6Class(
             selected = 5
           )
         ),
-        private$.tableTop$UI()
+        shiny::column(
+          width = 10,
+          private$.tableTop$UI()
+        )
       )
     },
 
     .plotUI = function() {
       shiny::tagList(
         shiny::column(
-          width = 3,
+          width = 2,
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "plotCDMName"),
+            label = "CDM Name",
+            choices = private$.cdmNames,
+            selected = private$.cdmNames[1],
+            multiple = TRUE
+          ),
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "plotCohortName"),
+            label = "Cohort Name",
+            choices = private$.cohortNames,
+            selected = private$.cohortNames[1],
+            multiple = TRUE
+          ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotFacetX"),
             label = "Horizontal Facet",
@@ -203,7 +283,7 @@ LargeScaleCharacteristics <- R6::R6Class(
             multiple = TRUE
           )
         ),
-        shiny::column(width = 9, private$.plot$UI())
+        shiny::column(width = 10, private$.plot$UI())
       )
     },
 
@@ -259,10 +339,6 @@ LargeScaleCharacteristics <- R6::R6Class(
 
     .updateTable = function(input, output, session) {
       shiny::observeEvent(list(input$tableCompareBy, input$tableCDMName, input$tableCohortName), {
-        strata <- result |>
-          dplyr::distinct(.data$strata_name) |>
-          dplyr::pull(.data$strata_name)
-
         choices <- if (input$tableCompareBy == "cdm_name") {
           cdmNames <- private$.result |>
             dplyr::distinct(.data$cdm_name) |>
@@ -369,6 +445,8 @@ LargeScaleCharacteristics <- R6::R6Class(
 
     .serverPlot = function(input, output, session) {
       shiny::observeEvent(list(
+        input$plotCDMName,
+        input$plotCohortName,
         input$plotFacetX,
         input$plotFacetY,
         input$plotColour
@@ -380,13 +458,17 @@ LargeScaleCharacteristics <- R6::R6Class(
 
         facets <- unique(c(input$plotFacetX, input$plotFacetY))
 
-        private$.plot$args$result <- if (is.null(facets)) {
+        result <- if (is.null(facets)) {
           private$.result |>
             dplyr::filter(.data$strata_name == "overall")
         } else {
           private$.result |>
             dplyr::filter(.data$strata_name %in% c("overall", facets))
         }
+
+        private$.plot$args$result <- result |>
+          dplyr::filter(.data$cdm_name %in% input$plotCDMName) |>
+          omopgenerics::filterGroup(.data$cohort_name %in% input$plotCohortName)
 
         private$.plot$args$colour <- input$plotColour
         private$.plot$server(input, output, session)
@@ -427,6 +509,7 @@ LargeScaleCharacteristics <- R6::R6Class(
       private$.table <- DarwinShinyModules::DTTable$new(
         fun = CohortCharacteristics::tableLargeScaleCharacteristics,
         args = list(result = private$.result, type = "DT"),
+        height = "90vh",
         parentNamespace = self$namespace
       )
     },
@@ -435,6 +518,7 @@ LargeScaleCharacteristics <- R6::R6Class(
       private$.tableTop <- DarwinShinyModules::Flextable$new(
         fun = CohortCharacteristics::tableTopLargeScaleCharacteristics,
         args = list(result = private$.result, type = "flextable", style = "darwin"),
+        heigth = "90vh",
         parentNamespace = self$namespace
       )
     },
@@ -443,6 +527,7 @@ LargeScaleCharacteristics <- R6::R6Class(
       private$.plot <- DarwinShinyModules::PlotPlotly$new(
         fun = CohortCharacteristics::plotLargeScaleCharacteristics,
         args = list(result = private$.result, style = "darwin"),
+        title = NULL,
         height = "90vh",
         parentNamespace = self$namespace
       )
@@ -482,6 +567,25 @@ LargeScaleCharacteristics <- R6::R6Class(
       } else {
         as.formula(f)
       }
+    },
+
+    .setFilterValues = function() {
+      private$.cdmNames <- private$.result |>
+        dplyr::distinct(.data$cdm_name) |>
+        dplyr::pull(.data$cdm_name)
+
+      private$.cohortNames <- private$.result |>
+        dplyr::filter(.data$group_name == "cohort_name") |>
+        dplyr::distinct(.data$group_level) |>
+        dplyr::pull(.data$group_level)
+
+      private$.strata <- private$.result |>
+        dplyr::distinct(.data$strata_name) |>
+        dplyr::pull(.data$strata_name)
+
+      private$.windows <- private$.result |>
+        dplyr::distinct(.data$variable_level) |>
+        dplyr::pull(.data$variable_level)
     }
   )
 )
