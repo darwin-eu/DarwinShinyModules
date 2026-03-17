@@ -2,6 +2,7 @@
 
 export(Bridge)
 export(Characteristics)
+export(CohortAttrition)
 export(CohortSurvival)
 export(DTTable)
 export(Database)
