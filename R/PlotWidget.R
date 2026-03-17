@@ -61,7 +61,7 @@ PlotWidget <- R6::R6Class(
         shiny::h3(private$.title),
         shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlHtml"), label = "html"),
         shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlPng"), label = "png"),
-        shiny::uiOutput(shiny::NS(private$.namespace, "plot"))
+        do.call(shiny::uiOutput, args = append(list(outputId = shiny::NS(private$.namespace, "plot")), private$.dots))
       )
     },
 
