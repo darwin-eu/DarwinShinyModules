@@ -49,9 +49,11 @@ Suggests:
     omopgenerics,
     CDMConnector,
     TreatmentPatterns,
+    DrugUtilisation,
     IncidencePrevalence,
     DrugExposureDiagnostics (>= 1.1.1),
     CohortSurvival,
+    PatientProfiles,
     CohortCharacteristics,
     usethis
 Config/testthat/edition: 3

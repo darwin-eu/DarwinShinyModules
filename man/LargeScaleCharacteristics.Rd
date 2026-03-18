@@ -17,7 +17,11 @@ if (interactive()) {
    con <- DBI::dbConnect(duckdb::duckdb(), CDMConnector::eunomiaDir())
    cdm <- CDMConnector::cdmFromCon(con = con, cdmSchema = "main", writeSchema = "main")
 
-   cdm <- DrugUtilisation::generateIngredientCohortSet(cdm = cdm, name = "my_cohort", ingredient = c("warfarin", "acetaminophen"))
+   cdm <- DrugUtilisation::generateIngredientCohortSet(
+     cdm = cdm,
+     name = "my_cohort",
+     ingredient = c("warfarin", "acetaminophen")
+  )
 
    cdm$my_cohort <- cdm$my_cohort |>
      PatientProfiles::addAge(ageGroup = list(

@@ -28,9 +28,17 @@
 #' if (interactive()) {
 #'   CDMConnector::requireEunomia()
 #'   con <- DBI::dbConnect(duckdb::duckdb(), CDMConnector::eunomiaDir())
-#'   cdm <- CDMConnector::cdmFromCon(con = con, cdmSchema = "main", writeSchema = "main")
+#'   cdm <- CDMConnector::cdmFromCon(
+#'     con = con,
+#'     cdmSchema = "main",
+#'     writeSchema = "main"
+#'   )
 #'
-#'   cdm <- DrugUtilisation::generateIngredientCohortSet(cdm = cdm, name = "my_cohort", ingredient = c("warfarin", "acetaminophen"))
+#'   cdm <- DrugUtilisation::generateIngredientCohortSet(
+#'     cdm = cdm,
+#'     name = "my_cohort",
+#'     ingredient = c("warfarin", "acetaminophen")
+#'   )
 #'
 #'   summarisedAttrition <- CohortCharacteristics::summariseCohortAttrition(cdm$my_cohort)
 #'
