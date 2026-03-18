@@ -71,6 +71,7 @@ reference:
   - DrugExposureDiagnostics
 
 - subtitle: IncidencePrevalence
+- contents:
   - Incidence
   - Prevalence
 
