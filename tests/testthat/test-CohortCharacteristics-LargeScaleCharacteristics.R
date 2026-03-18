@@ -28,4 +28,55 @@ testthat::test_that("CohortCharacteristics-LargeScaleCharacteristics", {
   shiny::testServer(app = mod$server, {
     testthat::expect_true(is.character(session$token))
   })
+
+  modServer <- function(id) {
+    mod$server(input, output, session)
+  }
+
+  testServer(modServer, {
+    suppressWarnings({
+      session$setInputs(
+        tableCDMName = "Synthea",
+        tableCohortName = c("acetaminophen"),
+        tableCompareBy = "cohort_name",
+        tableSMDReference = "acetaminophen",
+
+        tableTopCDMName = "Synthea",
+        tableTopCohortName = c("acetaminophen", "warfarin"),
+        tableTopStrata = c("age_group", "sex"),
+        tableTopVariableLevel = "0 to 0",
+        tableTopN = 10,
+
+        plotCDMName = "Synthea",
+        plotCohortName = c("acetaminophen", "warfarin"),
+        plotFacetX = "cohort_name",
+        plotFacetY = c("age_group", "sex"),
+        plotColour = NULL,
+
+        plotComparedColour = "cohort_name",
+        plotComparedReference = "acetaminophen",
+        plotComparedFacetX = NULL,
+        plotComparedFacetY = NULL
+      )
+
+      testthat::expect_s3_class(object = output[[sprintf("%s-table", mod$table$moduleId)]], class = "json")
+      testthat::expect_identical(unique(mod$table$args$result$cdm_name), "Synthea")
+      testthat::expect_identical(unique(mod$table$args$result$group_level), "acetaminophen")
+
+      tbl1 <- output[[sprintf("%s-FlexTable", mod$tableTop$moduleId)]]
+      session$setInputs(tableTopVariableLevel = "-inf to -366")
+      tbl2 <- output[[sprintf("%s-FlexTable", mod$tableTop$moduleId)]]
+      testthat::expect_true(tbl1$html != tbl2$html)
+
+      plot1 <- output[[sprintf("%s-plot", mod$plot$moduleId)]]
+      session$setInputs(plotCohortName = "acetaminophen")
+      plot2 <- output[[sprintf("%s-plot", mod$plot$moduleId)]]
+      testthat::expect_true(tbl1$html != tbl2$html)
+
+      plot1 <- output[[sprintf("%s-plot", mod$plot$moduleId)]]
+      session$setInputs(plotComparedReference = "warfarin")
+      plot2 <- output[[sprintf("%s-plot", mod$plot$moduleId)]]
+      testthat::expect_true(tbl1$html != tbl2$html)
+    })
+  })
 })

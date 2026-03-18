@@ -57,6 +57,14 @@ if (interactive()) {
 \item{\code{strata}}{(\code{character(n)})}
 
 \item{\code{windows}}{(\code{character(n)})}
+
+\item{\code{table}}{(\code{ShinyModule})}
+
+\item{\code{tableTop}}{(\code{ShinyModule})}
+
+\item{\code{plot}}{(\code{ShinyModule})}
+
+\item{\code{plotCompared}}{(\code{ShinyModule})}
 }
 \if{html}{\out{</div>}}
 }

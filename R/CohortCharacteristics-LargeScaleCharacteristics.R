@@ -86,6 +86,26 @@ LargeScaleCharacteristics <- R6::R6Class(
     #' @field windows (`character(n)`)
     windows = function() {
       return(private$.windows)
+    },
+
+    #' @field table (`ShinyModule`)
+    table = function() {
+      return(private$.table)
+    },
+
+    #' @field tableTop (`ShinyModule`)
+    tableTop = function() {
+      return(private$.tableTop)
+    },
+
+    #' @field plot (`ShinyModule`)
+    plot = function() {
+      return(private$.plot)
+    },
+
+    #' @field plotCompared (`ShinyModule`)
+    plotCompared = function() {
+      return(private$.plotCompared)
     }
   ),
 
@@ -111,6 +131,8 @@ LargeScaleCharacteristics <- R6::R6Class(
       private$.initTableTop()
       private$.initPlot()
       private$.initPlotCompared()
+
+      private$.setFilterValues()
 
       return(invisible(self))
     }
