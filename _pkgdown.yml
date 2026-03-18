@@ -16,6 +16,8 @@ reference:
   - Table
   - GTTable
   - Flextable
+  - DTTable
+  - ReactableTable
 
 - subtitle: Plots
 - desc: Documentation for modules that decorate the `Plot` decorator module
