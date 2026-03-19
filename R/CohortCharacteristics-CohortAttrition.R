@@ -77,6 +77,7 @@ CohortAttrition <- R6::R6Class(
     #'
     #' @returns `self`
     initialize = function(result, ...) {
+      private$assertInstall("CohortCharacteristics", "1.0.0")
       super$initialize(...)
       private$.result <- result
       private$.widget <- DarwinShinyModules::PlotWidget$new(

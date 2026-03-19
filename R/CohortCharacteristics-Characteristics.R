@@ -70,6 +70,7 @@ Characteristics <- R6::R6Class(
     #'
     #' @returns `self`
     initialize = function(result = NULL, ...) {
+      private$assertInstall("CohortCharacteristics", "1.0.0")
       super$initialize(...)
       private$.result <- result
 

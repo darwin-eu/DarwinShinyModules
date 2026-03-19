@@ -119,6 +119,7 @@ LargeScaleCharacteristics <- R6::R6Class(
     #'
     #' @returns `self`
     initialize = function(result, ...) {
+      private$assertInstall("CohortCharacteristics", "1.0.0")
       super$initialize(...)
       if ("summarised_result" %in% class(result)) {
         private$.result <- result
@@ -213,12 +214,6 @@ LargeScaleCharacteristics <- R6::R6Class(
             inputId = shiny::NS(self$namespace, "tableSMDReference"),
             label = "SMD reference",
             choices = c()
-          ),
-          shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "tableHide"),
-            label = "Columns to hide",
-            choices = CohortCharacteristics::availableTableColumns(private$.result),
-            multiple = TRUE
           )
         ),
         shiny::column(width = 9, private$.table$UI())
@@ -404,18 +399,18 @@ LargeScaleCharacteristics <- R6::R6Class(
     .updatePlotCompared = function(input, output, session) {
       shiny::observeEvent(input$plotComparedColour, {
         choices <- if (input$plotComparedColour == "cdm_name") {
-          unique(result$cdm_name)
+          unique(private$.cdm_name)
         } else if (input$plotComparedColour == "cohort_name") {
-          result |>
+          private$.result |>
             dplyr::filter(.data$group_name == "cohort_name") |>
             dplyr::pull(.data$group_level) |>
             unique()
         } else if (input$plotComparedColour == "variable_level") {
-          result |>
+          private$.result |>
             dplyr::pull(.data$variable_level) |>
             unique()
         } else if (input$plotComparedColour == "type") {
-          settings <- omopgenerics::settings(result)
+          settings <- omopgenerics::settings(private$.result)
           settings$type |>
             unique()
         }
@@ -431,13 +426,11 @@ LargeScaleCharacteristics <- R6::R6Class(
     .serverTable = function(input, output, session) {
       shiny::observeEvent(list(
         input$tableCompareBy,
-        input$tableHide,
         input$tableSMDReference,
         input$tableCDMName,
         input$tableCohortName
       ), {
         private$.table$args$compareBy <- input$tableCompareBy
-        private$.table$args$hide <- input$tableHide
         private$.table$args$smdReference <- input$tableSMDReference
 
         private$.table$args$result <- private$.result |>
@@ -543,18 +536,28 @@ LargeScaleCharacteristics <- R6::R6Class(
     },
 
     .initTableTop = function() {
+      args <- if (utils::packageVersion("CohortCharacteristics") > package_version("1.0.0")) {
+        list(result = private$.result, type = "flextable", style = "darwin")
+      } else {
+        list(result = private$.result, type = "flextable")
+      }
       private$.tableTop <- DarwinShinyModules::Flextable$new(
         fun = CohortCharacteristics::tableTopLargeScaleCharacteristics,
-        args = list(result = private$.result, type = "flextable", style = "darwin"),
+        args = args,
         heigth = "90vh",
         parentNamespace = self$namespace
       )
     },
 
     .initPlot = function() {
+      args <- if (utils::packageVersion("CohortCharacteristics") > package_version("1.0.0")) {
+        list(result = private$.result, style = "darwin")
+      } else {
+        list(result = private$.result)
+      }
       private$.plot <- DarwinShinyModules::PlotPlotly$new(
         fun = CohortCharacteristics::plotLargeScaleCharacteristics,
-        args = list(result = private$.result, style = "darwin"),
+        args = args,
         title = NULL,
         height = "90vh",
         parentNamespace = self$namespace
@@ -562,6 +565,12 @@ LargeScaleCharacteristics <- R6::R6Class(
     },
 
     .initPlotCompared = function() {
+      args <- if (utils::packageVersion("CohortCharacteristics") > package_version("1.0.0")) {
+        list(result = private$.result, style = "darwin")
+      } else {
+        list(result = private$.result)
+      }
+
       plotFun <- function(...) {
         CohortCharacteristics::plotComparedLargeScaleCharacteristics(...) +
           ggplot2::coord_fixed(ratio = 1 / 1)
@@ -569,7 +578,7 @@ LargeScaleCharacteristics <- R6::R6Class(
 
       private$.plotCompared <- DarwinShinyModules::PlotPlotly$new(
         fun = plotFun,
-        args = list(result = private$.result, style = "darwin"),
+        args = args,
         width = "108vh",
         height = "90vh",
         inline = TRUE,
