@@ -37,6 +37,9 @@ jobs:
       - name: Install TreatmentPatterns
         run: R CMD INSTALL --with-keep.source --no-multiarch ./
 
+      - name: Install devtools
+        run: Rscript -e 'install.packages("devtools")'
+
       - name: Install CohortCharacteristics 1.0.0
         run: Rscript -e 'devtools::install_version("CohortCharacteristics", version = "1.0.0")'
 
