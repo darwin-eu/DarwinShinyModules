@@ -77,7 +77,7 @@ CohortSurvival <- R6::R6Class(
     #' @field data (`SummarisedResult`) Summarised result object from `CohortSurvival`
     data = function(data) {
       if (missing(data)) {
-        return(private$.data)
+        return(private$.result)
       }
     },
 
@@ -115,14 +115,14 @@ CohortSurvival <- R6::R6Class(
     #' @description
     #' Initializer function
     #'
-    #' @param data (`SummarisedResults`) Summarised result object from `CohortSurvival`
+    #' @param result (`SummarisedResults`) Summarised result object from `CohortSurvival`
     #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @return `invisible(self)`
-    initialize = function(data, ...) {
-      checkmate::assertClass(x = data, classes = c("summarised_result", "omop_result"))
+    initialize = function(result, ...) {
+      checkmate::assertClass(x = result, classes = c("summarised_result", "omop_result"))
       super$initialize(...)
-      private$.data <- data
+      private$.result <- result
       private$initInputValues()
       private$initPlot()
       private$initRiskTable()
@@ -137,7 +137,7 @@ CohortSurvival <- R6::R6Class(
   ## Private ----
   private = list(
     ### Fields ----
-    .data = NULL,
+    .result = NULL,
     .plot = NULL,
     .riskTable = NULL,
     .survTable = NULL,
@@ -246,7 +246,7 @@ CohortSurvival <- R6::R6Class(
     },
     getInputOptions = function() {
       c(
-        private$.data %>%
+        private$.result %>%
           dplyr::filter(
             .data$variable_name == "outcome",
             .data$strata_name != "overall",
@@ -260,11 +260,11 @@ CohortSurvival <- R6::R6Class(
       )
     },
     fetchStrata = function() {
-      private$.data %>%
+      private$.result %>%
         dplyr::distinct(.data$strata_name) %>%
         dplyr::filter(
           !.data$strata_name %in% c("overall", "reason"),
-          ! stringr::str_detect(.data$strata_name, " &&& ")
+          !stringr::str_detect(.data$strata_name, " &&& ")
         ) %>%
         dplyr::pull()
     },
@@ -377,14 +377,14 @@ CohortSurvival <- R6::R6Class(
     },
     initPlot = function() {
       args <- if (
-        (private$.data %>%
+        (private$.result %>%
           dplyr::filter(.data$group_name == "target_cohort") %>%
           dplyr::distinct(.data$group_level) %>%
           nrow() / 2) > 1
       ) {
-        list(result = private$.data, colour = "target_cohort")
+        list(result = private$.result, colour = "target_cohort")
       } else {
-        list(result = private$.data)
+        list(result = private$.result)
       }
 
       private$.plot <- PlotPlotly$new(
@@ -397,21 +397,21 @@ CohortSurvival <- R6::R6Class(
     initRiskTable = function() {
       private$.riskTable <- GTTable$new(
         fun = CohortSurvival::riskTable,
-        args = list(x = private$.data, .options = list(style = "darwin")),
+        args = list(x = private$.result, .options = list(style = "darwin")),
         parentNamespace = self$namespace
       )
     },
     initSurvTable = function() {
       private$.survTable <- GTTable$new(
         fun = CohortSurvival::tableSurvival,
-        args = list(x = private$.data, .options = list(style = "darwin")),
+        args = list(x = private$.result, .options = list(style = "darwin")),
         parentNamespace = self$namespace
       )
     },
     initTable = function() {
       private$.table <- Table$new(
         title = NULL,
-        data = private$.data,
+        data = private$.result,
         parentNamespace = self$namespace
       )
     }
