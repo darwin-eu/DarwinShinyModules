@@ -4,10 +4,10 @@ on:
   pull_request:
     branches: [main, rc, develop]
 
-name: CohortCharacteristics [1.0.0]
+name: CohortSurvival [1.1.0]
 
 jobs:
-  CohortCharacteristics-test:
+  CohortSurvival-test:
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.os }}
     strategy:
