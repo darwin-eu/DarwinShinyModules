@@ -38,7 +38,7 @@ jobs:
         run: R CMD INSTALL --with-keep.source --no-multiarch ./
 
       - name: Install remotes
-        run: Rscript -e 'install.packages("remotes", "CirceR")'
+        run: Rscript -e 'install.packages(c("remotes", "CirceR"))'
 
       - name: Install TreatmentPatterns 3.1.0
         run: Rscript -e 'remotes::install_version("TreatmentPatterns", version = "3.1.0")'
