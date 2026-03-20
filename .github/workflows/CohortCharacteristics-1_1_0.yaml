@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main, rc, develop]
 
-name: CohortCharacteristics [1.0.0]
+name: CohortCharacteristics [1.1.0]
 
 jobs:
   CohortCharacteristics-test:
