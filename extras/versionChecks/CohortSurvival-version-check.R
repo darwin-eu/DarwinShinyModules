@@ -19,4 +19,8 @@ testthat::test_that("CohortCharacteristics", {
   app <- DarwinShinyModules::launchDarwinDashboardApp(app)
 
   testthat::expect_identical(class(app), "shiny.appobj")
+
+  shiny::testServer(app, {
+    expect_true(is.character(session$token))
+  })
 })
