@@ -37,6 +37,9 @@ jobs:
       - name: Install DarwinShinyModules
         run: R CMD INSTALL --with-keep.source --no-multiarch ./
 
+      - name: Install remotes
+        run: Rscript -e 'install.packages("CirceR")'
+
       - name: Run test-database.R
         run: |
           Rscript -e 'testthat::test_file(
