@@ -1,4 +1,7 @@
 testthat::test_that("TreatmentPatterns", {
+  Sys.setenv("EUNOMIA_DATA_FOLDER" = file.path(tempdir(), "eunomiaData"))
+  dir.create(Sys.getenv("EUNOMIA_DATA_FOLDER"))
+
   con <- DBI::dbConnect(duckdb::duckdb(), dbdir = CDMConnector::eunomiaDir())
   cdm <- CDMConnector::cdmFromCon(con, cdmSchema = "main", writeSchema = "main")
 
