@@ -365,7 +365,7 @@ Prevalence <- R6::R6Class(
     },
     transformData = function(data) {
       # set strata
-      strataColumn <- unique(settings(data) %>% dplyr::filter(strata != "reason") %>% dplyr::pull(strata))
+      strataColumn <- unique(omopgenerics::settings(data) %>% dplyr::filter(strata != "reason") %>% dplyr::pull(strata))
       private$.strata <- unique(data %>% dplyr::filter(strata_name != "reason") %>% dplyr::pull(strata_level))
 
       # transform to readable format
