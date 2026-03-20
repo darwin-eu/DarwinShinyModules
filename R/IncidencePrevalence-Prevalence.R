@@ -40,7 +40,7 @@
 #'       "dummyData/IncidencePrevalence/1.2.0/prevalence.csv"
 #'     ))
 #'
-#'     prevMod <- Prevalence$new(data = prev,
+#'     prevMod <- Prevalence$new(result = prev,
 #'                               defaults = list(sex = "Both"))
 #'
 #'     ui <- shiny::fluidPage(
@@ -63,14 +63,14 @@ Prevalence <- R6::R6Class(
 
   # Active ----
   active = list(
-    #' @field data (`summarisedResult`) SummarisedResult object from Prevalence.
-    data = function(data) {
-      if (missing(data)) {
-        return(private$.data)
+    #' @field result (`summarisedResult`) SummarisedResult object from Prevalence.
+    result = function(result) {
+      if (missing(result)) {
+        return(private$.result)
       } else {
-        # Checks on data
-        checkmate::assertClass(data, "summarised_result")
-        private$.data <- data
+        # Checks on result
+        checkmate::assertClass(result, "summarised_result")
+        private$.result <- result
       }
     },
 
@@ -86,18 +86,16 @@ Prevalence <- R6::R6Class(
     #' @description
     #' Initializer method
     #'
-    #' @param data (`summarised_result`) Result object from the `IncidencePrevalence` package.
+    #' @param result (`summarised_result`) Result object from the `IncidencePrevalence` package.
     #' @param defaults list of default values for the pickers
     #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @returns `self`
-    initialize = function(data, defaults, ...) {
+    initialize = function(result, defaults, ...) {
       super$initialize(...)
-      private$assertInstall("IncidencePrevalence", "1.2.0")
-      private$assertInstall("visOmopResults", "1.0.2")
-      private$assertPrevalenceData(data)
-      private$.data <- data
-      private$.tidyData <- private$transformData(data)
+      private$assertPrevalenceData(result)
+      private$.result <- result
+      private$.tidyData <- private$transformData(result)
       private$.defaults <- defaults
       private$initPickers()
       return(invisible(self))
@@ -106,7 +104,7 @@ Prevalence <- R6::R6Class(
 
   # Private ----
   private = list(
-    .data = NULL,
+    .result = NULL,
     .tidyData = NULL,
     .defaults = NULL,
     .strata = NULL,
@@ -229,7 +227,7 @@ Prevalence <- R6::R6Class(
 
       # Filtered data
       summarised_result_data <- reactive({
-        private$.data %>%
+        private$.result %>%
           dplyr::filter(
             cdm_name %in% private$.pickers[["cdm"]]$inputValues$cdm) %>%
           omopgenerics::filterSettings(

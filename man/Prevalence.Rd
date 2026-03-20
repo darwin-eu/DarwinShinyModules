@@ -27,7 +27,7 @@ Prevalence module that shows prevalence results from the IncidencePrevalence pac
       "dummyData/IncidencePrevalence/1.2.0/prevalence.csv"
     ))
 
-    prevMod <- Prevalence$new(data = prev,
+    prevMod <- Prevalence$new(result = prev,
                               defaults = list(sex = "Both"))
 
     ui <- shiny::fluidPage(
@@ -51,7 +51,7 @@ Prevalence module that shows prevalence results from the IncidencePrevalence pac
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{data}}{(\code{summarisedResult}) SummarisedResult object from Prevalence.}
+\item{\code{result}}{(\code{summarisedResult}) SummarisedResult object from Prevalence.}
 
 \item{\code{pickers}}{(\code{list}) List of pickers}
 }
@@ -80,13 +80,13 @@ Prevalence module that shows prevalence results from the IncidencePrevalence pac
 \subsection{Method \code{new()}}{
 Initializer method
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Prevalence$new(data, defaults, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Prevalence$new(result, defaults, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{(\code{summarised_result}) Result object from the \code{IncidencePrevalence} package.}
+\item{\code{result}}{(\code{summarised_result}) Result object from the \code{IncidencePrevalence} package.}
 
 \item{\code{defaults}}{list of default values for the pickers}
 
