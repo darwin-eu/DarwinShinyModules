@@ -32,13 +32,13 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          dependencies: '"Imports"'
+          dependencies: '"all"'
 
       - name: Install DarwinShinyModules
         run: R CMD INSTALL --with-keep.source --no-multiarch ./
 
       - name: Install remotes
-        run: Rscript -e 'install.packages(c("remotes", "testthat"))'
+        run: Rscript -e 'install.packages(c("remotes")'
 
       - name: Install IncidencePrevalence 1.0.0
         run: Rscript -e 'remotes::install_version("IncidencePrevalence", version = "1.0.0")'
