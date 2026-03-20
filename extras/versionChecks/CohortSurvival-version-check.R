@@ -1,4 +1,4 @@
-testthat::test_that("CohortCharacteristics", {
+testthat::test_that("CohortSurvival", {
   CDMConnector::requireEunomia()
   cdm <- CohortSurvival::mockMGUS2cdm()
 

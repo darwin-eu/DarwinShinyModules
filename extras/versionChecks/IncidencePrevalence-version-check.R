@@ -1,4 +1,4 @@
-testthat::test_that("CohortCharacteristics", {
+testthat::test_that("IncidencePrevalence", {
   CDMConnector::requireEunomia()
 
   cdm <- IncidencePrevalence::mockIncidencePrevalence(
