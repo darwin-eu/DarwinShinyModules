@@ -135,11 +135,8 @@ CohortAttrition <- R6::R6Class(
           )
         ),
         shiny::column(
-          width = 5,
-          private$.widget$UI()
-        ),
-        shiny::column(
-          width = 5,
+          width = 10,
+          private$.widget$UI(),
           private$.table$UI()
         )
       )

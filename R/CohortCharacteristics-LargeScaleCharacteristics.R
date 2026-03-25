@@ -472,7 +472,7 @@ LargeScaleCharacteristics <- R6::R6Class(
         input$plotFacetY,
         input$plotColour
       ), {
-        private$.plot$args$facet <- private$.makeFacetFormula(
+        private$.plot$args$facet <- makeFacetFormula(
           facetX = input$plotFacetX,
           facetY = input$plotFacetY
         )
@@ -506,7 +506,7 @@ LargeScaleCharacteristics <- R6::R6Class(
         private$.plotCompared$args$colour <- input$plotComparedColour
         private$.plotCompared$args$reference <- input$plotComparedReference
 
-        private$.plotCompared$args$facet <- private$.makeFacetFormula(
+        private$.plotCompared$args$facet <- makeFacetFormula(
           facetX = input$plotComparedFacetX,
           facetY = input$plotComparedFacetY
         )
@@ -530,7 +530,7 @@ LargeScaleCharacteristics <- R6::R6Class(
       private$.table <- DarwinShinyModules::DTTable$new(
         fun = CohortCharacteristics::tableLargeScaleCharacteristics,
         args = list(result = private$.result, type = "DT"),
-        height = "90vh",
+        height = "80vh",
         parentNamespace = self$namespace
       )
     },
@@ -544,7 +544,7 @@ LargeScaleCharacteristics <- R6::R6Class(
       private$.tableTop <- DarwinShinyModules::Flextable$new(
         fun = CohortCharacteristics::tableTopLargeScaleCharacteristics,
         args = args,
-        heigth = "90vh",
+        heigth = "80vh",
         parentNamespace = self$namespace
       )
     },
@@ -559,7 +559,7 @@ LargeScaleCharacteristics <- R6::R6Class(
         fun = CohortCharacteristics::plotLargeScaleCharacteristics,
         args = args,
         title = NULL,
-        height = "90vh",
+        height = "80vh",
         parentNamespace = self$namespace
       )
     },
@@ -580,7 +580,7 @@ LargeScaleCharacteristics <- R6::R6Class(
         fun = plotFun,
         args = args,
         width = "108vh",
-        height = "90vh",
+        height = "80vh",
         inline = TRUE,
         title = NULL,
         parentNamespace = self$namespace
@@ -588,24 +588,6 @@ LargeScaleCharacteristics <- R6::R6Class(
     },
 
     # Helpers ----
-    .makeFacetFormula = function(facetX, facetY) {
-      f <- sprintf(
-        "%s ~ %s",
-        paste(facetY, collapse = " + "),
-        paste(facetX, collapse = " + ")
-      )
-
-      if (f == " ~ ") {
-        NULL
-      } else if (stringr::str_detect(string = f, pattern = "^ \\~")) {
-        as.formula(paste0(".", f))
-      } else if (stringr::str_detect(string = f, pattern = "\\~ $")) {
-        as.formula(paste0(f, "."))
-      } else {
-        as.formula(f)
-      }
-    },
-
     .setFilterValues = function() {
       private$.cdmNames <- private$.result |>
         dplyr::distinct(.data$cdm_name) |>
