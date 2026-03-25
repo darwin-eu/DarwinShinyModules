@@ -381,7 +381,7 @@ LargeScaleCharacteristics <- R6::R6Class(
           settings <- omopgenerics::settings(private$.result)
           settings$type |>
             unique()
-        } else if (input$tableCompareBy %in% strata) {
+        } else if (input$tableCompareBy %in% private$.strata) {
           private$.result |>
             dplyr::filter(.data$strata_name == input$tableCompareBy) |>
             dplyr::distinct(.data$strata_level) |>
