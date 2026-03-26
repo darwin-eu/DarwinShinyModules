@@ -109,6 +109,8 @@ Characteristics <- R6::R6Class(
       private$.plot <- DarwinShinyModules::PlotStatic$new(
         fun = CohortCharacteristics::plotCharacteristics,
         args = list(style = "darwin"),
+        title = NULL,
+        height = "80vh",
         parentNamespace = self$namespace
       )
 
@@ -243,19 +245,19 @@ Characteristics <- R6::R6Class(
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotColour"),
             label = "Colour",
-            choices = CohortCharacteristics::availablePlotColumns(private$.result),
+            choices = NULL,
             multiple = TRUE
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotFacetX"),
             label = "Horizontal Facet",
-            choices = CohortCharacteristics::availablePlotColumns(private$.result),
+            choices = NULL,
             multiple = TRUE
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotFacetY"),
             label = "Vertical Facet",
-            choices = CohortCharacteristics::availablePlotColumns(private$.result),
+            choices = NULL,
             multiple = TRUE
           )
         ),
@@ -296,7 +298,7 @@ Characteristics <- R6::R6Class(
 
     .plotServer = function(input, output, session) {
       shiny::observeEvent(list(
-        input$plotCDMName, input$plotCohortName, input$plotStrata, input$plotVariableName
+        input$plotVariableName
       ), {
         private$.plot$args$result <- private$.result |>
           dplyr::filter(
@@ -315,6 +317,24 @@ Characteristics <- R6::R6Class(
           inputId = "plotEstimateName",
           choices = choices,
           selected = choices
+        )
+
+        shinyWidgets::updatePickerInput(
+          session = session,
+          inputId = "plotColour",
+          choices = CohortCharacteristics::availablePlotColumns(private$.plot$args$result)
+        )
+
+        shinyWidgets::updatePickerInput(
+          session = session,
+          inputId = "plotFacetX",
+          choices = CohortCharacteristics::availablePlotColumns(private$.plot$args$result)
+        )
+
+        shinyWidgets::updatePickerInput(
+          session = session,
+          inputId = "plotFacetY",
+          choices = CohortCharacteristics::availablePlotColumns(private$.plot$args$result)
         )
       }, ignoreNULL = TRUE)
 
