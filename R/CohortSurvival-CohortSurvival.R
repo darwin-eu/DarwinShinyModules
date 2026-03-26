@@ -72,7 +72,7 @@ CohortSurvival <- R6::R6Class(
   classname = "CohortSurvival",
   inherit = ShinyModule,
 
-  ## Active ----
+  # Active ----
   active = list(
     #' @field data (`SummarisedResult`) Summarised result object from `CohortSurvival`
     data = function(data) {
@@ -110,7 +110,7 @@ CohortSurvival <- R6::R6Class(
     }
   ),
 
-  ## Public ----
+  # Public ----
   public = list(
     #' @description
     #' Initializer function
@@ -122,21 +122,23 @@ CohortSurvival <- R6::R6Class(
     initialize = function(result, ...) {
       checkmate::assertClass(x = result, classes = c("summarised_result", "omop_result"))
       super$initialize(...)
+
       private$.result <- result
+      private$.setFilterValues()
+
       private$initInputValues()
       private$initPlot()
       private$initRiskTable()
       private$initSurvTable()
-      private$initTable()
       private$initRiskTableInput()
       private$initSurvTableInput()
       return(invisible(self))
     }
   ),
 
-  ## Private ----
+  # Private ----
   private = list(
-    ### Fields ----
+    ## Fields ----
     .result = NULL,
     .plot = NULL,
     .riskTable = NULL,
@@ -146,79 +148,168 @@ CohortSurvival <- R6::R6Class(
     .riskInputPanel = NULL,
     .survInputPanel = NULL,
 
-    ### Methods ----
+    .cdmName = NULL,
+    .cohortNames = NULL,
+    .strata = NULL,
+
+    ## Methods ----
     .UI = function() {
-      shiny::fluidPage(
-        shiny::column(
-          width = 2,
-          shiny::wellPanel(
-            shiny::h4("Plot Settings"),
-            private$.inputPanel$UI()
-          ),
-          shiny::wellPanel(
-            shiny::h4("Table Settings"),
-            shiny::h5("Risk Table Settings"),
-            private$.riskInputPanel$UI(),
-            shiny::br(),
-            shiny::br(),
-            shiny::h5("Surival Table Settings"),
-            private$.survInputPanel$UI()
+      shiny::tagList(
+        shiny::h4("General Settings"),
+        shiny::div(
+          style = "display: inline-block;",
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "cdmName"),
+            label = "CDM Name",
+            choices = private$.cdmName,
+            selected = private$.cdmName[1]
           )
         ),
-        shiny::column(
-          width = 10,
-          private$.plot$UI(),
-          shiny::tabsetPanel(
-            shiny::tabPanel(
-              title = "Risk Table",
+        shiny::div(
+          style = "display: inline-block;",
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "cohortName"),
+            label = "Cohort Name",
+            choices = private$.cohortNames,
+            selected = private$.cohortNames[1],
+            multiple = TRUE
+          )
+        ),
+
+        shiny::tabsetPanel(
+          shiny::tabPanel(
+            title = "Risk Table",
+            shiny::column(
+              width = 2,
+              shiny::h4("Settings"),
+              shinyWidgets::pickerInput(inputId = "dummy-a", label = "Dummy", choices = c("foo", "bar"))
+            ),
+            shiny::column(
+              width = 10,
               private$.riskTable$UI()
+            )
+          ),
+
+          shiny::tabPanel(
+            title = "Survival Table",
+            shiny::column(
+              width = 2,
+              shinyWidgets::pickerInput(inputId = "dummy-b", label = "Dummy", choices = c("foo", "bar"))
             ),
-            shiny::tabPanel(
-              title = "Survival Table",
+            shiny::column(
+              width = 10,
               private$.survTable$UI()
+            )
+          ),
+
+          shiny::tabPanel(
+            title = "Kaplan-Meier Plot",
+            shiny::column(
+              width = 2,
+              shinyWidgets::pickerInput(
+                inputId = shiny::NS(self$namespace, "plotRibbon"),
+                label = "Ribbon",
+                choices = c("On", "off"),
+                selected = "On"
+              ),
+              shinyWidgets::pickerInput(
+                inputId = shiny::NS(self$namespace, "plotCumulativeFailure"),
+                label = "Cumulative failure",
+                choices = c("On", "Off"),
+                selected = "Off"
+              ),
+              shinyWidgets::pickerInput(
+                inputId = shiny::NS(self$namespace, "plotLogLog"),
+                label = "Log-Log Transform",
+                choices = c("On", "Off"),
+                selected = "Off"
+              ),
+              shinyWidgets::pickerInput(
+                inputId = shiny::NS(self$namespace, "plotFacetX"),
+                label = "Horizontal facet",
+                choices = c("cdm_name", "target_cohort", private$.strata),
+                multiple = TRUE
+              ),
+              shinyWidgets::pickerInput(
+                inputId = shiny::NS(self$namespace, "plotFacetY"),
+                label = "Vertical facet",
+                choices = c("cdm_name", "target_cohort", private$.strata),
+                multiple = TRUE
+              ),
+              shinyWidgets::pickerInput(
+                inputId = shiny::NS(self$namespace, "plotColour"),
+                label = "Colour",
+                choices = c("cdm_name", "target_cohort", private$.strata),
+                multiple = TRUE
+              )
             ),
-            shiny::tabPanel(
-              title = "Raw Data",
-              private$.table$UI()
+            shiny::column(
+              width = 10,
+              private$.plot$UI()
             )
           )
         )
       )
     },
+
+    .uiGeneralFilters = function() {},
+
+    .uiPlot = function() {},
+
+    .uiTableSurv = function() {},
+
+    .uiTableRisk = function() {},
+
+    ## Server ----
     .server = function(input, output, session) {
-      private$.inputPanel$server(input, output, session)
-      private$.riskInputPanel$server(input, output, session)
-      private$.survInputPanel$server(input, output, session)
-      private$.table$server(input, output, session)
+      private$.serverPlot(input, output, session)
+      # private$.inputPanel$server(input, output, session)
+      # private$.riskInputPanel$server(input, output, session)
+      # private$.survInputPanel$server(input, output, session)
+      # private$.table$server(input, output, session)
 
-      private$updatePlotArgs()
+      # private$.serverPlot()
+      # private$.serverTableSurv()
+      # private$.serverTableRisk()
     },
-    updatePlotArgs = function() {
+
+    .serverPlot = function(input, output, session) {
       shiny::observeEvent(
         list(
-          private$.inputPanel$inputValues$plotFacet,
-          private$.inputPanel$inputValues$plotColour,
-          private$.inputPanel$inputValues$plotRibbon,
-          private$.inputPanel$inputValues$plotCumFail
+          input$cdmName,
+          input$cohortName,
+          input$plotRibbon,
+          input$plotCumulativeFailure,
+          input$plotLogLog,
+          input$plotFacetX,
+          input$plotFacetY,
+          input$plotColour
         ), {
-        private$.plot$args$facet <- private$.inputPanel$inputValues$plotFacet
-        private$.plot$args$colour <- private$.inputPanel$inputValues$plotColour
-        private$.plot$args$ribbon <- private$.inputPanel$inputValues$plotRibbon
-        private$.plot$args$cumulativeFailure <- private$.inputPanel$inputValues$plotCumFail
-        private$.plot$server(input, output, session)
+          inputStrata <- unique(c(input$plotFacetX, input$plotFacetY, input$plotColour))
+
+          strata <- if (all(is.null(inputStrata))) {
+            "overall"
+          } else {
+            c("overall", inputStrata)
+          }
+
+          private$.plot$args$result <- private$.result |>
+            dplyr::filter(
+              .data$cdm_name %in% input$cdmName,
+              .data$strata_name %in% strata
+            ) |>
+            omopgenerics::filterGroup(target_cohort %in% input$cohortName)
+
+          private$.plot$args$ribbon <- convertLabelToLogical(input$plotRibbon)
+          private$.plot$args$cumulativeFailure <- convertLabelToLogical(input$plotCumulativeFailure)
+          private$.plot$args$logLog <- convertLabelToLogical(input$plotLogLog)
+          private$.plot$args$facet <- makeFacetFormula(facetX = input$plotFacetX, facetY = input$plotFacetY)
+          private$.plot$args$colour <- input$plotColour
+          private$.plot$server(input, output, session)
       })
+    },
 
-      shiny::observeEvent(
-        list(
-          private$.riskInputPanel$inputValues$riskHeader,
-          private$.riskInputPanel$inputValues$riskGroupColumn
-        ), {
-          private$.riskTable$args$header <- private$.riskInputPanel$inputValues$riskHeader
-          private$.riskTable$args$groupColumn <- private$.riskInputPanel$inputValues$riskGroupColumn
-          private$.riskTable$server(input, output, session)
-        }
-      )
-
+    .serverTableSurv = function() {
       shiny::observeEvent(
         list(
           private$.survInputPanel$inputValues$survTimeScale,
@@ -244,30 +335,21 @@ CohortSurvival <- R6::R6Class(
         }
       )
     },
-    getInputOptions = function() {
-      c(
-        private$.result %>%
-          dplyr::filter(
-            .data$variable_name == "outcome",
-            .data$strata_name != "overall",
-            !grepl(pattern = "&&&", x = strata_name)
-          ) %>%
-          dplyr::pull(.data$strata_name) %>%
-          unique(),
 
-        # Additional options
-        "target_cohort"
+    .serverTableRisk = function() {
+      shiny::observeEvent(
+        list(
+          private$.riskInputPanel$inputValues$riskHeader,
+          private$.riskInputPanel$inputValues$riskGroupColumn
+        ), {
+          private$.riskTable$args$header <- private$.riskInputPanel$inputValues$riskHeader
+          private$.riskTable$args$groupColumn <- private$.riskInputPanel$inputValues$riskGroupColumn
+          private$.riskTable$server(input, output, session)
+        }
       )
     },
-    fetchStrata = function() {
-      private$.result %>%
-        dplyr::distinct(.data$strata_name) %>%
-        dplyr::filter(
-          !.data$strata_name %in% c("overall", "reason"),
-          !stringr::str_detect(.data$strata_name, " &&& ")
-        ) %>%
-        dplyr::pull()
-    },
+
+    # Initializers ----
     initInputValues = function() {
       inputOptions <- private$getInputOptions()
 
@@ -279,9 +361,15 @@ CohortSurvival <- R6::R6Class(
           plotCumFail = shinyWidgets::switchInput
         ),
         args = list(
-          plotFacet = list(
-            inputId = "plotFacet",
-            label = "Facet",
+          plotFacetX = list(
+            inputId = "plotFacetX",
+            label = "Horizontal Facet",
+            choices = inputOptions,
+            multiple = TRUE
+          ),
+          plotFacetY = list(
+            inputId = "plotFacetY",
+            label = "Vertical Facet",
             choices = inputOptions,
             multiple = TRUE
           ),
@@ -313,6 +401,7 @@ CohortSurvival <- R6::R6Class(
         parentNamespace = self$namespace
       )
     },
+
     initRiskTableInput = function() {
       selectOptions <- c("estimate", "cdm_name", private$fetchStrata(), "settings", "time", "overall")
 
@@ -338,6 +427,7 @@ CohortSurvival <- R6::R6Class(
         parentNamespace = self$namespace
       )
     },
+
     initSurvTableInput = function() {
       selectOptions <- c("estimate", "cdm_name", private$fetchStrata(), "settings", "time", "overall")
 
@@ -375,22 +465,13 @@ CohortSurvival <- R6::R6Class(
         parentNamespace = self$namespace
       )
     },
-    initPlot = function() {
-      args <- if (
-        (private$.result %>%
-          dplyr::filter(.data$group_name == "target_cohort") %>%
-          dplyr::distinct(.data$group_level) %>%
-          nrow() / 2) > 1
-      ) {
-        list(result = private$.result, colour = "target_cohort")
-      } else {
-        list(result = private$.result)
-      }
 
-      private$.plot <- PlotPlotly$new(
+    initPlot = function() {
+      private$.plot <- PlotStatic$new(
         title = NULL,
         fun = CohortSurvival::plotSurvival,
-        args = args,
+        args = list(style = "darwin"),
+        height = "80vh",
         parentNamespace = self$namespace
       )
     },
@@ -401,6 +482,7 @@ CohortSurvival <- R6::R6Class(
         parentNamespace = self$namespace
       )
     },
+
     initSurvTable = function() {
       private$.survTable <- GTTable$new(
         fun = CohortSurvival::tableSurvival,
@@ -408,11 +490,51 @@ CohortSurvival <- R6::R6Class(
         parentNamespace = self$namespace
       )
     },
-    initTable = function() {
-      private$.table <- Table$new(
-        title = NULL,
-        data = private$.result,
-        parentNamespace = self$namespace
+
+    ## Helpers ----
+    .setFilterValues = function() {
+      private$.cdmName <- private$.result |>
+        dplyr::distinct(.data$cdm_name) |>
+        dplyr::pull(.data$cdm_name)
+
+      private$.cohortNames <- private$.result |>
+        dplyr::filter(
+          .data$group_name == "target_cohort",
+          .data$strata_name != "reason"
+        ) |>
+        dplyr::distinct(.data$group_level) |>
+        dplyr::pull(.data$group_level)
+
+      private$.strata <- private$.result |>
+        dplyr::filter(.data$strata_name != "reason") |>
+        dplyr::distinct(.data$strata_name) |>
+        dplyr::filter(.data$strata_name != "overall") |>
+        dplyr::pull(.data$strata_name)
+    },
+
+    fetchStrata = function() {
+      private$.result %>%
+        dplyr::distinct(.data$strata_name) %>%
+        dplyr::filter(
+          !.data$strata_name %in% c("overall", "reason"),
+          !stringr::str_detect(.data$strata_name, " &&& ")
+        ) %>%
+        dplyr::pull()
+    },
+
+    getInputOptions = function() {
+      c(
+        private$.result %>%
+          dplyr::filter(
+            .data$variable_name == "outcome",
+            .data$strata_name != "overall",
+            !grepl(pattern = "&&&", x = strata_name)
+          ) %>%
+          dplyr::pull(.data$strata_name) %>%
+          unique(),
+
+        # Additional options
+        "target_cohort"
       )
     }
   )

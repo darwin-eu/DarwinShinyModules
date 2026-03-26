@@ -15,3 +15,7 @@ makeFacetFormula = function(facetX, facetY) {
     as.formula(f)
   }
 }
+
+convertLabelToLogical = function(label, trueVal = "On", falseVal = "Off") {
+  if (label == trueVal) TRUE else if (label == falseVal) FALSE else FALSE
+}

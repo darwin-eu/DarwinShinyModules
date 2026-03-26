@@ -5,7 +5,8 @@ testthat::test_that("CohortSurvival", {
   result <- CohortSurvival::estimateSingleEventSurvival(
     cdm = cdm,
     targetCohortTable = "mgus_diagnosis",
-    outcomeCohortTable = "death_cohort"
+    outcomeCohortTable = "death_cohort",
+    strata = list("age_group", "sex")
   )
 
   survMod <- DarwinShinyModules::CohortSurvival$new(result = result)
