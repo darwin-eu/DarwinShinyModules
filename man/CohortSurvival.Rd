@@ -63,11 +63,7 @@ The module consists of the following:
 
 \item{\code{plot}}{(\code{Plot}) Plot module.}
 
-\item{\code{tidyTable}}{(\code{GTTable}) GTTable module}
-
 \item{\code{table}}{(\code{Table}) Table module}
-
-\item{\code{inputPanel}}{(\code{InputPanel}) InputPanel module}
 }
 \if{html}{\out{</div>}}
 }
