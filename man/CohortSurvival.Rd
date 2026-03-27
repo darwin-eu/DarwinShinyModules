@@ -59,11 +59,21 @@ The module consists of the following:
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{data}}{(\code{SummarisedResult}) Summarised result object from \code{CohortSurvival}}
+\item{\code{result}}{(\code{SummarisedResult}) Summarised result object from \code{CohortSurvival}}
 
-\item{\code{plot}}{(\code{Plot}) Plot module.}
+\item{\code{plot}}{(\code{Plot}) Plot module. using \code{CohortSurvival::plotSurvival()}}
 
-\item{\code{table}}{(\code{Table}) Table module}
+\item{\code{table}}{(\code{Table}) Table module using \code{CohortSurvival::tableSurvival()}}
+
+\item{\code{tableEvents}}{(\code{Table}) Table module using \code{CohortSurvival::tableSurvivalEvents()}}
+
+\item{\code{tableAttrition}}{(\code{Table}) Table module using \code{CohortSurvival::tableAttrition()}}
+
+\item{\code{cdmName}}{(\code{character}) Available CDM names}
+
+\item{\code{cohortNames}}{(\code{character}) Available cohort bames}
+
+\item{\code{strata}}{(\code{character}) Available strata names}
 }
 \if{html}{\out{</div>}}
 }

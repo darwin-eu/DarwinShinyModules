@@ -74,25 +74,46 @@ CohortSurvival <- R6::R6Class(
 
   # Active ----
   active = list(
-    #' @field data (`SummarisedResult`) Summarised result object from `CohortSurvival`
-    data = function(data) {
-      if (missing(data)) {
+    #' @field result (`SummarisedResult`) Summarised result object from `CohortSurvival`
+    result = function(result) {
+      if (missing(result)) {
         return(private$.result)
       }
     },
 
-    #' @field plot (`Plot`) Plot module.
-    plot = function(plot) {
-      if (missing(plot)) {
-        return(private$.plot)
-      }
+    #' @field plot (`Plot`) Plot module. using `CohortSurvival::plotSurvival()`
+    plot = function() {
+      return(private$.plot)
     },
 
-    #' @field table (`Table`) Table module
-    table = function(table) {
-      if (missing(table)) {
-        return(private$.table)
-      }
+    #' @field table (`Table`) Table module using `CohortSurvival::tableSurvival()`
+    table = function() {
+        return(code)
+    },
+
+    #' @field tableEvents (`Table`) Table module using `CohortSurvival::tableSurvivalEvents()`
+    tableEvents = function() {
+      return(private$.tableEvents)
+    },
+
+    #' @field tableAttrition (`Table`) Table module using `CohortSurvival::tableAttrition()`
+    tableAttrition = function() {
+      return(private$.tableAttrition)
+    },
+
+    #' @field cdmName (`character`) Available CDM names
+    cdmName = function() {
+      return(private$.cdmName)
+    },
+
+    #' @field cohortNames (`character`) Available cohort bames
+    cohortNames = function() {
+      return(private$.cohortNames)
+    },
+
+    #' @field strata (`character`) Available strata names
+    strata = function() {
+      return(private$.strata)
     }
   ),
 
