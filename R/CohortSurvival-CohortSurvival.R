@@ -45,12 +45,9 @@
 #'      warn.conflicts = FALSE
 #'    )
 #'  ) {
-#'     library(CDMConnector)
-#'     library(CohortSurvival)
-#'
 #'     cdm <- CohortSurvival::mockMGUS2cdm()
 #'
-#'     MGUS_death <- estimateSingleEventSurvival(
+#'     result <- CohortSurvival::estimateSingleEventSurvival(
 #'       cdm,
 #'       targetCohortTable = "mgus_diagnosis",
 #'       outcomeCohortTable = "death_cohort",
@@ -61,9 +58,9 @@
 #'       )
 #'     )
 #'
-#'     cs <- CohortSurvival$new(data = MGUS_death)
+#'     survMod <- DarwinShinyModules::CohortSurvival$new(result = result)
 #'     if (interactive()) {
-#'       preview(cs)
+#'       DarwinShinyModules::preview(survMod)
 #'     }
 #'   }
 #' }
@@ -81,19 +78,19 @@ CohortSurvival <- R6::R6Class(
       }
     },
 
-    #' @field plot (`Plot`) Plot module. using `CohortSurvival::plotSurvival()`
-    plot = function() {
-      return(private$.plot)
-    },
-
     #' @field table (`Table`) Table module using `CohortSurvival::tableSurvival()`
     table = function() {
-        return(code)
+      return(private$.table)
     },
 
     #' @field tableEvents (`Table`) Table module using `CohortSurvival::tableSurvivalEvents()`
     tableEvents = function() {
       return(private$.tableEvents)
+    },
+
+    #' @field plot (`Plot`) Plot module. using `CohortSurvival::plotSurvival()`
+    plot = function() {
+      return(private$.plot)
     },
 
     #' @field tableAttrition (`Table`) Table module using `CohortSurvival::tableAttrition()`
@@ -166,15 +163,15 @@ CohortSurvival <- R6::R6Class(
   private = list(
     ## Fields ----
     .result = NULL,
+    .cdmName = NULL,
+    .cohortNames = NULL,
+    .strata = NULL,
 
+    ### Modules ----
     .table = NULL,
     .tableEvents = NULL,
     .plot = NULL,
     .tableAttrition = NULL,
-
-    .cdmName = NULL,
-    .cohortNames = NULL,
-    .strata = NULL,
 
     ## Methods ----
     .UI = function() {

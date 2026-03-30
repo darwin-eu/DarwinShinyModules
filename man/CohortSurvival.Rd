@@ -29,12 +29,9 @@ The module consists of the following:
      warn.conflicts = FALSE
    )
  ) {
-    library(CDMConnector)
-    library(CohortSurvival)
-
     cdm <- CohortSurvival::mockMGUS2cdm()
 
-    MGUS_death <- estimateSingleEventSurvival(
+    result <- CohortSurvival::estimateSingleEventSurvival(
       cdm,
       targetCohortTable = "mgus_diagnosis",
       outcomeCohortTable = "death_cohort",
@@ -45,9 +42,9 @@ The module consists of the following:
       )
     )
 
-    cs <- CohortSurvival$new(data = MGUS_death)
+    survMod <- DarwinShinyModules::CohortSurvival$new(result = result)
     if (interactive()) {
-      preview(cs)
+      DarwinShinyModules::preview(survMod)
     }
   }
 }
@@ -61,11 +58,11 @@ The module consists of the following:
 \describe{
 \item{\code{result}}{(\code{SummarisedResult}) Summarised result object from \code{CohortSurvival}}
 
-\item{\code{plot}}{(\code{Plot}) Plot module. using \code{CohortSurvival::plotSurvival()}}
-
 \item{\code{table}}{(\code{Table}) Table module using \code{CohortSurvival::tableSurvival()}}
 
 \item{\code{tableEvents}}{(\code{Table}) Table module using \code{CohortSurvival::tableSurvivalEvents()}}
+
+\item{\code{plot}}{(\code{Plot}) Plot module. using \code{CohortSurvival::plotSurvival()}}
 
 \item{\code{tableAttrition}}{(\code{Table}) Table module using \code{CohortSurvival::tableAttrition()}}
 

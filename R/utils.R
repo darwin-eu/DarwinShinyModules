@@ -8,11 +8,11 @@ makeFacetFormula = function(facetX, facetY) {
   if (f == " ~ ") {
     NULL
   } else if (stringr::str_detect(string = f, pattern = "^ \\~")) {
-    as.formula(paste0(".", f))
+    stats::as.formula(paste0(".", f))
   } else if (stringr::str_detect(string = f, pattern = "\\~ $")) {
-    as.formula(paste0(f, "."))
+    stats::as.formula(paste0(f, "."))
   } else {
-    as.formula(f)
+    stats::as.formula(f)
   }
 }
 
