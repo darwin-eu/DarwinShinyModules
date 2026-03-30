@@ -6,7 +6,7 @@ test_that("Creation: Prevalence", {
     package = "DarwinShinyModules",
     "dummyData/IncidencePrevalence/1.2.0/prevalence.csv"
   ))
-  prevMod <- Prevalence$new(data = prev, defaults = list(sex = "Both"))
+  prevMod <- Prevalence$new(result = prev, defaults = list(sex = "Both"))
 
   expect_identical(class(prevMod), c("Prevalence", "ShinyModule", "R6"))
 
