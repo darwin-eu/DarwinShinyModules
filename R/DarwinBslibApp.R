@@ -21,6 +21,8 @@ DarwinBslibApp <- R6::R6Class(
   ## Public ----
   public = list(
     UI = function() {
+      footer <- darwinFooter(type = "bslib")$children[[1]]$children[[1]]
+
       shiny::addResourcePath(
         prefix = "www",
         directoryPath = system.file("www", package = "DarwinShinyModules")
@@ -34,9 +36,12 @@ DarwinBslibApp <- R6::R6Class(
         bslib::page(
           title = private$.title,
           theme = private$theme(),
-          fillable = FALSE,
-          do.call(bslib::navset_bar, private$parseModules()),
-          darwinFooter(type = "bslib")
+          fillable = TRUE,
+          do.call(bslib::navset_bar, private$parseModules())
+        ),
+        shiny::tags$footer(
+          style = "margin-top: 10rem; text-align: center;",
+          footer
         )
       )
     }
