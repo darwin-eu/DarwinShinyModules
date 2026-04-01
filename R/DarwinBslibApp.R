@@ -40,7 +40,18 @@ DarwinBslibApp <- R6::R6Class(
           do.call(bslib::navset_bar, private$parseModules())
         ),
         shiny::tags$footer(
-          style = "margin-top: 10rem; text-align: center;",
+          style = "
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem;
+            text-align: center;
+            background: #f8f9fa;
+            border-top: 1px solid #ddd;
+            z-index: 1000;
+            font-size: 10px;
+          ",
           footer
         )
       )
