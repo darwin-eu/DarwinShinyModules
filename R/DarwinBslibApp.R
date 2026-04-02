@@ -32,11 +32,17 @@ DarwinBslibApp <- R6::R6Class(
         shiny::tags$head(
           shiny::tags$link(rel = "stylesheet", type = "text/css", href = "www/style.css")
         ),
+        tags$style("
+          .content-with-footer {
+            padding-bottom: 80px;
+          }
+        "),
         darwinHeader(),
         bslib::page(
           title = private$.title,
           theme = private$theme(),
           fillable = TRUE,
+          class = "content-with-footer",
           do.call(bslib::navset_bar, private$parseModules())
         ),
         shiny::tags$footer(
