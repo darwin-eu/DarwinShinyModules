@@ -82,8 +82,14 @@ GTTable <- R6::R6Class(
     .args = NULL,
     .UI = function() {
       shiny::tagList(
-        shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "docx"),
-        gt::gt_output(outputId = shiny::NS(private$.namespace, "gtTable"))
+        shiny::div(
+          style = "display: flex; justify-content: flex-end; margin-bottom: 10px;",
+          shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "docx")
+        ),
+        shiny::div(
+          style = "width: 100%;",
+          gt::gt_output(outputId = shiny::NS(private$.namespace, "gtTable"))
+        )
       )
     },
     .server = function(input, output, session) {

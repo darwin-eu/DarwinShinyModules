@@ -1,0 +1,149 @@
+/* ================================
+  SHINY-SAFE DARWIN THEME WRAPPER
+================================ */
+.darwin-theme {
+  background-color: #fff;
+}
+
+/* ----- Typography (safe) ----- */
+.darwin-theme p,
+.darwin-theme span,
+.darwin-theme h1,
+.darwin-theme h2,
+.darwin-theme h3,
+.darwin-theme h4,
+.darwin-theme h5,
+.darwin-theme h6 {
+  letter-spacing: 0.03em;
+}
+
+/* ----- Header block ----- */
+  .darwin-theme .header-background-image {
+    background-image: url(https://darwin-eu.org/images/darwin-transparant.png);
+    background-position-x: right;
+    background-repeat: no-repeat;
+    height: 100px;
+    margin-top: 15px;
+    overflow: hidden;
+  }
+
+/* ----- Buttons: NON-Bootstrap buttons ----- */
+  .darwin-theme .darwin-btn {
+    background: linear-gradient(0deg, #003399, #41abdd);
+                                color: #fff;
+                                  border: 1px solid #003399;
+                                padding: 0.4rem 1.5rem;
+                                border-radius: 0.4rem;
+                                cursor: pointer;
+                                }
+
+.darwin-theme .darwin-btn:hover {
+  background: linear-gradient(180deg, #003399 -50%, #41abdd);
+                              }
+
+/* ----- Custom info blocks ----- */
+  .darwin-theme .darwineu-info h5:first-of-type {
+    top: 10px;
+    position: relative;
+  }
+
+.darwin-theme .darwineu-info h5:last-of-type {
+  top: -20px;
+  position: relative;
+}
+
+.darwin-theme .darwineu-info h5 a {
+  color: #003399;
+}
+
+/* ----- Mailto icon ----- */
+  .darwin-theme .darwineu-mailto::before {
+    font-family: FontAwesome;
+    content: "\f0e0";
+    font-size: 18px;
+    position: absolute;
+    color: #000;
+      margin-top: -1px;
+  }
+
+.darwin-theme .darwineu-mailto a {
+  margin-left: 25px;
+}
+
+/* ----- Timeline component ----- */
+  .darwin-theme .timeline {
+    margin: 2rem 0 2rem 1rem;
+    border-left: 1px dashed #003399;
+  }
+
+.darwin-theme .timeline .year {
+  color: #003399;
+    font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.darwin-theme .timeline .year p {
+  position: relative;
+  top: 25%;
+}
+
+/* ----- EMA Section Styling (safe) ----- */
+  .darwin-theme .ema-separator__heading {
+    background-color: #2651a8;
+      display: flex;
+    line-height: 1.1;
+    padding: 1rem;
+  }
+
+.darwin-theme .ema-separator__heading--title {
+  color: #fff;
+    margin: 0;
+}
+
+.darwin-theme .ema-separator--secondary .ema-separator__heading {
+  background-color: #efefef;
+}
+
+.darwin-theme .ema-list-item .ema-icon {
+  fill: #606060;
+    height: 2.22rem;
+  width: 2.22rem;
+}
+
+/* ----- Main map styling ----- */
+  .darwin-theme .main-map h2 {
+    font-size: 1.65rem;
+  }
+
+.darwin-theme .main-map h3 {
+  font-size: 1.25rem;
+}
+
+.darwin-theme .main-map .counts {
+  flex-wrap: wrap;
+}
+
+.darwin-theme #darwin-eu-network-maps .counts > div {
+box-shadow: inset -5px -5px 0px 1px #c0c0c05c;
+border-radius: 5px;
+margin: 5px;
+}
+
+/* ----- Safe table enhancements (Shiny OK) ----- */
+  .darwin-theme #darwin-table-sortable th {
+cursor: pointer;
+position: relative;
+  }
+
+.darwin-theme #darwin-table-sortable th::after {
+content: '\21F5';
+float: right;
+color: #666;
+  transition: all 0.5s;
+}
+
+/* ----- Contact form tweaks (safe) ----- */
+  .darwin-theme .darwineu-contact-form textarea {
+    width: 100%;
+  }

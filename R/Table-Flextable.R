@@ -86,14 +86,20 @@ Flextable <- R6::R6Class(
 
     .UI = function() {
       shiny::tagList(
-        do.call(
-          what = shiny::uiOutput,
-          args = append(
-            list(outputId = shiny::NS(private$.namespace, "FlexTable")),
-            private$.dots
-          )
+        shiny::div(
+          style = "display: flex; justify-content: flex-end; margin-bottom: 10px;",
+          shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "docx")
         ),
-        shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "docx")
+        shiny::div(
+          style = "width: 100%; margin-bottom: 10px;",
+          do.call(
+            what = shiny::uiOutput,
+            args = append(
+              list(outputId = shiny::NS(private$.namespace, "FlexTable")),
+              private$.dots
+            )
+          )
+        )
       )
     },
 

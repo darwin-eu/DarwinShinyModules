@@ -1,4 +1,4 @@
-# Copyright 2024 DARWIN EU®
+# Copyright 2026 DARWIN EU®
 #
 # This file is part of DarwinShinyModules
 #
@@ -14,29 +14,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' @title ReactableTable Module Class
+#' @title DTTable Module Class
 #'
 #' @include ShinyModule.R
 #'
 #' @description
-#' ReactableTable module that displays tables using `reactable` that are supported by
-#' `reactable::renderReactable()` and `reactable::reactableOutput()`.
+#' GTTable module that displays tables using `DT` that are supported by
+#' `DT::renderDT()` and `DT::DTOutput()`.
 #'
 #' @export
 #'
 #' @examples
 #' library(DarwinShinyModules)
 #'
-#' reactableTable <- ReactableTable$new(
-#'   fun = reactable::reactable,
+#' dtTable <- DTTable$new(
+#'   fun = DT::datatable,
 #'   args = list(data = iris)
 #' )
 #'
 #' if (interactive()) {
-#'   preview(reactableTable)
+#'   preview(dtTable)
 #' }
-ReactableTable <- R6::R6Class(
-  classname = "ReactableTable",
+DTTable <- R6::R6Class(
+  classname = "DTTable",
   inherit = DarwinShinyModules::ShinyModule,
 
   # Active ----
@@ -69,9 +69,11 @@ ReactableTable <- R6::R6Class(
     #' @returns `self`
     initialize = function(fun, args, ...) {
       super$initialize(...)
-      private$assertInstall("reactable", as.package_version("0.0.0"))
+      private$assertInstall("DT", as.package_version("0.0.0"))
       private$.fun <- fun
       private$.args <- args
+      private$.dots <- list(...)
+      private$.dots <- private$.dots[!names(private$.dots) %in% c("parentNamespace", "async")]
       return(invisible(self))
     }
   ),
@@ -80,27 +82,45 @@ ReactableTable <- R6::R6Class(
   private = list(
     .fun = NULL,
     .args = NULL,
+    .dots = list(),
+
     .UI = function() {
       shiny::tagList(
-        shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "csv"),
-        reactable::reactableOutput(outputId = shiny::NS(private$.namespace, "table"))
+        shiny::div(
+          style = "display: flex; justify-content: flex-end; margin-bottom: 10px;",
+          shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "csv")
+        ),
+        shiny::div(
+          style = "width: 100%;",
+          do.call(
+            what = DT::DTOutput,
+            args = append(
+              list(outputId = shiny::NS(private$.namespace, "table")),
+              private$.dots
+            )
+          )
+        )
       )
     },
+
     .server = function(input, output, session) {
-      output$table <- reactable::renderReactable({
+      output$table <- DT::renderDT({
         do.call(private$.fun, private$.args)
       })
       private$downloader(output)
     },
+
     downloader = function(output) {
       output$dlButton <- shiny::downloadHandler(
         filename = private$dlFilename,
         content = private$dlContent
       )
     },
+
     dlFilename = function() {
       return("table.csv")
     },
+
     dlContent = function(file) {
       write.csv(isolate(self$reactiveValues$data), file)
     }

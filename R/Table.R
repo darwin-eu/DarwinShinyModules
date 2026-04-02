@@ -103,7 +103,7 @@ Table <- R6::R6Class(
     #' @description initialize
     #'
     #' @param data (`data.frame`) Data to plot with, usually a `data.frame`-like object.
-    #' @param title (`character(1)`) Title of the table. When set to `NULL`, no title is shown.
+    #' @param title (`character(1)`: `NULL`) Title of the table. When set to `NULL`, no title is shown.
     #' @param options (`list`) table options, by default it shows additional items next to
     #' the table like search box, pagination, etc. Only display the table using
     #' list(dom = '')
@@ -111,7 +111,7 @@ Table <- R6::R6Class(
     #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @return `self`
-    initialize = function(data, title = "Table", options = list(scrollX = TRUE), filter = "top", ...) {
+    initialize = function(data, title = NULL, options = list(scrollX = TRUE), filter = "top", ...) {
       super$initialize(...)
       private$.data <- data
       private$.title <- title
@@ -177,8 +177,17 @@ Table <- R6::R6Class(
     .UI = function() {
       shiny::tagList(
         shiny::h3(private$.title),
-        DT::DTOutput(outputId = shiny::NS(private$.namespace, "table")),
-        shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "csv")
+        shiny::div(
+          style = "display: flex; justify-content: flex-end; margin-bottom: 10px;",
+          shiny::downloadButton(
+            outputId = shiny::NS(private$.namespace, "dlButton"),
+            label = "csv"
+          )
+        ),
+        shiny::div(
+          style = "margin-bottom: 1rem;",
+          DT::DTOutput(shiny::NS(private$.namespace, "table"))
+        )
       )
     },
     setBindings = function(input) {
