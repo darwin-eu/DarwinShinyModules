@@ -118,7 +118,7 @@ CohortAttrition <- R6::R6Class(
 
     ## UI ----
     .UI = function() {
-      shiny::tagList(
+      shiny::fluidRow(
         shiny::column(
           width = 2,
           shiny::selectInput(

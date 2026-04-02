@@ -182,7 +182,7 @@ LargeScaleCharacteristics <- R6::R6Class(
     },
 
     .tableUI = function() {
-      shiny::tagList(
+      shiny::fluidRow(
         shiny::column(
           width = 2,
           shinyWidgets::pickerInput(
@@ -221,7 +221,7 @@ LargeScaleCharacteristics <- R6::R6Class(
     },
 
     .tableTopUI = function() {
-      shiny::tagList(
+      shiny::fluidRow(
         shiny::column(
           width = 2,
           shinyWidgets::pickerInput(
@@ -267,7 +267,7 @@ LargeScaleCharacteristics <- R6::R6Class(
     },
 
     .plotUI = function() {
-      shiny::tagList(
+      shiny::fluidRow(
         shiny::column(
           width = 2,
           shinyWidgets::pickerInput(
@@ -311,7 +311,7 @@ LargeScaleCharacteristics <- R6::R6Class(
     },
 
     .plotComparedUI = function() {
-      shiny::tagList(
+      shiny::fluidRow(
         shiny::column(
           width = 3,
           shinyWidgets::pickerInput(

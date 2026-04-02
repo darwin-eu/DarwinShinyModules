@@ -142,11 +142,10 @@ CohortSurvival <- R6::R6Class(
         parentNamespace = self$namespace
       )
 
-      private$.plot <- PlotStatic$new(
+      private$.plot <- PlotPlotly$new(
         title = NULL,
         fun = CohortSurvival::plotSurvival,
         args = list(style = "darwin"),
-        height = "80vh",
         parentNamespace = self$namespace
       )
 
@@ -199,7 +198,7 @@ CohortSurvival <- R6::R6Class(
     },
 
     .uiGeneralFilters = function() {
-      shiny::tagList(
+      shiny::fluidPage(
         shiny::h4("General Settings"),
         shiny::div(
           style = "display: inline-block;",
@@ -235,7 +234,7 @@ CohortSurvival <- R6::R6Class(
     },
 
     .uiTable = function() {
-      shiny::tagList(
+      shiny::fluidPage(
         shiny::column(
           width = 2,
           shiny::h4("Settings"),
@@ -281,7 +280,7 @@ CohortSurvival <- R6::R6Class(
 
       eventGap <- eventGap[!sapply(eventGap, is.na)]
 
-      shiny::tagList(
+      shiny::fluidPage(
         shiny::column(
           width = 2,
           shiny::h4("Settings"),
@@ -300,7 +299,7 @@ CohortSurvival <- R6::R6Class(
     },
 
     .uiPlot = function() {
-      shiny::tagList(
+      shiny::fluidPage(
         shiny::column(
           width = 2,
           shiny::h4("Settings"),
@@ -349,7 +348,9 @@ CohortSurvival <- R6::R6Class(
     },
 
     .uiTableAttrition = function() {
-      private$.tableAttrition$UI()
+      shiny::fluidPage(
+        private$.tableAttrition$UI()
+      )
     },
 
     ## Server ----

@@ -130,10 +130,10 @@ Characteristics <- R6::R6Class(
     .variableNames = NULL,
     .estimateNames = NULL,
 
+    ## UI ----
     .UI = function() {
       shiny::tagList(
         shiny::tabsetPanel(
-          # Table ----
           shiny::tabPanel(
             title = "Table",
             private$.tableUI()
@@ -147,7 +147,7 @@ Characteristics <- R6::R6Class(
     },
 
     .tableUI = function() {
-      shiny::tagList(
+      shiny::fluidRow(
         shiny::column(
           width = 2,
           shinyWidgets::pickerInput(
@@ -200,7 +200,7 @@ Characteristics <- R6::R6Class(
     },
 
     .plotUI = function() {
-      shiny::tagList(
+      shiny::fluidRow(
         shiny::column(
           width = 2,
           shinyWidgets::pickerInput(
@@ -268,6 +268,7 @@ Characteristics <- R6::R6Class(
       )
     },
 
+    ## Server ----
     .server = function(input, output, session) {
       output$foo <- shiny::renderText({
         input$foo
@@ -359,6 +360,7 @@ Characteristics <- R6::R6Class(
       })
     },
 
+    ## Helpers ----
     .setFilterValues = function() {
       private$.cdmNames <- private$.result |>
         dplyr::distinct(.data$cdm_name) |>
