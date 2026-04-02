@@ -59,9 +59,20 @@ PlotWidget <- R6::R6Class(
     .UI = function() {
       shiny::tagList(
         shiny::h3(private$.title),
-        shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlHtml"), label = "html"),
-        shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlPng"), label = "png"),
-        do.call(shiny::uiOutput, args = append(list(outputId = shiny::NS(private$.namespace, "plot")), private$.dots))
+        shiny::div(
+          style = "
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 10px;
+          ",
+          shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlHtml"), label = "html"),
+          shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlPng"), label = "png")
+        ),
+        shiny::div(
+          style = "width: 100%;",
+          do.call(shiny::uiOutput, args = append(list(outputId = shiny::NS(private$.namespace, "plot")), private$.dots))
+        )
       )
     },
 
