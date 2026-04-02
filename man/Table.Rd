@@ -82,7 +82,7 @@ initialize
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Table$new(
   data,
-  title = "Table",
+  title = NULL,
   options = list(scrollX = TRUE),
   filter = "top",
   ...
@@ -94,7 +94,7 @@ initialize
 \describe{
 \item{\code{data}}{(\code{data.frame}) Data to plot with, usually a \code{data.frame}-like object.}
 
-\item{\code{title}}{(\code{character(1)}) Title of the table. When set to \code{NULL}, no title is shown.}
+\item{\code{title}}{(\code{character(1)}: \code{NULL}) Title of the table. When set to \code{NULL}, no title is shown.}
 
 \item{\code{options}}{(\code{list}) table options, by default it shows additional items next to
 the table like search box, pagination, etc. Only display the table using
