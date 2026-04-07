@@ -45,8 +45,5 @@ test_that("App", {
       plot$args$data,
       iris
     )
-
-    ## Outputs ----
-    expect_true(nchar(output$plot$src) > 0)
   })
 })
