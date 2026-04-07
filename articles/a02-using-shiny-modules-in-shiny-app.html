@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DarwinShinyModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -110,7 +110,7 @@ need to create a Table module:</p>
 <span><span class="co">#&gt;     data: active binding</span></span>
 <span><span class="co">#&gt;     filter: active binding</span></span>
 <span><span class="co">#&gt;     getReactiveValues: function (session = getDefaultReactiveDomain()) </span></span>
-<span><span class="co">#&gt;     initialize: function (data, title = "Table", options = list(scrollX = TRUE), </span></span>
+<span><span class="co">#&gt;     initialize: function (data, title = NULL, options = list(scrollX = TRUE), </span></span>
 <span><span class="co">#&gt;     instanceId: active binding</span></span>
 <span><span class="co">#&gt;     moduleId: active binding</span></span>
 <span><span class="co">#&gt;     moduleName: active binding</span></span>
@@ -136,7 +136,7 @@ need to create a Table module:</p>
 <span><span class="co">#&gt;     .parentNamespace: NULL</span></span>
 <span><span class="co">#&gt;     .reactiveValues: list</span></span>
 <span><span class="co">#&gt;     .server: function (input, output, session) </span></span>
-<span><span class="co">#&gt;     .title: Table</span></span>
+<span><span class="co">#&gt;     .title: NULL</span></span>
 <span><span class="co">#&gt;     .UI: function () </span></span>
 <span><span class="co">#&gt;     assertInstall: function (pkgName, version) </span></span>
 <span><span class="co">#&gt;     checkMethodOverrides: function () </span></span>
@@ -289,7 +289,7 @@ actually filter the data in the table. We have to update the data in the
 <span>  <span class="co"># envrionment in the `inputPanel`.</span></span>
 <span>  <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">inputPanel</span><span class="op">$</span><span class="va">inputValues</span><span class="op">$</span><span class="va">inputSpecies</span>, <span class="op">{</span></span>
 <span>    <span class="co"># We update the data in the `table` module</span></span>
-<span>    <span class="va">table</span><span class="op">$</span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">iris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="va">table</span><span class="op">$</span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">iris</span> <span class="op">%&gt;%</span></span>
 <span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Species</span> <span class="op">==</span> <span class="va">inputPanel</span><span class="op">$</span><span class="va">inputValues</span><span class="op">$</span><span class="va">inputSpecies</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -329,7 +329,7 @@ modules.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bridgeFun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">inputPanel</span><span class="op">$</span><span class="va">inputValues</span><span class="op">$</span><span class="va">inputSpecies</span>, <span class="op">{</span></span>
-<span>    <span class="va">table</span><span class="op">$</span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">iris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="va">table</span><span class="op">$</span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">iris</span> <span class="op">%&gt;%</span></span>
 <span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">Species</span> <span class="op">==</span> <span class="va">inputPanel</span><span class="op">$</span><span class="va">inputValues</span><span class="op">$</span><span class="va">inputSpecies</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -380,7 +380,7 @@ module.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

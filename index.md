@@ -1,0 +1,61 @@
+# DarwinShinyModules
+
+[![Lifecycle:experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Build
+Status](https://github.com/darwin-eu/DarwinShinyModules/workflows/R-CMD-check/badge.svg)](https://github.com/darwin-eu/DarwinShinyModules/actions?query=workflow%3AR-CMD-check)
+[![codecov.io](https://codecov.io/github/darwin-eu/DarwinShinyModules/coverage.svg?branch=main)](https://codecov.io/github/darwin-eu/DarwinShinyModules?branch=main)
+
+`DarwinShinyModules` is an R package containing shiny modules. Each
+module is represented as an `R6` object, which contains pre-specified UI
+elements, and back-end code.
+
+## Features
+
+- Provides pre-specified modules of common shiny app components.
+- Provides pre-specified modules for DARWIN EU© analytical pipelines (in
+  progress).
+- Ability to overwrite UI elements and the server back-end with bespoke
+  code.
+- Compatible with bespoke shiny application development.
+- Seamlessly integrate existing `OhdsiShinyModules`.
+- Extend the existing library with your own modules
+
+## Package support
+
+| Package               | Support                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| CohortCharacteristics | [![latest](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortCharacteristics-latest.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortCharacteristics-latest.yaml) [![1.1.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortCharacteristics-1_1_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortCharacteristics-1_1_0.yaml) [![1.0.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortCharacteristics-1_0_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortCharacteristics-1_0_0.yaml)                                                                                                                                                                                                                      |
+| CohortSurvival        | [![latest](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortSurvival-latest.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortSurvival-latest.yaml) [![1.1.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortSurvival-1_1_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortSurvival-1_1_0.yaml) [![1.0.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortSurvival-1_0_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortSurvival-1_0_0.yaml)                                                                                                                                                                                                                                                                |
+| IncidencePrevalence   | [![latest](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/IncidencePrevalence-latest.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/IncidencePrevalence-latest.yaml) [![1.2.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/IncidencePrevalence-1_2_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/IncidencePrevalence-1_2_0.yaml) [![1.1.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/IncidencePrevalence-1_1_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/IncidencePrevalence-1_1_0.yaml) [![1.0.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/IncidencePrevalence-1_0_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/IncidencePrevalence-1_0_0.yaml) |
+| TreatmentPatterns     | [![latest](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/TreatmentPatterns-latest.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/TreatmentPatterns-latest.yaml) [![3.1.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/TreatmentPatterns-3_1_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/TreatmentPatterns-3_1_0.yaml) [![3.0.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/TreatmentPatterns-3_0_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/TreatmentPatterns-3_0_0.yaml)                                                                                                                                                                                                                                              |
+
+## Installation
+
+1.  To install the latest stable version:
+
+``` r
+install.packages(remotes)
+remotes::install_github('darwin-eu-dev/DarwinShinyModules')
+```
+
+## Usage
+
+``` r
+library(DarwinShinyModules)
+
+irisTable <- Table$new(iris)
+carsTable <- Table$new(mtcars)
+
+launchDarwinDashboardApp(
+  list(
+    Tables = list(
+      Iris = irisTable,
+      MT_Cars = carsTable
+    )
+  )
+)
+```
+
+## License
+
+DarwinShinyModules is licensed under Apache License 2.0

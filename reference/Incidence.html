@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DarwinShinyModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,7 +56,7 @@
     </div>
     <div class="section level2">
     <h2 id="active-bindings">Active bindings<a class="anchor" aria-label="anchor" href="#active-bindings"></a></h2>
-    <p></p><div class="r6-active-bindings"><dl><dt><code>data</code></dt>
+    <p></p><div class="r6-active-bindings"><dl><dt><code>result</code></dt>
 <dd><p>(<code>summarisedResult</code>) SummarisedResult object from Incidence.</p></dd>
 
 
@@ -82,13 +82,17 @@
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Initializer method</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/Incidence.html">Incidence</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/Incidence.html">Incidence</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">result</span>, defaults <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>data</code></dt>
+<p></p><div class="arguments"><dl><dt><code>result</code></dt>
 <dd><p>(<code>summarised_result</code>) Result object from the <code>IncidencePrevalence</code> package.</p></dd>
+
+
+<dt><code>defaults</code></dt>
+<dd><p>list of default values for the pickers</p></dd>
 
 
 <dt><code>...</code></dt>
@@ -137,7 +141,8 @@
 <span class="r-in"><span>      <span class="st">"dummyData/IncidencePrevalence/1.2.0/incidence.csv"</span></span></span>
 <span class="r-in"><span>    <span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span>    <span class="va">incMod</span> <span class="op">&lt;-</span> <span class="va">Incidence</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>data <span class="op">=</span> <span class="va">inc</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">incMod</span> <span class="op">&lt;-</span> <span class="va">Incidence</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>result <span class="op">=</span> <span class="va">inc</span>,</span></span>
+<span class="r-in"><span>                            defaults <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>sex <span class="op">=</span> <span class="st">"Both"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>    <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>      <span class="va">incMod</span><span class="op">$</span><span class="fu">UI</span><span class="op">(</span><span class="op">)</span></span></span>
@@ -168,7 +173,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

@@ -1,5 +1,6 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/404.html</loc></url>
+<url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/LICENSE.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/articles/a01-introduction.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/articles/a02-using-shiny-modules-in-shiny-app.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/articles/a03-app-builders.html</loc></url>
@@ -11,7 +12,10 @@
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/index.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/news/index.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Bridge.html</loc></url>
+<url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Characteristics.html</loc></url>
+<url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/CohortAttrition.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/CohortSurvival.html</loc></url>
+<url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/DTTable.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/DarwinShinyModules-package.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Database.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/DatabaseDBC.html</loc></url>
@@ -19,20 +23,24 @@
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/DatabaseOverview.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/DrugExposureDiagnostics.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/EventDuration.html</loc></url>
+<url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Flextable.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/GTTable.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Incidence.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/InputPanel.html</loc></url>
+<url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/LargeScaleCharacteristics.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/OhdsiModule.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Plot.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/PlotPlotly.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/PlotStatic.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/PlotWidget.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Prevalence.html</loc></url>
+<url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ReactableTable.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/StudyBackground.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Table.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Text.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/TreatmentPathways.html</loc></url>
+<url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/createApp.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/darwinFooter.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/darwinHeader.html</loc></url>
 <url><loc>https://darwin-eu-dev.github.io/DarwinShinyModules/reference/index.html</loc></url>
