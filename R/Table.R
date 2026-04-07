@@ -249,7 +249,11 @@ Table <- R6::R6Class(
       )
     },
     dlFilename = function() {
-      return(sprintf("%s.csv", private$.title))
+      if (is.null(private$.title)) {
+        return("table.csv")
+      } else {
+        return(sprintf("%s.csv", private$.title))
+      }
     },
     dlContent = function(file) {
       write.csv(isolate(self$reactiveValues$data), file)
