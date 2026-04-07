@@ -1,4 +1,4 @@
-# Copyright 2024 DARWIN EU®
+# Copyright 2026 DARWIN EU®
 #
 # This file is part of DarwinShinyModules
 #
@@ -72,7 +72,7 @@ PlotPlotly <- R6::R6Class(
     .UI = function() {
       shiny::tagList(
         shiny::h3(private$.title),
-        plotly::plotlyOutput(shiny::NS(private$.namespace, "plot"))
+        do.call(plotly::plotlyOutput, args = append(list(outputId = shiny::NS(private$.namespace, "plot")), private$.dots))
       )
     },
 

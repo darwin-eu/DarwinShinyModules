@@ -54,7 +54,7 @@
 #' }
 launchDarwinDashboardApp <- function(appStructure, title = NULL, async = FALSE) {
   if (!rlang::is_installed(pkg = "shinydashboard")) {
-    rlang::abort("`bslib` is not installed.")
+    rlang::abort("`shinydashboard` is not installed.")
   }
   assertAppStructure(appStructure)
   checkmate::assertCharacter(title, len = 1, null.ok = TRUE)

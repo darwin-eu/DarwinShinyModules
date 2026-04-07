@@ -15,6 +15,9 @@ reference:
 - contents:
   - Table
   - GTTable
+  - Flextable
+  - DTTable
+  - ReactableTable
 
 - subtitle: Plots
 - desc: Documentation for modules that decorate the `Plot` decorator module
@@ -41,8 +44,8 @@ reference:
 
 - subtitle: Utility Functions
 - contents:
-    - preview
-    - makeModule
+  - preview
+  - makeModule
 
 - subtitle: Shiny App Generator Functions
 - contents:
@@ -55,12 +58,27 @@ reference:
   - DatabaseOverview
   - StudyBackground
 
-- subtitle: Analytical Package Modules
+- subtitle: CohortCharacteristics
+- contents:
+  - Characteristics
+  - LargeScaleCharacteristics
+  - CohortAttrition
+
+- subtitle: CohortSurvival
 - contents:
   - CohortSurvival
+
+- subtitle: DrugExposureDiagnostics
+- contents:
   - DrugExposureDiagnostics
+
+- subtitle: IncidencePrevalence
+- contents:
   - Incidence
   - Prevalence
+
+- subtitle: TreatmentPatterns
+- contents:
   - TreatmentPathways
   - EventDuration
 
@@ -73,3 +91,4 @@ reference:
 - contents:
   - darwinHeader
   - darwinFooter
+  - createApp

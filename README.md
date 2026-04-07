@@ -21,12 +21,21 @@ elements, and back-end code.
 - Seamlessly integrate existing `OhdsiShinyModules`.
 - Extend the existing library with your own modules
 
+## Package support
+
+| Package | Support |
+|----|----|
+| CohortCharacteristics | [![latest](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortCharacteristics-latest.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortCharacteristics-latest.yaml) [![1.1.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortCharacteristics-1_1_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortCharacteristics-1_1_0.yaml) [![1.0.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortCharacteristics-1_0_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortCharacteristics-1_0_0.yaml) |
+| CohortSurvival | [![latest](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortSurvival-latest.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortSurvival-latest.yaml) [![1.1.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortSurvival-1_1_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortSurvival-1_1_0.yaml) [![1.0.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortSurvival-1_0_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/CohortSurvival-1_0_0.yaml) |
+| IncidencePrevalence | [![latest](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/IncidencePrevalence-latest.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/IncidencePrevalence-latest.yaml) [![1.2.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/IncidencePrevalence-1_2_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/IncidencePrevalence-1_2_0.yaml) [![1.1.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/IncidencePrevalence-1_1_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/IncidencePrevalence-1_1_0.yaml) [![1.0.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/IncidencePrevalence-1_0_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/IncidencePrevalence-1_0_0.yaml) |
+| TreatmentPatterns | [![latest](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/TreatmentPatterns-latest.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/TreatmentPatterns-latest.yaml) [![3.1.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/TreatmentPatterns-3_1_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/TreatmentPatterns-3_1_0.yaml) [![3.0.0](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/TreatmentPatterns-3_0_0.yaml/badge.svg)](https://github.com/darwin-eu-dev/DarwinShinyModules/actions/workflows/TreatmentPatterns-3_0_0.yaml) |
+
 ## Installation
 
 1.  To install the latest stable version:
 
 ``` r
-install.packages("remotes")
+install.packages(remotes)
 remotes::install_github('darwin-eu-dev/DarwinShinyModules')
 ```
 
@@ -38,7 +47,7 @@ library(DarwinShinyModules)
 irisTable <- Table$new(iris)
 carsTable <- Table$new(mtcars)
 
-darwinApp(
+launchDarwinDashboardApp(
   list(
     Tables = list(
       Iris = irisTable,
@@ -47,8 +56,6 @@ darwinApp(
   )
 )
 ```
-
-![](README_files/figure-gfm/app-1.png)<!-- -->
 
 ## License
 

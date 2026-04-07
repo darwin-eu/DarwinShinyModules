@@ -10,7 +10,7 @@ Description: Install this package to access useful shiny modules for building sh
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Depends: 
     R (>= 4.0)
 Imports:
@@ -23,6 +23,8 @@ Imports:
     plotly,
     DT,
     gt,
+    flextable,
+    reactable,
     promises,
     shinyWidgets,
     stringr,
@@ -30,9 +32,6 @@ Imports:
 Suggests:
     bslib,
     shinydashboard,
-    visOmopResults,
-    omopgenerics,
-    CDMConnector,
     networkD3,
     testthat (>= 3.0.0),
     knitr,
@@ -46,10 +45,17 @@ Suggests:
     dbplyr,
     duckdb,
     RSQLite,
+    visOmopResults,
+    omopgenerics,
+    CDMConnector,
     TreatmentPatterns,
+    DrugUtilisation,
     IncidencePrevalence,
     DrugExposureDiagnostics (>= 1.1.1),
-    CohortSurvival
+    CohortSurvival,
+    PatientProfiles,
+    CohortCharacteristics,
+    usethis
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr
@@ -59,7 +65,11 @@ Collate:
     'ShinyModule.R'
     'Bridge.R'
     'BslibApp.R'
-    'CohortSurvival.R'
+    'CohortCharacteristics-Characteristics.R'
+    'CohortCharacteristics-CohortAttrition.R'
+    'CohortCharacteristics-LargeScaleCharacteristics.R'
+    'CohortSurvival-CohortSurvival.R'
+    'CreateApp.R'
     'Darwin-Utils.R'
     'DarwinBslibApp.R'
     'DarwinDashboardApp.R'
@@ -69,17 +79,20 @@ Collate:
     'DatabaseDBI.R'
     'DatabaseOverview.R'
     'DrugExposureDiagnostics.R'
-    'GTTable.R'
     'IncidencePrevalence-Incidence.R'
     'IncidencePrevalence-Prevalence.R'
     'InputPanel.R'
     'OhdsiModule.R'
     'Plot.R'
-    'PlotPlotly.R'
-    'PlotStatic.R'
-    'PlotWidget.R'
+    'Plot-Plotly.R'
+    'Plot-Static.R'
+    'Plot-Widget.R'
     'ShinydashboardApp.R'
     'StudyBackground.R'
+    'Table-DT.R'
+    'Table-Flextable.R'
+    'Table-GT.R'
+    'Table-Reactable.R'
     'Table.R'
     'Text.R'
     'TreatmentPatterns-EventDuration.R'
@@ -92,4 +105,6 @@ Collate:
     'launchShinydashboardApp.R'
     'makeModule.R'
     'preview.R'
+    'utils.R'
+    'zzz.R'
 URL: https://darwin-eu-dev.github.io/DarwinShinyModules/

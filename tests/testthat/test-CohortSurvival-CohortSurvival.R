@@ -16,7 +16,7 @@ test_that("CohortSurvival: Server", {
     )
   )
 
-  cs <- CohortSurvival$new(data = MGUS_death)
+  cs <- CohortSurvival$new(result = MGUS_death)
 
   modServer <- function(id) {
     cs$server(input, output, session)

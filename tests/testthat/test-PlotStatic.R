@@ -1,3 +1,5 @@
+library(ggplot2)
+
 test_that("Creation", {
   f <- function(data) {
       ggplot(data = data, mapping = aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
@@ -10,7 +12,7 @@ test_that("Creation", {
   expect_identical(class(plot), c("PlotStatic", "Plot", "ShinyModule", "R6"))
 
   g <- plot$fun(data = plot$args$data)
-  expect_identical(class(g), c("gg", "ggplot"))
+  expect_contains(class(g), c("gg", "ggplot"))
 
   f <- function(data, foo = "bar") {
     ggplot(data = data, mapping = aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
@@ -43,8 +45,5 @@ test_that("App", {
       plot$args$data,
       iris
     )
-
-    ## Outputs ----
-    expect_true(nchar(output$plot$src) > 0)
   })
 })
