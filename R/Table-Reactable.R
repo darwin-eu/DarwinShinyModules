@@ -14,29 +14,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' @title GTTable Module Class
+#' @title ReactableTable Module Class
 #'
 #' @include ShinyModule.R
 #'
 #' @description
-#' GTTable module that displays tables using `gt` that are supported by
-#' `gt::render_gt()` and `gt::gt_output()`.
+#' ReactableTable module that displays tables using `reactable` that are supported by
+#' `reactable::renderReactable()` and `reactable::reactableOutput()`.
 #'
 #' @export
 #'
 #' @examples
 #' library(DarwinShinyModules)
 #'
-#' gtTable <- GTTable$new(
-#'   fun = gt::gt,
+#' reactableTable <- ReactableTable$new(
+#'   fun = reactable::reactable,
 #'   args = list(data = iris)
 #' )
 #'
 #' if (interactive()) {
-#'   preview(gtTable)
+#'   preview(reactableTable)
 #' }
-GTTable <- R6::R6Class(
-  classname = "GTTable",
+ReactableTable <- R6::R6Class(
+  classname = "ReactableTable",
   inherit = DarwinShinyModules::ShinyModule,
 
   # Active ----
@@ -69,7 +69,7 @@ GTTable <- R6::R6Class(
     #' @returns `self`
     initialize = function(fun, args, ...) {
       super$initialize(...)
-      private$assertGtInstall()
+      private$assertInstall("reactable", as.package_version("0.0.0"))
       private$.fun <- fun
       private$.args <- args
       return(invisible(self))
@@ -82,20 +82,21 @@ GTTable <- R6::R6Class(
     .args = NULL,
     .UI = function() {
       shiny::tagList(
-        shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "docx"),
-        gt::gt_output(outputId = shiny::NS(private$.namespace, "gtTable"))
+        shiny::div(
+          style = "display: flex; justify-content: flex-end; margin-bottom: 10px;",
+          shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "csv"),
+        ),
+        shiny::div(
+          style = "width: 100%;",
+          reactable::reactableOutput(outputId = shiny::NS(private$.namespace, "table"))
+        )
       )
     },
     .server = function(input, output, session) {
-      output$gtTable <- gt::render_gt({
+      output$table <- reactable::renderReactable({
         do.call(private$.fun, private$.args)
       })
       private$downloader(output)
-    },
-    assertGtInstall = function() {
-      if (!require("gt", quietly = TRUE, character.only = TRUE, warn.conflicts = FALSE)) {
-        stop("Required package: `gt` is not installed")
-      }
     },
     downloader = function(output) {
       output$dlButton <- shiny::downloadHandler(
@@ -104,11 +105,10 @@ GTTable <- R6::R6Class(
       )
     },
     dlFilename = function() {
-      return("table.docx")
+      return("table.csv")
     },
     dlContent = function(file) {
-      do.call(private$.fun, private$.args) |>
-        gt::gtsave(filename = file)
+      write.csv(isolate(self$reactiveValues$data), file)
     }
   )
 )

@@ -1,4 +1,4 @@
-# Copyright 2024 DARWIN EU®
+# Copyright 2026 DARWIN EU®
 #
 # This file is part of DarwinShinyModules
 #
@@ -14,34 +14,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' @title Flextable Module Class
+#' @title DTTable Module Class
 #'
 #' @include ShinyModule.R
 #'
 #' @description
-#' Flextable module that displays tables using `flextable` that are displayed by
-#' `renderUI` and `uiOutput`.
+#' GTTable module that displays tables using `DT` that are supported by
+#' `DT::renderDT()` and `DT::DTOutput()`.
 #'
 #' @export
 #'
 #' @examples
 #' library(DarwinShinyModules)
 #'
-#' gtTable <- Flextable$new(
-#'   fun = flextable::flextable,
+#' dtTable <- DTTable$new(
+#'   fun = DT::datatable,
 #'   args = list(data = iris)
 #' )
 #'
 #' if (interactive()) {
-#'   preview(gtTable)
+#'   preview(dtTable)
 #' }
-Flextable <- R6::R6Class(
-  classname = "Flextable",
+DTTable <- R6::R6Class(
+  classname = "DTTable",
   inherit = DarwinShinyModules::ShinyModule,
 
   # Active ----
   active = list(
-    #' @field fun (`function`) Function to produce a `flextable` table with, i.e `flextable::flextable`.
+    #' @field fun (`function`) Function to produce a `gt` table with, i.e `gt::gt`.
     fun = function() {
       return(private$.fun)
     },
@@ -62,16 +62,18 @@ Flextable <- R6::R6Class(
     #' @description
     #' Initializer method.
     #'
-    #' @param fun (`function`) Function to produce a `flextable` table with, i.e `flextable::flextable`.
+    #' @param fun (`function`) Function to produce a `gt` table with, i.e `gt::gt`.
     #' @param args (`list()`) Arguments for said function as a named list i.e. `list(data = iris)`.
     #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @returns `self`
     initialize = function(fun, args, ...) {
       super$initialize(...)
-      private$assertFlextableInstall()
+      private$assertInstall("DT", as.package_version("0.0.0"))
       private$.fun <- fun
       private$.args <- args
+      private$.dots <- list(...)
+      private$.dots <- private$.dots[!names(private$.dots) %in% c("parentNamespace", "async")]
       return(invisible(self))
     }
   ),
@@ -80,36 +82,47 @@ Flextable <- R6::R6Class(
   private = list(
     .fun = NULL,
     .args = NULL,
+    .dots = list(),
+
     .UI = function() {
       shiny::tagList(
-        uiOutput(outputId = shiny::NS(private$.namespace, "FlexTable")),
-        shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "docx")
+        shiny::div(
+          style = "display: flex; justify-content: flex-end; margin-bottom: 10px;",
+          shiny::downloadButton(outputId = shiny::NS(private$.namespace, "dlButton"), label = "csv")
+        ),
+        shiny::div(
+          style = "width: 100%;",
+          do.call(
+            what = DT::DTOutput,
+            args = append(
+              list(outputId = shiny::NS(private$.namespace, "table")),
+              private$.dots
+            )
+          )
+        )
       )
     },
+
     .server = function(input, output, session) {
-      output$FlexTable <- renderUI({
-        # browser()
-        flextable::htmltools_value(do.call(private$.fun, private$.args))
+      output$table <- DT::renderDT({
+        do.call(private$.fun, private$.args)
       })
       private$downloader(output)
     },
-    assertFlextableInstall = function() {
-      if (!require("flextable", quietly = TRUE, character.only = TRUE, warn.conflicts = FALSE)) {
-        stop("Required package: `flextable` is not installed")
-      }
-    },
+
     downloader = function(output) {
       output$dlButton <- shiny::downloadHandler(
         filename = private$dlFilename,
         content = private$dlContent
       )
     },
+
     dlFilename = function() {
-      return("flextable.docx")
+      return("table.csv")
     },
+
     dlContent = function(file) {
-      do.call(private$.fun, private$.args) |>
-        flextable::save_as_docx(path = file)
+      write.csv(isolate(self$reactiveValues$data), file)
     }
   )
 )

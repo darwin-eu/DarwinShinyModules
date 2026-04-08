@@ -52,6 +52,10 @@ PlotStatic <- R6::R6Class(
 
   # Private ----
   private = list(
+    ## Fields ----
+    .plotHeight = 0,
+    .plotWidth = 0,
+
     ## Methods ----
     .UI = function() {
       shiny::tagList(
@@ -62,8 +66,15 @@ PlotStatic <- R6::R6Class(
 
     .server = function(input, output, session) {
       super$.server(input, output, session)
-      output$plot <- shiny::renderPlot({
-        do.call(private$.fun, self$args)
+
+      h <- shiny::reactive({
+        session$clientData[[sprintf("output_%s-plot_height", self$namespace)]]
+      })
+
+      shiny::observe({
+        output$plot <- shiny::renderPlot({
+          do.call(private$.fun, self$args)
+        }, res = h() / 8)
       })
     }
   )
