@@ -99,8 +99,7 @@ CohortAttrition <- R6::R6Class(
         parentNamespace = self$namespace
       )
 
-      private$.getCDMNames()
-      private$.getCohortNames()
+      private$.setFilterValues()
 
       return(invisible(self))
     }
@@ -158,17 +157,9 @@ CohortAttrition <- R6::R6Class(
     },
 
     ## Helpers ----
-    .getCDMNames = function() {
-      private$.cdmNames <- private$.result |>
-        dplyr::distinct(.data$cdm_name) |>
-        dplyr::pull(.data$cdm_name)
-    },
-
-    .getCohortNames = function() {
-      private$.cohortNames <- private$.result |>
-        dplyr::filter(.data$group_name == "cohort_name") |>
-        dplyr::distinct(.data$group_level) |>
-        dplyr::pull(.data$group_level)
+    .setFilterValues = function() {
+      private$.cdmNames <- getCDMNames(private$.result)
+      private$.cohortNames <- getCohortNames(private$.result)
     }
   )
 )

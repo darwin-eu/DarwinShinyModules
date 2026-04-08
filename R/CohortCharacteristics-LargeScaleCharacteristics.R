@@ -287,14 +287,14 @@ LargeScaleCharacteristics <- R6::R6Class(
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotFacetX"),
             label = "Horizontal Facet",
-            choices = CohortCharacteristics::availablePlotColumns(private$.result),
+            choices = availablePlotColumns(private$.result),
             selected = NULL,
             multiple = TRUE
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotFacetY"),
             label = "Vertical Facet",
-            choices = CohortCharacteristics::availablePlotColumns(private$.result),
+            choices = availablePlotColumns(private$.result),
             selected = NULL,
             multiple = TRUE
           ),
@@ -330,14 +330,14 @@ LargeScaleCharacteristics <- R6::R6Class(
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotComparedFacetX"),
             label = "Horizontal Facet",
-            choices = CohortCharacteristics::availablePlotColumns(private$.result),
+            choices = availablePlotColumns(private$.result),
             selected = NULL,
             multiple = TRUE
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotComparedFacetY"),
             label = "Vertical Facet",
-            choices = CohortCharacteristics::availablePlotColumns(private$.result),
+            choices = availablePlotColumns(private$.result),
             selected = NULL,
             multiple = TRUE
           )
@@ -589,18 +589,9 @@ LargeScaleCharacteristics <- R6::R6Class(
 
     # Helpers ----
     .setFilterValues = function() {
-      private$.cdmNames <- private$.result |>
-        dplyr::distinct(.data$cdm_name) |>
-        dplyr::pull(.data$cdm_name)
-
-      private$.cohortNames <- private$.result |>
-        dplyr::filter(.data$group_name == "cohort_name") |>
-        dplyr::distinct(.data$group_level) |>
-        dplyr::pull(.data$group_level)
-
-      private$.strata <- private$.result |>
-        dplyr::distinct(.data$strata_name) |>
-        dplyr::pull(.data$strata_name)
+      private$.cdmNames <- getCDMNames(private$.result)
+      private$.cohortNames <- getCohortNames(private$.result)
+      private$.strata <- getStrata(private$.result)
 
       private$.windows <- private$.result |>
         dplyr::distinct(.data$variable_level) |>

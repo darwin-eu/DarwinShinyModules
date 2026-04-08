@@ -181,14 +181,14 @@ Characteristics <- R6::R6Class(
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tableHeader"),
             label = "Headers",
-            choices = CohortCharacteristics::availableTableColumns(private$.result),
+            choices = availableTableColumns(private$.result),
             selected = c("cdm_name", "cohort_name"),
             multiple = TRUE
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tableGroupColumn"),
             label = "Group Columns",
-            choices = CohortCharacteristics::availableTableColumns(private$.result),
+            choices = availableTableColumns(private$.result),
             multiple = TRUE
           )
         ),
@@ -323,19 +323,19 @@ Characteristics <- R6::R6Class(
         shinyWidgets::updatePickerInput(
           session = session,
           inputId = "plotColour",
-          choices = CohortCharacteristics::availablePlotColumns(private$.plot$args$result)
+          choices = availablePlotColumns(private$.plot$args$result)
         )
 
         shinyWidgets::updatePickerInput(
           session = session,
           inputId = "plotFacetX",
-          choices = CohortCharacteristics::availablePlotColumns(private$.plot$args$result)
+          choices = availablePlotColumns(private$.plot$args$result)
         )
 
         shinyWidgets::updatePickerInput(
           session = session,
           inputId = "plotFacetY",
-          choices = CohortCharacteristics::availablePlotColumns(private$.plot$args$result)
+          choices = availablePlotColumns(private$.plot$args$result)
         )
       }, ignoreNULL = TRUE)
 
@@ -362,18 +362,9 @@ Characteristics <- R6::R6Class(
 
     ## Helpers ----
     .setFilterValues = function() {
-      private$.cdmNames <- private$.result |>
-        dplyr::distinct(.data$cdm_name) |>
-        dplyr::pull(.data$cdm_name)
-
-      private$.cohortNames <- private$.result |>
-        dplyr::filter(.data$group_name == "cohort_name") |>
-        dplyr::distinct(.data$group_level) |>
-        dplyr::pull(.data$group_level)
-
-      private$.strata <- private$.result |>
-        dplyr::distinct(.data$strata_name) |>
-        dplyr::pull(.data$strata_name)
+      private$.cdmNames <- getCDMNames(private$.result)
+      private$.cohortNames <- getCohortNames(private$.result)
+      private$.strata <- getStrata(private$.result)
 
       private$.variableNames <- private$.result |>
         dplyr::distinct(.data$variable_name) |>

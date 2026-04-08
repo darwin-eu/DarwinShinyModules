@@ -438,22 +438,9 @@ CohortSurvival <- R6::R6Class(
 
     ## Helpers ----
     .setFilterValues = function() {
-      private$.cdmName <- private$.result |>
-        dplyr::distinct(.data$cdm_name) |>
-        dplyr::pull(.data$cdm_name)
-
-      private$.cohortNames <- private$.result |>
-        dplyr::filter(
-          .data$group_name == "target_cohort",
-          .data$strata_name != "reason"
-        ) |>
-        dplyr::distinct(.data$group_level) |>
-        dplyr::pull(.data$group_level)
-
-      private$.strata <- private$.result |>
-        dplyr::filter(.data$strata_name != "reason") |>
-        dplyr::distinct(.data$strata_name) |>
-        dplyr::pull(.data$strata_name)
+      private$.cdmNames <- getCDMNames(private$.result)
+      private$.cohortNames <- getCohortNames(private$.result)
+      private$.strata <- getStrata(private$.result)
     }
   )
 )
