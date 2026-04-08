@@ -123,13 +123,12 @@ DrugUtilisation <- R6::R6Class(
         shinyWidgets::pickerInput(
           inputId = shiny::NS(self$namespace, "variable"),
           label = "Variable",
-          choices = private$.variableNames,
-          selected = private$.variableNames[1]
+          choices = c()
         ),
         shinyWidgets::pickerInput(
           inputId = shiny::NS(self$namespace, "plotType"),
           label = "Plot Type",
-          choices = c("scatterplot", "barplot", "boxplot"),
+          choices = c(),
           selected = "barplot"
         ),
         shinyWidgets::pickerInput(
@@ -160,6 +159,8 @@ DrugUtilisation <- R6::R6Class(
 
     ## Server ----
     .server = function(input, output, session) {
+      private$.updatePlotType(input, output, session)
+      private$.updateVariables(input, output, session)
       private$.serverTable(input, output, session)
       private$.serverPlot(input, output, session)
     },
@@ -204,15 +205,68 @@ DrugUtilisation <- R6::R6Class(
       })
     },
 
+    .updatePlotType = function(input, output, session) {
+      shiny::observeEvent(list(
+        input$cdmName, input$cohortName, input$estimates
+      ), {
+        res <- private$.result |>
+          dplyr::filter(
+            .data$cdm_name %in% input$cdmName,
+            .data$estimate_name %in% input$estimates
+          ) |>
+          omopgenerics::filterGroup(.data$cohort_name %in% input$cohortName)
+
+        estimates <- res |>
+          dplyr::distinct(.data$estimate_name) |>
+          dplyr::pull(.data$estimate_name)
+
+        if (all(c("min", "q25", "median", "q75", "max") %in% estimates)) {
+          shinyWidgets::updatePickerInput(
+            session = session,
+            inputId = "plotType",
+            choices = c("boxplot", "scatterplot", "barplot"),
+            selected = "boxplot"
+          )
+        } else {
+          shinyWidgets::updatePickerInput(
+            session = session,
+            inputId = "plotType",
+            choices = c("barplot", "scatterplot"),
+            selected = "barplot"
+          )
+        }
+      })
+    },
+
+    .updateVariables = function(input, output, session) {
+      shiny::observeEvent(list(
+        input$cdmName, input$cohortName, input$estimates
+      ), {
+        res <- private$.result |>
+          dplyr::filter(
+            .data$cdm_name %in% input$cdmName,
+            .data$estimate_name %in% input$estimates
+          ) |>
+          omopgenerics::filterGroup(.data$cohort_name %in% input$cohortName)
+
+        variables <- res |>
+          dplyr::distinct(.data$variable_name) |>
+          dplyr::pull(.data$variable_name)
+
+        shinyWidgets::updatePickerInput(
+          session = session,
+          inputId = "variable",
+          choices = variables,
+          selected = variables[1]
+        )
+      })
+    },
+
     ## Helpers ----
     .setFilterValues = function() {
       private$.cdmNames <- getCDMNames(private$.result)
       private$.cohortNames <- getCohortNames(private$.result)
       private$.strata <- getStrata(private$.result)
-
-      private$.variableNames <- private$.result |>
-        dplyr::distinct(.data$variable_name) |>
-        dplyr::pull(.data$variable_name)
 
       private$.estimates <- private$.result |>
         dplyr::distinct(.data$estimate_name) |>
