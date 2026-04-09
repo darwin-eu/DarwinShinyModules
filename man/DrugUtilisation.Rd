@@ -3,6 +3,9 @@
 \name{DrugUtilisation}
 \alias{DrugUtilisation}
 \title{DrugUtilisation Module Class}
+\value{
+\code{self}
+}
 \description{
 DrugUtilisation module that shows a that supports results from the
 \code{summariseDrugutilisation()} function from the DrugUtilisation package.
@@ -48,6 +51,27 @@ if (interactive()) {
 \section{Super class}{
 \code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{DrugUtilisation}
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{result}}{(\code{summarised_result})}
+
+\item{\code{table}}{(\code{Flextable})}
+
+\item{\code{plot}}{(\code{PlotStatic})}
+
+\item{\code{cdmNames}}{(\code{character(n)})}
+
+\item{\code{cohortNames}}{(\code{character(n)})}
+
+\item{\code{strata}}{(\code{character(n)})}
+
+\item{\code{variables}}{(\code{character(n)})}
+
+\item{\code{estimates}}{(\code{character(n)})}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -69,10 +93,20 @@ if (interactive()) {
 \if{html}{\out{<a id="method-DrugUtilisation-new"></a>}}
 \if{latex}{\out{\hypertarget{method-DrugUtilisation-new}{}}}
 \subsection{Method \code{new()}}{
+Initializer method.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DrugUtilisation$new(result, ...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{result}}{(\code{summarised_result}) Object created by \code{DrugUtilisation::summariseDrugUtilisation()}.}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DrugUtilisation-clone"></a>}}

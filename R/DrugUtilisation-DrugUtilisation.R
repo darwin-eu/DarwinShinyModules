@@ -67,13 +67,56 @@ DrugUtilisation <- R6::R6Class(
 
   # Active ----
   active = list(
+    #' @field result (`summarised_result`)
     result = function() {
       return(private$.result)
+    },
+
+    #' @field table (`Flextable`)
+    table = function() {
+      return(private$.table)
+    },
+
+    #' @field plot (`PlotStatic`)
+    plot = function() {
+      return(private$.plot)
+    },
+
+    #' @field cdmNames (`character(n)`)
+    cdmNames = function() {
+      return(private$.cdmNames)
+    },
+
+    #' @field cohortNames (`character(n)`)
+    cohortNames = function() {
+      return(private$.cohortNames)
+    },
+
+    #' @field strata (`character(n)`)
+    strata = function() {
+      return(private$.strata)
+    },
+
+    #' @field variables (`character(n)`)
+    variables = function() {
+      return(private$.variables)
+    },
+
+    #' @field estimates (`character(n)`)
+    estimates = function() {
+      return(private$.estimates)
     }
   ),
 
   # Public ----
   public = list(
+    #' @description
+    #' Initializer method.
+    #'
+    #' @param result (`summarised_result`) Object created by `DrugUtilisation::summariseDrugUtilisation()`.
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
+    #'
+    #' @returns `self`
     initialize = function(result, ...) {
       super$initialize(...)
       private$.result <- result
