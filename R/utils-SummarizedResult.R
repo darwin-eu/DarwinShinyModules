@@ -33,7 +33,7 @@ getCohortNames.summarised_result <- function(result) {
 
 getStrata.summarised_result <- function(result) {
   result |>
-    dplyr::filter(.data$strata_name != "reason") |>
+    dplyr::filter(!.data$strata_name %in% c("reason", "overall")) |>
     dplyr::distinct(.data$strata_name) |>
     dplyr::pull(.data$strata_name)
 }

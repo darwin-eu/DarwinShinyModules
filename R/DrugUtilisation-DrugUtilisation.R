@@ -23,9 +23,10 @@ DrugUtilisation <- R6::R6Class(
         parentNamespace = self$namespace
       )
 
-      private$.plot <- PlotPlotly$new(
+      private$.plot <- PlotStatic$new(
         fun = DrugUtilisation::plotDrugUtilisation,
         args = list(style = "darwin"),
+        height = "80vh",
         parentNamespace = self$namespace
       )
     }
@@ -41,7 +42,7 @@ DrugUtilisation <- R6::R6Class(
     .cdmNames = NULL,
     .cohortNames = NULL,
     .strata = NULL,
-    .variableNames = NULL,
+    .variables = NULL,
     .estimates = NULL,
 
     ## UI ----
@@ -76,20 +77,26 @@ DrugUtilisation <- R6::R6Class(
     },
 
     .uiGeneralInputs = function() {
-      shiny::tagList(
-        shinyWidgets::pickerInput(
-          inputId = shiny::NS(self$namespace, "cdmName"),
-          label = "CDM Name",
-          choices = private$.cdmNames,
-          selected = private$.cdmNames[1],
-          multiple = TRUE
+      shiny::fluidPage(
+        shiny::div(
+          style = "display: inline-block;",
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "cdmName"),
+            label = "CDM Name",
+            choices = private$.cdmNames,
+            selected = private$.cdmNames[1],
+            multiple = TRUE
+          )
         ),
-        shinyWidgets::pickerInput(
-          inputId = shiny::NS(self$namespace, "cohortName"),
-          label = "Cohort Name",
-          choices = private$.cohortNames,
-          selected = private$.cohortNames[1],
-          multiple = TRUE
+        shiny::div(
+          style = "display: inline-block;",
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "cohortName"),
+            label = "Cohort Name",
+            choices = private$.cohortNames,
+            selected = private$.cohortNames[1],
+            multiple = TRUE
+          )
         )
       )
     },
@@ -123,7 +130,14 @@ DrugUtilisation <- R6::R6Class(
         shinyWidgets::pickerInput(
           inputId = shiny::NS(self$namespace, "variable"),
           label = "Variable",
-          choices = c()
+          choices = private$.variables,
+          selected = private$.variables[1]
+        ),
+        shinyWidgets::pickerInput(
+          inputId = shiny::NS(self$namespace, "estimates"),
+          label = "Estimates",
+          choices = private$.estimates,
+          selected = private$.estimates[1],
         ),
         shinyWidgets::pickerInput(
           inputId = shiny::NS(self$namespace, "plotType"),
@@ -134,74 +148,53 @@ DrugUtilisation <- R6::R6Class(
         shinyWidgets::pickerInput(
           inputId = shiny::NS(self$namespace, "facetX"),
           label = "Horizontal Facet",
-          choices = availablePlotColumns(private$.result),
+          choices = c("cdm_name", "cohort_name", private$.strata),
           multiple = TRUE
         ),
         shinyWidgets::pickerInput(
           inputId = shiny::NS(self$namespace, "facetY"),
           label = "Vertical Facet",
-          choices = availablePlotColumns(private$.result),
+          choices = c("cdm_name", "cohort_name", private$.strata),
           multiple = TRUE
         ),
         shinyWidgets::pickerInput(
           inputId = shiny::NS(self$namespace, "colour"),
           label = "Colour",
-          choices = availablePlotColumns(private$.result)
-        ),
-        shinyWidgets::pickerInput(
-          inputId = shiny::NS(self$namespace, "estimates"),
-          label = "Estimates",
-          choices = private$.estimates,
-          selected = private$.estimates[1]
+          choices = c("cdm_name", "cohort_name", private$.strata),
+          multiple = TRUE
         )
       )
     },
 
     ## Server ----
     .server = function(input, output, session) {
+      private$.updateEstimates(input, output, session)
       private$.updatePlotType(input, output, session)
-      private$.updateVariables(input, output, session)
       private$.serverTable(input, output, session)
       private$.serverPlot(input, output, session)
     },
 
-    .serverTable = function(input, output, session) {
+    .updateEstimates = function(input, output, session) {
       shiny::observeEvent(list(
-        input$cdmName, input$cohortName,
-        input$strata, input$header, input$groupColumn
+        input$cdmName, input$cohortName
       ), {
-        private$.table$args$result <- private$.result |>
+        res <- private$.result |>
           dplyr::filter(
-            .data$cdm_name %in% input$cdmName,
-            .data$strata_name %in% input$strata
+            .data$cdm_name %in% input$cdmName
           ) |>
           omopgenerics::filterGroup(.data$cohort_name %in% input$cohortName)
 
-        private$.table$args$header <- input$header
-        private$.table$args$groupColumn <- input$groupColumn
+        estimates <- res |>
+          dplyr::distinct(.data$estimate_name) |>
+          dplyr::filter(!.data$estimate_name %in% c("count")) |>
+          dplyr::pull(.data$estimate_name)
 
-        private$.table$server(input, output, session)
-      })
-    },
-
-    .serverPlot = function(input, output, session) {
-      shiny::observeEvent(list(
-        input$cdmName, input$cohortName,
-        input$variable, input$plotType, input$facetX, input$facetY, input$colour, input$estimates
-      ), {
-        private$.plot$args$result <- private$.result |>
-          dplyr::filter(
-            .data$cdm_name %in% input$cdmName,
-            .data$estimate_name %in% input$estimates
-          ) |>
-          omopgenerics::filterGroup(.data$cohort_name %in% input$cohortName)
-
-        private$.plot$args$facet <- makeFacetFormula(input$facetX, input$facetY)
-        private$.plot$args$colour <- input$colour
-        private$.plot$args$plotType <- input$plotType
-        private$.plot$args$variable <- input$variable
-
-        private$.plot$server(input, output, session)
+        shinyWidgets::updatePickerInput(
+          session = session,
+          inputId = "estimates",
+          choices = estimates,
+          selected = estimates[1]
+        )
       })
     },
 
@@ -238,27 +231,52 @@ DrugUtilisation <- R6::R6Class(
       })
     },
 
-    .updateVariables = function(input, output, session) {
+    .serverTable = function(input, output, session) {
       shiny::observeEvent(list(
-        input$cdmName, input$cohortName, input$estimates
+        input$cdmName, input$cohortName,
+        input$strata, input$header, input$groupColumn
       ), {
-        res <- private$.result |>
+        private$.table$args$result <- private$.result |>
           dplyr::filter(
             .data$cdm_name %in% input$cdmName,
-            .data$estimate_name %in% input$estimates
+            .data$strata_name %in% input$strata
           ) |>
           omopgenerics::filterGroup(.data$cohort_name %in% input$cohortName)
 
-        variables <- res |>
-          dplyr::distinct(.data$variable_name) |>
-          dplyr::pull(.data$variable_name)
+        private$.table$args$header <- input$header
+        private$.table$args$groupColumn <- input$groupColumn
 
-        shinyWidgets::updatePickerInput(
-          session = session,
-          inputId = "variable",
-          choices = variables,
-          selected = variables[1]
-        )
+        private$.table$server(input, output, session)
+      })
+    },
+
+    .serverPlot = function(input, output, session) {
+      shiny::observeEvent(list(
+        input$cdmName, input$cohortName,
+        input$variable, input$plotType, input$facetX, input$facetY, input$colour, input$estimates
+      ), {
+        inputStrata <- unique(c(input$facetX, input$facetY, input$colour))
+
+        strata <- if (all(is.null(inputStrata))) {
+          "overall"
+        } else {
+          c("overall", inputStrata)
+        }
+
+        private$.plot$args$result <- private$.result |>
+          dplyr::filter(
+            .data$cdm_name %in% input$cdmName,
+            .data$estimate_name %in% input$estimates,
+            .data$strata_name %in% strata
+          ) |>
+          omopgenerics::filterGroup(.data$cohort_name %in% input$cohortName)
+
+        private$.plot$args$facet <- makeFacetFormula(input$facetX, input$facetY)
+        private$.plot$args$colour <- input$colour
+        private$.plot$args$plotType <- input$plotType
+        private$.plot$args$variable <- input$variable
+
+        private$.plot$server(input, output, session)
       })
     },
 
@@ -268,9 +286,21 @@ DrugUtilisation <- R6::R6Class(
       private$.cohortNames <- getCohortNames(private$.result)
       private$.strata <- getStrata(private$.result)
 
+      # private$.strata <- private$.result |>
+      #   dplyr::distinct(.data$strata_name ) |>
+      #   dplyr::pull(.data$strata_name)
+      #
+      # private$.strata <- c("cdm_name", "cohort_name", private$.strata)
+
       private$.estimates <- private$.result |>
         dplyr::distinct(.data$estimate_name) |>
+        dplyr::filter(!.data$estimate_name %in% c("count")) |>
         dplyr::pull(.data$estimate_name)
+
+      private$.variables <- private$.result |>
+        dplyr::distinct(.data$variable_name) |>
+        dplyr::filter(!.data$variable_name %in% c("number records", "number subjects")) |>
+        dplyr::pull(.data$variable_name)
     }
   )
 )
