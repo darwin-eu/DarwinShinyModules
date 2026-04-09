@@ -349,12 +349,6 @@ DrugUtilisation <- R6::R6Class(
       private$.cohortNames <- getCohortNames(private$.result)
       private$.strata <- getStrata(private$.result)
 
-      # private$.strata <- private$.result |>
-      #   dplyr::distinct(.data$strata_name ) |>
-      #   dplyr::pull(.data$strata_name)
-      #
-      # private$.strata <- c("cdm_name", "cohort_name", private$.strata)
-
       private$.estimates <- private$.result |>
         dplyr::distinct(.data$estimate_name) |>
         dplyr::filter(!.data$estimate_name %in% c("count")) |>
