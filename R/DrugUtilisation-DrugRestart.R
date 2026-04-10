@@ -1,71 +1,279 @@
-DrugRestart <- R6::R6Class(
-  classname = "DrugRestart",
+# Copyright 2026 DARWIN EU®
+#
+# This file is part of DarwinShinyModules
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#' @title Restart Module Class
+#'
+#' @include ShinyModule.R
+#'
+#' @description
+#' Restart module that shows a that supports results from the
+#' `summariseDrugRestart()` function from the DrugUtilisation package.
+#'
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+
+#' }
+Restart <- R6::R6Class(
+  classname = "Restart",
   inherit = DarwinShinyModules::ShinyModule,
-  public = list(
-    initialize = function() {
-      super$initialize()
-      private$assertInstall("DrugUtilisation", "1.0.1")
-    }
-  )
-)
 
-DrugRestart <- R6::R6Class(
-  classname = "DrugRestart",
-  inherit = DrugUtilisation,
+  # Active ----
   active = list(
-    #' @field data Data
-    data = function() {
-      return(private$.data)
+    #' @param result (`sumamrised_result`)
+    result = function() {
+      return(private$.result)
+    },
+
+    #' @param table (`Flextable`)
+    table = function() {
+      return(private$.table)
+    },
+
+    #' @param plot (`PlotStatic`)
+    plot = function() {
+      return(private$.plot)
+    },
+
+    #' @param cdmNames (`character(n)`)
+    cdmNames = function() {
+      return(private$.cdmNames)
+    },
+
+    #' @param cohortNames (`character(n)`)
+    cohortNames = function() {
+      return(private$.cohortNames)
+    },
+
+    #' @param strata (`character(n)`)
+    strata = function() {
+      return(private$.strata)
     }
   ),
 
+  # Public ----
   public = list(
-    initialize = function(data, title = "") {
-      super$initialize()
-      private$.title <- title
-      private$.data <- data
-      private$initTable()
-      private$initPlot()
+    #' @description
+    #' Initializer method.
+    #'
+    #' @param result (`summarised_result`) Object created by `DrugUtilisation::summariseDrugUtilisation()`.
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
+    #'
+    #' @returns `self`
+    initialize = function(result, ...) {
+      super$initialize(...)
+      private$.result <- result
+
+      private$.setFilterValues()
+
+      private$.table <- DarwinShinyModules::Flextable$new(
+        fun = DrugUtilisation::tableDrugRestart,
+        args = list(result = private$.result, type = "flextable", style = "darwin"),
+        parentNamespace = self$namespace
+      )
+
+      private$.plot <- DarwinShinyModules::PlotStatic$new(
+        fun = DrugUtilisation::plotDrugRestart,
+        args = list(result = private$.result, style = "darwin"),
+        title = NULL,
+        height = "80vh",
+        parentNamespace = self$namespace
+      )
+      return(self)
     }
   ),
+
   # Private ----
   private = list(
     ## Fields ----
-    .data = NULL,
-    .title = "",
+    .result = NULL,
 
-    ## Modules ----
     .table = NULL,
     .plot = NULL,
 
-    ## Methods ----
+    .cdmNames = NULL,
+    .cohortNames = NULL,
+    .strata = NULL,
+
+    ## UI ----
     .UI = function() {
-      shiny::tagList(
-        private$.plot$UI(),
-        private$.table$UI()
+      shiny::fluidPage(
+        private$.uiGeneralSettings(),
+        shiny::tabsetPanel(
+          shiny::tabPanel(
+            title = "Table",
+            shiny::column(
+              width = 2,
+              private$.uiTableSettings()
+            ),
+            shiny::column(
+              width = 10,
+              private$.table$UI()
+            )
+          ),
+          shiny::tabPanel(
+            title = "Plot",
+            shiny::column(
+              width = 2,
+              private$.uiPlotSettings()
+            ),
+            shiny::column(
+              width = 10,
+              private$.plot$UI()
+            )
+          )
+        )
       )
     },
 
+    .uiGeneralSettings = function() {
+      shiny::fluidPage(
+        shiny::div(
+          style = "display: inline-block;",
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "cdmName"),
+            label = "CDM Name",
+            choices = private$.cdmNames,
+            selected = private$.cdmNames[1],
+            multiple = TRUE
+          )
+        ),
+        shiny::div(
+          style = "display: inline-block;",
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "cohortName"),
+            label = "Cohort Name",
+            choices = private$.cohortNames,
+            selected = private$.cohortNames[1],
+            multiple = TRUE
+          )
+        )
+      )
+    },
+
+    .uiTableSettings = function() {
+      shiny::fluidPage(
+        shinyWidgets::pickerInput(
+          inputId = shiny::NS(self$namespace, "strata"),
+          label = "Strata",
+          choices = private$.strata,
+          multiple = TRUE
+        ),
+        shinyWidgets::pickerInput(
+          inputId = shiny::NS(self$namespace, "header"),
+          label = "Header",
+          choices = availableTableColumns(private$.result),
+          multiple = TRUE
+        ),
+        shinyWidgets::pickerInput(
+          inputId = shiny::NS(self$namespace, "groupColumn"),
+          label = "Group Column",
+          choices = availableTableColumns(private$.result),
+          multiple = TRUE
+        )
+      )
+    },
+
+    .uiPlotSettings = function() {
+      shiny::fluidPage(
+        shinyWidgets::pickerInput(
+          inputId = shiny::NS(self$namespace, "position"),
+          label = "Bar position",
+          choices = c("stack", "dodge"),
+          selected = "stack"
+        ),
+        shinyWidgets::pickerInput(
+          inputId = shiny::NS(self$namespace, "facetX"),
+          label = "Horizontal Facet",
+          choices = availablePlotColumns(private$.result),
+          multiple = TRUE
+        ),
+        shinyWidgets::pickerInput(
+          inputId = shiny::NS(self$namespace, "facetY"),
+          label = "Vertical Facet",
+          choices = availablePlotColumns(private$.result),
+          multiple = TRUE
+        ),
+        shinyWidgets::pickerInput(
+          inputId = shiny::NS(self$namespace, "colour"),
+          label = "Colour",
+          choices = availablePlotColumns(private$.result),
+          multiple = TRUE
+        )
+      )
+    },
+
+    ## Server ----
     .server = function(input, output, session) {
-      private$.table$server(input, output, session)
-      private$.plot$server(input, output, session)
+      private$.serverTable(input, output, session)
+      private$.serverPlot(input, output, session)
     },
 
-    initTable = function() {
-      private$.table <- DarwinShinyModules::GTTable$new(
-        fun = DrugUtilisation::tableDrugRestart,
-        args = list(result = private$.data)
-      )
-      private$.table$parentNamespace <- self$namespace
+    .serverTable = function(input, output, session) {
+      shiny::observeEvent(list(
+        input$cdm_name,
+        input$header,
+        input$groupColumn,
+        input$strata
+      ), {
+        strata <- if (all(is.null(input$strata))) {
+          "overall"
+        } else {
+          c("overall", input$strata)
+        }
+
+        private$.table$args$result <- private$.result |>
+          dplyr::filter(
+            .data$cdm_name %in% input$cdmName,
+            .data$strata_name %in% strata
+          ) |>
+          omopgenerics::filterGroup(.data$cohort_name %in% input$cohortName)
+
+        private$.table$args$header <- input$header
+        private$.table$args$groupColumn <- input$groupColumn
+        private$.table$server(input, output, session)
+      })
     },
 
-    initPlot = function() {
-      private$.plot <- DarwinShinyModules::PlotStatic$new(
-        fun = DrugUtilisation::plotDrugRestart,
-        args = list(result = private$.data, facet = "age_group", colour = "pregnancy_period"),
-        title = private$.title
-      )
-      private$.plot$parentNamespace <- self$namespace
+    .serverPlot = function(input, output, session) {
+      shiny::observeEvent(list(
+        input$cdmName,
+        input$cohortName,
+        input$position,
+        input$facetX,
+        input$facetY,
+        input$colour
+      ), {
+        private$.plot$args$result <- private$.result |>
+          dplyr::filter(.data$cdm_name %in% input$cdmName) |>
+          omopgenerics::filterGroup(.data$cohort_name %in% input$cohortName)
+
+        private$.plot$args$position <- input$position
+        private$.plot$args$facet <- makeFacetFormula(input$facetX, input$facetY)
+        private$.plot$args$colour <- input$colour
+        private$.plot$server(input, output, session)
+      })
+    },
+
+    ## Helpers ----
+    .setFilterValues = function() {
+      private$.cdmNames <- getCDMNames(private$.result)
+      private$.cohortNames <- getCohortNames(private$.result)
+      private$.strata <- getStrata(private$.result)
     }
   )
 )

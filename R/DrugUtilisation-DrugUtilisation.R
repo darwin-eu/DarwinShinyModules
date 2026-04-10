@@ -135,6 +135,7 @@ DrugUtilisation <- R6::R6Class(
         height = "80vh",
         parentNamespace = self$namespace
       )
+      return(self)
     }
   ),
 

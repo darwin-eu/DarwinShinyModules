@@ -14,59 +14,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' @title Indication Module Class
+#' @title Treatment Module Class
 #'
 #' @include ShinyModule.R
 #'
 #' @description
-#' Indication module that shows a that supports results from the
-#' `summariseIndication()` function from the DrugUtilisation package.
+#' Restart module that shows a that supports results from the
+#' `summariseTreatment()` function from the DrugUtilisation package.
 #'
 #' @export
 #'
 #' @examples
 #' if (interactive()) {
-#'   cdm <- DrugUtilisation::mockDrugUtilisation(numberIndividual = 100, source = "duckdb")
-#'
-#'   cdm <- DrugUtilisation::generateIngredientCohortSet(
-#'     cdm = cdm,
-#'     name = "dus_cohort",
-#'     ingredient = "acetaminophen",
-#'     gapEra = 7
-#'   )
-#'
-#'   indications <- list(headache = 378253, influenza = 4266367)
-#'
-#'   cdm <- CDMConnector::generateConceptCohortSet(
-#'     cdm = cdm,
-#'     conceptSet = indications,
-#'     name = "indications_cohort"
-#'   )
-#'
-#'   result <- cdm$dus_cohort |>
-#'     PatientProfiles::addAge(
-#'       ageGroup = list(
-#'         `0-17` = c(0, 17),
-#'         `>=18` = c(18, Inf)
-#'       )
-#'     ) |>
-#'     PatientProfiles::addSex() |>
-#'     DrugUtilisation::summariseIndication(
-#'       indicationCohortName = "indications_cohort",
-#'       unknownIndicationTable = "condition_occurrence",
-#'       indicationWindow = list(c(-30, 0)),
-#'       strata = list(
-#'         "age_group",
-#'         "sex"
-#'       )
-#'     )
-#'
-#'   mod <- Indication$new(result)
-#'
-#'   DarwinShinyModules::preview(mod)
+
 #' }
-Indication <- R6::R6Class(
-  classname = "Indication",
+Treatment <- R6::R6Class(
+  classname = "Treatment",
   inherit = DarwinShinyModules::ShinyModule,
 
   # Active ----
@@ -118,13 +81,13 @@ Indication <- R6::R6Class(
       private$.setFilterValues()
 
       private$.table <- DarwinShinyModules::Flextable$new(
-        fun = DrugUtilisation::tableIndication,
+        fun = DrugUtilisation::tableTreatment,
         args = list(result = private$.result, type = "flextable", style = "darwin"),
         parentNamespace = self$namespace
       )
 
       private$.plot <- DarwinShinyModules::PlotStatic$new(
-        fun = DrugUtilisation::plotIndication,
+        fun = DrugUtilisation::plotTreatment,
         args = list(result = private$.result, style = "darwin"),
         title = NULL,
         height = "80vh",
