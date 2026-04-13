@@ -14,52 +14,80 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' @title Restart Module Class
+#' @title DrugRestart Module Class
 #'
 #' @include ShinyModule.R
 #'
 #' @description
-#' Restart module that shows a that supports results from the
+#' DrugRestart module that shows a that supports results from the
 #' `summariseDrugRestart()` function from the DrugUtilisation package.
 #'
 #' @export
 #'
 #' @examples
 #' if (interactive()) {
-
+#'   cdm <- DrugUtilisation::mockDrugUtilisation()
+#'
+#'   conceptlist <- list(
+#'    acetaminophen = 1125360,
+#'    metformin = c(1503297, 1503327)
+#'   )
+#'
+#'   cdm <- DrugUtilisation::generateDrugUtilisationCohortSet(
+#'    cdm = cdm,
+#'    name = "switch_cohort",
+#'    conceptSet = conceptlist
+#'   )
+#'
+#'   result <- cdm$cohort1 |>
+#'    PatientProfiles::addAge(
+#'      ageGroup = list(
+#'        `0-17` = c(0, 17),
+#'        `>=18` = c(18, Inf)
+#'      )
+#'    ) |>
+#'    PatientProfiles::addSex() |>
+#'    DrugUtilisation::summariseDrugRestart(
+#'      switchCohortTable = "switch_cohort",
+#'      strata = list("age_group", "sex")
+#'    )
+#'
+#'   mod <- DrugRestart$new(result)
+#'
+#'   DarwinShinyModules::preview(mod)
 #' }
-Restart <- R6::R6Class(
-  classname = "Restart",
+DrugRestart <- R6::R6Class(
+  classname = "DrugRestart",
   inherit = DarwinShinyModules::ShinyModule,
 
   # Active ----
   active = list(
-    #' @param result (`sumamrised_result`)
+    #' @field result (`sumamrised_result`)
     result = function() {
       return(private$.result)
     },
 
-    #' @param table (`Flextable`)
+    #' @field table (`Flextable`)
     table = function() {
       return(private$.table)
     },
 
-    #' @param plot (`PlotStatic`)
+    #' @field plot (`PlotStatic`)
     plot = function() {
       return(private$.plot)
     },
 
-    #' @param cdmNames (`character(n)`)
+    #' @field cdmNames (`character(n)`)
     cdmNames = function() {
       return(private$.cdmNames)
     },
 
-    #' @param cohortNames (`character(n)`)
+    #' @field cohortNames (`character(n)`)
     cohortNames = function() {
       return(private$.cohortNames)
     },
 
-    #' @param strata (`character(n)`)
+    #' @field strata (`character(n)`)
     strata = function() {
       return(private$.strata)
     }

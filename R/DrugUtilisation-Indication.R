@@ -71,32 +71,32 @@ Indication <- R6::R6Class(
 
   # Active ----
   active = list(
-    #' @param result (`sumamrised_result`)
+    #' @field result (`sumamrised_result`)
     result = function() {
       return(private$.result)
     },
 
-    #' @param table (`Flextable`)
+    #' @field table (`Flextable`)
     table = function() {
       return(private$.table)
     },
 
-    #' @param plot (`PlotStatic`)
+    #' @field plot (`PlotStatic`)
     plot = function() {
       return(private$.plot)
     },
 
-    #' @param cdmNames (`character(n)`)
+    #' @field cdmNames (`character(n)`)
     cdmNames = function() {
       return(private$.cdmNames)
     },
 
-    #' @param cohortNames (`character(n)`)
+    #' @field cohortNames (`character(n)`)
     cohortNames = function() {
       return(private$.cohortNames)
     },
 
-    #' @param strata (`character(n)`)
+    #' @field strata (`character(n)`)
     strata = function() {
       return(private$.strata)
     }

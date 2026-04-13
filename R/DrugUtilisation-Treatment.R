@@ -26,7 +26,24 @@
 #'
 #' @examples
 #' if (interactive()) {
-
+#'   cdm <- DrugUtilisation::mockDrugUtilisation()
+#'
+#'   result <- cdm$cohort1 |>
+#'     PatientProfiles::addAge(
+#'       ageGroup = list(
+#'         `0-17` = c(0, 17),
+#'         `>=18` = c(18, Inf)
+#'       )
+#'     ) |>
+#'     PatientProfiles::addSex() |>
+#'     DrugUtilisation::summariseTreatment(
+#'       treatmentCohortName = "cohort2",
+#'       window = list(c(0, 30), c(31, 365)), strata = list("age_group", "sex")
+#'     )
+#'
+#'   mod <- Treatment$new(result = result)
+#'
+#'   DarwinShinyModules::preview(mod)
 #' }
 Treatment <- R6::R6Class(
   classname = "Treatment",
@@ -34,32 +51,32 @@ Treatment <- R6::R6Class(
 
   # Active ----
   active = list(
-    #' @param result (`sumamrised_result`)
+    #' @field result (`sumamrised_result`)
     result = function() {
       return(private$.result)
     },
 
-    #' @param table (`Flextable`)
+    #' @field table (`Flextable`)
     table = function() {
       return(private$.table)
     },
 
-    #' @param plot (`PlotStatic`)
+    #' @field plot (`PlotStatic`)
     plot = function() {
       return(private$.plot)
     },
 
-    #' @param cdmNames (`character(n)`)
+    #' @field cdmNames (`character(n)`)
     cdmNames = function() {
       return(private$.cdmNames)
     },
 
-    #' @param cohortNames (`character(n)`)
+    #' @field cohortNames (`character(n)`)
     cohortNames = function() {
       return(private$.cohortNames)
     },
 
-    #' @param strata (`character(n)`)
+    #' @field strata (`character(n)`)
     strata = function() {
       return(private$.strata)
     }
