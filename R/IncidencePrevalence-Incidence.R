@@ -109,88 +109,141 @@ Incidence <- R6::R6Class(
     .strata = NULL,
     .pickers = NULL,
     .defaults = NULL,
+
+    ## UI ----
     .UI = function() {
       shiny::tagList(
         shinydashboard::tabItem(
           tabName = shiny::NS(private$.namespace, "incidence"),
-          shiny::h3("Incidence estimates"),
-          shiny::p("Incidence estimates are shown below, please select configuration to filter them:"),
-          shiny::p("Database, study outcome and strata"),
-          private$.pickers[["cdm"]]$UI(),
-          private$.pickers[["outcome"]]$UI(),
-          private$.pickers[["strata"]]$UI(),
-          p("Denominator population settings"),
-          private$.pickers[["denomAgeGroup"]]$UI(),
-          private$.pickers[["denomSex"]]$UI(),
-          private$.pickers[["denomPriorObs"]]$UI(),
-          private$.pickers[["denomStartDate"]]$UI(),
-          private$.pickers[["denomEndDate"]]$UI(),
-          private$.pickers[["denomTimeAtRisk"]]$UI(),
-          p("Analysis settings"),
-          private$.pickers[["washout"]]$UI(),
-          private$.pickers[["repeatedEvents"]]$UI(),
-          private$.pickers[["completePeriod"]]$UI(),
-          private$.pickers[["minCounts"]]$UI(),
-          p("Dates"),
-          private$.pickers[["interval"]]$UI(),
-          private$.pickers[["startDate"]]$UI(),
+          private$.uiInputs(),
           shiny::tabsetPanel(
             id = shiny::NS(private$.namespace, "tabsetPanel"),
             type = "tabs",
             shiny::tabPanel(
-              "Tidy table",
-              private$.pickers[["headerColumn"]]$UI(),
-              private$.pickers[["groupColumn"]]$UI(),
-              private$.pickers[["settingsColumn"]]$UI(),
-              private$.pickers[["hideColumn"]]$UI(),
-              p(),
-              shiny::downloadButton(shiny::NS(private$.namespace, "downloadTidyTable"), "Download table"),
-              p(),
-              gt::gt_output(shiny::NS(private$.namespace, "tidyTable")) %>% shinycssloaders::withSpinner()
+              title = "Tidy table",
+              private$.uiTidyTable()
             ),
             shiny::tabPanel(
-              "Plot",
-              p("Plotting options"),
-              private$.pickers[["xAxis"]]$UI(),
-              private$.pickers[["facet"]]$UI(),
-              private$.pickers[["color"]]$UI(),
-              private$.pickers[["ribbon"]]$UI(),
-              private$.pickers[["confInterval"]]$UI(),
-              private$.pickers[["rotateXLabels"]]$UI(),
-              plotly::plotlyOutput(
-                shiny::NS(private$.namespace, "plot"),
-                height = "800px"
-              ) %>%
-                shinycssloaders::withSpinner(),
-              shiny::h4("Download figure"),
-              shiny::div("height:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
-              shiny::div(
-                style = "display: inline-block;",
-                shiny::textInput(shiny::NS(private$.namespace, "download_height"), "", 10, width = "50px")
-              ),
-              shiny::div("cm", style = "display: inline-block; margin-right: 25px;"),
-              shiny::div("width:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
-              shiny::div(
-                style = "display: inline-block;",
-                shiny::textInput(shiny::NS(private$.namespace, "download_width"), "", 20, width = "50px")
-              ),
-              shiny::div("cm", style = "display: inline-block; margin-right: 25px;"),
-              shiny::div("dpi:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
-              shiny::div(
-                style = "display: inline-block; margin-right:",
-                shiny::textInput(shiny::NS(private$.namespace, "download_dpi"), "", 300, width = "50px")
-              ),
-              shiny::downloadButton(shiny::NS(private$.namespace, "download_plot"), "Download plot")
+              title = "Plot",
+              private$.uiPlot()
             ),
             shiny::tabPanel(
-              "Table",
-              shiny::downloadButton(shiny::NS(private$.namespace, "downloadTable"), "Download current estimates"),
-              DT::DTOutput(shiny::NS(private$.namespace, "table")) %>% shinycssloaders::withSpinner()
+              title = "Table",
+              private$.uiTable()
             )
           )
         )
       )
     },
+
+    .uiInputs = function() {
+      shiny::tagList(
+        shiny::h3("Incidence estimates"),
+        shiny::p("Incidence estimates are shown below, please select configuration to filter them:"),
+        private$.uiDatabaseInputs(),
+        private$.uiDenominatorInputs(),
+        private$.uiAnalysisInputs(),
+        private$.uiDateInputs()
+      )
+    },
+
+    .uiDatabaseInputs = function() {
+      shiny::tagList(
+        shiny::p("Database, study outcome and strata"),
+        private$.pickers[["cdm"]]$UI(),
+        private$.pickers[["outcome"]]$UI(),
+        private$.pickers[["strata"]]$UI()
+      )
+    },
+
+    .uiDenominatorInputs = function() {
+      shiny::tagList(
+        p("Denominator population settings"),
+        private$.pickers[["denomAgeGroup"]]$UI(),
+        private$.pickers[["denomSex"]]$UI(),
+        private$.pickers[["denomPriorObs"]]$UI(),
+        private$.pickers[["denomStartDate"]]$UI(),
+        private$.pickers[["denomEndDate"]]$UI(),
+        private$.pickers[["denomTimeAtRisk"]]$UI()
+      )
+    },
+
+    .uiAnalysisInputs = function() {
+      shiny::tagList(
+        p("Analysis settings"),
+        private$.pickers[["washout"]]$UI(),
+        private$.pickers[["repeatedEvents"]]$UI(),
+        private$.pickers[["completePeriod"]]$UI(),
+        private$.pickers[["minCounts"]]$UI(),
+      )
+    },
+
+    .uiDateInputs = function() {
+      shiny::tagList(
+        p("Dates"),
+        private$.pickers[["interval"]]$UI(),
+        private$.pickers[["startDate"]]$UI()
+      )
+    },
+
+    .uiTidyTable = function() {
+      shiny::tagList(
+        private$.pickers[["headerColumn"]]$UI(),
+        private$.pickers[["groupColumn"]]$UI(),
+        private$.pickers[["settingsColumn"]]$UI(),
+        private$.pickers[["hideColumn"]]$UI(),
+        p(),
+        shiny::downloadButton(shiny::NS(private$.namespace, "downloadTidyTable"), "Download table"),
+        p(),
+        gt::gt_output(shiny::NS(private$.namespace, "tidyTable")) |>
+          shinycssloaders::withSpinner()
+      )
+    },
+
+    .uiPlot = function() {
+      shiny::tagList(
+        p("Plotting options"),
+        private$.pickers[["xAxis"]]$UI(),
+        private$.pickers[["facet"]]$UI(),
+        private$.pickers[["color"]]$UI(),
+        private$.pickers[["ribbon"]]$UI(),
+        private$.pickers[["confInterval"]]$UI(),
+        private$.pickers[["rotateXLabels"]]$UI(),
+        plotly::plotlyOutput(
+          shiny::NS(private$.namespace, "plot"),
+          height = "800px"
+        ) %>%
+          shinycssloaders::withSpinner(),
+        shiny::h4("Download figure"),
+        shiny::div("height:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
+        shiny::div(
+          style = "display: inline-block;",
+          shiny::textInput(shiny::NS(private$.namespace, "download_height"), "", 10, width = "50px")
+        ),
+        shiny::div("cm", style = "display: inline-block; margin-right: 25px;"),
+        shiny::div("width:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
+        shiny::div(
+          style = "display: inline-block;",
+          shiny::textInput(shiny::NS(private$.namespace, "download_width"), "", 20, width = "50px")
+        ),
+        shiny::div("cm", style = "display: inline-block; margin-right: 25px;"),
+        shiny::div("dpi:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
+        shiny::div(
+          style = "display: inline-block; margin-right:",
+          shiny::textInput(shiny::NS(private$.namespace, "download_dpi"), "", 300, width = "50px")
+        ),
+        shiny::downloadButton(shiny::NS(private$.namespace, "download_plot"), "Download plot")
+      )
+    },
+
+    .uiTable = function() {
+      shiny::tagList(
+        shiny::downloadButton(shiny::NS(private$.namespace, "downloadTable"), "Download current estimates"),
+        DT::DTOutput(shiny::NS(private$.namespace, "table")) %>% shinycssloaders::withSpinner()
+      )
+    },
+
+    ## Server ----
     .server = function(input, output, session) {
       for (module in private$.pickers) {
         module$server(input, output, session)
@@ -355,6 +408,8 @@ Incidence <- R6::R6Class(
         plotIncidenceEstimates()
       })
     },
+
+    ## Helpers ----
     assertIncidenceData = function(data) {
       resSettings <- attr(data, "settings")
       if (is.null(resSettings)) {
@@ -389,7 +444,8 @@ Incidence <- R6::R6Class(
       }
       return(data)
     },
-    initPickers = function() {
+
+    .initDatabaseInputs = function() {
       # cdm
       allDatabases <- unique(private$.tidyData$database)
       selectedDatabases <- allDatabases[1]
@@ -397,50 +453,65 @@ Incidence <- R6::R6Class(
       if (databaseStr %in% names(private$.defaults) && all(private$.defaults[[databaseStr]] %in% allDatabases)) {
         selectedDatabases <- private$.defaults[[databaseStr]]
       }
-      private$.pickers[["cdm"]] <- InputPanel$new(
-        funs = list(cdm = shinyWidgets::pickerInput),
-        args = list(cdm = list(
-          inputId = "cdm", label = "Database", choices = allDatabases, selected = selectedDatabases, multiple = TRUE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["cdm"]]$parentNamespace <- self$namespace
 
-      # outcome
       allOutcomes <- unique(private$.tidyData$outcome_cohort_name)
       selectedOutcomes <- allOutcomes[1]
       outcomeStr <- "outcome"
       if (outcomeStr %in% names(private$.defaults) && all(private$.defaults[[outcomeStr]] %in% allOutcomes)) {
         selectedOutcomes <- private$.defaults[[outcomeStr]]
       }
-      private$.pickers[["outcome"]] <- InputPanel$new(
-        funs = list(outcome = shinyWidgets::pickerInput),
-        args = list(outcome = list(
-          inputId = "outcome", label = "Outcome", choices = allOutcomes, selected = selectedOutcomes, multiple = TRUE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["outcome"]]$parentNamespace <- self$namespace
 
-      # strata
       allStrata <- unique(private$.strata)
       strataStr <- "strata"
       selectedStrata <- allStrata[1]
       if (strataStr %in% names(private$.defaults) && all(private$.defaults[[strataStr]] %in% allStrata)) {
         selectedStrata <- private$.defaults[[strataStr]]
       }
-      private$.pickers[["strata"]] <- InputPanel$new(
-        funs = list(strata = shinyWidgets::pickerInput),
-        args = list(strata = list(
-          inputId = "strata", label = "Strata", choices = allStrata, selected = selectedStrata, multiple = TRUE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["strata"]]$parentNamespace <- self$namespace
 
+      options <- list(
+        `actions-box` = TRUE,
+        size = 10,
+        `selected-text-format` = "count > 3"
+      )
+
+      private$.pickers[["database"]] <- InputPanel$new(
+        funs = list(
+          cdm = shinyWidgets::pickerInput,
+          outcome = shinyWidgets::pickerInput,
+          strata = shinyWidgets::pickerInput
+        ),
+        args = list(
+          cdm = list(
+            inputId = "cdm",
+            label = "Database",
+            choices = allDatabases,
+            selected = selectedDatabases,
+            multiple = TRUE,
+            options = options
+          ),
+          outcome = list(
+            inputId = "outcome",
+            label = "Outcome",
+            choices = allOutcomes,
+            selected = selectedOutcomes,
+            multiple = TRUE,
+            options = options
+          ),
+          strata = list(
+            inputId = "strata",
+            label = "Strata",
+            choices = allStrata,
+            selected = selectedStrata,
+            multiple = TRUE,
+            options = options
+          )
+        ),
+        growDirection = "horizontal",
+        parentNamespace = self$namespace
+      )
+    },
+
+    .initDenominatorInputs = function() {
       # denominator age group
       allAgeGroups <- unique(private$.tidyData$denominator_age_group)
       selectedAgeGroups <- allAgeGroups[1]
@@ -448,101 +519,113 @@ Incidence <- R6::R6Class(
       if (ageGroupStr %in% names(private$.defaults) && all(private$.defaults[[ageGroupStr]] %in% allAgeGroups)) {
         selectedAgeGroups <- private$.defaults[[ageGroupStr]]
       }
-      private$.pickers[["denomAgeGroup"]] <- InputPanel$new(
-        funs = list(age_group = shinyWidgets::pickerInput),
-        args = list(age_group = list(
-          inputId = "age_group", label = "Age group", choices = allAgeGroups, selected = selectedAgeGroups, multiple = TRUE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["denomAgeGroup"]]$parentNamespace <- self$namespace
 
-      # denominator sex
       allSex <- unique(private$.tidyData$denominator_sex)
       selectedSex <- allSex[1]
       sexStr <- "sex"
       if (sexStr %in% names(private$.defaults) && all(private$.defaults[[sexStr]] %in% allSex)) {
         selectedSex <- private$.defaults[[sexStr]]
       }
-      private$.pickers[["denomSex"]] <- InputPanel$new(
-        funs = list(denom_sex = shinyWidgets::pickerInput),
-        args = list(denom_sex = list(
-          inputId = "denom_sex", choices = allSex, label = "Sex", selected = selectedSex, multiple = TRUE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["denomSex"]]$parentNamespace <- self$namespace
 
-      # prior observation
       allPO <- unique(private$.tidyData$denominator_days_prior_observation)
       selectedPO <- allPO[1]
       priorObservationStr <- "prior_observation"
       if (priorObservationStr %in% names(private$.defaults) && all(private$.defaults[[priorObservationStr]] %in% allPO)) {
         selectedPO <- private$.defaults[[priorObservationStr]]
       }
-      private$.pickers[["denomPriorObs"]] <- InputPanel$new(
-        funs = list(prior_obs = shinyWidgets::pickerInput),
-        args = list(prior_obs = list(
-          inputId = "prior_obs", choices = allPO, label = "Prior observation", selected = selectedPO, multiple = TRUE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["denomPriorObs"]]$parentNamespace <- self$namespace
 
-      # denominator start date
       allDenomStartDates <- unique(private$.tidyData$denominator_start_date)
       selectedDenomStartDate <- allDenomStartDates[1]
       startDateStr <- "start_date"
       if (startDateStr %in% names(private$.defaults) && all(private$.defaults[[startDateStr]] %in% allDenomStartDates)) {
         selectedDenomStartDate <- private$.defaults[[startDateStr]]
       }
-      private$.pickers[["denomStartDate"]] <- InputPanel$new(
-        funs = list(start_date = shinyWidgets::pickerInput),
-        args = list(start_date = list(
-          inputId = "start_date", choices = allDenomStartDates, label = "Start date", selected = selectedDenomStartDate, multiple = TRUE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["denomStartDate"]]$parentNamespace <- self$namespace
 
-      # denominator end date
       allDenomEndDates <- unique(private$.tidyData$denominator_end_date)
       selectedDenomEndDate <- allDenomEndDates[1]
       endDateStr <- "end_date"
       if (endDateStr %in% names(private$.defaults) && all(private$.defaults[[endDateStr]] %in% allDenomEndDates)) {
         selectedDenomEndDate <- private$.defaults[[endDateStr]]
       }
-      private$.pickers[["denomEndDate"]] <- InputPanel$new(
-        funs = list(end_date = shinyWidgets::pickerInput),
-        args = list(end_date = list(
-          inputId = "end_date", choices = allDenomEndDates, label = "End date", selected = selectedDenomEndDate, multiple = TRUE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["denomEndDate"]]$parentNamespace <- self$namespace
 
-      # denominator time at risk
       allTimeAtRisk <- unique(private$.tidyData$denominator_time_at_risk)
       selectedTimeAtRisk <- allTimeAtRisk[1]
       timeAtRiskStr <- "time_at_risk"
       if (timeAtRiskStr %in% names(private$.defaults) && all(private$.defaults[[timeAtRiskStr]] %in% allTimeAtRisk)) {
         selectedTimeAtRisk <- private$.defaults[[timeAtRiskStr]]
       }
-      private$.pickers[["denomTimeAtRisk"]] <- InputPanel$new(
-        funs = list(time_at_risk = shinyWidgets::pickerInput),
-        args = list(time_at_risk = list(
-          inputId = "time_at_risk", choices = allTimeAtRisk, label = "Time at risk", selected = selectedTimeAtRisk, multiple = TRUE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["denomTimeAtRisk"]]$parentNamespace <- self$namespace
 
+      options <- list(
+        `actions-box` = TRUE,
+        size = 10,
+        `selected-text-format` = "count > 3"
+      )
+
+      private$.pickers[["denomAgeGroup"]] <- InputPanel$new(
+        funs = list(
+          age_group = shinyWidgets::pickerInput,
+          denom_sex = shinyWidgets::pickerInput,
+          prior_obs = shinyWidgets::pickerInput,
+          start_date = shinyWidgets::pickerInput,
+          end_date = shinyWidgets::pickerInput,
+          time_at_risk = shinyWidgets::pickerInput
+        ),
+        args = list(
+          age_group = list(
+            inputId = "age_group",
+            label = "Age group",
+            choices = allAgeGroups,
+            selected = selectedAgeGroups,
+            multiple = TRUE,
+            options = options
+          ),
+          denom_sex = list(
+            inputId = "denom_sex",
+            choices = allSex,
+            label = "Sex",
+            selected = selectedSex,
+            multiple = TRUE,
+            options = options
+          ),
+          prior_obs = list(
+            inputId = "prior_obs",
+            choices = allPO,
+            label = "Prior observation",
+            selected = selectedPO,
+            multiple = TRUE,
+            options = options
+          ),
+          start_date = list(
+            inputId = "start_date",
+            choices = allDenomStartDates,
+            label = "Start date",
+            selected = selectedDenomStartDate,
+            multiple = TRUE,
+            options = options
+          ),
+          end_date = list(
+            inputId = "end_date",
+            choices = allDenomEndDates,
+            label = "End date",
+            selected = selectedDenomEndDate,
+            multiple = TRUE,
+            options = options
+          ),
+          time_at_risk = list(
+            inputId = "time_at_risk",
+            choices = allTimeAtRisk,
+            label = "Time at risk",
+            selected = selectedTimeAtRisk,
+            multiple = TRUE,
+            options = options
+          )
+        ),
+        growDirection = "horizontal",
+        parentNamespace = self$namespace
+      )
+    },
+
+    .initAnalysisInputs = function() {
       # washout
       allWashout <- unique(private$.tidyData$analysis_outcome_washout)
       selectedWashout <- allWashout[1]
@@ -550,68 +633,77 @@ Incidence <- R6::R6Class(
       if (washoutStr %in% names(private$.defaults) && all(private$.defaults[[washoutStr]] %in% allWashout)) {
         selectedWashout <- private$.defaults[[washoutStr]]
       }
-      private$.pickers[["washout"]] <- InputPanel$new(
-        funs = list(washout = shinyWidgets::pickerInput),
-        args = list(washout = list(
-          inputId = "washout", choices = allWashout, label = "Outcome washout", selected = selectedWashout, multiple = TRUE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["washout"]]$parentNamespace <- self$namespace
 
-      # repeated events
       allRepeatedEvents <- unique(private$.tidyData$analysis_repeated_events)
       selectedRepeatedEvents <- allRepeatedEvents[1]
       repeatedEventsStr <- "repeated_events"
       if (repeatedEventsStr %in% names(private$.defaults) && all(private$.defaults[[repeatedEventsStr]] %in% allRepeatedEvents)) {
         selectedRepeatedEvents <- private$.defaults[[repeatedEventsStr]]
       }
-      private$.pickers[["repeatedEvents"]] <- InputPanel$new(
-        funs = list(repeated_events = shinyWidgets::pickerInput),
-        args = list(repeated_events = list(
-          inputId = "repeated_events", choices = allRepeatedEvents, label = "Repeated events", selected = selectedRepeatedEvents, multiple = TRUE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["repeatedEvents"]]$parentNamespace <- self$namespace
 
-      # complete period
       allCompletePeriod <- unique(private$.tidyData$analysis_complete_database_intervals)
       selectedCompletePeriod <- allCompletePeriod[1]
       completePeriodStr <- "complete_period"
       if (completePeriodStr %in% names(private$.defaults) && all(private$.defaults[[completePeriodStr]] %in% allCompletePeriod)) {
         selectedCompletePeriod <- private$.defaults[[completePeriodStr]]
       }
-      private$.pickers[["completePeriod"]] <- InputPanel$new(
-        funs = list(complete_period = shinyWidgets::pickerInput),
-        args = list(complete_period = list(
-          inputId = "complete_period", choices = allCompletePeriod, label = "Complete period", selected = selectedCompletePeriod, multiple = TRUE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["completePeriod"]]$parentNamespace <- self$namespace
 
-      # min counts
       allMinCounts <- unique(private$.tidyData$analysis_min_cell_count)
       selectedMinCounts <- allMinCounts[1]
       minCellCountStr <- "min_cell_count"
       if (minCellCountStr %in% names(private$.defaults) && private$.defaults[[minCellCountStr]] %in% allMinCounts) {
         selectedMinCounts <- private$.defaults[[minCellCountStr]]
       }
-      private$.pickers[["minCounts"]] <- InputPanel$new(
-        funs = list(min_cell_count = shinyWidgets::pickerInput),
-        args = list(min_cell_count = list(
-          inputId = "min_cell_count", choices = allMinCounts, label = "Minimum counts", selected = selectedMinCounts, multiple = TRUE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["minCounts"]]$parentNamespace <- self$namespace
 
-      # interval
+      options <- list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
+
+      private$.pickers[["analysis"]] <- InputPanel$new(
+        funs = list(
+          washout = shinyWidgets::pickerInput,
+          repeated_events = shinyWidgets::pickerInput,
+          complete_period = shinyWidgets::pickerInput,
+          min_cell_count = shinyWidgets::pickerInput
+        ),
+        args = list(
+          washout = list(
+            inputId = "washout",
+            choices = allWashout,
+            label = "Outcome washout",
+            selected = selectedWashout,
+            multiple = TRUE,
+            options = options
+          ),
+          repeated_events = list(
+            inputId = "repeated_events",
+            choices = allRepeatedEvents,
+            label = "Repeated events",
+            selected = selectedRepeatedEvents,
+            multiple = TRUE,
+            options = options
+          ),
+          complete_period = list(
+            inputId = "complete_period",
+            choices = allCompletePeriod,
+            label = "Complete period",
+            selected = selectedCompletePeriod,
+            multiple = TRUE,
+            options = options
+          ),
+          min_cell_count = list(
+            inputId = "min_cell_count",
+            choices = allMinCounts,
+            label = "Minimum counts",
+            selected = selectedMinCounts,
+            multiple = TRUE,
+            options = options
+          ),
+          growDirection = "horizontal",
+          parentNamespace = self$namespace
+        )
+      )
+    },
+
+    .initDateInputs = function() {
       allIntervals <- unique(private$.tidyData$analysis_interval)
       allIntervals <- na.omit(allIntervals[order(match(allIntervals, c("overall", "years", "quarters", "months", "weeks")))])
       selectedInterval <- allIntervals[1]
@@ -619,104 +711,117 @@ Incidence <- R6::R6Class(
       if (intervalStr %in% names(private$.defaults) && all(private$.defaults[[intervalStr]] %in% allIntervals)) {
         selectedInterval <- private$.defaults[[intervalStr]]
       }
-      private$.pickers[["interval"]] <- InputPanel$new(
-        funs = list(interval = shinyWidgets::pickerInput),
-        args = list(interval = list(
-          inputId = "interval", choices = allIntervals, label = "Interval", selected = selectedInterval, multiple = TRUE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["interval"]]$parentNamespace <- self$namespace
 
-      # start date
       allStartDates <- unique(private$.tidyData$incidence_start_date)
       selectedStartDate <- allStartDates[1]
       intervalStartDateStr <- "interval_start_date"
       if (intervalStartDateStr %in% names(private$.defaults) && all(private$.defaults[[intervalStartDateStr]] %in% allStartDates)) {
         selectedStartDate <- private$.defaults[[intervalStartDateStr]]
       }
-      private$.pickers[["startDate"]] <- InputPanel$new(
-        funs = list(year = shinyWidgets::pickerInput),
-        args = list(year = list(
-          inputId = "year", choices = allStartDates, label = "Year", selected = selectedStartDate, multiple = TRUE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["startDate"]]$parentNamespace <- self$namespace
 
+      options <- list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
+
+      private$.pickers[["date"]] <- InputPanel$new(
+        funs = list(
+          interval = shinyWidgets::pickerInput,
+          year = shinyWidgets::pickerInput
+        ),
+        args = list(
+          interval = list(
+            inputId = "interval",
+            choices = allIntervals,
+            label = "Interval",
+            selected = selectedInterval,
+            multiple = TRUE,
+            options = options
+          ),
+          year = list(
+            inputId = "year",
+            choices = allStartDates,
+            label = "Year",
+            selected = selectedStartDate,
+            multiple = TRUE,
+            options = options
+          )
+        ),
+        growDirection = "horizontal",
+        parentNamespace = self$namespace
+      )
+    },
+
+    .initPlotInputs = function() {
       # plot pickers
       plotDataChoices <- c(
         "database", "outcome_cohort_name", "strata", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation",
         "denominator_start_date", "denominator_end_date", "denominator_time_at_risk", "analysis_outcome_washout", "analysis_repeated_events",
         "analysis_complete_database_intervals", "analysis_min_cell_count", "analysis_interval", "incidence_start_date"
       )
-      # x-axis
-      private$.pickers[["xAxis"]] <- InputPanel$new(
-        funs = list(xAxis = shinyWidgets::pickerInput),
-        args = list(xAxis = list(
-          inputId = "xAxis", choices = plotDataChoices, label = "Incidence_start_date", selected = "incidence_start_date", multiple = F,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["xAxis"]]$parentNamespace <- self$namespace
 
-      # facet by
-      private$.pickers[["facet"]] <- InputPanel$new(
-        funs = list(facet_by = shinyWidgets::pickerInput),
-        args = list(facet_by = list(
-          inputId = "facet_by", choices = plotDataChoices, label = "Facet by", selected = c("outcome_cohort_name", "database"), multiple = TRUE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["facet"]]$parentNamespace <- self$namespace
+      options <- list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
 
-      # color by
-      private$.pickers[["color"]] <- InputPanel$new(
-        funs = list(color_by = shinyWidgets::pickerInput),
-        args = list(color_by = list(
-          inputId = "color_by", choices = plotDataChoices, label = "Colour by", selected = c(), multiple = TRUE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
+      private$.pickers[["plot"]] <- InputPanel$new(
+        funs = list(
+          xAxis = shinyWidgets::pickerInput,
+          facet_by = shinyWidgets::pickerInput,
+          color_by = shinyWidgets::pickerInput,
+          ribbon = shinyWidgets::pickerInput,
+          confInterval = shinyWidgets::pickerInput,
+          rotateXLabels = shinyWidgets::pickerInput
+        ),
+        args = list(
+          xAxis = list(
+            inputId = "xAxis",
+            choices = plotDataChoices,
+            label = "Incidence_start_date",
+            selected = "incidence_start_date",
+            multiple = FALSE,
+            options = options
+          ),
+          facet_by = list(
+            inputId = "facet_by",
+            choices = plotDataChoices,
+            label = "Facet by",
+            selected = c("outcome_cohort_name", "database"),
+            multiple = TRUE,
+            options = options
+          ),
+          color_by = list(
+            inputId = "color_by",
+            choices = plotDataChoices,
+            label = "Colour by",
+            selected = c(),
+            multiple = TRUE,
+            options = options
+          ),
+          ribbon = list(
+            inputId = "ribbon",
+            choices = c(TRUE, FALSE),
+            label = "Ribbon",
+            selected = TRUE,
+            multiple = FALSE,
+            options = options
+          ),
+          confInterval = list(
+            inputId = "confInterval",
+            choices = c(TRUE, FALSE),
+            label = "Confidence interval",
+            selected = TRUE,
+            multiple = FALSE,
+            options = options
+          ),
+          rotateXLabels = list(
+            inputId = "rotateXLabels",
+            choices = c(TRUE, FALSE),
+            label = "Rotate x-axis labels",
+            selected = FALSE
+          )
+        ),
+        growDirection = "horizontal",
+        parentNamespace = self$namespace
       )
-      private$.pickers[["color"]]$parentNamespace <- self$namespace
+    },
 
-      # ribbon
-      private$.pickers[["ribbon"]] <- InputPanel$new(
-        funs = list(ribbon = shinyWidgets::pickerInput),
-        args = list(ribbon = list(
-          inputId = "ribbon", choices = c(TRUE, FALSE), label = "Ribbon", selected = TRUE, multiple = FALSE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["ribbon"]]$parentNamespace <- self$namespace
-
-      # confidence interval
-      private$.pickers[["confInterval"]] <- InputPanel$new(
-        funs = list(confInterval = shinyWidgets::pickerInput),
-        args = list(confInterval = list(
-          inputId = "confInterval", choices = c(TRUE, FALSE), label = "Confidence interval", selected = TRUE, multiple = FALSE,
-          options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3")
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["confInterval"]]$parentNamespace <- self$namespace
-
-      # rotate x-axis labels
-      private$.pickers[["rotateXLabels"]] <- InputPanel$new(
-        funs = list(rotateXLabels = shinyWidgets::pickerInput),
-        args = list(rotateXLabels = list(
-          inputId = "rotateXLabels", choices = c(TRUE, FALSE), label = "Rotate x-axis labels", selected = FALSE
-        )),
-        growDirection = "horizontal"
-      )
-      private$.pickers[["rotateXLabels"]]$parentNamespace <- self$namespace
-
+    .initTableInputs = function() {
       # headerColumn
       headerColumnOptions <- c("cdm_name", "estimate_name")
       private$.pickers[["headerColumn"]] <- InputPanel$new(
@@ -764,6 +869,15 @@ Incidence <- R6::R6Class(
         growDirection = "horizontal"
       )
       private$.pickers[["hideColumn"]]$parentNamespace <- self$namespace
+    },
+
+    initPickers = function() {
+      private$.initDatabaseInputs()
+      private$.initDenominatorInputs()
+      private$.initAnalysisInputs()
+      private$.initDateInputs()
+      private$.initPlotInputs()
+      private$.initTableInputs()
     }
   )
 )
