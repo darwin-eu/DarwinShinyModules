@@ -72,6 +72,13 @@ reference:
 - contents:
   - DrugExposureDiagnostics
 
+- subtitle: DrugUtilisation
+- contents:
+  - DrugUtilisation
+  - DrugRestart
+  - Indication
+  - Treatment
+
 - subtitle: IncidencePrevalence
 - contents:
   - Incidence

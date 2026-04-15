@@ -79,6 +79,10 @@ Collate:
     'DatabaseDBI.R'
     'DatabaseOverview.R'
     'DrugExposureDiagnostics.R'
+    'DrugUtilisation-DrugRestart.R'
+    'DrugUtilisation-DrugUtilisation.R'
+    'DrugUtilisation-Indication.R'
+    'DrugUtilisation-Treatment.R'
     'IncidencePrevalence-Incidence.R'
     'IncidencePrevalence-Prevalence.R'
     'InputPanel.R'
@@ -105,6 +109,7 @@ Collate:
     'launchShinydashboardApp.R'
     'makeModule.R'
     'preview.R'
+    'utils-SummarizedResult.R'
     'utils.R'
     'zzz.R'
 URL: https://darwin-eu-dev.github.io/DarwinShinyModules/

@@ -98,9 +98,9 @@ CohortSurvival <- R6::R6Class(
       return(private$.tableAttrition)
     },
 
-    #' @field cdmName (`character`) Available CDM names
-    cdmName = function() {
-      return(private$.cdmName)
+    #' @field cdmNames (`character`) Available CDM names
+    cdmNames = function() {
+      return(private$.cdmNames)
     },
 
     #' @field cohortNames (`character`) Available cohort bames
@@ -162,7 +162,7 @@ CohortSurvival <- R6::R6Class(
   private = list(
     ## Fields ----
     .result = NULL,
-    .cdmName = NULL,
+    .cdmNames = NULL,
     .cohortNames = NULL,
     .strata = NULL,
 
@@ -203,17 +203,17 @@ CohortSurvival <- R6::R6Class(
         shiny::div(
           style = "display: inline-block;",
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "cdmName"),
+            inputId = shiny::NS(self$namespace, "cdmNames"),
             label = "CDM Name",
-            choices = private$.cdmName,
-            selected = private$.cdmName[1],
+            choices = private$.cdmNames,
+            selected = private$.cdmNames[1],
             multiple = TRUE
           )
         ),
         shiny::div(
           style = "display: inline-block;",
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "cohortName"),
+            inputId = shiny::NS(self$namespace, "cohortNames"),
             label = "Cohort Name",
             choices = private$.cohortNames,
             selected = private$.cohortNames[1],
@@ -364,19 +364,25 @@ CohortSurvival <- R6::R6Class(
     .serverTable = function(input, output, session) {
       shiny::observeEvent(
         list(
-          input$cdm_name, input$cohortName, input$strata,
+          input$cdmNames, input$cohortNames, input$strata,
           input$tableTimeScale, input$tableTimes, input$tableEstimates
         ), {
           private$.table$args$timeScale <- input$tableTimeScale
           private$.table$args$times <- as.numeric(input$tableTimes)
           private$.table$args$estimates <- input$tableEstimates
 
+          strata <- if (all(is.null(input$strata))) {
+            "overall"
+          } else {
+            c("overall", input$strata)
+          }
+
           private$.table$args$x <- private$.result |>
             dplyr::filter(
-              .data$cdm_name %in% input$cdmName,
-              .data$strata_name %in% input$strata
+              .data$cdm_name %in% input$cdmNames,
+              .data$strata_name %in% strata
             ) |>
-            omopgenerics::filterGroup(target_cohort %in% input$cohortName)
+            omopgenerics::filterGroup(target_cohort %in% input$cohortNames)
 
           private$.table$server(input, output, session)
         }
@@ -384,13 +390,19 @@ CohortSurvival <- R6::R6Class(
     },
 
     .serverTableEvents = function(input, output, session) {
-      shiny::observeEvent(list(input$cdmName, input$cohortName, input$strata), {
+      shiny::observeEvent(list(input$cdmNames, input$cohortNames, input$strata), {
+        strata <- if (all(is.null(input$strata))) {
+          "overall"
+        } else {
+          c("overall", input$strata)
+        }
+
         private$.tableEvents$args$x <- private$.result |>
           dplyr::filter(
-            .data$cdm_name %in% input$cdmName,
-            .data$strata_name %in% input$strata
+            .data$cdm_name %in% input$cdmNames,
+            .data$strata_name %in% strata
           ) |>
-          omopgenerics::filterGroup(.data$target_cohort %in% input$cohortName)
+          omopgenerics::filterGroup(.data$target_cohort %in% input$cohortNames)
 
         private$.tableEvents$server(input, output, session)
       })
@@ -399,8 +411,8 @@ CohortSurvival <- R6::R6Class(
     .serverPlot = function(input, output, session) {
       shiny::observeEvent(
         list(
-          input$cdmName,
-          input$cohortName,
+          input$cdmNames,
+          input$cohortNames,
           input$plotRibbon,
           input$plotCumulativeFailure,
           input$plotLogLog,
@@ -418,10 +430,10 @@ CohortSurvival <- R6::R6Class(
 
           private$.plot$args$result <- private$.result |>
             dplyr::filter(
-              .data$cdm_name %in% input$cdmName,
+              .data$cdm_name %in% input$cdmNames,
               .data$strata_name %in% strata
             ) |>
-            omopgenerics::filterGroup(target_cohort %in% input$cohortName)
+            omopgenerics::filterGroup(target_cohort %in% input$cohortNames)
 
           private$.plot$args$ribbon <- convertLabelToLogical(input$plotRibbon)
           private$.plot$args$cumulativeFailure <- convertLabelToLogical(input$plotCumulativeFailure)
@@ -438,22 +450,14 @@ CohortSurvival <- R6::R6Class(
 
     ## Helpers ----
     .setFilterValues = function() {
-      private$.cdmName <- private$.result |>
-        dplyr::distinct(.data$cdm_name) |>
-        dplyr::pull(.data$cdm_name)
+      private$.cdmNames <- getCDMNames(private$.result)
+      private$.strata <- getStrata(private$.result)
 
       private$.cohortNames <- private$.result |>
-        dplyr::filter(
-          .data$group_name == "target_cohort",
-          .data$strata_name != "reason"
-        ) |>
+        dplyr::filter(.data$group_name == "target_cohort") |>
         dplyr::distinct(.data$group_level) |>
+        dplyr::filter(!grepl(.data$group_level, pattern = "_\\d$")) |>
         dplyr::pull(.data$group_level)
-
-      private$.strata <- private$.result |>
-        dplyr::filter(.data$strata_name != "reason") |>
-        dplyr::distinct(.data$strata_name) |>
-        dplyr::pull(.data$strata_name)
     }
   )
 )
