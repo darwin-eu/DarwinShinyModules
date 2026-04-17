@@ -65,8 +65,12 @@ InputPanel <- R6::R6Class(
     },
 
     #' @field args (`list()`) Named list of arguments used by xInput functions `list(funA = list(inputId = "name", label = "name"))`.
-    args = function() {
-      return(private$.args)
+    args = function(args) {
+      if (missing(args)) {
+        return(private$.args)
+      } else {
+        private$.args <- args
+      }
     },
 
     #' @field inputValues (`reactiveValues`) Values passed from the input fields.
@@ -74,7 +78,7 @@ InputPanel <- R6::R6Class(
       if (missing(inputValues)) {
         return(self$getReactiveValues())
       } else {
-        self$reactiveValues <- inputValues
+        private$.reactiveValues <- inputValues
       }
     }
   ),
@@ -96,6 +100,7 @@ InputPanel <- R6::R6Class(
       checkmate::assertChoice(x = growDirection, choices = c("vertical", "horizontal"))
       private$.funs <- funs
       private$.args <- args
+
       private$.growDirection <- growDirection
       private$updateIds()
       self$validate()
@@ -108,6 +113,21 @@ InputPanel <- R6::R6Class(
     #' @return (`self`)
     validate = function() {
       return(invisible(self))
+    },
+
+    #' @description
+    #' Updates the input variables using the provided update functions supplied in `updateFuns`
+    #'
+    #' @param fun (`funciton`) Update function to use i.e. `shiny::updateSelectInput`
+    #' @param name (`character(1)`) Name of the update function and argument set to use.
+    #' @param ... Arguments that are used by the supplied function. `inputId` should now be provided, as it is derived from the `name` argument.
+    #'
+    #' @return (`invisible(self)`)
+    update = function(fun, name, ...) {
+      dots <- list(...)
+      args <- append(dots, list(inputId = shiny::NS(self$moduleId, name)))
+      do.call(fun, args)
+      return(invisible(self))
     }
   ),
 
@@ -116,6 +136,7 @@ InputPanel <- R6::R6Class(
     ## Fields ----
     .funs = NULL,
     .args = NULL,
+
     .growDirection = "vertical",
 
     .UI = function() {

@@ -51,6 +51,7 @@ if (interactive()) {
 \itemize{
 \item \href{#method-InputPanel-new}{\code{InputPanel$new()}}
 \item \href{#method-InputPanel-validate}{\code{InputPanel$validate()}}
+\item \href{#method-InputPanel-update}{\code{InputPanel$update()}}
 \item \href{#method-InputPanel-clone}{\code{InputPanel$clone()}}
 }
 }
@@ -100,6 +101,30 @@ Validation method
 
 \subsection{Returns}{
 (\code{self})
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-InputPanel-update"></a>}}
+\if{latex}{\out{\hypertarget{method-InputPanel-update}{}}}
+\subsection{Method \code{update()}}{
+Updates the input variables using the provided update functions supplied in \code{updateFuns}
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{InputPanel$update(fun, name, ...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{fun}}{(\code{funciton}) Update function to use i.e. \code{shiny::updateSelectInput}}
+
+\item{\code{name}}{(\code{character(1)}) Name of the update function and argument set to use.}
+
+\item{\code{...}}{Arguments that are used by the supplied function. \code{inputId} should now be provided, as it is derived from the \code{name} argument.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+(\code{invisible(self)})
 }
 }
 \if{html}{\out{<hr>}}
