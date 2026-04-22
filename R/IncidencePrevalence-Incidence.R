@@ -96,7 +96,6 @@ Incidence <- R6::R6Class(
       private$.assertIncidenceData(result)
       private$.result <- result
       private$.settings <- omopgenerics::settings(result)
-      private$.tidyData <- private$.transformData(result)
       private$.defaults <- defaults
       private$.setFilterValues()
       private$.initPickers()
@@ -126,7 +125,6 @@ Incidence <- R6::R6Class(
   private = list(
     .result = NULL,
     .settings = NULL,
-    .tidyData = NULL,
 
     .pickers = NULL,
     .pickerOptions = list(
@@ -158,6 +156,9 @@ Incidence <- R6::R6Class(
     .minCellCount = NULL,
 
     .timeIntervals = NULL,
+
+    .dateRangeMin = NULL,
+    .dateRangeMax = NULL,
 
     ## UI ----
     .UI = function() {
@@ -244,54 +245,40 @@ Incidence <- R6::R6Class(
 
     .serverUpdateIntervalItems = function(input, output, session) {
       # "overall", "years", "quarters", "months", "weeks"
-      shiny::observeEvent(private$.pickers[["date"]]$inputValues$interval, {
+      shiny::observeEvent(list(
+        private$.pickers[["date"]]$inputValues$interval,
+        private$.pickers[["date"]]$inputValues$timeWindow
+      ), {
         interval <- private$.pickers[["date"]]$inputValues$interval
+        minDate <- private$.pickers[["date"]]$inputValues$timeWindow[1]
+        maxDate <- private$.pickers[["date"]]$inputValues$timeWindow[2]
 
-        additionalLevels <- result |>
+        additionalLevels <- private$.result |>
+          omopgenerics::filterAdditional(.data$incidence_end_date != "overall") |>
+          omopgenerics::filterAdditional(as.Date(.data$incidence_start_date) >= minDate) |>
+          omopgenerics::filterAdditional(as.Date(.data$incidence_end_date) <= maxDate) |>
           dplyr::filter(grepl(pattern = "analysis_interval", x = .data$additional_name)) |>
           dplyr::filter(grepl(pattern = interval, x = .data$additional_level)) |>
           dplyr::distinct(.data$additional_level) |>
           dplyr::pull(.data$additional_level)
 
-        additionalLevelItems <- stringr::str_split(string = additionalLevels, pattern = " &&& ") |>
+        additionalLevelItems <- stringr::str_split_i(string = additionalLevels, pattern = " &&& ", i = 1) |>
           unlist() |>
           unique()
-
-        dates <- additionalLevelItems[grepl(pattern = "^\\d", x = additionalLevelItems)] |>
-          as.Date()
-
-        choices <- if (interval == "years") {
-          dates |>
-            format("%Y") |>
-            unique()
-        } else if (interval == "months") {
-          if (FALSE) {
-            month.name
-          } else {
-            dates |>
-              unique() |>
-              as.character()
-          }
-        } else if (inteval == "quarters") {
-          dates
-        } else if (interval == "weeks") {
-          dates
-        }
 
         private$.pickers[["date"]]$update(
           fun = shinyWidgets::updatePickerInput,
           name = "intervalItems",
           session = session,
-          choices = choices,
-          selected = choices[1]
+          choices = additionalLevelItems,
+          selected = additionalLevelItems[1]
         )
       })
     },
 
     .serverGetSummariseResultData = function(input, output, session) {
       reactive({
-        browser()
-        df <- private$.result %>%
+        private$.result %>%
           dplyr::filter(
             cdm_name %in% private$.pickers[["database"]]$inputValues$cdm) %>%
           omopgenerics::filterSettings(
@@ -307,36 +294,10 @@ Incidence <- R6::R6Class(
             denominator_time_at_risk %in% private$.pickers[["denominator"]]$inputValues$time_at_risk
           ) |>
           omopgenerics::filterAdditional(
-            analysis_interval == private$.pickers[["date"]]$inputValues$interval
+            analysis_interval == private$.pickers[["date"]]$inputValues$interval,
+            incidence_start_date %in% private$.pickers[["date"]]$inputValues$intervalItems
           ) |>
           omopgenerics::filterGroup(outcome_cohort_name %in% private$.pickers[["database"]]$inputValues$outcome)
-
-        # "overall", "years", "quarters", "months", "weeks"
-        if (private$.pickers[["date"]]$inputValues$interval == "years") {
-          pat <- sprintf("[%s]", paste(private$.pickers[["date"]]$inputValues$intervalItems, collapse = "|"))
-          df <- df |>
-            omopgenerics::filterAdditional(
-              grepl(x = .data$incidence_start_date, pattern = pat)
-            )
-        } else if (private$.pickers[["date"]]$inputValues$interval == "months") {
-          df <- df |>
-            omopgenerics::filterAdditional(
-              .data$incidence_start_date %in% private$.pickers[["date"]]$inputValues$intervalItems
-            )
-        } else if (private$.pickers[["date"]]$inputValues$interval == "quarters") {
-          df <- df
-        } else if (private$.pickers[["date"]]$inputValues$interval == "weeks") {
-          df <- df
-        } else if (private$.pickers[["date"]]$inputValues$interval == "months seasonal") {
-          df <- df
-        } else if (private$.pickers[["date"]]$inputValues$interval == "quarters seasonal") {
-          df <- df
-        } else if (private$.pickers[["date"]]$inputValues$interval == "weeks seasonal") {
-          df <- df
-        } else {
-          df <- df
-        }
-        return(df)
       })
     },
 
@@ -542,7 +503,8 @@ Incidence <- R6::R6Class(
       private$.pickers[["date"]] <- InputPanel$new(
         funs = list(
           interval = shinyWidgets::pickerInput,
-          intervalItems = shinyWidgets::pickerInput
+          intervalItems = shinyWidgets::pickerInput,
+          timeWindow = shiny::dateRangeInput
         ),
         args = list(
           interval = list(
@@ -558,6 +520,14 @@ Incidence <- R6::R6Class(
             choices = c(),
             multiple = TRUE,
             options = private$.pickerOptions
+          ),
+          timeWindow = list(
+            inputId = "timeWindow",
+            label = "Time Window",
+            start = private$.dateRangeMin,
+            end = private$.dateRangeMax,
+            min = private$.dateRangeMin,
+            max = private$.dateRangeMax
           )
         ),
         growDirection = "horizontal",
@@ -568,7 +538,7 @@ Incidence <- R6::R6Class(
     .initPlotInputs = function() {
       # plot pickers
       plotDataChoices <- c(
-        "database", "outcome_cohort_name", "strata", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation",
+        "cdm_name", "outcome_cohort_name", "strata", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation",
         "denominator_start_date", "denominator_end_date", "denominator_time_at_risk", "analysis_outcome_washout", "analysis_repeated_events",
         "analysis_complete_database_intervals", "analysis_min_cell_count", "analysis_interval", "incidence_start_date"
       )
@@ -717,7 +687,28 @@ Incidence <- R6::R6Class(
       private$.databaseIntervals <- private$.getColValues("analysis_complete_database_intervals")
       private$.minCellCount <- private$.getColValues("min_cell_count")
 
+      private$.setDateRange()
+
       private$.setTimeIntervals()
+    },
+
+    .setDateRange = function() {
+      private$.dateRangeMin <- result |>
+        omopgenerics::filterAdditional(
+          .data$incidence_start_date == min(.data$incidence_start_date)
+        ) |>
+        omopgenerics::tidy() |>
+        dplyr::distinct(.data$incidence_start_date) |>
+        dplyr::pull() |>
+        as.Date()
+
+      private$.dateRangeMax <- result |>
+        omopgenerics::filterAdditional(.data$incidence_end_date != "overall") |>
+        omopgenerics::filterAdditional(.data$incidence_end_date == max(.data$incidence_end_date)) |>
+        omopgenerics::tidy() |>
+        dplyr::distinct(.data$incidence_end_date) |>
+        dplyr::pull() |>
+        as.Date()
     },
 
     .setTimeIntervals = function() {
