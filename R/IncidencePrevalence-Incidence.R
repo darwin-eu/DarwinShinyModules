@@ -693,7 +693,7 @@ Incidence <- R6::R6Class(
     },
 
     .setDateRange = function() {
-      private$.dateRangeMin <- result |>
+      private$.dateRangeMin <- private$.result |>
         omopgenerics::filterAdditional(
           .data$incidence_start_date == min(.data$incidence_start_date)
         ) |>
@@ -702,7 +702,7 @@ Incidence <- R6::R6Class(
         dplyr::pull() |>
         as.Date()
 
-      private$.dateRangeMax <- result |>
+      private$.dateRangeMax <- private$.result |>
         omopgenerics::filterAdditional(.data$incidence_end_date != "overall") |>
         omopgenerics::filterAdditional(.data$incidence_end_date == max(.data$incidence_end_date)) |>
         omopgenerics::tidy() |>
