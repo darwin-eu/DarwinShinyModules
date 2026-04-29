@@ -14,12 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' @title Incidence Module Class
+#' @title IncidencePrevalence Module Class
 #'
 #' @include ShinyModule.R
 #'
 #' @description
-#' Incidence module that shows incidence results from the IncidencePrevalence package.
+#' IncidencePrevalence module that shows incidence results from the IncidencePrevalence package.
 #'
 #' @export
 #'
@@ -40,7 +40,7 @@
 #'       "dummyData/IncidencePrevalence/1.2.0/incidence.csv"
 #'     ))
 #'
-#'     incMod <- Incidence$new(result = inc,
+#'     incMod <- IncidencePrevalence$new(result = inc,
 #'                             defaults = list(sex = "Both"))
 #'
 #'     ui <- shiny::fluidPage(
@@ -57,13 +57,13 @@
 #'   }
 #' }
 #' }
-Incidence <- R6::R6Class(
-  classname = "Incidence",
+IncidencePrevalence <- R6::R6Class(
+  classname = "IncidencePrevalence",
   inherit = DarwinShinyModules::ShinyModule,
 
   # Active ----
   active = list(
-    #' @field result (`summarisedResult`) SummarisedResult object from Incidence.
+    #' @field result (`summarisedResult`) SummarisedResult object from IncidencePrevalence
     result = function(result) {
       if (missing(result)) {
         return(private$.result)
@@ -88,20 +88,30 @@ Incidence <- R6::R6Class(
     #'
     #' @param result (`summarised_result`) Result object from the `IncidencePrevalence` package.
     #' @param defaults list of default values for the pickers
+    #' @param type (`character(1)`) Either `"incidence"` or `"prevalence"`
     #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @returns `self`
     initialize = function(result, defaults = list(), ...) {
       super$initialize(...)
-      private$.assertIncidenceData(result)
+      private$.assertResult(result)
       private$.result <- result
       private$.settings <- omopgenerics::settings(result)
       private$.defaults <- defaults
+
+      resType <- unique(private$.settings$result_type)
+
+      if ("incidence" %in% resType) {
+        private$.setIncidenceCols()
+      } else if ("prevalence" %in% resType) {
+        private$.setPrevalenceCols()
+      }
+
       private$.setFilterValues()
       private$.initPickers()
 
       private$.table <- Flextable$new(
-        fun = IncidencePrevalence::tableIncidence,
+        fun = private$.tableIncidencePrevalence,
         args = list(
           type = "flextable",
           style = "darwin"
@@ -111,7 +121,7 @@ Incidence <- R6::R6Class(
       )
 
       private$.plot <- PlotStatic$new(
-        fun = private$.plotIncidence,
+        fun = private$.plotIncidencePrevalence,
         args = list(),
         height = "80vh",
         parentNamespace = self$namespace
@@ -123,6 +133,13 @@ Incidence <- R6::R6Class(
 
   # Private ----
   private = list(
+    .resultType = "",
+    .startDateCol = "",
+    .endDateCol = "",
+    .estimate = "",
+    .ciUpper = "",
+    .ciLower = "",
+
     .result = NULL,
     .settings = NULL,
 
@@ -149,20 +166,26 @@ Incidence <- R6::R6Class(
     .startDate = NULL,
     .endDate = NULL,
     .timeAtRisk = NULL,
+    .timeIntervals = NULL,
 
+    # Incidence
     .outcomeWashout = NULL,
     .repeatedEvents = NULL,
     .databaseIntervals = NULL,
-    .minCellCount = NULL,
 
-    .timeIntervals = NULL,
+    # Point Prev
+    .timePoint = NULL,
+
+    # Period Prev
+    .fullContribution = NULL,
+    .level = NULL,
 
     .dateRangeMin = NULL,
     .dateRangeMax = NULL,
 
     ## UI ----
     .UI = function() {
-      shiny::tagList(
+      shiny::fluidPage(
         private$.uiInputs(),
         shiny::tabsetPanel(
           shiny::tabPanel(
@@ -178,9 +201,17 @@ Incidence <- R6::R6Class(
     },
 
     .uiInputs = function() {
-      shiny::tagList(
-        shiny::h3("Incidence estimates"),
-        shiny::p("Incidence estimates are shown below, please select configuration to filter them:"),
+      label <- if (private$.resultType == "incidence") {
+        "Incidence"
+      } else if (private$.resultType == "point_prev") {
+        "Point Prevalence"
+      } else if (private$.resultType == "period_prev") {
+        "Period Prevalence"
+      }
+
+      shiny::fluidRow(
+        shiny::h3(sprintf("%s Estimates", label)),
+        shiny::p(sprintf("%s Estimates are shown below, please select configuration to filter them:", label)),
         shiny::h4("Settings"),
         shiny::tabsetPanel(
           shiny::tabPanel(
@@ -205,26 +236,30 @@ Incidence <- R6::R6Class(
 
     .uiPlot = function() {
       shiny::tagList(
-        shiny::column(
-          width = 2,
-          private$.pickers[["plot"]]$UI()
-        ),
-        shiny::column(
-          width = 10,
-          private$.plot$UI()
+        shiny::fluidRow(
+          shiny::column(
+            width = 2,
+            private$.pickers[["plot"]]$UI()
+          ),
+          shiny::column(
+            width = 10,
+            private$.plot$UI()
+          )
         )
       )
     },
 
     .uiTable = function() {
       shiny::tagList(
-        shiny::column(
-          width = 2,
-          private$.pickers[["table"]]$UI()
-        ),
-        shiny::column(
-          width = 10,
-          private$.table$UI()
+        shiny::fluidRow(
+          shiny::column(
+            width = 2,
+            private$.pickers[["table"]]$UI()
+          ),
+          shiny::column(
+            width = 10,
+            private$.table$UI()
+          )
         )
       )
     },
@@ -254,9 +289,9 @@ Incidence <- R6::R6Class(
         maxDate <- private$.pickers[["date"]]$inputValues$timeWindow[2]
 
         additionalLevels <- private$.result |>
-          omopgenerics::filterAdditional(.data$incidence_end_date != "overall") |>
-          omopgenerics::filterAdditional(as.Date(.data$incidence_start_date) >= minDate) |>
-          omopgenerics::filterAdditional(as.Date(.data$incidence_end_date) <= maxDate) |>
+          omopgenerics::filterAdditional(.data[[private$.endDateCol]] != "overall") |>
+          omopgenerics::filterAdditional(as.Date(.data[[private$.startDateCol]]) >= minDate) |>
+          omopgenerics::filterAdditional(as.Date(.data[[private$.endDateCol]]) <= maxDate) |>
           dplyr::filter(grepl(pattern = "analysis_interval", x = .data$additional_name)) |>
           dplyr::filter(grepl(pattern = interval, x = .data$additional_level)) |>
           dplyr::distinct(.data$additional_level) |>
@@ -278,26 +313,50 @@ Incidence <- R6::R6Class(
 
     .serverGetSummariseResultData = function(input, output, session) {
       reactive({
-        private$.result %>%
+        analysis <- private$.pickers$analysis$inputValues
+        denominator <- private$.pickers$denominator$inputValues
+        date <- private$.pickers$date$inputValues
+        database <- private$.pickers[["database"]]$inputValues
+
+        result <- private$.result |>
           dplyr::filter(
-            cdm_name %in% private$.pickers[["database"]]$inputValues$cdm) %>%
+            cdm_name %in% private$.pickers[["database"]]$inputValues$cdm
+          )
+
+        result <- if (private$.resultType == "incidence") {
+          result |>
+            omopgenerics::filterSettings(
+              .data$analysis_outcome_washout %in% analysis$washout,
+              .data$analysis_repeated_events %in% analysis$repeated_events,
+              .data$analysis_complete_database_intervals %in% analysis$complete_period
+            )
+        } else if (private$.resultType == "point_prev") {
+          result
+        } else if (private$.resultType == "period_prev") {
+          result |>
+            omopgenerics::filterSettings(
+              .data$analysis_full_contribution %in% analysis$fullContribution,
+              .data$analysis_level %in% analysis$level,
+              .data$analysis_complete_database_intervals %in% analysis$complete_period
+            )
+        } else {
+          result
+        }
+
+        result |>
           omopgenerics::filterSettings(
-            analysis_repeated_events %in% private$.pickers[["analysis"]]$inputValues$repeated_events,
-            analysis_outcome_washout %in% private$.pickers[["analysis"]]$inputValues$washout,
-            analysis_complete_database_intervals %in% private$.pickers[["analysis"]]$inputValues$complete_period,
-            min_cell_count %in% private$.pickers[["analysis"]]$inputValues$min_cell_count,
-            denominator_start_date %in% private$.pickers[["denominator"]]$inputValues$start_date,
-            denominator_end_date %in% private$.pickers[["denominator"]]$inputValues$end_date,
-            denominator_days_prior_observation %in% private$.pickers[["denominator"]]$inputValues$prior_obs,
-            denominator_sex %in% private$.pickers[["denominator"]]$inputValues$denom_sex,
-            denominator_age_group %in% private$.pickers[["denominator"]]$inputValues$age_group,
-            denominator_time_at_risk %in% private$.pickers[["denominator"]]$inputValues$time_at_risk
+            .data$denominator_start_date %in% denominator$start_date,
+            .data$denominator_end_date %in% denominator$end_date,
+            .data$denominator_days_prior_observation %in% denominator$prior_obs,
+            .data$denominator_sex %in% denominator$denom_sex,
+            .data$denominator_age_group %in% denominator$age_group,
+            .data$denominator_time_at_risk %in% denominator$time_at_risk
           ) |>
           omopgenerics::filterAdditional(
-            analysis_interval == private$.pickers[["date"]]$inputValues$interval,
-            incidence_start_date %in% private$.pickers[["date"]]$inputValues$intervalItems
+            analysis_interval == date$interval,
+            .data[[private$.startDateCol]] %in% date$intervalItems
           ) |>
-          omopgenerics::filterGroup(outcome_cohort_name %in% private$.pickers[["database"]]$inputValues$outcome)
+          omopgenerics::filterGroup(outcome_cohort_name %in% database$outcome)
       })
     },
 
@@ -306,7 +365,6 @@ Incidence <- R6::R6Class(
 
       shiny::observe({
         shiny::req(fetchData())
-
         private$.table$args$result <- fetchData()
         private$.table$args$header <- inputValues$headerColumn
         private$.table$args$groupColumn <- inputValues$groupColumn
@@ -320,16 +378,18 @@ Incidence <- R6::R6Class(
     .serverPlot = function(input, output, session, fetchData) {
       shiny::observe({
         shiny::req(fetchData())
-
         private$.plot$args$result <- fetchData()
         private$.plot$args$x <- private$.pickers[["plot"]]$inputValues$xAxis
-        private$.plot$args$y <- "incidence_100000_pys"
+        private$.plot$args$y <- private$.estimate
         private$.plot$args$line <- FALSE
         private$.plot$args$point <- TRUE
         private$.plot$args$ribbon <- as.logical(private$.pickers[["plot"]]$inputValues$ribbon)
-        private$.plot$args$ymin <- "incidence_100000_pys_95CI_lower"
-        private$.plot$args$ymax <- "incidence_100000_pys_95CI_upper"
-        private$.plot$args$facet <- private$.pickers[["plot"]]$inputValues$facet_by
+        private$.plot$args$ymin <- private$.ciLower
+        private$.plot$args$ymax <- private$.ciUpper
+        private$.plot$args$facet <- makeFacetFormula(
+          facetX = private$.pickers[["plot"]]$inputValues$facetX,
+          facetY = private$.pickers[["plot"]]$inputValues$facetY
+        )
         private$.plot$args$colour <- private$.pickers[["plot"]]$inputValues$color_by
 
         private$.plot$args$confInterval <- as.logical(private$.pickers[["plot"]]$inputValues$confInterval)
@@ -453,50 +513,94 @@ Incidence <- R6::R6Class(
     },
 
     .initAnalysisInputs = function() {
-      private$.pickers[["analysis"]] <- InputPanel$new(
-        funs = list(
-          washout = shinyWidgets::pickerInput,
-          repeated_events = shinyWidgets::pickerInput,
-          complete_period = shinyWidgets::pickerInput,
-          min_cell_count = shinyWidgets::pickerInput
-        ),
-        args = list(
-          washout = list(
-            inputId = "washout",
-            label = "Outcome washout",
-            choices = private$.outcomeWashout,
-            selected = private$.outcomeWashout[1],
-            multiple = TRUE,
-            options = private$.pickerOptions
+      private$.pickers[["analysis"]] <- if (private$.resultType == "incidence") {
+        InputPanel$new(
+          funs = list(
+            washout = shinyWidgets::pickerInput,
+            repeated_events = shinyWidgets::pickerInput,
+            complete_period = shinyWidgets::pickerInput
           ),
-          repeated_events = list(
-            inputId = "repeated_events",
-            label = "Repeated events",
-            choices = private$.repeatedEvents,
-            selected = private$.repeatedEvents[1],
-            multiple = TRUE,
-            options = private$.pickerOptions
+          args = list(
+            washout = list(
+              inputId = "washout",
+              label = "Outcome washout",
+              choices = private$.outcomeWashout,
+              selected = private$.outcomeWashout[1],
+              multiple = TRUE,
+              options = private$.pickerOptions
+            ),
+            repeated_events = list(
+              inputId = "repeated_events",
+              label = "Repeated events",
+              choices = private$.repeatedEvents,
+              selected = private$.repeatedEvents[1],
+              multiple = TRUE,
+              options = private$.pickerOptions
+            ),
+            complete_period = list(
+              inputId = "complete_period",
+              label = "Complete period",
+              choices = private$.databaseIntervals,
+              selected = private$.databaseIntervals[1],
+              multiple = TRUE,
+              options = private$.pickerOptions
+            )
           ),
-          complete_period = list(
-            inputId = "complete_period",
-            label = "Complete period",
-            choices = private$.databaseIntervals,
-            selected = private$.databaseIntervals[1],
-            multiple = TRUE,
-            options = private$.pickerOptions
+          growDirection = "horizontal",
+          parentNamespace = self$namespace
+        )
+      } else if (private$.resultType == "point_prev") {
+        # Empty module, no analysis settings are present for point prevalence.
+        InputPanel$new(
+          funs = list(),
+          args = list(),
+          growDirection = "horizontal",
+          parentNamespace = self$namespace
+        )
+      } else if (private$.resultType == "period_prev") {
+        InputPanel$new(
+          funs = list(
+            fullContribution = shinyWidgets::pickerInput,
+            level = shinyWidgets::pickerInput,
+            complete_period = shinyWidgets::pickerInput
           ),
-          min_cell_count = list(
-            inputId = "min_cell_count",
-            label = "Minimum counts",
-            choices = private$.minCellCount,
-            selected = private$.minCellCount[1],
-            multiple = TRUE,
-            options = private$.pickerOptions
-          )
-        ),
-        growDirection = "horizontal",
-        parentNamespace = self$namespace
-      )
+          args = list(
+            fullContribution = list(
+              inputId = "fullContribution",
+              label = "Full Contribution",
+              choices = private$.fullContribution,
+              selected = private$.fullContribution[1],
+              multiple = TRUE,
+              options = private$.pickerOptions
+            ),
+            level = list(
+              inputId = "level",
+              label = "Level",
+              choices = private$.level,
+              selected = private$.level[1],
+              multiple = TRUE,
+              options = private$.pickerOptions
+            ),
+            complete_period = list(
+              inputId = "complete_period",
+              label = "Complete period",
+              choices = private$.databaseIntervals,
+              selected = private$.databaseIntervals[1],
+              multiple = TRUE,
+              options = private$.pickerOptions
+            )
+          ),
+          growDirection = "horizontal",
+          parentNamespace = self$namespace
+        )
+      } else {
+        InputPanel$new(
+          funs = list(),
+          args = list(),
+          growDirection = "horizontal",
+          parentNamespace = self$namespace
+        )
+      }
     },
 
     .initDateInputs = function() {
@@ -509,8 +613,8 @@ Incidence <- R6::R6Class(
         args = list(
           interval = list(
             inputId = "interval",
-            choices = private$.timeIntervals,
             label = "Interval",
+            choices = private$.timeIntervals,
             selected = private$.timeIntervals[1],
             options = private$.pickerOptions
           ),
@@ -538,15 +642,18 @@ Incidence <- R6::R6Class(
     .initPlotInputs = function() {
       # plot pickers
       plotDataChoices <- c(
-        "cdm_name", "outcome_cohort_name", "strata", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "denominator_days_prior_observation",
-        "denominator_start_date", "denominator_end_date", "denominator_time_at_risk", "analysis_outcome_washout", "analysis_repeated_events",
-        "analysis_complete_database_intervals", "analysis_min_cell_count", "analysis_interval", "incidence_start_date"
+        "cdm_name", "outcome_cohort_name", "strata", "denominator_cohort_name",
+        "denominator_age_group", "denominator_sex", "denominator_days_prior_observation",
+        "denominator_start_date", "denominator_end_date", "denominator_time_at_risk",
+        "analysis_outcome_washout", "analysis_repeated_events",
+        "analysis_complete_database_intervals", "analysis_interval", private$.startDateCol
       )
 
       private$.pickers[["plot"]] <- InputPanel$new(
         funs = list(
           xAxis = shinyWidgets::pickerInput,
-          facet_by = shinyWidgets::pickerInput,
+          facetX = shinyWidgets::pickerInput,
+          facetY = shinyWidgets::pickerInput,
           color_by = shinyWidgets::pickerInput,
           ribbon = shinyWidgets::pickerInput,
           confInterval = shinyWidgets::pickerInput,
@@ -556,48 +663,55 @@ Incidence <- R6::R6Class(
         args = list(
           xAxis = list(
             inputId = "xAxis",
+            label = "X-Axis",
             choices = plotDataChoices,
-            label = "Incidence_start_date",
-            selected = "incidence_start_date",
+            selected = private$.startDateCol,
             multiple = FALSE,
             options = private$.pickerOptions
           ),
-          facet_by = list(
-            inputId = "facet_by",
+          facetX = list(
+            inputId = "facetX",
+            label = "Horizontal Facet",
             choices = plotDataChoices,
-            label = "Facet by",
-            selected = c("outcome_cohort_name", "cdm_name"),
+            selected = c("outcome_cohort_name"),
+            multiple = TRUE,
+            options = private$.pickerOptions
+          ),
+          facetY = list(
+            inputId = "facetY",
+            label = "Vertical Facet",
+            choices = plotDataChoices,
             multiple = TRUE,
             options = private$.pickerOptions
           ),
           color_by = list(
             inputId = "color_by",
-            choices = plotDataChoices,
             label = "Colour by",
+            choices = plotDataChoices,
             selected = c(),
             multiple = TRUE,
             options = private$.pickerOptions
           ),
           ribbon = list(
             inputId = "ribbon",
-            choices = c(TRUE, FALSE),
             label = "Ribbon",
+            choices = c(TRUE, FALSE),
             selected = TRUE,
             multiple = FALSE,
             options = private$.pickerOptions
           ),
           confInterval = list(
             inputId = "confInterval",
-            choices = c(TRUE, FALSE),
             label = "Confidence interval",
+            choices = c(TRUE, FALSE),
             selected = TRUE,
             multiple = FALSE,
             options = private$.pickerOptions
           ),
           rotateXLabels = list(
             inputId = "rotateXLabels",
-            choices = c(TRUE, FALSE),
             label = "Rotate x-axis labels",
+            choices = c(TRUE, FALSE),
             selected = FALSE
           ),
           line = list(
@@ -613,9 +727,17 @@ Incidence <- R6::R6Class(
 
     .initTableInputs = function() {
       headerColumnOptions <- c("cdm_name", "estimate_name")
+
       groupColumnOptions <- c("outcome_cohort_name", "cdm_name")
-      settingColumnOptions <- c("denominator_time_at_risk", "denominator_age_group", "denominator_sex")
-      hideColumnOptions <- c("denominator_time_at_risk", "denominator_cohort_name", "denominator_age_group", "denominator_sex", "analysis_interval")
+
+      settingColumnOptions <- c(
+        "denominator_time_at_risk", "denominator_age_group", "denominator_sex"
+      )
+
+      hideColumnOptions <- c(
+        "denominator_time_at_risk", "denominator_cohort_name", "denominator_age_group",
+        "denominator_sex", "analysis_interval"
+      )
 
       private$.pickers[["table"]] <- InputPanel$new(
         funs = list(
@@ -665,9 +787,13 @@ Incidence <- R6::R6Class(
 
     ## Helpers ----
     .getColValues = function(colName) {
-      private$.settings |>
-        dplyr::distinct(.data[[colName]]) |>
-        dplyr::pull(.data[[colName]])
+      if (is.null(private$.settings[[colName]])) {
+        NULL
+      } else {
+        private$.settings |>
+          dplyr::distinct(.data[[colName]]) |>
+          dplyr::pull(.data[[colName]])
+      }
     },
 
     .setFilterValues = function() {
@@ -682,31 +808,38 @@ Incidence <- R6::R6Class(
       private$.endDate <- private$.getColValues("denominator_end_date")
       private$.timeAtRisk <- private$.getColValues("denominator_time_at_risk")
 
+      private$.setDateRange()
+      private$.setTimeIntervals()
+
+      private$.databaseIntervals <- private$.getColValues("analysis_complete_database_intervals")
+
+      # Incidence
       private$.outcomeWashout <- private$.getColValues("analysis_outcome_washout")
       private$.repeatedEvents <- private$.getColValues("analysis_repeated_events")
-      private$.databaseIntervals <- private$.getColValues("analysis_complete_database_intervals")
-      private$.minCellCount <- private$.getColValues("min_cell_count")
 
-      private$.setDateRange()
+      # Point Prev
+      # -
 
-      private$.setTimeIntervals()
+      # Period Prev
+      private$.fullContribution <- private$.getColValues("analysis_full_contribution")
+      private$.level <- private$.getColValues("analysis_level")
     },
 
     .setDateRange = function() {
       private$.dateRangeMin <- private$.result |>
         omopgenerics::filterAdditional(
-          .data$incidence_start_date == min(.data$incidence_start_date)
+          .data[[private$.startDateCol]] == min(.data[[private$.startDateCol]])
         ) |>
         omopgenerics::tidy() |>
-        dplyr::distinct(.data$incidence_start_date) |>
+        dplyr::distinct(.data[[private$.startDateCol]]) |>
         dplyr::pull() |>
         as.Date()
 
       private$.dateRangeMax <- private$.result |>
-        omopgenerics::filterAdditional(.data$incidence_end_date != "overall") |>
-        omopgenerics::filterAdditional(.data$incidence_end_date == max(.data$incidence_end_date)) |>
+        omopgenerics::filterAdditional(.data[[private$.endDateCol]] != "overall") |>
+        omopgenerics::filterAdditional(.data[[private$.endDateCol]] == max(.data[[private$.endDateCol]])) |>
         omopgenerics::tidy() |>
-        dplyr::distinct(.data$incidence_end_date) |>
+        dplyr::distinct(.data[[private$.endDateCol]]) |>
         dplyr::pull() |>
         as.Date()
     },
@@ -739,8 +872,37 @@ Incidence <- R6::R6Class(
       private$.outcomeCohorts <- cohortNames[!cohortNames %in% private$.denominatorCohorts]
     },
 
-    .plotIncidence = function(line, confInterval, ...) {
-      gg <- IncidencePrevalence::plotIncidence(...)
+    .setIncidenceCols = function() {
+      private$.resultType <- "incidence"
+      private$.startDateCol <- "incidence_start_date"
+      private$.endDateCol <- "incidence_end_date"
+      private$.estimate <- "incidence_100000_pys"
+      private$.ciUpper <- "incidence_100000_pys_95CI_lower"
+      private$.ciLower <- "incidence_100000_pys_95CI_upper"
+    },
+
+    .setPrevalenceCols = function() {
+      analysisType <- unique(private$.settings$analysis_type)
+
+      private$.startDateCol <- "prevalence_start_date"
+      private$.endDateCol <- "prevalence_end_date"
+      private$.estimate <- "prevalence"
+      private$.ciUpper <- "prevalence_95CI_lower"
+      private$.ciLower <- "prevalence_95CI_upper"
+
+      if (analysisType == "point prevalence") {
+        private$.resultType <- "point_prev"
+      } else if (analysisType == "period prevalence") {
+        private$.resultType <- "period_prev"
+      }
+    },
+
+    .plotIncidencePrevalence = function(line, confInterval, ...) {
+      gg <- if (private$.resultType == "incidence") {
+        IncidencePrevalence::plotIncidence(...)
+      } else {
+        IncidencePrevalence::plotPrevalence(...)
+      }
 
       if (!confInterval) {
         gg$layers <- gg$layers[2]
@@ -757,40 +919,21 @@ Incidence <- R6::R6Class(
       return(gg)
     },
 
-    .assertIncidenceData = function(data) {
+    .tableIncidencePrevalence = function(...) {
+      if (private$.resultType == "incidence") {
+        IncidencePrevalence::tableIncidence(...)
+      } else {
+        IncidencePrevalence::tablePrevalence(...)
+      }
+    },
+
+    .assertResult = function(data) {
       resSettings <- attr(data, "settings")
       if (is.null(resSettings)) {
         stop("Data does not appear to be a result object of `IncidencePrevalence`")
       }
-      if (!all(resSettings$result_type %in% c("incidence", "incidence_attrition"))) {
-        stop("Cannot assert `Incidence` result")
-      }
-    },
-
-    .transformData = function(data) {
-      # set strata
-      strataColumn <- unique(omopgenerics::settings(data) %>% dplyr::filter(strata != "reason") %>% dplyr::pull(strata))
-      private$.strata <- unique(data %>% dplyr::filter(strata_name != "reason") %>% dplyr::pull(strata_level))
-
-      # transform to readable format
-      minCellCount <- attr(data, "settings") %>%
-        dplyr::pull(min_cell_count) %>%
-        unique()
-      data <- IncidencePrevalence::asIncidenceResult(data) %>%
-        { if (!"analysis_interval" %in% names(.)) dplyr::mutate(., analysis_interval = "overall") else .} %>%
-        dplyr::mutate(analysis_min_cell_count = !!minCellCount) %>%
-        dplyr::rename(
-          database = cdm_name,
-          n_events = outcome_count,
-          n_persons = denominator_count
-        )
-      # add strata column
-      if (strataColumn == "") {
-        data %>%
-          dplyr::mutate(strata = "overall")
-      } else {
-        data %>%
-          dplyr::rename(strata = strataColumn)
+      if (!any(resSettings$result_type %in% c("incidence", "prevalence", "incidence_attrition", "prevalence_attrition"))) {
+        stop("Cannot assert `Incidence` or `Prevalence` result")
       }
     }
   )
