@@ -53,7 +53,7 @@ The module consists of the following:
 
   (`Table`) Table module using `CohortSurvival::tableAttrition()`
 
-- `cdmName`:
+- `cdmNames`:
 
   (`character`) Available CDM names
 

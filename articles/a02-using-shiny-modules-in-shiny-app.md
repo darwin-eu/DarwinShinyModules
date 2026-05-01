@@ -7,6 +7,7 @@ shiny app. The shiny app exists out of two components: the UI, and the
 server:
 
 ``` r
+
 server <- function(input, output, session) {
   
 }
@@ -30,6 +31,7 @@ Let’s add a table containing the `iris` data. First we need to create a
 Table module:
 
 ``` r
+
 library(DarwinShinyModules)
 
 table <- Table$new(data = iris)
@@ -96,6 +98,7 @@ To integrate our module in our own shiny app, all we have to do is add
 the `UI()` and `server()` method calls to our own shiny app:
 
 ``` r
+
 server <- function(input, output, session) {
   table$server(input, output, session)
 }
@@ -114,6 +117,7 @@ We have some arguments to customize our table, `title`, `options`,
 extra options, or to have control over the filtering.
 
 ``` r
+
 table <- Table$new(
   data = iris,
   title = "Iris Dataset",
@@ -141,6 +145,7 @@ The upside of this is, that if you may add an input function from
 another package, without breaking compatibility.
 
 ``` r
+
 inputPanel <- InputPanel$new(
   funs = list(
     inputSpecies = shiny::selectInput
@@ -174,6 +179,7 @@ inputPanel
 #>     reactiveValues: active binding
 #>     server: function (input, output, session) 
 #>     UI: function () 
+#>     update: function (fun, name, ...) 
 #>     validate: function () 
 #>   Private:
 #>     .args: list
@@ -208,6 +214,7 @@ Again we can add the `server()` and `UI()` method calls to our shiny
 app. Note that the UI is rendered first come, first serve:
 
 ``` r
+
 server <- function(input, output, session) {
   table$server(input, output, session)
   inputPanel$server(input, output, session)
@@ -228,6 +235,7 @@ actually filter the data in the table. We have to update the data in the
 `Table` module.
 
 ``` r
+
 server <- function(input, output, session) {
   table$server(input, output, session)
   inputPanel$server(input, output, session)
@@ -267,6 +275,7 @@ will simply execute the `UI()` and `server()` methods, without any
 interaction.
 
 ``` r
+
 bridge <- Bridge$new(inputPanel, table)
 
 preview(bridge)
@@ -280,6 +289,7 @@ a regular shiny `server()` function. This function is executed with the
 `server()` methods of the modules.
 
 ``` r
+
 bridgeFun <- function(input, output, session) {
   shiny::observeEvent(inputPanel$inputValues$inputSpecies, {
     table$data <- iris %>%
@@ -293,6 +303,7 @@ bridge <- Bridge$new(inputPanel, table, bridgeFun = bridgeFun)
 We can then use our `Bridge` module, like any other module.
 
 ``` r
+
 preview(bridge)
 ```
 
@@ -301,6 +312,7 @@ preview(bridge)
 Or use it in any bespoke shiny app.
 
 ``` r
+
 library(shinydashboard)
 library(shiny)
 

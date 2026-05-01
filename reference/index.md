@@ -96,12 +96,21 @@
 - [`DrugExposureDiagnostics`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/DrugExposureDiagnostics.md)
   : DrugExposureDiagnostics Module Class
 
+### DrugUtilisation
+
+- [`DrugUtilisation`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/DrugUtilisation.md)
+  : DrugUtilisation Module Class
+- [`DrugRestart`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/DrugRestart.md)
+  : DrugRestart Module Class
+- [`Indication`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Indication.md)
+  : Indication Module Class
+- [`Treatment`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Treatment.md)
+  : Treatment Module Class
+
 ### IncidencePrevalence
 
-- [`Incidence`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Incidence.md)
-  : Incidence Module Class
-- [`Prevalence`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Prevalence.md)
-  : Prevalence Module Class
+- [`IncidencePrevalence`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/IncidencePrevalence.md)
+  : IncidencePrevalence Module Class
 
 ### TreatmentPatterns
 

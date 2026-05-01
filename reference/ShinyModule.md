@@ -11,6 +11,7 @@ The `ShinyModule` class manages namespacing with the `moduleName` and
 `parentNamespace` (when a module is nested in another module) make up
 the `namespace` field.
 
+
       moduleId = moduleName-instanceId
       namespace = [parentNamespace-]moduleId
 
@@ -32,6 +33,7 @@ which should overridden when creating a module.
 
 As an example:
 
+
     ...
     private = list(
       .server = function(input, output, session) {
@@ -41,6 +43,7 @@ As an example:
     ...
 
 If the public `server()` method is overridden an error will be thrown:
+
 
     ...
     public = list(
@@ -64,6 +67,7 @@ as an exmaple, `shiny::taglist()`.
 
 As an example:
 
+
     ...
     private = list(
       .UI = function() {
@@ -73,6 +77,7 @@ As an example:
     )
 
 If the public `UI()` method is overridden an error will be thrown:
+
 
     ...
     public = list(

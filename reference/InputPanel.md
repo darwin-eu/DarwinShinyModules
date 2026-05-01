@@ -46,6 +46,8 @@ with i.e.
 
 - [`InputPanel$validate()`](#method-InputPanel-validate)
 
+- [`InputPanel$update()`](#method-InputPanel-update)
+
 - [`InputPanel$clone()`](#method-InputPanel-clone)
 
 Inherited methods
@@ -103,6 +105,37 @@ Validation method
 #### Returns
 
 (`self`)
+
+------------------------------------------------------------------------
+
+### Method [`update()`](https://rdrr.io/r/stats/update.html)
+
+Updates the input variables using the provided update functions supplied
+in `updateFuns`
+
+#### Usage
+
+    InputPanel$update(fun, name, ...)
+
+#### Arguments
+
+- `fun`:
+
+  (`funciton`) Update function to use i.e.
+  [`shiny::updateSelectInput`](https://rdrr.io/pkg/shiny/man/updateSelectInput.html)
+
+- `name`:
+
+  (`character(1)`) Name of the update function and argument set to use.
+
+- `...`:
+
+  Arguments that are used by the supplied function. `inputId` should now
+  be provided, as it is derived from the `name` argument.
+
+#### Returns
+
+(`invisible(self)`)
 
 ------------------------------------------------------------------------
 

@@ -9,7 +9,7 @@ shiny::selectInput(), shinyWidgets::pickerInput(), etc."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">DarwinShinyModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,6 +87,7 @@ with i.e. <code><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class=
 
 <ul><li><p><a href="#method-InputPanel-new"><code>InputPanel$new()</code></a></p></li>
 <li><p><a href="#method-InputPanel-validate"><code>InputPanel$validate()</code></a></p></li>
+<li><p><a href="#method-InputPanel-update"><code>InputPanel$update()</code></a></p></li>
 <li><p><a href="#method-InputPanel-clone"><code>InputPanel$clone()</code></a></p></li>
 </ul></div><p><details open><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href="ShinyModule.html#method-UI"><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href="ShinyModule.html#method-getReactiveValues"><code>DarwinShinyModules::ShinyModule$getReactiveValues()</code></a></span></li>
@@ -135,15 +136,43 @@ with i.e. <code><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class=
 <p>(<code>self</code>)</p>
 </div>
 
-</div><p></p><hr><a id="method-InputPanel-clone"></a><div class="section">
-<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
-<p>The objects of this class are cloneable with this method.</p><div class="section">
+</div><p></p><hr><a id="method-InputPanel-update"></a><div class="section">
+<h3 id="method-update-">Method <code><a href="https://rdrr.io/r/stats/update.html" class="external-link">update()</a></code><a class="anchor" aria-label="anchor" href="#method-update-"></a></h3>
+<p>Updates the input variables using the provided update functions supplied in <code>updateFuns</code></p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">InputPanel</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">InputPanel</span><span class="op">$</span><span class="fu">update</span><span class="op">(</span><span class="va">fun</span>, <span class="va">name</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>fun</code></dt>
+<dd><p>(<code>funciton</code>) Update function to use i.e. <code><a href="https://rdrr.io/pkg/shiny/man/updateSelectInput.html" class="external-link">shiny::updateSelectInput</a></code></p></dd>
+
+
+<dt><code>name</code></dt>
+<dd><p>(<code>character(1)</code>) Name of the update function and argument set to use.</p></dd>
+
+
+<dt><code>...</code></dt>
+<dd><p>Arguments that are used by the supplied function. <code>inputId</code> should now be provided, as it is derived from the <code>name</code> argument.</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
+<p>(<code>invisible(self)</code>)</p>
+</div>
+
+</div><p></p><hr><a id="method-InputPanel-clone"></a><div class="section">
+<h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
+<p>The objects of this class are cloneable with this method.</p><div class="section">
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">InputPanel</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 

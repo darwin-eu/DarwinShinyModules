@@ -35,6 +35,7 @@ As an example we can display the contents of the `iris` and `mtcars`
 data sets in a similar fashion:
 
 ``` r
+
 library(DarwinShinyModules)
 
 tableIris <- Table$new(iris, title = "Iris")
@@ -67,6 +68,7 @@ table, and then updated in the `plot`. The `plot` will then update with
 the updated data.
 
 ``` r
+
 server = function(input, output, session) {
   # Server method for the `plot`
   private$.plot$server(input, output, session)
@@ -105,6 +107,7 @@ environment, on disk, or the data needs to be attached to a function
 environment:
 
 ``` r
+
 foo <- function(x) {
   z <- x
 
@@ -145,6 +148,7 @@ specific for each kind of plot. Finally in the third layer are the
 ### A: Full code
 
 ``` r
+
 ExampleModule <- R6::R6Class(
   classname = "ExampleModule",
   inherit = ShinyModule,

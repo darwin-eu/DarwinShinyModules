@@ -18,6 +18,7 @@ the `DatabaseDBI` and `DatabaseDBC` modules.
 ### From a File
 
 ``` r
+
 library(DarwinShinyModules)
 
 tempDir <- file.path(tempdir(), "loading_data_example")
@@ -37,6 +38,7 @@ if (interactive()) {
 ### A database using `DBI`
 
 ``` r
+
 library(DBI)
 library(duckdb)
 library(dplyr)
@@ -78,6 +80,7 @@ if (interactive()) {
 ### From a database using `DatabaseConnector`
 
 ``` r
+
 library(DatabaseConnector)
 
 connectionDetails <- DatabaseConnector::createConnectionDetails(
@@ -131,6 +134,7 @@ The following examples show how to dynamically load from:
 ### From csv-files
 
 ``` r
+
 TablesFromFile <- R6::R6Class(
   classname = "TablesFromFile",
   inherit = ShinyModule,
@@ -193,6 +197,7 @@ In this example we maintain the connection to the database, post
 run-time.
 
 ``` r
+
 TablesFromDBI <- R6::R6Class(
   classname = "TablesFromDBI",
   inherit = ShinyModule,
@@ -253,6 +258,7 @@ In this example we manage the connection to the database within run
 time.
 
 ``` r
+
 TablesFromDBC <- R6::R6Class(
   classname = "TablesFromDBC",
   inherit = ShinyModule,
@@ -379,6 +385,7 @@ is ideal when you want to use `dplyr` syntax to query a database during
 run-time of your shiny app.
 
 ``` r
+
 # Setup the module with the driver for the database
 db <- DatabaseDBI$new(driver)
 
@@ -430,6 +437,7 @@ database. This is ideal when you want to use SQL to query a database
 during run-time of your shiny app.
 
 ``` r
+
 # Setup the module with the ConnectionDetails of the database
 db <- DatabaseDBC$new(connectionDetails)
 

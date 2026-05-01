@@ -12,6 +12,7 @@ built with `DarwinShinyModules`.
 The base setup to do this would look something like this:
 
 ``` r
+
 # Create connection details to the results database
 connectionDetails <- DatabseConnector::createConnectionDetails(
   dbms = "sqlite",
@@ -35,12 +36,14 @@ estimation <- OhdsiModule$new(
 We can then either preview the module
 
 ``` r
+
 DarwinShinyModules::preview(estimation)
 ```
 
 Launch a shiny app using the appStructure
 
 ``` r
+
 appStructure <- list(
   Estimation = estimation
 )
@@ -51,6 +54,7 @@ DarwinShinyModules::launchDarwinDashboardApp(appStructure)
 Or integrate it in a bespoke shiny app
 
 ``` r
+
 server <- function(input, output, session) {
   # Do bespoke stuff ...
   estimation$server(input, output, session)
@@ -73,6 +77,7 @@ below.
 ### Run the analysis
 
 ``` r
+
 library(DatabaseConnector)
 library(Eunomia)
 library(CohortMethod)
@@ -159,6 +164,7 @@ refTable <- CohortMethod::runCmAnalyses(
 ### Export results
 
 ``` r
+
 exportFolder <- file.path(tempdir(), "cm-test-export")
 
 CohortMethod::exportToCsv(
@@ -171,6 +177,7 @@ CohortMethod::exportToCsv(
 ### Upload results to database
 
 ``` r
+
 cg_cohort <- data.frame(
   cohortId = c(1, 2, 3),
   cohortName = c("celexocib", "diclofenac", "GiBleed"),
@@ -197,6 +204,7 @@ CohortMethod::uploadExportedResults(
 ### Make a shiny module using `DarwinShinyModules` and `OhdsiShinyModules`
 
 ``` r
+
 library(DarwinShinyModules)
 
 connectionHandler <- ResultModelManager::ConnectionHandler$new(connectionDetails = resConnectionDetails)

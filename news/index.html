@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DarwinShinyModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,6 +40,37 @@
 
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.5.0" id="darwinshinymodules-050">DarwinSHinyModules 0.5.0<a class="anchor" aria-label="anchor" href="#darwinshinymodules-050"></a></h2>
+<ul><li>Re-factored the UI and back-end of <code>Incidence</code> and <code>Prevalence</code> modules</li>
+<li>Merged <code>Incidence</code> and <code>Prevalence</code> modules into <code>IncidencePrevalence</code>
+</li>
+<li>Added download arguments and button to <code>PlotStatic</code> by default</li>
+<li>Minor update to the <code>InputPanel</code> module back-end</li>
+<li>Added <code>DrugUtilisation</code>, <code>DrugRestart</code>, <code>Indication</code>, and <code>Treatment</code> modules to support <code>DrugUtilisation</code>
+</li>
+<li>Minor internal tweaks to <code>CohortSurvival</code>
+</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.4.0" id="darwinshinymodules-040">DarwinShinyModules 0.4.0<a class="anchor" aria-label="anchor" href="#darwinshinymodules-040"></a></h2>
+<ul><li>Updated Cohort Survival</li>
+<li>Added <code><a href="../reference/darwinHeader.html">darwinHeader()</a></code> and <code><a href="../reference/darwinFooter.html">darwinFooter()</a></code> functions</li>
+<li>Load DARWIN EU logo from the package locally</li>
+<li>Added defaults for <code>Incidence</code> and <code>Prevalence</code> modules</li>
+<li>Updated footer for <code>bslib</code> and <code>shinydashboard</code>
+</li>
+<li>Added ability to customize plot rendering, by passing arguments through <code>...</code> to <code><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html" class="external-link">renderPlot()</a></code>
+</li>
+<li>Added <code>Flextable</code> module to support <code>flextable</code>
+</li>
+<li>Updated UI for modules to be more compatible when using <code>bslib</code>
+</li>
+<li>Added <code>Characteristics</code>, <code>CohortAttrition</code>, <code>LargeScaleCharacterisitcs</code> to support results from <code>CohortCharacteristics</code>
+</li>
+<li>Added <code>ReactableTable</code> module to support <code>reactable</code>
+</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.2" id="darwinshinymodules-032">DarwinShinyModules 0.3.2<a class="anchor" aria-label="anchor" href="#darwinshinymodules-032"></a></h2>
 <ul><li>Exports the darwinHeader() and darwinFooter() functions to be used in bespoke shiny apps.</li>

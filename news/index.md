@@ -1,5 +1,37 @@
 # Changelog
 
+## DarwinSHinyModules 0.5.0
+
+- Re-factored the UI and back-end of `Incidence` and `Prevalence`
+  modules
+- Merged `Incidence` and `Prevalence` modules into `IncidencePrevalence`
+- Added download arguments and button to `PlotStatic` by default
+- Minor update to the `InputPanel` module back-end
+- Added `DrugUtilisation`, `DrugRestart`, `Indication`, and `Treatment`
+  modules to support `DrugUtilisation`
+- Minor internal tweaks to `CohortSurvival`
+
+## DarwinShinyModules 0.4.0
+
+- Updated Cohort Survival
+- Added
+  [`darwinHeader()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/darwinHeader.md)
+  and
+  [`darwinFooter()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/darwinFooter.md)
+  functions
+- Load DARWIN EU logo from the package locally
+- Added defaults for `Incidence` and `Prevalence` modules
+- Updated footer for `bslib` and `shinydashboard`
+- Added ability to customize plot rendering, by passing arguments
+  through `...` to
+  [`renderPlot()`](https://rdrr.io/pkg/shiny/man/renderPlot.html)
+- Added `Flextable` module to support `flextable`
+- Updated UI for modules to be more compatible when using `bslib`
+- Added `Characteristics`, `CohortAttrition`,
+  `LargeScaleCharacterisitcs` to support results from
+  `CohortCharacteristics`
+- Added `ReactableTable` module to support `reactable`
+
 ## DarwinShinyModules 0.3.2
 
 - Exports the darwinHeader() and darwinFooter() functions to be used in

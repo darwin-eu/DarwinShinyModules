@@ -9,6 +9,7 @@ create a shiny app
 Lets create some simple Text modules to showcase the building process:
 
 ``` r
+
 library(DarwinShinyModules)
 
 base <- Text$new("**base**")
@@ -26,6 +27,7 @@ the overarching list are the main menu items, and subsequent names are
 sub menu items.
 
 ``` r
+
 appStructure <- list(
   # `base` on a page
   base = base,
@@ -57,6 +59,7 @@ We can also use the `darwinApp()` function to get a DARWIN EU© themed
 shiny app.
 
 ``` r
+
 darwinApp(appStructure, title = "Study")
 ```
 

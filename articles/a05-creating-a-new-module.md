@@ -32,6 +32,7 @@ module. Or a static image.
 The base interface of creating a new module would be this:
 
 ``` r
+
 library(DarwinShinyModules)
 
 MyModule <- R6::R6Class(
@@ -57,6 +58,7 @@ more familiar with functions, you may want to call your own `server` and
 `ui` functions in the module, like so:
 
 ``` r
+
 library(DarwinShinyModules)
 library(shiny)
 
@@ -99,6 +101,7 @@ module. In this module I want to:
   `"moduleData"` as the `input` / `output` reference.
 
 ``` r
+
 library(DarwinShinyModules)
 
 MyModule <- R6::R6Class(
@@ -149,6 +152,7 @@ To initialize our module object we call the
 `MyModule`:
 
 ``` r
+
 module <- MyModule$new()
 ```
 
@@ -156,6 +160,7 @@ To see what the module contains we can simply
 [`print()`](https://rdrr.io/r/base/print.html) the module instance:
 
 ``` r
+
 print(module)
 #> <MyModule>
 #>   Inherits from: <ShinyModule>
@@ -203,6 +208,7 @@ parts: `.appId`, `.data`, `.instanceId`, `moduleName`.
 We can get the active fields of our module `MyModule` like so:
 
 ``` r
+
 module$moduleId
 #> [1] "MyModule-SwlKLU5Ed6ieYxombQ_X"
 module$instanceId
@@ -223,6 +229,7 @@ Notice that if we initialize multiple instances of the same type of
 module the `instanceId` is different per instance:
 
 ``` r
+
 mod1 <- MyModule$new()
 mod2 <- MyModule$new()
 mod3 <- MyModule$new()
@@ -238,6 +245,7 @@ mod3$instanceId
 We can spin up a simple shiny app using our module:
 
 ``` r
+
 ui <- shiny::fluidPage(
   module$UI()
 )
@@ -260,6 +268,7 @@ We can make a new module called: `MyModule2` which inherits from
 looking at the `iris` data, I want to look at `mtcars`.
 
 ``` r
+
 MyModule2 <- R6::R6Class(
   classname = "MyModule2",
   inherit = MyModule,
@@ -275,6 +284,7 @@ module2 <- MyModule2$new()
 We can spin up a new ShinyApp:
 
 ``` r
+
 ui <- shiny::fluidPage(
   module$UI(),
   module2$UI()
@@ -300,6 +310,7 @@ add an arbitrary size column for this example, which we will manipulate
 later to change the plot.
 
 ``` r
+
 data <- iris
 data$size <- 0.5
 
@@ -320,6 +331,7 @@ module, in a parent module, `ExampleModule`.
 Let’s create our base module first: `ExampleModule`.
 
 ``` r
+
 ExampleModule <- R6::R6Class(
   classname = "ExampleModule",
   inherit = ShinyModule,
@@ -336,6 +348,7 @@ We can now add our modules that we want to nest into this
 `ExampleModule`, when the module is initialized.
 
 ``` r
+
 ExampleModule <- R6::R6Class(
   classname = "ExampleModule",
   inherit = ShinyModule,
@@ -382,6 +395,7 @@ With our modules added, we can call their respective `server()` and
 `UI()` methods in our module.
 
 ``` r
+
 ExampleModule <- R6::R6Class(
   classname = "ExampleModule",
   inherit = ShinyModule,
@@ -424,6 +438,7 @@ ExampleModule <- R6::R6Class(
 And now that we have something to look at, let’s preview our module
 
 ``` r
+
 mod <- ExampleModule$new(data = data)
 
 preview(mod)
@@ -436,6 +451,7 @@ another. However, we can change that by adding some extra code in the
 `.server()` method.
 
 ``` r
+
 ExampleModule <- R6::R6Class(
   classname = "ExampleModule",
   inherit = ShinyModule,
@@ -495,6 +511,7 @@ ExampleModule <- R6::R6Class(
 We can preview our module again.
 
 ``` r
+
 mod <- ExampleModule$new(data = data)
 
 preview(mod)
@@ -508,6 +525,7 @@ plot for the selected row.
 All the code we used then looks like this:
 
 ``` r
+
 # Format data
 data <- iris
 data$size <- 0.5
