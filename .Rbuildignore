@@ -11,3 +11,6 @@
 ^README\.Rmd$
 ^README_files$
 ^LICENSE\.md$
+^.lintr$
+^\.positai$
+^\.claude$

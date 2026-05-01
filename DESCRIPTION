@@ -1,6 +1,6 @@
 Package: DarwinShinyModules
 Title: Repository of Shiny Modules for Darwin Result Viewers
-Version: 0.4.0
+Version: 0.5.0
 Authors@R: c(
     person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut"), comment = c(ORCID = "0000-0001-8993-8748")),
     person("Maarten", "van Kessel", email = "m.l.vankessel@erasmusmc.nl", role = c("aut", "cre"), comment = c(ORCID = "0009-0006-8832-6030")),
@@ -79,8 +79,11 @@ Collate:
     'DatabaseDBI.R'
     'DatabaseOverview.R'
     'DrugExposureDiagnostics.R'
-    'IncidencePrevalence-Incidence.R'
-    'IncidencePrevalence-Prevalence.R'
+    'DrugUtilisation-DrugRestart.R'
+    'DrugUtilisation-DrugUtilisation.R'
+    'DrugUtilisation-Indication.R'
+    'DrugUtilisation-Treatment.R'
+    'IncidencePrevalence-IncidencePrevalence.R'
     'InputPanel.R'
     'OhdsiModule.R'
     'Plot.R'
@@ -105,6 +108,7 @@ Collate:
     'launchShinydashboardApp.R'
     'makeModule.R'
     'preview.R'
+    'utils-SummarizedResult.R'
     'utils.R'
     'zzz.R'
 URL: https://darwin-eu-dev.github.io/DarwinShinyModules/

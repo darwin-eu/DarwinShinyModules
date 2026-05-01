@@ -47,13 +47,13 @@ testthat::test_that("IncidencePrevalence", {
     fullContribution = TRUE
   )
 
-  incMod <- DarwinShinyModules::Incidence$new(result = incResult)
-  prevPointMod <- DarwinShinyModules::Prevalence$new(result = prevPointResult, defaults = list(sex = "both"))
-  prevPeriodMod <- DarwinShinyModules::Prevalence$new(result = prevPeriodResult, defaults = list(sex = "both"))
+  incMod <- DarwinShinyModules::IncidencePrevalence$new(result = incResult)
+  prevPointMod <- DarwinShinyModules::IncidencePrevalence$new(result = prevPointResult)
+  prevPeriodMod <- DarwinShinyModules::IncidencePrevalence$new(result = prevPeriodResult)
 
-  testthat::expect_r6_class(incMod, class = "Incidence")
-  testthat::expect_r6_class(prevPointMod, class = "Prevalence")
-  testthat::expect_r6_class(prevPeriodMod, class = "Prevalence")
+  testthat::expect_r6_class(incMod, class = "IncidencePrevalence")
+  testthat::expect_r6_class(prevPointMod, class = "IncidencePrevalence")
+  testthat::expect_r6_class(prevPeriodMod, class = "IncidencePrevalence")
 
   app <- list(
     Incidence = incMod,

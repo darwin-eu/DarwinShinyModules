@@ -65,8 +65,12 @@ InputPanel <- R6::R6Class(
     },
 
     #' @field args (`list()`) Named list of arguments used by xInput functions `list(funA = list(inputId = "name", label = "name"))`.
-    args = function() {
-      return(private$.args)
+    args = function(args) {
+      if (missing(args)) {
+        return(private$.args)
+      } else {
+        private$.args <- args
+      }
     },
 
     #' @field inputValues (`reactiveValues`) Values passed from the input fields.
@@ -74,7 +78,7 @@ InputPanel <- R6::R6Class(
       if (missing(inputValues)) {
         return(self$getReactiveValues())
       } else {
-        self$reactiveValues <- inputValues
+        private$.reactiveValues <- inputValues
       }
     }
   ),
@@ -93,8 +97,10 @@ InputPanel <- R6::R6Class(
     #' @return (`invisible(self)`)
     initialize = function(funs, args, growDirection = "vertical", ...) {
       super$initialize(...)
+      checkmate::assertChoice(x = growDirection, choices = c("vertical", "horizontal"))
       private$.funs <- funs
       private$.args <- args
+
       private$.growDirection <- growDirection
       private$updateIds()
       self$validate()
@@ -107,6 +113,21 @@ InputPanel <- R6::R6Class(
     #' @return (`self`)
     validate = function() {
       return(invisible(self))
+    },
+
+    #' @description
+    #' Updates the input variables using the provided update functions supplied in `updateFuns`
+    #'
+    #' @param fun (`funciton`) Update function to use i.e. `shiny::updateSelectInput`
+    #' @param name (`character(1)`) Name of the update function and argument set to use.
+    #' @param ... Arguments that are used by the supplied function. `inputId` should now be provided, as it is derived from the `name` argument.
+    #'
+    #' @return (`invisible(self)`)
+    update = function(fun, name, ...) {
+      dots <- list(...)
+      args <- append(dots, list(inputId = shiny::NS(self$moduleId, name)))
+      do.call(fun, args)
+      return(invisible(self))
     }
   ),
 
@@ -115,19 +136,21 @@ InputPanel <- R6::R6Class(
     ## Fields ----
     .funs = NULL,
     .args = NULL,
+
     .growDirection = "vertical",
+
     .UI = function() {
       if (private$.growDirection == "horizontal") {
-        result <- shiny::tagList(
-          shiny::div(
-            style = "display: inline-block;vertical-align:top; width: 150px;",
-            lapply(names(private$.funs), function(name) {
+        result <- shiny::fluidPage(
+          lapply(names(private$.funs), function(name) {
+            shiny::div(
+              style = "display: inline-block;",
               do.call(what = private$.funs[[name]], args = private$.args[[name]])
-            })
-          )
+            )
+          })
         )
       } else {
-        result <- shiny::tagList(
+        result <- shiny::fluidPage(
           lapply(names(private$.funs), function(name) {
             do.call(what = private$.funs[[name]], args = private$.args[[name]])
           })
@@ -135,16 +158,19 @@ InputPanel <- R6::R6Class(
       }
       return(result)
     },
+
     .server = function(input, output, session) {
       lapply(names(private$.args), function(label) {
-        shiny::observeEvent(input[[label]],
-          {
-            private$.reactiveValues[[session$token]][[label]] <- input[[label]]
-          },
-          ignoreNULL = FALSE
-        )
+        # Expression added to the observer, to track value changes. Evaluated later.
+        shiny::observe({
+          private$.reactiveValues[[session$token]][[label]] <- input[[label]]
+        })
+
+        # Expression evaluated immediately on start up, to initialize the first selected value
+        private$.reactiveValues[[session$token]][[label]] <- shiny::isolate(input[[label]])
       })
     },
+
     updateIds = function() {
       for (name in names(private$.args)) {
         if (!is.null(private$.args[[name]]$inputId)) {

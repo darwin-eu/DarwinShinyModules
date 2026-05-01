@@ -66,7 +66,7 @@ The module consists of the following:
 
 \item{\code{tableAttrition}}{(\code{Table}) Table module using \code{CohortSurvival::tableAttrition()}}
 
-\item{\code{cdmName}}{(\code{character}) Available CDM names}
+\item{\code{cdmNames}}{(\code{character}) Available CDM names}
 
 \item{\code{cohortNames}}{(\code{character}) Available cohort bames}
 

@@ -60,22 +60,63 @@ PlotStatic <- R6::R6Class(
     .UI = function() {
       shiny::tagList(
         shiny::h3(private$.title),
-        do.call(shiny::plotOutput, args = append(list(outputId = shiny::NS(private$.namespace, "plot")), private$.dots))
+        do.call(shiny::plotOutput, args = append(list(outputId = shiny::NS(private$.namespace, "plot")), private$.dots)),
+        shiny::div("height:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
+        shiny::div(
+          style = "display: inline-block;",
+          shiny::textInput(shiny::NS(self$namespace, "download_height"), "", 10, width = "50px")
+        ),
+        shiny::div("cm", style = "display: inline-block; margin-right: 25px;"),
+        shiny::div("width:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
+        shiny::div(
+          style = "display: inline-block;",
+          shiny::textInput(shiny::NS(self$namespace, "download_width"), "", 20, width = "50px")
+        ),
+        shiny::div("cm", style = "display: inline-block; margin-right: 25px;"),
+        shiny::div("dpi:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),
+        shiny::div(
+          style = "display: inline-block; margin-right:",
+          shiny::textInput(shiny::NS(self$namespace, "download_dpi"), "", 300, width = "50px")
+        ),
+        shiny::downloadButton(shiny::NS(self$namespace, "download_plot"), "Download plot")
       )
     },
 
     .server = function(input, output, session) {
       super$.server(input, output, session)
+      private$.serverDownload(input, output, session)
 
-      h <- shiny::reactive({
+      plotHeight <- shiny::reactive({
         session$clientData[[sprintf("output_%s-plot_height", self$namespace)]]
+      })
+
+      plotWidth <- shiny::reactive({
+        session$clientData[[sprintf("output_%s-plot_width", self$namespace)]]
       })
 
       shiny::observe({
         output$plot <- shiny::renderPlot({
           do.call(private$.fun, self$args)
-        }, res = h() / 8)
+        }, res = max(c(plotHeight(), plotWidth() / 1.5)) / 8)
       })
+    },
+
+    .serverDownload = function(input, output, session) {
+      output$download_plot <- downloadHandler(
+        filename = function() {
+          "plot.png"
+        },
+        content = function(file) {
+          ggplot2::ggsave(
+            file,
+            do.call(private$.fun, self$args),
+            width = as.numeric(input$download_width),
+            height = as.numeric(input$download_height),
+            dpi = as.numeric(input$download_dpi),
+            units = "cm"
+          )
+        }
+      )
     }
   )
 )
