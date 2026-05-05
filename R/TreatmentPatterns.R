@@ -57,6 +57,7 @@ TreatmentPatterns <- R6::R6Class(
       private$.initAnalyses()
 
       private$.initTreatmentPathways()
+      private$.initTreatmentDuration()
 
       private$.initCountsAge()
       private$.initCountsSex()
@@ -93,7 +94,11 @@ TreatmentPatterns <- R6::R6Class(
     ### Modules ----
     .analysesMod = NULL,
 
-    .treatmentPathwaysMod = NULL,
+    .treatmentPathwaysTable = NULL,
+    .treatmentPathwaysSunburst = NULL,
+
+    .treatmentDurationTable = NULL,
+    .treatmentDurationPlot = NULL,
 
     .argumentsMod = NULL,
     .metadataMod = NULL,
@@ -198,23 +203,31 @@ TreatmentPatterns <- R6::R6Class(
         shiny::column(
           width = 2,
           shinyWidgets::pickerInput(
+            # TODO Make strata options dynamic
             inputId = shiny::NS(self$namespace, "tpAge"),
             label = "Age",
-            choices = unique(tpMod$treatment_pathways$age),
-            selected = "all"
+            choices = unique(private$.treatment_pathways$age),
+            selected = "all",
+            multiple = TRUE,
+            options = private$.pickerOptions
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tpSex"),
             label = "Sex",
-            choices = unique(tpMod$treatment_pathways$sex),
-            selected = "all"
+            choices = unique(private$.treatment_pathways$sex),
+            selected = "all",
+            multiple = TRUE,
+            options = private$.pickerOptions
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tpIndexYear"),
             label = "Index Year",
-            choices = unique(tpMod$treatment_pathways$index_year),
-            selected = "all"
+            choices = unique(private$.treatment_pathways$index_year),
+            selected = "all",
+            multiple = TRUE,
+            options = private$.pickerOptions
           ),
+          # TODO Make choice options dynamic based on reactive data
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tpMinFreq"),
             label = "Minimum Frequency",
@@ -230,13 +243,82 @@ TreatmentPatterns <- R6::R6Class(
         ),
         shiny::column(
           width = 10,
-          private$.treatmentPathwaysMod$UI()
+          shiny::tabsetPanel(
+            shiny::tabPanel(
+              title = "Table",
+              private$.treatmentPathwaysTable$UI()
+            ),
+            shiny::tabPanel(
+              title = "Sunburst Plot",
+              shiny::div(
+                style = "display: inline-block;",
+                shinyWidgets::pickerInput(
+                  inputId = shiny::NS(self$namespace, "tpFacetX"),
+                  label = "Horizontal Facet",
+                  choices = c("cdm_name", "target_cohort_name", "description", "age", "sex", "index_year"),
+                  selected = "cdm_name",
+                  multiple = TRUE,
+                  options = private$.pickerOptions
+                )
+              ),
+              shiny::div(
+                style = "display: inline-block;",
+                shinyWidgets::pickerInput(
+                  inputId = shiny::NS(self$namespace, "tpFacetY"),
+                  label = "Vertical Facet",
+                  choices = c("cdm_name", "target_cohort_name", "description", "age", "sex", "index_year"),
+                  multiple = TRUE,
+                  options = private$.pickerOptions
+                )
+              ),
+              private$.treatmentPathwaysSunburst$UI()
+            )
+          )
         )
       )
     },
 
     .uiSummaryEventDuration = function() {
-      shiny::tagList()
+      shiny::tagList(
+        shiny::column(
+          width = 2,
+          # TODO: apply filters to table and plot
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "treatmentGroups"),
+            label = "Treatment Groups",
+            choices = c("both", "group", "individual"),
+            selected = "both",
+          ),
+          # TODO: update lines to be dynmaic also convert to int, remove overall
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "eventLines"),
+            label = "Event Lines",
+            choices = unique(private$.summary_event_duration$line),
+            multiple = TRUE
+          ),
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "includeOverall"),
+            label = "Include Overall",
+            choices = c("Yes", "No"),
+            selected = "Yes"
+          )
+          # TODO: add vertical facet option
+          # TODO: add min and max duration options
+        ),
+        shiny::column(
+          width = 10,
+          shiny::tabsetPanel(
+            shiny::tabPanel(
+              title = "Table",
+              private$.treatmentDurationTable$UI()
+            ),
+            shiny::tabPanel(
+              title = "Plot",
+              private$.treatmentDurationPlot$UI()
+            )
+          )
+        )
+      )
     },
 
     .uiPopulationCounts = function() {
@@ -287,6 +369,7 @@ TreatmentPatterns <- R6::R6Class(
       private$.analysesMod$server(input, output, session)
 
       private$.serverTreatmentPathways(input, output, session)
+      private$.serverTreatmentDuration(input, output, session)
 
       private$.metadataMod$server(input, output, session)
       private$.argumentsMod$server(input, output, session)
@@ -299,25 +382,86 @@ TreatmentPatterns <- R6::R6Class(
       private$.serverAttrition(input, output, session)
     },
 
-    .serverTreatmentPathways = function(input, output, session) {
-      shiny::observeEvent(list(input$tpAge, input$tpSex, input$tpIndexYear, input$tpMinFreq, input$tpMaxFreq), {
-        private$.treatmentPathwaysMod$args$result <- private$.treatment_pathways |>
+    .getReactiveTreatmentPathways = function(input) {
+      shiny::reactive({
+        private$.treatmentPathwaysTable$args$result <- private$.treatment_pathways |>
+          dplyr::left_join(
+            private$.cdm_source_info |>
+              dplyr::select(cdm_name = "cdm_source_abbreviation", "result_id", "analysis_id"),
+            by = c("result_id", "analysis_id")
+          ) |>
+          dplyr::left_join(private$.analyses, by = c("result_id", "analysis_id")) |>
           dplyr::filter(
             .data$age %in% input$tpAge,
             .data$sex %in% input$tpSex,
             .data$index_year %in% input$tpIndexYear,
             .data$freq >= private$.pathFreqChoices[[input$tpMinFreq]],
-            .data$freq <= private$.pathFreqChoices[[input$tpMaxFreq]]
+            .data$freq <= private$.pathFreqChoices[[input$tpMaxFreq]],
+            .data$cdm_name %in% input$cdmName,
+            .data$target_cohort_name %in% input$targetCohort,
+            .data$description %in% input$analysis
+          ) |>
+          dplyr::relocate("cdm_name", "target_cohort_name", "description", "age", "sex", "index_year", "pathway", "freq") |>
+          dplyr::select(-"analysis_id", -"target_cohort_id", -"result_id") |>
+          dplyr::arrange(.data$cdm_name, .data$target_cohort_name, .data$description, .data$age, .data$sex, .data$index_year, dplyr::desc(.data$freq))
+      })
+    },
+
+    .getReactiveTreatmentDuration = function(input) {
+      shiny::reactive({
+        private$.summary_event_duration |>
+          dplyr::mutate(
+            duration_average = round(.data$duration_average, 2),
+            duration_sd = round(.data$duration_sd, 2)
           ) |>
           dplyr::left_join(
             private$.cdm_source_info |>
               dplyr::select(cdm_name = "cdm_source_abbreviation", "result_id", "analysis_id"),
             by = c("result_id", "analysis_id")
           ) |>
-          dplyr::relocate("cdm_name", "target_cohort_name", "age", "sex", "index_year", "pathway", "freq") |>
+          dplyr::left_join(private$.analyses, by = c("result_id", "analysis_id")) |>
+          dplyr::filter(
+            .data$cdm_name %in% input$cdmName,
+            .data$target_cohort_name %in% input$targetCohort,
+            .data$description %in% input$analysis
+          ) |>
           dplyr::select(-"analysis_id", -"target_cohort_id", -"result_id") |>
-          dplyr::arrange(.data$cdm_name, .data$target_cohort_name, .data$age, .data$sex, .data$index_year, dplyr::desc(.data$freq))
-        private$.treatmentPathwaysMod$server(input, output, session)
+          dplyr::relocate("cdm_name", "target_cohort_name", "description", "line")
+      })
+    },
+
+    .serverTreatmentPathways = function(input, output, session) {
+      result <- private$.getReactiveTreatmentPathways(input)
+      shiny::observe({
+        private$.treatmentPathwaysTable$args$result <- result()
+        private$.treatmentPathwaysTable$server(input, output, session)
+      })
+
+      shiny::observe({
+        private$.treatmentPathwaysSunburst$args$treatmentPathways <- result()
+        private$.treatmentPathwaysSunburst$args$strataX <- input$tpFacetX
+        private$.treatmentPathwaysSunburst$args$strataY <- input$tpFacetY
+        private$.treatmentPathwaysSunburst$server(input, output, session)
+      })
+    },
+
+    .serverTreatmentDuration = function(input, output, session) {
+      result <- private$.getReactiveTreatmentDuration(input)
+
+      shiny::observe({
+        private$.treatmentDurationTable$args$result <- result()
+
+        private$.treatmentDurationPlot$args$eventDurations <- result()
+        private$.treatmentDurationPlot$args$treatmentGroups <- input$treatmentGroups
+        private$.treatmentDurationPlot$args$eventLines <- input$eventLines
+        private$.treatmentDurationPlot$args$includeOverall <- convertLabelToLogical(
+          input$includeOverall,
+          trueVal = "Yes",
+          falseVal = "No"
+        )
+
+        private$.treatmentDurationTable$server(input, output, session)
+        private$.treatmentDurationPlot$server(input, output, session)
       })
     },
 
@@ -382,19 +526,27 @@ TreatmentPatterns <- R6::R6Class(
 
     ## Initializers ----
     .initTreatmentPathways = function() {
+      # TODO Make this dynamic based on reactive data
+      localTp <- private$.treatment_pathways |>
+        dplyr::filter(
+          .data$age == "all",
+          .data$sex == "all",
+          .data$index_year == "all"
+        )
+
       private$.pathFreqChoices <- list(
-        maximum = max(tpMod$treatment_pathways$freq),
-        `99%` = quantile(tpMod$treatment_pathways$freq, probs = 0.99),
-        `97.5%` = quantile(tpMod$treatment_pathways$freq, probs = 0.975),
-        `95%` = quantile(tpMod$treatment_pathways$freq, probs = 0.95),
-        `75%` = quantile(tpMod$treatment_pathways$freq, probs = 0.75),
-        median = round(median(tpMod$treatment_pathways$freq)),
-        mean = round(mean(tpMod$treatment_pathways$freq)),
-        `25%` = quantile(tpMod$treatment_pathways$freq, probs = 0.25),
-        `5%` = quantile(tpMod$treatment_pathways$freq, probs = 0.05),
-        `0.25%` = quantile(tpMod$treatment_pathways$freq, probs = 0.025),
-        `1%` = quantile(tpMod$treatment_pathways$freq, probs = 0.01),
-        minimum = min(tpMod$treatment_pathways$freq)
+        maximum = max(private$.treatment_pathways$freq),
+        `99%` = quantile(localTp$freq, probs = 0.99),
+        `97.5%` = quantile(localTp$freq, probs = 0.975),
+        `95%` = quantile(localTp$freq, probs = 0.95),
+        `75%` = quantile(localTp$freq, probs = 0.75),
+        median = round(median(localTp$freq)),
+        mean = round(mean(localTp$freq)),
+        `25%` = quantile(localTp$freq, probs = 0.25),
+        `5%` = quantile(localTp$freq, probs = 0.05),
+        `2.5%` = quantile(localTp$freq, probs = 0.025),
+        `1%` = quantile(localTp$freq, probs = 0.01),
+        minimum = min(private$.treatment_pathways$freq)
       )
 
       names(private$.pathFreqChoices) <- sprintf(
@@ -402,7 +554,7 @@ TreatmentPatterns <- R6::R6Class(
         names(private$.pathFreqChoices), unlist(private$.pathFreqChoices)
       )
 
-      private$.treatmentPathwaysMod <- Flextable$new(
+      private$.treatmentPathwaysTable <- Flextable$new(
         fun = visOmopResults::visTable,
         args = list(
           result = NULL,
@@ -410,6 +562,30 @@ TreatmentPatterns <- R6::R6Class(
           groupColumn = "target_cohort_name",
           type = "flextable"
         ),
+        parentNamespace = self$namespace
+      )
+
+      private$.treatmentPathwaysSunburst <- PlotStatic$new(
+        fun = ggSunburst,
+        args = list(style = "darwin"),
+        height = "60vw",
+        parentNamespace = self$namespace
+      )
+    },
+
+    .initTreatmentDuration = function() {
+      private$.treatmentDurationTable <- Flextable$new(
+        fun = visOmopResults::visTable,
+        args = list(
+          style = "darwin",
+          type = "flextable"
+        ),
+        parentNamespace = self$namespace
+      )
+
+      private$.treatmentDurationPlot <- PlotStatic$new(
+        fun = TreatmentPatterns::plotEventDuration,
+        args = list(),
         parentNamespace = self$namespace
       )
     },
@@ -609,11 +785,11 @@ TreatmentPatterns <- R6::R6Class(
     .parseCounts = function(counts, colName) {
       counts |>
         dplyr::left_join(
-          tpMod$cdm_source_info |>
+          private$.cdm_source_info |>
             dplyr::select(cdm_name = "cdm_source_abbreviation", "result_id", "analysis_id"),
           by = c("result_id", "analysis_id")
         ) |>
-        dplyr::left_join(tpMod$analyses, by = c("result_id", "analysis_id")) |>
+        dplyr::left_join(private$.analyses, by = c("result_id", "analysis_id")) |>
         dplyr::select(-"result_id", -"analysis_id", -"target_cohort_id") |>
         dplyr::relocate("cdm_name", "target_cohort_name", "description", colName, "n")
     }
