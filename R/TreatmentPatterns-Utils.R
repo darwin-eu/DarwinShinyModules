@@ -198,3 +198,24 @@ ggSunburst <- function(treatmentPathways, minFreq = 0, strataX = "", strataY = "
 
   return(gg)
 }
+
+getFreqRanges <- function(treatmentPathways) {
+  pathFreqChoices <- list(
+    maximum = max(treatmentPathways$freq),
+    `99%` = quantile(treatmentPathways$freq, probs = 0.99),
+    `97.5%` = quantile(treatmentPathways$freq, probs = 0.975),
+    `95%` = quantile(treatmentPathways$freq, probs = 0.95),
+    `75%` = quantile(treatmentPathways$freq, probs = 0.75),
+    median = round(median(treatmentPathways$freq)),
+    mean = round(mean(treatmentPathways$freq)),
+    `25%` = quantile(treatmentPathways$freq, probs = 0.25),
+    `5%` = quantile(treatmentPathways$freq, probs = 0.05),
+    `2.5%` = quantile(treatmentPathways$freq, probs = 0.025),
+    `1%` = quantile(treatmentPathways$freq, probs = 0.01),
+    minimum = min(treatmentPathways$freq)
+  )
+
+  names(pathFreqChoices) <- sprintf("%s (%s)", names(pathFreqChoices), unlist(pathFreqChoices))
+
+  return(pathFreqChoices)
+}

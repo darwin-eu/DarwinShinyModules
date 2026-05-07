@@ -1,4 +1,4 @@
-makeFacetFormula = function(facetX, facetY) {
+makeFacetFormula <- function(facetX, facetY) {
   f <- sprintf(
     "%s ~ %s",
     paste(facetY, collapse = " + "),
@@ -16,6 +16,10 @@ makeFacetFormula = function(facetX, facetY) {
   }
 }
 
-convertLabelToLogical = function(label, trueVal = "On", falseVal = "Off") {
+convertLabelToLogical <- function(label, trueVal = "On", falseVal = "Off") {
   if (label == trueVal) TRUE else if (label == falseVal) FALSE else FALSE
+}
+
+nullToDefault <- function(value, default) {
+  if (is.null(value)) default else value
 }

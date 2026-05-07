@@ -9,38 +9,47 @@ TreatmentPatterns <- R6::R6Class(
       return(private$.analyses)
     },
 
+    #' @field treatment_pathways Analyses table from TreatmentPatterns
     treatment_pathways = function() {
       return(private$.treatment_pathways)
     },
 
+    #' @field summary_event_duration Analyses table from TreatmentPatterns
     summary_event_duration = function() {
       return(private$.summary_event_duration)
     },
 
+    #' @field counts_age Analyses table from TreatmentPatterns
     counts_age = function() {
       return(private$.counts_age)
     },
 
+    #' @field counts_sex Analyses table from TreatmentPatterns
     counts_sex = function() {
       return(private$.counts_sex)
     },
 
+    #' @field counts_year Analyses table from TreatmentPatterns
     counts_year = function() {
       return(private$.counts_year)
     },
 
+    #' @field attrition Analyses table from TreatmentPatterns
     attrition = function() {
       return(private$.attrition)
     },
 
+    #' @field metadata Analyses table from TreatmentPatterns
     metadata = function() {
       return(private$.metadata)
     },
 
+    #' @field arguments Analyses table from TreatmentPatterns
     arguments = function() {
       return(private$.arguments)
     },
 
+    #' @field cdm_source_info Analyses table from TreatmentPatterns
     cdm_source_info = function() {
       return(private$.cdm_source_info)
     }
@@ -202,8 +211,8 @@ TreatmentPatterns <- R6::R6Class(
       shiny::tagList(
         shiny::column(
           width = 2,
+          # TODO Make strata options dynamic
           shinyWidgets::pickerInput(
-            # TODO Make strata options dynamic
             inputId = shiny::NS(self$namespace, "tpAge"),
             label = "Age",
             choices = unique(private$.treatment_pathways$age),
@@ -368,6 +377,9 @@ TreatmentPatterns <- R6::R6Class(
     .server = function(input, output, session) {
       private$.analysesMod$server(input, output, session)
 
+      private$.updateTreatmentPathwaysStrata(input, output, session)
+      # private$.updateTreatmentPathwaysFreq(input, output, session)
+
       private$.serverTreatmentPathways(input, output, session)
       private$.serverTreatmentDuration(input, output, session)
 
@@ -382,9 +394,35 @@ TreatmentPatterns <- R6::R6Class(
       private$.serverAttrition(input, output, session)
     },
 
-    .getReactiveTreatmentPathways = function(input) {
+    .updateTreatmentPathwaysStrata = function(input, output, session) {
+      baseResult <- private$.reactiveTreatmentPathwaysBase(input)
+
+      shiny::observe({
+        res <- baseResult()
+
+        inputIdMap <- list(
+          tpAge = "age",
+          tpSex = "sex",
+          tpIndexYear = "index_year"
+        )
+
+        for (i in seq_len(length(inputIdMap))) {
+          inputId <- names(inputIdMap[i])
+          col <- inputIdMap[[inputId]]
+
+          shinyWidgets::updatePickerInput(
+            session = session,
+            inputId = inputId,
+            choices = unique(res[[col]])
+          )
+        }
+        private$.treatmentPathwaysTable$server(input, output, session)
+      })
+    },
+
+    .reactiveTreatmentPathwaysBase = function(input) {
       shiny::reactive({
-        private$.treatmentPathwaysTable$args$result <- private$.treatment_pathways |>
+        private$.treatment_pathways |>
           dplyr::left_join(
             private$.cdm_source_info |>
               dplyr::select(cdm_name = "cdm_source_abbreviation", "result_id", "analysis_id"),
@@ -392,18 +430,82 @@ TreatmentPatterns <- R6::R6Class(
           ) |>
           dplyr::left_join(private$.analyses, by = c("result_id", "analysis_id")) |>
           dplyr::filter(
-            .data$age %in% input$tpAge,
-            .data$sex %in% input$tpSex,
-            .data$index_year %in% input$tpIndexYear,
-            .data$freq >= private$.pathFreqChoices[[input$tpMinFreq]],
-            .data$freq <= private$.pathFreqChoices[[input$tpMaxFreq]],
             .data$cdm_name %in% input$cdmName,
             .data$target_cohort_name %in% input$targetCohort,
-            .data$description %in% input$analysis
+            .data$description %in% input$analysis,
+            .data$freq >= private$.pathFreqChoices[[input$tpMinFreq]],
+            .data$freq <= private$.pathFreqChoices[[input$tpMaxFreq]]
           ) |>
           dplyr::relocate("cdm_name", "target_cohort_name", "description", "age", "sex", "index_year", "pathway", "freq") |>
           dplyr::select(-"analysis_id", -"target_cohort_id", -"result_id") |>
           dplyr::arrange(.data$cdm_name, .data$target_cohort_name, .data$description, .data$age, .data$sex, .data$index_year, dplyr::desc(.data$freq))
+      })
+    },
+
+    .reactiveTreatmentPathwaysStrata = function(input, baseResult) {
+      shiny::reactive({
+        baseResult() |>
+          dplyr::filter(
+            .data$age %in% nullToDefault(input$tpAge, "all"),
+            .data$sex %in% nullToDefault(input$tpSex, "all"),
+            .data$index_year %in% nullToDefault(input$tpIndexYear, "all")
+          )
+      })
+    },
+
+    .updateTreatmentPathwaysFreq = function(input, output, session) {
+      baseResult <- baseResult <- private$.reactiveTreatmentPathwaysBase(input) |>
+        private$.reactiveTreatmentPathwaysStrata(input = input)
+
+      shinyWidgets::updatePickerInput(
+        session = session,
+        inputId = "tpMaxFreq",
+        choices = names(private$.pathFreqChoices),
+        selected = names(private$.pathFreqChoices)[1]
+      )
+
+      shinyWidgets::updatePickerInput(
+        session = session,
+        inputId = "tpMinFreq",
+        choices = names(private$.pathFreqChoices),
+        selected = names(private$.pathFreqChoices)[2]
+      )
+
+      shiny::observe({
+        result <- baseResult()
+        private$.pathFreqChoices <- getFreqRanges(result)
+
+        tpMinFreq <- input$tpMinFreq |>
+          nullToDefault(default = names(private$.pathFreqChoices[2]))
+
+        tpMaxFreq <- input$tpMaxFreq |>
+          nullToDefault(default = names(private$.pathFreqChoices[1]))
+
+        browser()
+
+        private$.treatmentPathwaysTable$args$result <- result |>
+          dplyr::filter(
+            .data$freq >= private$.pathFreqChoices[[tpMinFreq]],
+            .data$freq <= private$.pathFreqChoices[[tpMaxFreq]]
+          )
+
+        private$.treatmentPathwaysTable$server(input, output, session)
+      })
+    },
+
+    .serverTreatmentPathways = function(input, output, session) {
+      result <- private$.reactiveTreatmentPathwaysBase(input) |>
+        private$.reactiveTreatmentPathwaysStrata(input = input)
+      shiny::observe({
+        private$.treatmentPathwaysTable$args$result <- result()
+        private$.treatmentPathwaysTable$server(input, output, session)
+      })
+
+      shiny::observe({
+        private$.treatmentPathwaysSunburst$args$treatmentPathways <- result()
+        private$.treatmentPathwaysSunburst$args$strataX <- input$tpFacetX
+        private$.treatmentPathwaysSunburst$args$strataY <- input$tpFacetY
+        private$.treatmentPathwaysSunburst$server(input, output, session)
       })
     },
 
@@ -427,21 +529,6 @@ TreatmentPatterns <- R6::R6Class(
           ) |>
           dplyr::select(-"analysis_id", -"target_cohort_id", -"result_id") |>
           dplyr::relocate("cdm_name", "target_cohort_name", "description", "line")
-      })
-    },
-
-    .serverTreatmentPathways = function(input, output, session) {
-      result <- private$.getReactiveTreatmentPathways(input)
-      shiny::observe({
-        private$.treatmentPathwaysTable$args$result <- result()
-        private$.treatmentPathwaysTable$server(input, output, session)
-      })
-
-      shiny::observe({
-        private$.treatmentPathwaysSunburst$args$treatmentPathways <- result()
-        private$.treatmentPathwaysSunburst$args$strataX <- input$tpFacetX
-        private$.treatmentPathwaysSunburst$args$strataY <- input$tpFacetY
-        private$.treatmentPathwaysSunburst$server(input, output, session)
       })
     },
 
@@ -526,33 +613,9 @@ TreatmentPatterns <- R6::R6Class(
 
     ## Initializers ----
     .initTreatmentPathways = function() {
-      # TODO Make this dynamic based on reactive data
-      localTp <- private$.treatment_pathways |>
-        dplyr::filter(
-          .data$age == "all",
-          .data$sex == "all",
-          .data$index_year == "all"
-        )
-
-      private$.pathFreqChoices <- list(
-        maximum = max(private$.treatment_pathways$freq),
-        `99%` = quantile(localTp$freq, probs = 0.99),
-        `97.5%` = quantile(localTp$freq, probs = 0.975),
-        `95%` = quantile(localTp$freq, probs = 0.95),
-        `75%` = quantile(localTp$freq, probs = 0.75),
-        median = round(median(localTp$freq)),
-        mean = round(mean(localTp$freq)),
-        `25%` = quantile(localTp$freq, probs = 0.25),
-        `5%` = quantile(localTp$freq, probs = 0.05),
-        `2.5%` = quantile(localTp$freq, probs = 0.025),
-        `1%` = quantile(localTp$freq, probs = 0.01),
-        minimum = min(private$.treatment_pathways$freq)
-      )
-
-      names(private$.pathFreqChoices) <- sprintf(
-        "%s (%s)",
-        names(private$.pathFreqChoices), unlist(private$.pathFreqChoices)
-      )
+      private$.pathFreqChoices <- private$.treatment_pathways |>
+        dplyr::filter(.data$age == "all", .data$sex == "all", .data$index_year == "all") |>
+        getFreqRanges()
 
       private$.treatmentPathwaysTable <- Flextable$new(
         fun = visOmopResults::visTable,
