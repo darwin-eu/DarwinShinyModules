@@ -288,6 +288,11 @@ TreatmentPatterns <- R6::R6Class(
     },
 
     .uiSummaryEventDuration = function() {
+      lineChoices <- private$.summary_event_duration |>
+        dplyr::filter(.data$line != "overall") |>
+        dplyr::distinct(.data$line) |>
+        dplyr::pull()
+
       shiny::tagList(
         shiny::column(
           width = 2,
@@ -296,13 +301,14 @@ TreatmentPatterns <- R6::R6Class(
             inputId = shiny::NS(self$namespace, "treatmentGroups"),
             label = "Treatment Groups",
             choices = c("both", "group", "individual"),
-            selected = "both",
+            selected = "group",
           ),
           # TODO: update lines to be dynmaic also convert to int, remove overall
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "eventLines"),
             label = "Event Lines",
-            choices = unique(private$.summary_event_duration$line),
+            choices = c(0, lineChoices),
+            selected = 0,
             multiple = TRUE
           ),
           shinyWidgets::pickerInput(
@@ -310,8 +316,13 @@ TreatmentPatterns <- R6::R6Class(
             label = "Include Overall",
             choices = c("Yes", "No"),
             selected = "Yes"
+          ),
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "logXAxis"),
+            label = "Log Transform Durations",
+            choices = c("Yes", "No"),
+            selected = "No"
           )
-          # TODO: add vertical facet option
           # TODO: add min and max duration options
         ),
         shiny::column(
@@ -497,7 +508,11 @@ TreatmentPatterns <- R6::R6Class(
       result <- private$.reactiveTreatmentPathwaysBase(input) |>
         private$.reactiveTreatmentPathwaysStrata(input = input)
       shiny::observe({
-        private$.treatmentPathwaysTable$args$result <- result()
+        private$.treatmentPathwaysTable$args$result <- result() |>
+          dplyr::group_by(.data$cdm_name, .data$target_cohort_name, .data$description) |>
+          dplyr::mutate(
+            `%` = round(.data$freq / sum(.data$freq) * 100, 2)
+          )
         private$.treatmentPathwaysTable$server(input, output, session)
       })
 
@@ -536,9 +551,6 @@ TreatmentPatterns <- R6::R6Class(
       result <- private$.getReactiveTreatmentDuration(input)
 
       shiny::observe({
-        private$.treatmentDurationTable$args$result <- result()
-
-        private$.treatmentDurationPlot$args$eventDurations <- result()
         private$.treatmentDurationPlot$args$treatmentGroups <- input$treatmentGroups
         private$.treatmentDurationPlot$args$eventLines <- input$eventLines
         private$.treatmentDurationPlot$args$includeOverall <- convertLabelToLogical(
@@ -546,6 +558,36 @@ TreatmentPatterns <- R6::R6Class(
           trueVal = "Yes",
           falseVal = "No"
         )
+
+        logXAxis <- convertLabelToLogical(input$logXAxis, trueVal = "Yes", falseVal = "No")
+
+        res <- result() |>
+          dplyr::group_by(.data$cdm_name, .data$target_cohort_name, .data$description) |>
+          dplyr::mutate(
+            `%` = round(.data$event_count / sum(.data$event_count) * 100, 2)
+          )
+
+        if (logXAxis) {
+          res <- res |>
+            dplyr::mutate(
+              duration_min = round(log(.data$duration_min), 2),
+              duration_q1 = round(log(.data$duration_q1), 2),
+              duration_median = round(log(.data$duration_median), 2),
+              duration_q2 = round(log(.data$duration_q2), 2),
+              duration_max = round(log(.data$duration_max), 2),
+              duration_average = round(log(.data$duration_average), 2),
+              duration_sd = round(log(.data$duration_sd), 2)
+            )
+
+          private$.treatmentDurationPlot$args$xLab <- "log(days)"
+          private$.treatmentDurationTable$args$result <- res
+          private$.treatmentDurationPlot$args$eventDurations <- res
+        } else {
+          private$.treatmentDurationPlot$args$xLab <- "days"
+          private$.treatmentDurationTable$args$result <- res
+          private$.treatmentDurationPlot$args$eventDurations <- res
+        }
+
 
         private$.treatmentDurationTable$server(input, output, session)
         private$.treatmentDurationPlot$server(input, output, session)
@@ -623,7 +665,12 @@ TreatmentPatterns <- R6::R6Class(
           result = NULL,
           style = "darwin",
           groupColumn = "target_cohort_name",
-          type = "flextable"
+          type = "flextable",
+          rename = c(
+            "Data Source" = "cdm_name",
+            "Analysis" = "description",
+            "N" = "freq"
+          )
         ),
         parentNamespace = self$namespace
       )
@@ -641,14 +688,29 @@ TreatmentPatterns <- R6::R6Class(
         fun = visOmopResults::visTable,
         args = list(
           style = "darwin",
-          type = "flextable"
+          groupColumn = "target_cohort_name",
+          type = "flextable",
+          rename = c(
+            "Data Source" = "cdm_name",
+            "Analysis" = "description",
+            "Event Line" = "line",
+            "Min" = "duration_min",
+            "Q25" = "duration_q1",
+            "Median" = "duration_median",
+            "Q75" = "duration_q2",
+            "Max" = "duration_max",
+            "Mean" = "duration_average",
+            "St Dev" = "duration_sd",
+            "N" = "event_count"
+          )
         ),
         parentNamespace = self$namespace
       )
 
       private$.treatmentDurationPlot <- PlotStatic$new(
-        fun = TreatmentPatterns::plotEventDuration,
+        fun = plotShinyEventDuration,
         args = list(),
+        height = "80vh",
         parentNamespace = self$namespace
       )
     },
@@ -833,7 +895,12 @@ TreatmentPatterns <- R6::R6Class(
         for (result in results) {
           tbl <- if (result %in% c("counts_age", "counts_sex", "counts_year")) {
             tpr[[result]] |>
-              dplyr::mutate(n = as.character(n))
+              dplyr::mutate(n = as.character(.data$n))
+          } else if (result == "cdm_source_info") {
+            tpr[[result]] |>
+              dplyr::mutate(
+                cdm_version = as.character(.data$cdm_version)
+              )
           } else {
             tpr[[result]]
           }

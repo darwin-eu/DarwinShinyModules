@@ -193,7 +193,7 @@ ggSunburst <- function(treatmentPathways, minFreq = 0, strataX = "", strataY = "
 
   if (style == "darwin") {
     gg <- gg +
-      visOmopResults::themeVisOmop(style = "darwin")
+      ggThemeDarwin(fontSize = 10)
   }
 
   return(gg)
@@ -202,20 +202,60 @@ ggSunburst <- function(treatmentPathways, minFreq = 0, strataX = "", strataY = "
 getFreqRanges <- function(treatmentPathways) {
   pathFreqChoices <- list(
     maximum = max(treatmentPathways$freq),
-    `99%` = quantile(treatmentPathways$freq, probs = 0.99),
-    `97.5%` = quantile(treatmentPathways$freq, probs = 0.975),
-    `95%` = quantile(treatmentPathways$freq, probs = 0.95),
-    `75%` = quantile(treatmentPathways$freq, probs = 0.75),
+    `99%` = round(quantile(treatmentPathways$freq, probs = 0.99)),
+    `97.5%` = round(quantile(treatmentPathways$freq, probs = 0.975)),
+    `95%` = round(quantile(treatmentPathways$freq, probs = 0.95)),
+    `75%` = round(quantile(treatmentPathways$freq, probs = 0.75)),
     median = round(median(treatmentPathways$freq)),
     mean = round(mean(treatmentPathways$freq)),
-    `25%` = quantile(treatmentPathways$freq, probs = 0.25),
-    `5%` = quantile(treatmentPathways$freq, probs = 0.05),
-    `2.5%` = quantile(treatmentPathways$freq, probs = 0.025),
-    `1%` = quantile(treatmentPathways$freq, probs = 0.01),
+    `25%` = round(quantile(treatmentPathways$freq, probs = 0.25)),
+    `5%` = round(quantile(treatmentPathways$freq, probs = 0.05)),
+    `2.5%` = round(quantile(treatmentPathways$freq, probs = 0.025)),
+    `1%` = round(quantile(treatmentPathways$freq, probs = 0.01)),
     minimum = min(treatmentPathways$freq)
   )
 
   names(pathFreqChoices) <- sprintf("%s (%s)", names(pathFreqChoices), unlist(pathFreqChoices))
 
   return(pathFreqChoices)
+}
+
+plotShinyEventDuration = function(eventDurations, minCellCount = 0, treatmentGroups = "both", eventLines = NULL, includeOverall = TRUE, xLab = "days") {
+  eventDurations <- eventDurations |>
+    dplyr::filter(
+      .data$event_count >= minCellCount,
+      dplyr::case_when(
+        treatmentGroups == "both" ~ .data$event_name == .data$event_name,
+        treatmentGroups == "group" ~ .data$event_name %in% c("mono-event", "combination-event"),
+        treatmentGroups == "individual" ~ !.data$event_name %in% c("mono-event", "combination-event")
+      ),
+      dplyr::case_when(
+        is.null(eventLines) ~ .data$event_name == .data$event_name,
+        .default = .data$line %in% c(as.character(eventLines), "overall")
+      ),
+      dplyr::case_when(
+        includeOverall ~ .data$event_name == .data$event_name,
+        .default = !.data$line == "overall"
+      )
+    )
+
+  ggplot2::ggplot(data = eventDurations) +
+    ggplot2::geom_boxplot(
+      mapping = ggplot2::aes(
+        group = interaction(.data$event_name, .data$cdm_name, .data$description),
+        y = .data$event_name,
+        xmin = .data$duration_min,
+        xlower = .data$duration_q1,
+        xmiddle = .data$duration_median,
+        xupper = .data$duration_q2,
+        xmax = .data$duration_max
+      ),
+      stat = "identity"
+    ) +
+    ggplot2::facet_grid(.data$cdm_name + .data$description ~ .data$line) +
+    ggplot2::labs(
+      title = "Duration of events per line",
+      x = xLab
+    ) +
+    ggThemeDarwin(fontSize = 10)
 }
