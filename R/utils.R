@@ -24,7 +24,7 @@ nullToDefault <- function(value, default) {
   if (is.null(value)) default else value
 }
 
-themeDarwin <- function(fontSize = NULL) {
+ggThemeDarwin <- function(fontSize = NULL) {
   visOmopResults::themeVisOmop(style = "darwin", fontsizeRef = fontSize) +
     ggplot2::theme(strip.text.y.right = ggplot2::element_text(angle = -90))
 }

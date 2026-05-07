@@ -101,6 +101,7 @@ Collate:
     'TreatmentPatterns-EventDuration.R'
     'TreatmentPatterns-TreatmentPathways.R'
     'TreatmentPatterns-Utils.R'
+    'TreatmentPatterns.R'
     'appBuilderUtils.R'
     'launchBslibApp.R'
     'launchDarwinBslibApp.R'
