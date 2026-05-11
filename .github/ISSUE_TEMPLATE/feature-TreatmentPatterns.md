@@ -1,8 +1,9 @@
 ---
-name: TreatmentPatterns module
+name: Feature TreatmentPatterns module
 about: Suggest an idea for the TreatmentPatterns module. This can be a new feature or an improvement.
 title: ''
 labels: 'TreatmentPatterns'
+type: 'Feature'
 assignees: mvankessel-EMC
 
 ---
