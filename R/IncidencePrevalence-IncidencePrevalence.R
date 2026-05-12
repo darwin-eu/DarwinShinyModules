@@ -183,6 +183,8 @@ IncidencePrevalence <- R6::R6Class(
     .dateRangeMin = NULL,
     .dateRangeMax = NULL,
 
+    .hasInterval = FALSE,
+
     ## UI ----
     .UI = function() {
       shiny::fluidPage(
@@ -288,26 +290,36 @@ IncidencePrevalence <- R6::R6Class(
         minDate <- private$.pickers[["date"]]$inputValues$timeWindow[1]
         maxDate <- private$.pickers[["date"]]$inputValues$timeWindow[2]
 
-        additionalLevels <- private$.result |>
-          omopgenerics::filterAdditional(.data[[private$.endDateCol]] != "overall") |>
-          omopgenerics::filterAdditional(as.Date(.data[[private$.startDateCol]]) >= minDate) |>
-          omopgenerics::filterAdditional(as.Date(.data[[private$.endDateCol]]) <= maxDate) |>
-          dplyr::filter(grepl(pattern = "analysis_interval", x = .data$additional_name)) |>
-          dplyr::filter(grepl(pattern = interval, x = .data$additional_level)) |>
-          dplyr::distinct(.data$additional_level) |>
-          dplyr::pull(.data$additional_level)
+        if (private$.hasInterval) {
+          additionalLevels <- private$.result |>
+            omopgenerics::filterAdditional(.data[[private$.endDateCol]] != "overall") |>
+            omopgenerics::filterAdditional(as.Date(.data[[private$.startDateCol]]) >= minDate) |>
+            omopgenerics::filterAdditional(as.Date(.data[[private$.endDateCol]]) <= maxDate) |>
+            dplyr::filter(grepl(pattern = "analysis_interval", x = .data$additional_name)) |>
+            dplyr::filter(grepl(pattern = interval, x = .data$additional_level)) |>
+            dplyr::distinct(.data$additional_level) |>
+            dplyr::pull(.data$additional_level)
 
-        additionalLevelItems <- stringr::str_split_i(string = additionalLevels, pattern = " &&& ", i = 1) |>
-          unlist() |>
-          unique()
+          additionalLevelItems <- stringr::str_split_i(string = additionalLevels, pattern = " &&& ", i = 1) |>
+            unlist() |>
+            unique()
 
-        private$.pickers[["date"]]$update(
-          fun = shinyWidgets::updatePickerInput,
-          name = "intervalItems",
-          session = session,
-          choices = additionalLevelItems,
-          selected = additionalLevelItems[1]
-        )
+          private$.pickers[["date"]]$update(
+            fun = shinyWidgets::updatePickerInput,
+            name = "intervalItems",
+            session = session,
+            choices = additionalLevelItems,
+            selected = additionalLevelItems[1]
+          )
+        } else {
+          private$.pickers[["date"]]$update(
+            fun = shinyWidgets::updatePickerInput,
+            name = "intervalItems",
+            session = session,
+            choices = "overall",
+            selected = "overall"
+          )
+        }
       })
     },
 
@@ -343,7 +355,7 @@ IncidencePrevalence <- R6::R6Class(
           result
         }
 
-        result |>
+        result <- result |>
           omopgenerics::filterSettings(
             .data$denominator_start_date %in% denominator$start_date,
             .data$denominator_end_date %in% denominator$end_date,
@@ -351,11 +363,17 @@ IncidencePrevalence <- R6::R6Class(
             .data$denominator_sex %in% denominator$denom_sex,
             .data$denominator_age_group %in% denominator$age_group,
             .data$denominator_time_at_risk %in% denominator$time_at_risk
-          ) |>
-          omopgenerics::filterAdditional(
-            analysis_interval == date$interval,
-            .data[[private$.startDateCol]] %in% date$intervalItems
-          ) |>
+          )
+
+        if (private$.hasInterval) {
+          result <- result |>
+            omopgenerics::filterAdditional(
+              analysis_interval == date$interval,
+              .data[[private$.startDateCol]] %in% date$intervalItems
+            )
+        }
+
+        result |>
           omopgenerics::filterGroup(outcome_cohort_name %in% database$outcome)
       })
     },
@@ -613,7 +631,7 @@ IncidencePrevalence <- R6::R6Class(
         args = list(
           interval = list(
             inputId = "interval",
-            label = "Interval",
+            label = "Interval Period",
             choices = private$.timeIntervals,
             selected = private$.timeIntervals[1],
             options = private$.pickerOptions
@@ -823,6 +841,8 @@ IncidencePrevalence <- R6::R6Class(
       # Period Prev
       private$.fullContribution <- private$.getColValues("analysis_full_contribution")
       private$.level <- private$.getColValues("analysis_level")
+
+      private$.hasInterval <- any(grepl("analysis_interval", private$.result$additional_name))
     },
 
     .setDateRange = function() {
@@ -846,16 +866,20 @@ IncidencePrevalence <- R6::R6Class(
 
     .setTimeIntervals = function() {
       # "overall", "years", "quarters", "months", "weeks"
-      additionalLevels <- private$.result |>
-        dplyr::filter(grepl(pattern = "analysis_interval", x = .data$additional_name)) |>
-        dplyr::distinct(.data$additional_level) |>
-        dplyr::pull(.data$additional_level)
+      private$.timeIntervals <- if (private$.hasInterval) {
+        additionalLevels <- private$.result |>
+          dplyr::filter(grepl(pattern = "analysis_interval", x = .data$additional_name)) |>
+          dplyr::distinct(.data$additional_level) |>
+          dplyr::pull(.data$additional_level)
 
-      additionalItems <- stringr::str_split(string = additionalLevels, pattern = " &&& ") |>
-        unlist() |>
-        unique()
+        additionalItems <- stringr::str_split(string = additionalLevels, pattern = " &&& ") |>
+          unlist() |>
+          unique()
 
-      private$.timeIntervals <- additionalItems[grepl(pattern = "^[a-z]", x = tolower(additionalItems))]
+        additionalItems[grepl(pattern = "^[a-z]", x = tolower(additionalItems))]
+      } else {
+        "overall"
+      }
     },
 
     .setCohortNames = function() {
