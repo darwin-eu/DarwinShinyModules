@@ -130,9 +130,16 @@ Characteristics <- R6::R6Class(
     .variableNames = NULL,
     .estimateNames = NULL,
 
+    .pickerOptions = list(
+      `actions-box` = TRUE,
+      size = 10,
+      `selected-text-format` = "count > 3"
+    ),
+
     ## UI ----
     .UI = function() {
-      shiny::tagList(
+      shiny::fluidPage(
+        private$.uiGeneralFilters(),
         shiny::tabsetPanel(
           shiny::tabPanel(
             title = "Table",
@@ -146,50 +153,67 @@ Characteristics <- R6::R6Class(
       )
     },
 
+    .uiGeneralFilters = function() {
+      shiny::tagList(
+        shiny::div(
+          style = "display: inline-block;",
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "cdmName"),
+            label = "CDM Name",
+            choices = private$.cdmNames,
+            selected = private$.cdmNames[1],
+            multiple = TRUE,
+            options = private$.pickerOptions
+          )
+        ),
+        shiny::div(
+          style = "display: inline-block;",
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "cohortName"),
+            label = "Cohort Name",
+            choices = private$.cohortNames,
+            selected = private$.cohortNames[1],
+            multiple = TRUE,
+            options = private$.pickerOptions
+          )
+        )
+      )
+    },
+
     .tableUI = function() {
       shiny::fluidRow(
         shiny::column(
           width = 2,
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "tableCDMName"),
-            label = "CDM Name",
-            choices = private$.cdmNames,
-            selected = private$.cdmNames[1],
-            multiple = TRUE,
-          ),
-          shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "tableCohortName"),
-            label = "Cohort Name",
-            choices = private$.cohortNames,
-            selected = private$.cohortNames[1],
-            multiple = TRUE
-          ),
-          shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tableStrata"),
             label = "Strata",
             choices = private$.strata,
             selected = private$.strata[1],
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tableVariable"),
             label = "Variables",
             choices = private$.variableNames,
             selected = private$.variableNames[1],
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tableHeader"),
             label = "Headers",
             choices = availableTableColumns(private$.result),
             selected = c("cdm_name", "cohort_name"),
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tableGroupColumn"),
             label = "Group Columns",
             choices = availableTableColumns(private$.result),
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
           )
         ),
         shiny::column(
@@ -204,25 +228,12 @@ Characteristics <- R6::R6Class(
         shiny::column(
           width = 2,
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "plotCDMName"),
-            label = "CDM Name",
-            choices = private$.cdmNames,
-            selected = private$.cdmNames[1],
-            multiple = TRUE,
-          ),
-          shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "plotCohortName"),
-            label = "Cohort Name",
-            choices = private$.cohortNames,
-            selected = private$.cohortNames[1],
-            multiple = TRUE
-          ),
-          shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotStrata"),
             label = "Strata",
             choices = private$.strata,
             selected = private$.strata[1],
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotVariableName"),
@@ -240,25 +251,29 @@ Characteristics <- R6::R6Class(
             inputId = shiny::NS(self$namespace, "plotEstimateName"),
             label = "Estimate",
             choices = private$.estimateNames,
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotColour"),
             label = "Colour",
             choices = NULL,
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotFacetX"),
             label = "Horizontal Facet",
             choices = NULL,
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotFacetY"),
             label = "Vertical Facet",
             choices = NULL,
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
           )
         ),
         shiny::column(
@@ -279,17 +294,17 @@ Characteristics <- R6::R6Class(
 
     .tableServer = function(input, output, session) {
       shiny::observeEvent(list(
-        input$tableCDMName, input$tableCohortName,
+        input$cdmName, input$cohortName,
         input$tableStrata, input$tableVariable,
         input$tableHeader, input$tableGroupColumn
       ), {
         private$.table$args$result <- private$.result |>
           dplyr::filter(
-            .data$cdm_name %in% input$tableCDMName,
+            .data$cdm_name %in% input$cdmName,
             .data$variable_name %in% input$tableVariable,
             .data$strata_name %in% input$tableStrata
           ) |>
-          omopgenerics::filterGroup(.data$cohort_name %in% input$tableCohortName)
+          omopgenerics::filterGroup(.data$cohort_name %in% input$cohortName)
 
         private$.table$args$header <- input$tableHeader
         private$.table$args$groupColumn <- input$tableGroupColumn
@@ -299,15 +314,15 @@ Characteristics <- R6::R6Class(
 
     .plotServer = function(input, output, session) {
       shiny::observeEvent(list(
-        input$plotVariableName
+        input$cdmName, input$cohortName, input$plotVariableName
       ), {
         private$.plot$args$result <- private$.result |>
           dplyr::filter(
-            .data$cdm_name %in% input$plotCDMName,
+            .data$cdm_name %in% input$cdmName,
             .data$variable_name %in% input$plotVariableName,
             .data$strata_name %in% input$plotStrata
           ) |>
-          omopgenerics::filterGroup(.data$cohort_name %in% input$plotCohortName)
+          omopgenerics::filterGroup(.data$cohort_name %in% input$cohortName)
 
         choices <- private$.plot$args$result |>
           dplyr::distinct(.data$estimate_name) |>

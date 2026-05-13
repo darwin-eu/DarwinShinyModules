@@ -32,7 +32,7 @@ getStrata <- function(result) {
 #' @exportS3Method DarwinShinyModules::getStrata
 getStrata.summarised_result <- function(result) {
   result |>
-    dplyr::filter(!.data$strata_name %in% c("reason", "overall")) |>
+    dplyr::filter(!.data$strata_name %in% c("reason")) |>
     dplyr::distinct(.data$strata_name) |>
     dplyr::pull(.data$strata_name)
 }
