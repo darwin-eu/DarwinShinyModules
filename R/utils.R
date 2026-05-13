@@ -19,3 +19,20 @@ makeFacetFormula = function(facetX, facetY) {
 convertLabelToLogical = function(label, trueVal = "On", falseVal = "Off") {
   if (label == trueVal) TRUE else if (label == falseVal) FALSE else FALSE
 }
+
+
+#' getCDMAcronyms
+#'
+#' Returns a character vector containing all the data source acronyms from the DARWIN EU Portal
+#'
+#' @returns `character(n)`
+#' @export
+#'
+#' @examples
+#' getCDMAcronyms()
+getCDMAcronyms <- function() {
+  readRDS(system.file("datapartners.RDS", package = "DarwinShinyModules")) |>
+    dplyr::filter(.data$field == "db_acrynym") |>
+    dplyr::select("Answer") |>
+    dplyr::pull()
+}
