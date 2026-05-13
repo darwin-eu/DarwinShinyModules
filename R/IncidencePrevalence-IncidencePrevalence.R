@@ -100,6 +100,7 @@ IncidencePrevalence <- R6::R6Class(
       private$.defaults <- defaults
 
       resType <- unique(private$.settings$result_type)
+      private$.hasInterval <- any(grepl("analysis_interval", private$.result$additional_name))
 
       if ("incidence" %in% resType) {
         private$.setIncidenceCols()
@@ -841,8 +842,6 @@ IncidencePrevalence <- R6::R6Class(
       # Period Prev
       private$.fullContribution <- private$.getColValues("analysis_full_contribution")
       private$.level <- private$.getColValues("analysis_level")
-
-      private$.hasInterval <- any(grepl("analysis_interval", private$.result$additional_name))
     },
 
     .setDateRange = function() {
