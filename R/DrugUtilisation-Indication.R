@@ -124,7 +124,7 @@ Indication <- R6::R6Class(
       )
 
       private$.plot <- DarwinShinyModules::PlotStatic$new(
-        fun = DrugUtilisation::plotIndication,
+        fun = private$.plotFun,
         args = list(result = private$.result, style = "darwin"),
         title = NULL,
         height = "80vh",
@@ -145,6 +145,12 @@ Indication <- R6::R6Class(
     .cdmNames = NULL,
     .cohortNames = NULL,
     .strata = NULL,
+
+    .pickerOptions = list(
+      `actions-box` = TRUE,
+      size = 10,
+      `selected-text-format` = "count > 3"
+    ),
 
     ## UI ----
     .UI = function() {
@@ -186,7 +192,8 @@ Indication <- R6::R6Class(
             label = "CDM Name",
             choices = private$.cdmNames,
             selected = private$.cdmNames[1],
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
           )
         ),
         shiny::div(
@@ -196,7 +203,8 @@ Indication <- R6::R6Class(
             label = "Cohort Name",
             choices = private$.cohortNames,
             selected = private$.cohortNames[1],
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
           )
         )
       )
@@ -208,19 +216,22 @@ Indication <- R6::R6Class(
           inputId = shiny::NS(self$namespace, "strata"),
           label = "Strata",
           choices = private$.strata,
-          multiple = TRUE
+          multiple = TRUE,
+          options = private$.pickerOptions
         ),
         shinyWidgets::pickerInput(
           inputId = shiny::NS(self$namespace, "header"),
           label = "Header",
           choices = availableTableColumns(private$.result),
-          multiple = TRUE
+          multiple = TRUE,
+          options = private$.pickerOptions
         ),
         shinyWidgets::pickerInput(
           inputId = shiny::NS(self$namespace, "groupColumn"),
           label = "Group Column",
           choices = availableTableColumns(private$.result),
-          multiple = TRUE
+          multiple = TRUE,
+          options = private$.pickerOptions
         )
       )
     },
@@ -237,19 +248,22 @@ Indication <- R6::R6Class(
           inputId = shiny::NS(self$namespace, "facetX"),
           label = "Horizontal Facet",
           choices = availablePlotColumns(private$.result),
-          multiple = TRUE
+          multiple = TRUE,
+          options = private$.pickerOptions
         ),
         shinyWidgets::pickerInput(
           inputId = shiny::NS(self$namespace, "facetY"),
           label = "Vertical Facet",
           choices = availablePlotColumns(private$.result),
-          multiple = TRUE
+          multiple = TRUE,
+          options = private$.pickerOptions
         ),
         shinyWidgets::pickerInput(
           inputId = shiny::NS(self$namespace, "colour"),
           label = "Colour",
           choices = availablePlotColumns(private$.result),
-          multiple = TRUE
+          multiple = TRUE,
+          options = private$.pickerOptions
         )
       )
     },
@@ -262,7 +276,8 @@ Indication <- R6::R6Class(
 
     .serverTable = function(input, output, session) {
       shiny::observeEvent(list(
-        input$cdm_name,
+        input$cdmName,
+        input$cohortName,
         input$header,
         input$groupColumn,
         input$strata
@@ -311,6 +326,11 @@ Indication <- R6::R6Class(
       private$.cdmNames <- getCDMNames(private$.result)
       private$.cohortNames <- getCohortNames(private$.result)
       private$.strata <- getStrata(private$.result)
+    },
+
+    .plotFun = function(...) {
+      DrugUtilisation::plotIndication(...) +
+        ggThemeDarwin()
     }
   )
 )
