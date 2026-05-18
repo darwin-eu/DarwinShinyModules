@@ -1,4 +1,13 @@
 makeTreatmentPatternsResult <- function() {
+  if (!all(
+    require("TreatmentPatterns", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
+    require("CDMConnector", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
+    require("duckdb", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
+    require("DBI", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
+    require("dplyr", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
+  )) {
+    return(NULL)
+  }
   con <- DBI::dbConnect(duckdb::duckdb(), dbdir = CDMConnector::eunomiaDir())
   cdm <- CDMConnector::cdmFromCon(con, cdmSchema = "main", writeSchema = "main")
 

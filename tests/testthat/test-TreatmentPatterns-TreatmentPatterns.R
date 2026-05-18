@@ -13,6 +13,8 @@ test_that("Creation", {
 
   tpr <- makeTreatmentPatternsResult()
 
+  testthat::skip_if(is.null(tpr))
+
   tpMod <- moduleTreatmentPatterns(tpr)
 
   expect_identical(class(tpMod), c("TreatmentPatterns", "ShinyModule", "R6"))
