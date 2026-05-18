@@ -86,6 +86,7 @@ reference:
 - subtitle: TreatmentPatterns
 - contents:
   - TreatmentPatterns
+  - moduleTreatmentPatterns
 
 - subtitle: Shiny App Generator Functions
 - contents:
