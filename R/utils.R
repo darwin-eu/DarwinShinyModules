@@ -28,3 +28,19 @@ ggThemeDarwin <- function(fontSize = NULL) {
   visOmopResults::themeVisOmop(style = "darwin", fontsizeRef = fontSize) +
     ggplot2::theme(strip.text.y.right = ggplot2::element_text(angle = -90))
 }
+
+#' getCDMAcronyms
+#'
+#' Returns a character vector containing all the data source acronyms from the DARWIN EU Portal
+#'
+#' @returns `character(n)`
+#' @export
+#'
+#' @examples
+#' getCDMAcronyms()
+getCDMAcronyms <- function() {
+  readRDS(system.file("datapartners.RDS", package = "DarwinShinyModules")) |>
+    dplyr::filter(.data$field == "db_acrynym") |>
+    dplyr::select("Answer") |>
+    dplyr::pull()
+}
