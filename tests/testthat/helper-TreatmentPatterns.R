@@ -4,7 +4,8 @@ makeTreatmentPatternsResult <- function() {
     require("CDMConnector", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
     require("duckdb", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
     require("DBI", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
-    require("dplyr", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
+    require("dplyr", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
+    require("tidyr", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
   )) {
     return(NULL)
   }

@@ -998,16 +998,16 @@ moduleTreatmentPatterns <- function(...) {
 getFreqRanges <- function(treatmentPathways) {
   pathFreqChoices <- list(
     maximum = max(treatmentPathways$freq),
-    `99%` = round(quantile(treatmentPathways$freq, probs = 0.99)),
-    `97.5%` = round(quantile(treatmentPathways$freq, probs = 0.975)),
-    `95%` = round(quantile(treatmentPathways$freq, probs = 0.95)),
-    `75%` = round(quantile(treatmentPathways$freq, probs = 0.75)),
-    median = round(median(treatmentPathways$freq)),
+    `99%` = round(stats::quantile(treatmentPathways$freq, probs = 0.99)),
+    `97.5%` = round(stats::quantile(treatmentPathways$freq, probs = 0.975)),
+    `95%` = round(stats::quantile(treatmentPathways$freq, probs = 0.95)),
+    `75%` = round(stats::quantile(treatmentPathways$freq, probs = 0.75)),
+    median = round(stats::median(treatmentPathways$freq)),
     mean = round(mean(treatmentPathways$freq)),
-    `25%` = round(quantile(treatmentPathways$freq, probs = 0.25)),
-    `5%` = round(quantile(treatmentPathways$freq, probs = 0.05)),
-    `2.5%` = round(quantile(treatmentPathways$freq, probs = 0.025)),
-    `1%` = round(quantile(treatmentPathways$freq, probs = 0.01)),
+    `25%` = round(stats::quantile(treatmentPathways$freq, probs = 0.25)),
+    `5%` = round(stats::quantile(treatmentPathways$freq, probs = 0.05)),
+    `2.5%` = round(stats::quantile(treatmentPathways$freq, probs = 0.025)),
+    `1%` = round(stats::quantile(treatmentPathways$freq, probs = 0.01)),
     minimum = min(treatmentPathways$freq)
   )
 
