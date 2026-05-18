@@ -85,8 +85,7 @@ reference:
 
 - subtitle: TreatmentPatterns
 - contents:
-  - TreatmentPathways
-  - EventDuration
+  - TreatmentPatterns
 
 - subtitle: Shiny App Generator Functions
 - contents:
