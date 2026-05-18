@@ -35,7 +35,7 @@ testthat::test_that("TreatmentPatterns", {
 
   tpMod <- DarwinShinyModules::TreatmentPatterns$new(result)
 
-  testthat::expect_r6_class(pathwaysMod, class = "TreatmentPatterns")
+  testthat::expect_r6_class(tpMod, class = "TreatmentPatterns")
 
   app <- DarwinShinyModules::launchDarwinDashboardApp(
     list(
