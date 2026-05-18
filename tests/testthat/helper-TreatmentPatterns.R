@@ -2,6 +2,7 @@ makeTreatmentPatternsResult <- function() {
   if (!all(
     require("TreatmentPatterns", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
     require("CDMConnector", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
+    require("CirceR", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
     require("duckdb", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
     require("DBI", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
     require("dplyr", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
