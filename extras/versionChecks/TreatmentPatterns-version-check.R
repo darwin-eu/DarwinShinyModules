@@ -18,7 +18,7 @@ testthat::test_that("TreatmentPatterns", {
   cohorts <- cohortSet |>
     # Remove 'cohort' and 'json' columns
     dplyr::select(-"cohort", -"json") |>
-    dplyr::mutate(type = c("event", "event", "event", "event", "exit", "event", "event", "target")) %>%
+    dplyr::mutate(type = c("event", "event", "event", "event", "exit", "event", "event", "target")) |>
     dplyr::select(
       cohortId = "cohort_definition_id",
       cohortName = "cohort_name",
