@@ -420,7 +420,6 @@ TreatmentPatterns <- R6::R6Class(
       private$.analysesMod$server(input, output, session)
 
       private$.updateTreatmentPathwaysStrata(input, output, session)
-      # private$.updateTreatmentPathwaysFreq(input, output, session)
 
       private$.serverTreatmentPathways(input, output, session)
       private$.serverTreatmentDuration(input, output, session)
@@ -448,7 +447,7 @@ TreatmentPatterns <- R6::R6Class(
           tpIndexYear = "index_year"
         )
 
-        for (i in seq_len(length(inputIdMap))) {
+        for (i in seq_along(inputIdMap)) {
           inputId <- names(inputIdMap[i])
           col <- inputIdMap[[inputId]]
 
@@ -492,46 +491,6 @@ TreatmentPatterns <- R6::R6Class(
             .data$sex %in% nullToDefault(input$tpSex, "all"),
             .data$index_year %in% nullToDefault(input$tpIndexYear, "all")
           )
-      })
-    },
-
-    .updateTreatmentPathwaysFreq = function(input, output, session) {
-      baseResult <- baseResult <- private$.reactiveTreatmentPathwaysBase(input) |>
-        private$.reactiveTreatmentPathwaysStrata(input = input)
-
-      shinyWidgets::updatePickerInput(
-        session = session,
-        inputId = "tpMaxFreq",
-        choices = names(private$.pathFreqChoices),
-        selected = names(private$.pathFreqChoices)[1]
-      )
-
-      shinyWidgets::updatePickerInput(
-        session = session,
-        inputId = "tpMinFreq",
-        choices = names(private$.pathFreqChoices),
-        selected = names(private$.pathFreqChoices)[2]
-      )
-
-      shiny::observe({
-        result <- baseResult()
-        private$.pathFreqChoices <- getFreqRanges(result)
-
-        tpMinFreq <- input$tpMinFreq |>
-          nullToDefault(default = names(private$.pathFreqChoices[2]))
-
-        tpMaxFreq <- input$tpMaxFreq |>
-          nullToDefault(default = names(private$.pathFreqChoices[1]))
-
-        browser()
-
-        private$.treatmentPathwaysTable$args$result <- result |>
-          dplyr::filter(
-            .data$freq >= private$.pathFreqChoices[[tpMinFreq]],
-            .data$freq <= private$.pathFreqChoices[[tpMaxFreq]]
-          )
-
-        private$.treatmentPathwaysTable$server(input, output, session)
       })
     },
 
@@ -904,17 +863,10 @@ TreatmentPatterns <- R6::R6Class(
           arg
         }
       })
-
-      # Rest parse
-      # restArgs <- dots[!names(dots) %in% ""]
-      # for (arg in restArgs) {
-      #   label <- names(arg)
-      #   private[[label]]
-      # }
     },
 
     .parseTPRS = function() {
-      for (i in seq_len(length(private$.tprs))) {
+      for (i in seq_along(private$.tprs)) {
         tpr <- private$.tprs[[i]]
 
         results <- c(
@@ -1082,7 +1034,7 @@ mergeIndividualPathways <- function(treatmentPathways, strataX, strataY) {
     ) |>
     tidyr::replace_na(naReplaceList)
 
-  for (i in seq_len(length(layerColumns))) {
+  for (i in seq_along(layerColumns)) {
     dat <- dat |>
       dplyr::group_by(!!!rlang::parse_exprs(c(strataX, strataY)), !!!rlang::parse_exprs(layerColumns[1:i])) |>
       dplyr::mutate(!!rlang::sym(sprintf("l%s_freq", i)) := sum(.data$freq)) |>
@@ -1108,7 +1060,7 @@ mergeIndividualPathways <- function(treatmentPathways, strataX, strataY) {
     dplyr::ungroup()
 
   dat <- lapply(1:maxLayer, function(i) {
-    layerDat <- dat |>
+    dat |>
       dplyr::filter(.data$layer == i) |>
       dplyr::group_by(!!!rlang::parse_exprs(c(strataX, strataY)), !!!rlang::parse_exprs(layerColumns[1:i])) |>
       dplyr::reframe(
@@ -1126,8 +1078,6 @@ mergeIndividualPathways <- function(treatmentPathways, strataX, strataY) {
 
 splitCombinations <- function(treatmentPathways, strataX, strataY) {
   layerCols <- names(treatmentPathways)[grepl(pattern = "^layer_\\d$", names(treatmentPathways))]
-
-  n <- sum(grepl(names(treatmentPathways), pattern = "^layer_\\d$"))
 
   treatmentPathways |>
     dplyr::mutate(
