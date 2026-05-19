@@ -55,7 +55,10 @@ Suggests:
     CohortSurvival,
     PatientProfiles,
     CohortCharacteristics,
-    usethis
+    usethis,
+    tidyr,
+    stats,
+    CirceR
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr
@@ -98,9 +101,7 @@ Collate:
     'Table-Reactable.R'
     'Table.R'
     'Text.R'
-    'TreatmentPatterns-EventDuration.R'
-    'TreatmentPatterns-TreatmentPathways.R'
-    'TreatmentPatterns-Utils.R'
+    'TreatmentPatterns-TreatmentPatterns.R'
     'appBuilderUtils.R'
     'launchBslibApp.R'
     'launchDarwinBslibApp.R'

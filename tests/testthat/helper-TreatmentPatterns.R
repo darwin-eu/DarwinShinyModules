@@ -1,0 +1,43 @@
+makeTreatmentPatternsResult <- function() {
+  if (!all(
+    require("TreatmentPatterns", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
+    require("CDMConnector", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
+    require("CirceR", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
+    require("duckdb", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
+    require("DBI", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
+    require("dplyr", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE),
+    require("tidyr", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
+  )) {
+    return(NULL)
+  }
+  con <- DBI::dbConnect(duckdb::duckdb(), dbdir = CDMConnector::eunomiaDir())
+  cdm <- CDMConnector::cdmFromCon(con, cdmSchema = "main", writeSchema = "main")
+
+  cohortSet <- CDMConnector::readCohortSet(
+    path = system.file(package = "TreatmentPatterns", "exampleCohorts")
+  )
+
+  cdm <- CDMConnector::generateCohortSet(
+    cdm = cdm,
+    cohortSet = cohortSet,
+    name = "cohort_table"
+  )
+
+  cohorts <- cohortSet |>
+    # Remove 'cohort' and 'json' columns
+    dplyr::select(-"cohort", -"json") |>
+    dplyr::mutate(type = c("event", "event", "event", "event", "exit", "event", "event", "target")) |>
+    dplyr::rename(
+      cohortId = "cohort_definition_id",
+      cohortName = "cohort_name",
+    ) |>
+    dplyr::select("cohortId", "cohortName", "type")
+
+  outputEnv <- TreatmentPatterns::computePathways(
+    cohorts = cohorts,
+    cohortTableName = "cohort_table",
+    cdm = cdm
+  )
+
+  TreatmentPatterns::export(outputEnv)
+}

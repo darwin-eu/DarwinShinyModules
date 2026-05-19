@@ -11,3 +11,5 @@
 .onUnload <- function(libname, pkgname) {
   shiny::removeResourcePath("img")
 }
+
+utils::globalVariables(":=")

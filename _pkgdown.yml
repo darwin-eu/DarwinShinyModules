@@ -85,8 +85,8 @@ reference:
 
 - subtitle: TreatmentPatterns
 - contents:
-  - TreatmentPathways
-  - EventDuration
+  - TreatmentPatterns
+  - moduleTreatmentPatterns
 
 - subtitle: Shiny App Generator Functions
 - contents:
@@ -98,3 +98,4 @@ reference:
   - darwinHeader
   - darwinFooter
   - createApp
+  - getCDMAcronyms
