@@ -84,14 +84,14 @@ testthat::test_that("Treatment", {
   CDMConnector::requireEunomia()
   cdm <- DrugUtilisation::mockDrugUtilisation(numberIndividual = 200, source = "duckdb")
 
-  new_cohort_set <- settings(cdm$cohort1) |>
+  new_cohort_set <- omopgenerics::settings(cdm$cohort1) |>
     dplyr::arrange(cohort_definition_id) |>
     dplyr::mutate(cohort_name = c("asthma", "bronchitis", "pneumonia"))
 
   cdm$cohort1 <- cdm$cohort1 |>
     omopgenerics::newCohortTable(cohortSetRef = new_cohort_set)
 
-  new_cohort_set <- settings(cdm$cohort2) |>
+  new_cohort_set <- omopgenerics::settings(cdm$cohort2) |>
     dplyr::arrange(cohort_definition_id) |>
     dplyr::mutate(cohort_name = c("albuterol", "fluticasone", "montelukast"))
 
