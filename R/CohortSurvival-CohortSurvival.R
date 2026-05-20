@@ -500,3 +500,43 @@ CohortSurvival <- R6::R6Class(
     }
   )
 )
+
+# Functions ----
+#' moduleSurvival
+#'
+#' Wrapper function to create a CohortSurvival module instance.
+#'
+#' @param result (`summarised_result`) Result from either `estimateCompetingRiskSurvival()` or `estimateSingleEventSurvival()` functions from the CohortSurvival package.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `TreatmentPatterns` ShinyModule
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   moduleSurvival(tpr)
+#' }
+moduleSurvival <- function(result, .softValidation) {
+  assertType(result, type = c("survival_estimates", "survival_events", "survival_summary"))
+  checkCDMNames(result, .softValidation)
+  CohortSurvival$new(result)
+}
+
+#' shinySurvival
+#'
+#' @param result (`summarised_result`) Result from either `estimateCompetingRiskSurvival()` or `estimateSingleEventSurvival()` functions from the CohortSurvival package.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#' @returns `shiny.appobj`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   shinySurvival(result)
+#' }
+shinySurvival <- function(result, .softValidation) {
+  launchBslibApp(
+    list(
+      Survival = moduleSurvival(result, .softValidation)
+    )
+  )
+}

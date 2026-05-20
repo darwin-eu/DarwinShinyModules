@@ -961,3 +961,80 @@ IncidencePrevalence <- R6::R6Class(
     }
   )
 )
+
+# Functions ----
+#' moduleIncidence
+#'
+#' @param result (`summarised_result`) Result from the `estimateIncidence()` function from the `IncidencePrevalence` pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `ShinyModule`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   moduleIncidence(result)
+#' }
+moduleIncidence <- function(result, .softValidation = FALSE) {
+  assertType(result, type = "incidence")
+  checkCDMNames(result, .softValidation)
+  IncidencePrevalence$new(result)
+}
+
+#' modulePrevalence
+#'
+#' @param result (`summarised_result`) Result from either `estimatePeriodPrevalence()` or `estimatePointPrevalence()` function from the `IncidencePrevalence` pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `ShinyModule`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   modulePrevalence(result)
+#' }
+modulePrevalence <- function(result, .softValidation = FALSE) {
+  assertType(result, type = "prevalence")
+  checkCDMNames(result, .softValidation)
+  IncidencePrevalence$new(result)
+}
+
+#' shinyIncidence
+#'
+#' @param result (`summarised_result`) Result from the `estimateIncidence()` function from the `IncidencePrevalence` pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `shiny.appobj`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   shinyIncidence(result)
+#' }
+shinyIncidence <- function(result, .softValidation = FALSE) {
+  launchBslibApp(
+    list(
+      Incidence = moduleIncidence(result, .softValidation)
+    )
+  )
+}
+
+#' shinyPrevalence
+#'
+#' @param result (`summarised_result`) Result from either `estimatePeriodPrevalence()` or `estimatePointPrevalence()` function from the `IncidencePrevalence` pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `shiny.appobj`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   shinyPrevalence(result)
+#' }
+shinyPrevalence <- function(result, .softValidation = FALSE) {
+  launchBslibApp(
+    list(
+      Prevalence = modulePrevalence(result, .softValidation)
+    )
+  )
+}

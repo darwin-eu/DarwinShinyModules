@@ -391,3 +391,42 @@ Characteristics <- R6::R6Class(
     }
   )
 )
+
+# Functions ----
+#' moduleCharacteristics
+#'
+#' @param result (`summarised_result`) Result from the `summariseCharacteristics()` function from the `CohortCharacteristics` pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `ShinyModule`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   moduleCharacteristics(result)
+#' }
+moduleCharacteristics <- function(result, .softValidation = FALSE) {
+  assertType(result, type = "summarise_characteristics")
+  checkCDMNames(result, .softValidation)
+  Characteristics$new(result)
+}
+
+#' shinyCharacteristics
+#'
+#' @param result (`summarised_result`) Result from the `summariseCharacteristics()` function from the `CohortCharacteristics` pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `shiny.appojb`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   moduleCharacteristics(result)
+#' }
+shinyCharacteristics <- function(result, .softValidation = FALSE) {
+  launchBslibApp(
+    list(
+      Characteristics = moduleCharacteristics(result, .softValidation)
+    )
+  )
+}

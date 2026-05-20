@@ -2,19 +2,23 @@ getCDMNames <- function(result) {
   UseMethod("getCDMNames")
 }
 
+getCohortNames <- function(result) {
+  UseMethod("getCohortNames")
+}
+
+checkCDMNames <- function(result, .softValidation) {
+  UseMethod("checkCDMNames")
+}
+
+assertType <- function(result, type) {
+  UseMethod("assertType")
+}
+
 #' @exportS3Method DarwinShinyModules::getCDMNames
 getCDMNames.summarised_result <- function(result) {
   result |>
     dplyr::distinct(.data$cdm_name) |>
     dplyr::pull(.data$cdm_name)
-}
-
-getCohortNames <- function(result) {
-  UseMethod("getCohortNames")
-}
-
-checkCDMNames <- function(result) {
-  UseMethod("renameDataSource")
 }
 
 #' @exportS3Method DarwinShinyModules::getCohortNames
@@ -61,7 +65,7 @@ availablePlotColumns.summarised_result <- function(result) {
 }
 
 #' @exportS3Method DarwinShinyModules::checkCDMNames
-checkCDMNames.summarised_result <- function(result) {
+checkCDMNames.summarised_result <- function(result, .softValidation = FALSE) {
   tar <- result |>
     dplyr::select(cdm_name_result = "cdm_name") |>
     dplyr::distinct() |>
@@ -92,8 +96,73 @@ checkCDMNames.summarised_result <- function(result) {
     return(invisible(NULL))
   } else {
     for (i in seq_len(length(bad))) {
-      message(sprintf("The following cdm_name need to be updated: `%s`. Moste likely to one of: %s\n", bad[i], paste(sprintf("`%s`", matches[[i]]), collapse = ", ")))
+      warning(sprintf("The following cdm_name need to be updated: `%s`. Moste likely to one of: %s\n", bad[i], paste(sprintf("`%s`", matches[[i]]), collapse = ", ")))
     }
-    warning("Some acryonyms in `cdm_name` are not in the standard format (see the messages above). To get the full list of acronyms use: `getCDMAcronyms()`")
+    errMsg <- "Some acryonyms in `cdm_name` are not in the standard format. To get the full list of acronyms use: `getCDMAcronyms()`"
+    if (.softValidation) {
+      warning(errMsg)
+    } else {
+      stop(errMsg)
+    }
+  }
+}
+
+#' @exportS3Method DarwinShinyModules::checkCDMNames
+checkCDMNames.TreatmentPatternsResults <- function(tpr, .softValidation = FALSE) {
+  tar <- tpr$cdm_source_info$cdm_source_abbreviation |>
+    unique()
+
+  ref <- readRDS(system.file("datapartners.RDS", package = "DarwinShinyModules")) |>
+    dplyr::filter(.data$field == "db_acrynym") |>
+    dplyr::select("Answer") |>
+    dplyr::pull()
+
+
+  good <- tar[tar %in% ref]
+  bad <- tar[!tar %in% ref]
+
+  subStr <- substr(bad, start = 0, stop = 4)
+
+  matches <- lapply(subStr, function(str) {
+    res <- ref[grepl(tolower(str), tolower(ref))]
+    res <- if (length(res) == 0) {
+      ""
+    } else {
+      res
+    }
+    return(res)
+  })
+
+  if (length(bad) == 0) {
+    return(invisible(NULL))
+  } else {
+    for (i in seq_len(length(bad))) {
+      warning(sprintf("The following `cdm_source_abbreviation` need to be updated: `%s`. Moste likely to one of: %s\n", bad[i], paste(sprintf("`%s`", matches[[i]]), collapse = ", ")))
+    }
+    errMsg <- "Some acryonyms in `tpr$cdm_source_info$cdm_source_abbreviation` are not in the standard format. To get the full list of acronyms use: `getCDMAcronyms()`"
+    if (.softValidation) {
+      warning(errMsg)
+    } else {
+      stop(errMsg)
+    }
+  }
+}
+
+#' @exportS3Method DarwinShinyModules::assertType
+assertType.summarised_result <- function(result, type) {
+  settings <- omopgenerics::settings(result)
+
+  if (!all(type %in% settings$result_type)) {
+    realTypes <- sprintf("`%s`", settings$result_type) |>
+      unique() |>
+      paste(collapse = ", ")
+
+    assertedTypes <- sprintf("`%s`", type) |>
+      unique() |>
+      paste(collapse = ", ")
+
+    stop(sprintf("`result_type` is: %s and not: %s", realTypes, assertedTypes))
+  } else {
+    invisible(TRUE)
   }
 }

@@ -334,3 +334,42 @@ Indication <- R6::R6Class(
     }
   )
 )
+
+# Functions ----
+#' moduleIndication
+#'
+#' @param result (`summarised_result`) Result from the `summariseIndication` function from the DrugUtilisation pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `ShinyModule`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   moduleIndication(result)
+#' }
+moduleIndication <- function(result, .softValidation = FALSE) {
+  assertType(result, "summarise_indication")
+  checkCDMNames(result, .softValidation)
+  Indication$new(result)
+}
+
+#' shinyIndication
+#'
+#' @param result (`summarised_result`) Result from the `summariseIndication` function from the DrugUtilisation pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `ShinyModule`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   shinyIndication(result)
+#' }
+shinyIndication <- function(result, .softValidation = FALSE) {
+  launchBslibApp(
+    list(
+      Indication = moduleIndication(result, .softValidation)
+    )
+  )
+}

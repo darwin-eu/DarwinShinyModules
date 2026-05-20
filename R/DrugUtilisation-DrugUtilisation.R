@@ -424,3 +424,42 @@ DrugUtilisation <- R6::R6Class(
     }
   )
 )
+
+# Functions ----
+#' moduleDrugUtilisation
+#'
+#' @param result (`summarised_result`) Result from the `summariseDrugUtilisation` function from the DrugUtilisation pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `ShinyModule`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   moduleDrugUtilisation(result)
+#' }
+moduleDrugUtilisation <- function(result, .softValidation = FALSE) {
+  assertType(result, "summarise_drug_utilisation")
+  checkCDMNames(result, .softValidation)
+  DrugUtilisation$new(result)
+}
+
+#' shinyDrugRestart
+#'
+#' @param result (`summarised_result`) Result from the `summariseDrugRestart` function from the DrugUtilisation pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `ShinyModule`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   shinyDrugRestart(result)
+#' }
+shinyDrugRestart <- function(result, .softValidation = FALSE) {
+  launchBslibApp(
+    list(
+      DrugUtilisation = moduleDrugUtilisation$new(result, .softValidation)
+    )
+  )
+}

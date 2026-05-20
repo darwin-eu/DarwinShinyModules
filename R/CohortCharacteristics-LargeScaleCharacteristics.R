@@ -601,3 +601,42 @@ LargeScaleCharacteristics <- R6::R6Class(
     }
   )
 )
+
+# Functions ----
+#' moduleLargeScaleCharacteristics
+#'
+#' @param result (`summarised_result`) Result from the `summariseLargeScaleCharacteristics()` function from the `CohortCharacteristics` pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `ShinyModule`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   moduleLargeScaleCharacteristics(result)
+#' }
+moduleLargeScaleCharacteristics <- function(result, .softValidation) {
+  assertType(result, type = "summarise_large_scale_characteristics")
+  checkCDMNames(result, .softValidation)
+  LargeScaleCharacteristics$new(result)
+}
+
+#' shinyLargeScaleCharacteristics
+#'
+#' @param result (`summarised_result`) Result from the `summariseLargeScaleCharacteristics()` function from the `CohortCharacteristics` pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `shiny.appobj`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   shinyLargeScaleCharacteristics(result)
+#' }
+shinyLargeScaleCharacteristics <- function(result, .softValidation) {
+  launchBslibApp(
+    list(
+      LargeScaleCharacteristics = moduleLargeScaleCharacteristics(result, .softValidation)
+    )
+  )
+}

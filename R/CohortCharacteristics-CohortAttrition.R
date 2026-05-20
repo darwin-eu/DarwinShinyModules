@@ -163,3 +163,42 @@ CohortAttrition <- R6::R6Class(
     }
   )
 )
+
+# Functions ----
+#' moduleCohortAttrition
+#'
+#' @param result (`summarised_result`) Result from the `summariseCohortAttrition` function from the CohortCharacteristics pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `ShinyModule`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   moduleCohortAttrition(result)
+#' }
+moduleCohortAttrition <- function(result, .softValidation) {
+  assertType(result, "cohort_attrition")
+  checkCDMNames(result, .softValidation)
+  CohortAttrition$new(result)
+}
+
+#' shinyCohortAttrition
+#'
+#' @param result (`summarised_result`) Result from the `summariseCohortAttrition` function from the CohortCharacteristics pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `shiny.appobj`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   shinyCohortAttrition(result)
+#' }
+shinyCohortAttrition <- function(result, .softValidation = FALSE) {
+  launchBslibApp(
+    list(
+      CohortAttrition = moduleCohortAttrition$new(result, .softValidation)
+    )
+  )
+}

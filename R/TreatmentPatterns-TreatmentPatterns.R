@@ -916,16 +916,17 @@ TreatmentPatterns <- R6::R6Class(
 #'
 #' Wrapper function to create a TreatmentPatterns module instance.
 #'
-#' @param ... Unnamed TreatmentPatternsResults objects.
+#' @param ... Unnamed result objects from the `export()` function from the TreatmentPatterns package.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
 #'
 #' @returns `TreatmentPatterns` ShinyModule
 #' @export
 #'
 #' @examples
 #' if (interactive()) {
-#'   moduleTreatmentPatterns(tpr)
+#'   moduleTreatmentPatterns(tpr1, tpr2, tpr3)
 #' }
-moduleTreatmentPatterns <- function(...) {
+moduleTreatmentPatterns <- function(..., .softValidation = FALSE) {
   dots <- list(...)
 
   if (!is.null(names(dots))) {
@@ -945,6 +946,26 @@ moduleTreatmentPatterns <- function(...) {
   }
 
   do.call(what = TreatmentPatterns$new, args = dots[passVec])
+}
+
+#' shinyTreatmentPatterns
+#'
+#' @param ... Unnamed result objects from the `export()` function from the TreatmentPatterns package.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns shiny.appobj
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   shinyTreatmentPatterns(tpr1, tpr2, tpr3)
+#' }
+shinyTreatmentPatterns <- function(..., .softValidation = FALSE) {
+  launchBslibApp(
+    list(
+      TreatmentPatterns = moduleTreatmentPatterns(..., .softValidation = .softValidation)
+    )
+  )
 }
 
 getFreqRanges <- function(treatmentPathways) {
