@@ -456,7 +456,7 @@ moduleDrugUtilisation <- function(result, .softValidation = FALSE) {
 #' if (interactive()) {
 #'   shinyDrugRestart(result)
 #' }
-shinyDrugRestart <- function(result, .softValidation = FALSE) {
+shinyDrugUtilisation <- function(result, .softValidation = FALSE) {
   launchBslibApp(
     list(
       DrugUtilisation = moduleDrugUtilisation$new(result, .softValidation)
