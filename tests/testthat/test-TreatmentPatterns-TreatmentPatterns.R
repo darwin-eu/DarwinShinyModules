@@ -15,7 +15,7 @@ test_that("Creation", {
 
   testthat::skip_if(is.null(tpr))
 
-  tpMod <- moduleTreatmentPatterns(tpr)
+  tpMod <- suppressWarnings(moduleTreatmentPatterns(tpr, .softValidation = TRUE))
 
   expect_identical(class(tpMod), c("TreatmentPatterns", "ShinyModule", "R6"))
 
