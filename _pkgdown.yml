@@ -73,8 +73,8 @@ reference:
 - subtitle: CohortSurvival
 - contents:
   - CohortSurvival
-  - moduleCohortSurvival
-  - shinyCohortSurvival
+  - moduleSurvival
+  - shinySurvival
 
 - subtitle: DrugExposureDiagnostics
 - contents:
