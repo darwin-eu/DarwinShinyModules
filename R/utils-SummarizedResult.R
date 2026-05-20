@@ -108,8 +108,8 @@ checkCDMNames.summarised_result <- function(result, .softValidation = FALSE) {
 }
 
 #' @exportS3Method DarwinShinyModules::checkCDMNames
-checkCDMNames.TreatmentPatternsResults <- function(tpr, .softValidation = FALSE) {
-  tar <- tpr$cdm_source_info$cdm_source_abbreviation |>
+checkCDMNames.TreatmentPatternsResults <- function(result, .softValidation = FALSE) {
+  tar <- result$cdm_source_info$cdm_source_abbreviation |>
     unique()
 
   ref <- readRDS(system.file("datapartners.RDS", package = "DarwinShinyModules")) |>

@@ -934,6 +934,10 @@ moduleTreatmentPatterns <- function(..., .softValidation = FALSE) {
     names(dots) <- NULL
   }
 
+  for (tpr in dots) {
+    checkCDMNames(result = tpr, .softValidation)
+  }
+
   passVec <- lapply(dots, function(item) {
     "TreatmentPatternsResults" %in% class(item)
   }) |>
