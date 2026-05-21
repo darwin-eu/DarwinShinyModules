@@ -993,7 +993,7 @@ getFreqRanges <- function(treatmentPathways) {
   return(pathFreqChoices)
 }
 
-plotShinyEventDuration = function(eventDurations, minCellCount = 0, treatmentGroups = "both", eventLines = NULL, includeOverall = TRUE, xLab = "days") {
+plotShinyEventDuration <- function(eventDurations, minCellCount = 0, treatmentGroups = "both", eventLines = NULL, includeOverall = TRUE, xLab = "days") {
   eventDurations <- eventDurations |>
     dplyr::filter(
       .data$event_count >= minCellCount,
