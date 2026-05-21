@@ -8,7 +8,7 @@ test_that("Creation: Incidence", {
     package = "DarwinShinyModules",
     "dummyData/CohortCharacteristics/1.1.1/characteristics.csv"
   ))
-  charMod <- Characteristics$new(result = result)
+  charMod <- suppressWarnings(moduleCharacteristics(result = result, .softValidation = TRUE))
 
   expect_identical(class(charMod), c("Characteristics", "ShinyModule", "R6"))
 

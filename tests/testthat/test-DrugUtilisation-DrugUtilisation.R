@@ -24,7 +24,7 @@ test_that("DrugUtilisation: DrugUtilisation", {
       strata = list("age_group", "sex")
     )
 
-  mod <- DrugUtilisation$new(result = result)
+  mod <- suppressWarnings(moduleDrugUtilisation(result = result, .softValidation = TRUE))
 
   shiny::testServer(app = mod$server, {
     testthat::expect_true(is.character(session$token))

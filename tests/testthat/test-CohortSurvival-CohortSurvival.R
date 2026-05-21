@@ -16,7 +16,7 @@ test_that("CohortSurvival: Server", {
     )
   )
 
-  cs <- CohortSurvival$new(result = MGUS_death)
+  cs <- suppressWarnings(moduleSurvival(result = MGUS_death, .softValidation = TRUE))
 
   modServer <- function(id) {
     cs$server(input, output, session)

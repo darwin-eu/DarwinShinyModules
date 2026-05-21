@@ -29,7 +29,7 @@ test_that("DrugUtilisation: DrugRestart", {
      strata = list("age_group", "sex")
    )
 
-  mod <- DrugRestart$new(result)
+  mod <- suppressWarnings(moduleDrugRestart(result, .softValidation = TRUE))
 
   shiny::testServer(app = mod$server, {
     testthat::expect_true(is.character(session$token))
