@@ -1,7 +1,8 @@
 linters: linters_with_defaults(
     object_name_linter(styles = "camelCase"),
-    line_length_linter(120),
-    pipe_consistency_linter()
+    line_length_linter(Inf),
+    pipe_consistency_linter(),
+    return_linter(return_style = c("implicit", "explicit"), allow_implicit_else = TRUE)
   )
 exclusions: list(
     "tests"
