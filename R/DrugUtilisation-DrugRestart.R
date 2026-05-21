@@ -150,24 +150,28 @@ DrugRestart <- R6::R6Class(
         shiny::tabsetPanel(
           shiny::tabPanel(
             title = "Table",
-            shiny::column(
-              width = 2,
-              private$.uiTableSettings()
-            ),
-            shiny::column(
-              width = 10,
-              private$.table$UI()
+            shiny::fluidRow(
+              shiny::column(
+                width = 2,
+                private$.uiTableSettings()
+              ),
+              shiny::column(
+                width = 10,
+                private$.table$UI()
+              )
             )
           ),
           shiny::tabPanel(
             title = "Plot",
-            shiny::column(
-              width = 2,
-              private$.uiPlotSettings()
-            ),
-            shiny::column(
-              width = 10,
-              private$.plot$UI()
+            shiny::fluidRow(
+              shiny::column(
+                width = 2,
+                private$.uiPlotSettings()
+              ),
+              shiny::column(
+                width = 10,
+                private$.plot$UI()
+              )
             )
           )
         )
@@ -175,7 +179,7 @@ DrugRestart <- R6::R6Class(
     },
 
     .uiGeneralSettings = function() {
-      shiny::fluidPage(
+      shiny::tagList(
         shiny::div(
           style = "display: inline-block;",
           shinyWidgets::pickerInput(
@@ -202,7 +206,7 @@ DrugRestart <- R6::R6Class(
     },
 
     .uiTableSettings = function() {
-      shiny::fluidPage(
+      shiny::tagList(
         shinyWidgets::pickerInput(
           inputId = shiny::NS(self$namespace, "strata"),
           label = "Strata",
@@ -228,7 +232,7 @@ DrugRestart <- R6::R6Class(
     },
 
     .uiPlotSettings = function() {
-      shiny::fluidPage(
+      shiny::tagList(
         shinyWidgets::pickerInput(
           inputId = shiny::NS(self$namespace, "position"),
           label = "Bar position",

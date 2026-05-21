@@ -165,24 +165,28 @@ DrugUtilisation <- R6::R6Class(
         shiny::tabsetPanel(
           shiny::tabPanel(
             title = "Table",
-            shiny::column(
-              width = 2,
-              private$.uiTableInput()
-            ),
-            shiny::column(
-              width = 10,
-              private$.table$UI()
+            shiny::fluidRow(
+              shiny::column(
+                width = 2,
+                private$.uiTableInput()
+              ),
+              shiny::column(
+                width = 10,
+                private$.table$UI()
+              )
             )
           ),
           shiny::tabPanel(
             title = "Plot",
-            shiny::column(
-              width = 2,
-              private$.uiPlotInput()
-            ),
-            shiny::column(
-              width = 10,
-              private$.plot$UI()
+            shiny::fluidRow(
+              shiny::column(
+                width = 2,
+                private$.uiPlotInput()
+              ),
+              shiny::column(
+                width = 10,
+                private$.plot$UI()
+              )
             )
           )
         )
@@ -190,7 +194,7 @@ DrugUtilisation <- R6::R6Class(
     },
 
     .uiGeneralInputs = function() {
-      shiny::fluidPage(
+      shiny::tagList(
         shiny::div(
           style = "display: inline-block;",
           shinyWidgets::pickerInput(
