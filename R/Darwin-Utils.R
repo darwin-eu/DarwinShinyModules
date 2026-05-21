@@ -56,6 +56,7 @@ darwinHeader <- function() {
 #' Creates the DARWIN EU (c) footer.
 #'
 #' @param type for which app type the footer should be generated
+#' @param deployDate Date when the app is deployed
 #'
 #' @returns `tagList`
 #' @export
@@ -72,21 +73,24 @@ darwinHeader <- function() {
 #' if (interactive()) {
 #'   shiny::shinyApp(ui, server)
 #' }
-darwinFooter <- function(type = "shinydashboard") {
+darwinFooter <- function(type = "shinydashboard", deployDate = Sys.Date()) {
   assertions <- checkmate::makeAssertCollection()
   checkmate::assertChoice(type, c("shinydashboard", "bslib"), add = assertions)
   checkmate::reportAssertions(assertions)
 
-  darwinStyle <- ifelse(type == "shinydashboard",
-                        "padding: 5px 0px 0px 0px; text-align: center; bottom: 0; width: 100%;",
-                        "padding: 0px; text-align: center; position: fixed; bottom: 0; width: 100%;")
+  darwinStyle <- ifelse(
+    type == "shinydashboard",
+    "padding: 5px 0px 0px 0px; text-align: center; bottom: 0; width: 100%;",
+    "padding: 0px; text-align: center; position: fixed; bottom: 0; width: 100%;"
+  )
+
   shiny::tags$footer(
     style = darwinStyle,
     shiny::h6(
       sprintf(
-        "Generated with DarwinShinyModules %s | Deployed on: %s | (c) %s - 2023 European Medicines Agency. All rights reserved. Certain parts are licensed under conditions to the European Medicines Agency.",
+        "Generated with DarwinShinyModules %s | Deployed on: %s | Copyright %s European Medicines Agency",
         utils::packageVersion("DarwinShinyModules"),
-        Sys.Date(),
+        deployDate,
         substr(Sys.Date(), start = 1, stop = 4)
       )
     )

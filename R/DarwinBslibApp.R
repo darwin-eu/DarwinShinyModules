@@ -21,7 +21,7 @@ DarwinBslibApp <- R6::R6Class(
   ## Public ----
   public = list(
     UI = function() {
-      footer <- darwinFooter(type = "bslib")$children[[1]]$children[[1]]
+      footer <- darwinFooter(type = "bslib", deployDate = self$deployDate)$children[[1]]$children[[1]]
 
       shiny::addResourcePath(
         prefix = "www",

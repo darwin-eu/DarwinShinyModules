@@ -17,12 +17,19 @@
 App <- R6::R6Class(
   classname = "App",
 
-  active = list(),
+  ## Active ----
+  active = list(
+    deployDate = function() {
+      return(private$.deployDate)
+    }
+  ),
+
   ## Public ----
   public = list(
     ## Methods ----
     initialize = function(appStructure) {
       private$.appStructure <- appStructure
+      private$.deployDate <- Sys.Date()
     },
 
     launch = function() {
@@ -42,6 +49,7 @@ App <- R6::R6Class(
   ## Private ----
   private = list(
     ### Fields ----
-    .appStructure = list()
+    .appStructure = list(),
+    .deployDate = NULL
   )
 )
