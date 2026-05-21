@@ -182,7 +182,7 @@ CohortSurvival <- R6::R6Class(
 
     ## Methods ----
     .UI = function() {
-      shiny::tagList(
+      shiny::fluidPage(
         private$.uiGeneralFilters(),
         shiny::tabsetPanel(
           shiny::tabPanel(
@@ -206,7 +206,7 @@ CohortSurvival <- R6::R6Class(
     },
 
     .uiGeneralFilters = function() {
-      shiny::fluidPage(
+      shiny::tagList(
         shiny::h4("General Settings"),
         shiny::div(
           style = "display: inline-block;",
@@ -256,7 +256,7 @@ CohortSurvival <- R6::R6Class(
     },
 
     .uiTable = function() {
-      shiny::fluidPage(
+      shiny::fluidRow(
         shiny::column(
           width = 2,
           shiny::h4("Settings"),
@@ -303,7 +303,7 @@ CohortSurvival <- R6::R6Class(
 
       eventGap <- eventGap[!sapply(eventGap, is.na)]
 
-      shiny::fluidPage(
+      shiny::fluidRow(
         shiny::column(
           width = 2,
           shiny::h4("Settings"),
@@ -323,7 +323,7 @@ CohortSurvival <- R6::R6Class(
     },
 
     .uiPlot = function() {
-      shiny::fluidPage(
+      shiny::fluidRow(
         shiny::column(
           width = 2,
           shiny::h4("Settings"),
@@ -378,7 +378,7 @@ CohortSurvival <- R6::R6Class(
     },
 
     .uiTableAttrition = function() {
-      shiny::fluidPage(
+      shiny::tagList(
         private$.tableAttrition$UI()
       )
     },
