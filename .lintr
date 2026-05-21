@@ -1,6 +1,8 @@
 linters: linters_with_defaults(
     object_name_linter(styles = "camelCase"),
     pipe_consistency_linter(),
+    trailing_blank_lines_linter(),
+    trailing_whitespace_linter(),
     defaults = list()
   )
 exclusions: list(
