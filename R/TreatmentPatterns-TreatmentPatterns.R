@@ -239,7 +239,7 @@ TreatmentPatterns <- R6::R6Class(
     },
 
     .uiTreatmentPathways = function() {
-      shiny::tagList(
+      shiny::fluidRow(
         shiny::column(
           width = 2,
           # TODO Make strata options dynamic
@@ -290,28 +290,30 @@ TreatmentPatterns <- R6::R6Class(
             ),
             shiny::tabPanel(
               title = "Sunburst Plot",
-              shiny::div(
-                style = "display: inline-block;",
-                shinyWidgets::pickerInput(
-                  inputId = shiny::NS(self$namespace, "tpFacetX"),
-                  label = "Horizontal Facet",
-                  choices = c("cdm_name", "target_cohort_name", "description", "age", "sex", "index_year"),
-                  selected = "cdm_name",
-                  multiple = TRUE,
-                  options = private$.pickerOptions
-                )
-              ),
-              shiny::div(
-                style = "display: inline-block;",
-                shinyWidgets::pickerInput(
-                  inputId = shiny::NS(self$namespace, "tpFacetY"),
-                  label = "Vertical Facet",
-                  choices = c("cdm_name", "target_cohort_name", "description", "age", "sex", "index_year"),
-                  multiple = TRUE,
-                  options = private$.pickerOptions
-                )
-              ),
-              private$.treatmentPathwaysSunburst$UI()
+              shiny::fluidPage(
+                shiny::div(
+                  style = "display: inline-block;",
+                  shinyWidgets::pickerInput(
+                    inputId = shiny::NS(self$namespace, "tpFacetX"),
+                    label = "Horizontal Facet",
+                    choices = c("cdm_name", "target_cohort_name", "description", "age", "sex", "index_year"),
+                    selected = "cdm_name",
+                    multiple = TRUE,
+                    options = private$.pickerOptions
+                  )
+                ),
+                shiny::div(
+                  style = "display: inline-block;",
+                  shinyWidgets::pickerInput(
+                    inputId = shiny::NS(self$namespace, "tpFacetY"),
+                    label = "Vertical Facet",
+                    choices = c("cdm_name", "target_cohort_name", "description", "age", "sex", "index_year"),
+                    multiple = TRUE,
+                    options = private$.pickerOptions
+                  )
+                ),
+                private$.treatmentPathwaysSunburst$UI()
+              )
             )
           )
         )
@@ -324,7 +326,7 @@ TreatmentPatterns <- R6::R6Class(
         dplyr::distinct(.data$line) |>
         dplyr::pull()
 
-      shiny::tagList(
+      shiny::fluidRow(
         shiny::column(
           width = 2,
           # TODO: apply filters to table and plot
@@ -365,7 +367,9 @@ TreatmentPatterns <- R6::R6Class(
             ),
             shiny::tabPanel(
               title = "Plot",
-              private$.treatmentDurationPlot$UI()
+              shiny::tagList(
+                private$.treatmentDurationPlot$UI()
+              )
             )
           )
         )
@@ -373,10 +377,11 @@ TreatmentPatterns <- R6::R6Class(
     },
 
     .uiPopulationCounts = function() {
-      shiny::tagList(
-        shiny::tabsetPanel(
-          shiny::tabPanel(
-            title = "Age",
+      shiny::tabsetPanel(
+        shiny::tabPanel(
+          title = "Age",
+          shiny::column(
+            width = 2,
             shinyWidgets::pickerInput(
               inputId = shiny::NS(self$namespace, "countsAge"),
               label = "Age",
@@ -384,11 +389,17 @@ TreatmentPatterns <- R6::R6Class(
               selected = unique(private$.counts_age$age)[1:5],
               multiple = TRUE,
               options = private$.pickerOptions
-            ),
-            private$.countsAgeMod$UI()
+            )
           ),
-          shiny::tabPanel(
-            title = "Sex",
+          shiny::column(
+            width = 10,
+            private$.countsAgeMod$UI()
+          )
+        ),
+        shiny::tabPanel(
+          title = "Sex",
+          shiny::column(
+            width = 2,
             shinyWidgets::pickerInput(
               inputId = shiny::NS(self$namespace, "countsSex"),
               label = "Sex",
@@ -396,11 +407,16 @@ TreatmentPatterns <- R6::R6Class(
               selected = unique(private$.counts_sex$sex)[1:5],
               multiple = TRUE,
               options = private$.pickerOptions
-            ),
-            private$.countsSexMod$UI()
+            )
           ),
-          shiny::tabPanel(
-            title = "Index Year",
+          shiny::column(width = 10,
+            private$.countsSexMod$UI()
+          )
+        ),
+        shiny::tabPanel(
+          title = "Index Year",
+          shiny::column(
+            width = 2,
             shinyWidgets::pickerInput(
               inputId = shiny::NS(self$namespace, "countsYear"),
               label = "Year",
@@ -408,7 +424,10 @@ TreatmentPatterns <- R6::R6Class(
               selected = unique(private$.counts_year$index_year)[5],
               multiple = TRUE,
               options = private$.pickerOptions
-            ),
+            )
+          ),
+          shiny::column(
+            width = 10,
             private$.countsIndexYearMod$UI()
           )
         )
