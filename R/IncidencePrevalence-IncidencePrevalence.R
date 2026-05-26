@@ -128,6 +128,23 @@ IncidencePrevalence <- R6::R6Class(
         parentNamespace = self$namespace
       )
 
+      private$.attrition <- Flextable$new(
+        fun = private$.tableAttrition,
+        args = list(
+          type = "flextable",
+          style = "darwin"
+        ),
+        height = "80vh",
+        parentNamespace = self$namespace
+      )
+
+      private$.population <- PlotStatic$new(
+        fun = private$.plotPopulation,
+        args = list(),
+        height = "80vh",
+        parentNamespace = self$namespace
+      )
+
       return(invisible(self))
     }
   ),
@@ -156,6 +173,8 @@ IncidencePrevalence <- R6::R6Class(
 
     .table = NULL,
     .plot = NULL,
+    .attrition = NULL,
+    .population = NULL,
 
     .cdmNames = NULL,
     .denominatorCohorts = NULL,
@@ -198,6 +217,14 @@ IncidencePrevalence <- R6::R6Class(
           shiny::tabPanel(
             title = "Table",
             private$.uiTable()
+          ),
+          shiny::tabPanel(
+            title = "Attrition",
+            private$.uiAttrition()
+          ),
+          shiny::tabPanel(
+            title = "Population",
+            private$.uiPopulation()
           )
         )
       )
@@ -267,6 +294,18 @@ IncidencePrevalence <- R6::R6Class(
       )
     },
 
+    .uiAttrition = function() {
+      shiny::fluidRow(
+        private$.attrition$UI()
+      )
+    },
+
+    .uiPopulation = function() {
+      shiny::fluidRow(
+        private$.population$UI()
+      )
+    },
+
     ## Server ----
     .server = function(input, output, session) {
       for (module in private$.pickers) {
@@ -279,6 +318,9 @@ IncidencePrevalence <- R6::R6Class(
 
       private$.serverPlot(input, output, session, fetchData = summariseResultData)
       private$.serverTable(input, output, session, fetchData = summariseResultData)
+
+      private$.serverAttrition(input, output, session)
+      private$.serverPopulation(input, output, session)
     },
 
     .serverUpdateIntervalItems = function(input, output, session) {
@@ -392,6 +434,16 @@ IncidencePrevalence <- R6::R6Class(
 
         private$.table$server(input, output, session)
       })
+    },
+
+    .serverAttrition = function(input, output, session) {
+      private$.attrition$args$result <- private$.result
+      private$.attrition$server(input, output, session)
+    },
+
+    .serverPopulation = function(input, output, session) {
+      private$.population$args$result <- private$.result
+      private$.population$server(input, output, session)
     },
 
     .serverPlot = function(input, output, session, fetchData) {
@@ -947,6 +999,22 @@ IncidencePrevalence <- R6::R6Class(
         IncidencePrevalence::tableIncidence(...)
       } else {
         IncidencePrevalence::tablePrevalence(...)
+      }
+    },
+
+    .tableAttrition = function(...) {
+      if (private$.resultType == "incidence") {
+        IncidencePrevalence::tableIncidenceAttrition(...)
+      } else {
+        IncidencePrevalence::tablePrevalenceAttrition(...)
+      }
+    },
+
+    .plotPopulation = function(...) {
+      if (private$.resultType == "incidence") {
+        IncidencePrevalence::plotIncidencePopulation(...)
+      } else {
+        IncidencePrevalence::plotPrevalencePopulation(...)
       }
     },
 
