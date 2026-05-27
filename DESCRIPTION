@@ -10,9 +10,8 @@ Description: Install this package to access useful shiny modules for building sh
 License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Depends: 
-    R (>= 4.0)
+    R (>= 4.1)
 Imports:
     R6,
     rlang,
@@ -113,3 +112,4 @@ Collate:
     'utils.R'
     'zzz.R'
 URL: https://darwin-eu-dev.github.io/DarwinShinyModules/
+Config/roxygen2/version: 8.0.0
