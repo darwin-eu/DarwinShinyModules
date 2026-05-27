@@ -31,117 +31,118 @@ if (interactive()) {
 }
 }
 \section{Super class}{
-\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{InputPanel}
+\code{\link[DarwinShinyModules:ShinyModule]{ShinyModule}} -> \code{InputPanel}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{parentNamespace}}{(\code{character(1)}) Namespace of the parent module.}
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{parentNamespace}}{(\code{character(1)}) Namespace of the parent module.}
 
-\item{\code{funs}}{(\code{list()}) Named list of xInput functions used \code{list(funA = shiny::selectInput)}.}
+    \item{\code{funs}}{(\code{list()}) Named list of xInput functions used \code{list(funA = shiny::selectInput)}.}
 
-\item{\code{args}}{(\code{list()}) Named list of arguments used by xInput functions \code{list(funA = list(inputId = "name", label = "name"))}.}
+    \item{\code{args}}{(\code{list()}) Named list of arguments used by xInput functions \code{list(funA = list(inputId = "name", label = "name"))}.}
 
-\item{\code{inputValues}}{(\code{reactiveValues}) Values passed from the input fields.}
-}
-\if{html}{\out{</div>}}
+    \item{\code{inputValues}}{(\code{reactiveValues}) Values passed from the input fields.}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-InputPanel-new}{\code{InputPanel$new()}}
-\item \href{#method-InputPanel-validate}{\code{InputPanel$validate()}}
-\item \href{#method-InputPanel-update}{\code{InputPanel$update()}}
-\item \href{#method-InputPanel-clone}{\code{InputPanel$clone()}}
+  \itemize{
+    \item \href{#method-InputPanel-initialize}{\code{InputPanel$new()}}
+    \item \href{#method-InputPanel-validate}{\code{InputPanel$validate()}}
+    \item \href{#method-InputPanel-update}{\code{InputPanel$update()}}
+    \item \href{#method-InputPanel-clone}{\code{InputPanel$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>DarwinShinyModules::ShinyModule$getReactiveValues()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>ShinyModule$UI()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>ShinyModule$getReactiveValues()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>ShinyModule$server()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-InputPanel-new"></a>}}
-\if{latex}{\out{\hypertarget{method-InputPanel-new}{}}}
-\subsection{Method \code{new()}}{
-Initializer method
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InputPanel$new(funs, args, growDirection = "vertical", ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-InputPanel-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-InputPanel-initialize}{}}}
+\subsection{\code{InputPanel$new()}}{
+  Initializer method
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{InputPanel$new(funs, args, growDirection = "vertical", ...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{funs}}{(\code{list()}) Named list of xInput functions used \code{list(funA = shiny::selectInput)}.}
+      \item{\code{args}}{(\code{list()}) Named list of arguments used by xInput functions \code{list(funA = list(inputId = "name", label = "name"))}}
+      \item{\code{growDirection}}{The direction in which this component will be placed, either "horizontal" or "vertical" (default)}
+      \item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{invisible(self)})
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{funs}}{(\code{list()}) Named list of xInput functions used \code{list(funA = shiny::selectInput)}.}
-
-\item{\code{args}}{(\code{list()}) Named list of arguments used by xInput functions \code{list(funA = list(inputId = "name", label = "name"))}}
-
-\item{\code{growDirection}}{The direction in which this component will be placed, either "horizontal" or "vertical" (default)}
-
-\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{invisible(self)})
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-InputPanel-validate"></a>}}
 \if{latex}{\out{\hypertarget{method-InputPanel-validate}{}}}
-\subsection{Method \code{validate()}}{
-Validation method
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InputPanel$validate()}\if{html}{\out{</div>}}
+\subsection{\code{InputPanel$validate()}}{
+  Validation method
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{InputPanel$validate()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{self})
+  }
 }
 
-\subsection{Returns}{
-(\code{self})
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-InputPanel-update"></a>}}
 \if{latex}{\out{\hypertarget{method-InputPanel-update}{}}}
-\subsection{Method \code{update()}}{
-Updates the input variables using the provided update functions supplied in \code{updateFuns}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InputPanel$update(fun, name, ...)}\if{html}{\out{</div>}}
+\subsection{\code{InputPanel$update()}}{
+  Updates the input variables using the provided update functions supplied in \code{updateFuns}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{InputPanel$update(fun, name, ...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{fun}}{(\code{funciton}) Update function to use i.e. \code{shiny::updateSelectInput}}
+      \item{\code{name}}{(\code{character(1)}) Name of the update function and argument set to use.}
+      \item{\code{...}}{Arguments that are used by the supplied function. \code{inputId} should now be provided, as it is derived from the \code{name} argument.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{invisible(self)})
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{fun}}{(\code{funciton}) Update function to use i.e. \code{shiny::updateSelectInput}}
-
-\item{\code{name}}{(\code{character(1)}) Name of the update function and argument set to use.}
-
-\item{\code{...}}{Arguments that are used by the supplied function. \code{inputId} should now be provided, as it is derived from the \code{name} argument.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{invisible(self)})
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-InputPanel-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-InputPanel-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InputPanel$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{InputPanel$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{InputPanel$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }
