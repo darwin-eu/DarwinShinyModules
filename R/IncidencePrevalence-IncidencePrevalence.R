@@ -140,7 +140,10 @@ IncidencePrevalence <- R6::R6Class(
 
       private$.population <- PlotStatic$new(
         fun = private$.plotPopulation,
-        args = list(),
+        args = list(
+          colour = "denominator_cohort_name",
+          facet = as.formula("outcome_cohort_name ~ cdm_name")
+        ),
         height = "80vh",
         parentNamespace = self$namespace
       )
@@ -436,16 +439,6 @@ IncidencePrevalence <- R6::R6Class(
       })
     },
 
-    .serverAttrition = function(input, output, session) {
-      private$.attrition$args$result <- private$.result
-      private$.attrition$server(input, output, session)
-    },
-
-    .serverPopulation = function(input, output, session) {
-      private$.population$args$result <- private$.result
-      private$.population$server(input, output, session)
-    },
-
     .serverPlot = function(input, output, session, fetchData) {
       shiny::observe({
         shiny::req(fetchData())
@@ -467,6 +460,28 @@ IncidencePrevalence <- R6::R6Class(
         private$.plot$args$line <- as.logical(private$.pickers[["plot"]]$inputValues$line)
 
         private$.plot$server(input, output, session)
+      })
+    },
+
+    .serverAttrition = function(input, output, session) {
+      dbInput <- private$.pickers$database$inputValues
+
+      shiny::observeEvent(list(dbInput$cdm, dbInput$outcome), {
+        private$.attrition$args$result <- private$.result |>
+          dplyr::filter(.data$cdm_name %in% dbInput$cdm) |>
+          omopgenerics::filterGroup(.data$outcome_cohort_name %in% dbInput$outcome)
+        private$.attrition$server(input, output, session)
+      })
+    },
+
+    .serverPopulation = function(input, output, session) {
+      dbInput <- private$.pickers$database$inputValues
+
+      shiny::observeEvent(list(dbInput$cdm, dbInput$outcome), {
+        private$.population$args$result <- private$.result |>
+          dplyr::filter(.data$cdm_name %in% dbInput$cdm) |>
+          omopgenerics::filterGroup(.data$outcome_cohort_name %in% dbInput$outcome)
+        private$.population$server(input, output, session)
       })
     },
 
@@ -989,6 +1004,7 @@ IncidencePrevalence <- R6::R6Class(
       }
 
       gg <- gg +
+        ggThemeDarwin() +
         ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 1, hjust = 1))
 
       return(gg)
@@ -1012,9 +1028,11 @@ IncidencePrevalence <- R6::R6Class(
 
     .plotPopulation = function(...) {
       if (private$.resultType == "incidence") {
-        IncidencePrevalence::plotIncidencePopulation(...)
+        IncidencePrevalence::plotIncidencePopulation(...) +
+        ggThemeDarwin()
       } else {
-        IncidencePrevalence::plotPrevalencePopulation(...)
+        IncidencePrevalence::plotPrevalencePopulation(...) +
+          ggThemeDarwin()
       }
     },
 
