@@ -25,8 +25,10 @@ nullToDefault <- function(value, default) {
 }
 
 ggThemeDarwin <- function(fontSize = NULL) {
-  visOmopResults::themeVisOmop(style = "darwin", fontsizeRef = fontSize) +
+  list(
+    visOmopResults::themeVisOmop(style = "darwin", fontsizeRef = fontSize),
     ggplot2::theme(strip.text.y.right = ggplot2::element_text(angle = -90))
+  )
 }
 
 #' getCDMAcronyms
