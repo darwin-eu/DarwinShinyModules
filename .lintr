@@ -6,6 +6,7 @@ linters: linters_with_defaults(
     defaults = list()
   )
 exclusions: list(
-    "tests"
+    "tests",
+    "vignettes"
   )
 encoding: "UTF-8"
