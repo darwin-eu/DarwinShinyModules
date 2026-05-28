@@ -4,13 +4,9 @@ The OhdsiModule wraps around a `viewerX()` and `serverX()` function from
 `OhdsiShinyModules`, running the module stand-alone. This setup should
 also support any module from `OhdsiShinyModules`.
 
-## Value
-
-`self`
-
 ## Super class
 
-[`DarwinShinyModules::ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
 -\> `OhdsiModule`
 
 ## Active bindings
@@ -37,20 +33,20 @@ also support any module from `OhdsiShinyModules`.
 
 ### Public methods
 
-- [`OhdsiModule$new()`](#method-OhdsiModule-new)
+- [`OhdsiModule$new()`](#method-OhdsiModule-initialize)
 
 - [`OhdsiModule$clone()`](#method-OhdsiModule-clone)
 
 Inherited methods
 
-- [`DarwinShinyModules::ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
-- [`DarwinShinyModules::ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
-- [`DarwinShinyModules::ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
-- [`DarwinShinyModules::ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
+- [`ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
+- [`ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
+- [`ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `OhdsiModule$new()`
 
 Initializer method
 
@@ -88,9 +84,13 @@ Initializer method
 
   Additional parameters to set fields from the `ShinyModule` parent.
 
+#### Returns
+
+`self`
+
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `OhdsiModule$clone()`
 
 The objects of this class are cloneable with this method.
 

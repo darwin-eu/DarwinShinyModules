@@ -4,7 +4,7 @@ Text Module
 
 ## Super class
 
-[`DarwinShinyModules::ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
 -\> `Text`
 
 ## Active bindings
@@ -17,7 +17,7 @@ Text Module
 
 ### Public methods
 
-- [`Text$new()`](#method-Text-new)
+- [`Text$new()`](#method-Text-initialize)
 
 - [`Text$validate()`](#method-Text-validate)
 
@@ -25,13 +25,13 @@ Text Module
 
 Inherited methods
 
-- [`DarwinShinyModules::ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
-- [`DarwinShinyModules::ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
-- [`DarwinShinyModules::ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
+- [`ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
+- [`ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `Text$new()`
 
 initialize
 
@@ -55,7 +55,7 @@ initialize
 
 ------------------------------------------------------------------------
 
-### Method `validate()`
+### `Text$validate()`
 
 Validator method
 
@@ -69,7 +69,7 @@ Validator method
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `Text$clone()`
 
 The objects of this class are cloneable with this method.
 

@@ -25,7 +25,7 @@ The module consists of the following:
 
 ## Super class
 
-[`DarwinShinyModules::ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
 -\> `CohortSurvival`
 
 ## Active bindings
@@ -69,20 +69,20 @@ The module consists of the following:
 
 ### Public methods
 
-- [`CohortSurvival$new()`](#method-CohortSurvival-new)
+- [`CohortSurvival$new()`](#method-CohortSurvival-initialize)
 
 - [`CohortSurvival$clone()`](#method-CohortSurvival-clone)
 
 Inherited methods
 
-- [`DarwinShinyModules::ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
-- [`DarwinShinyModules::ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
-- [`DarwinShinyModules::ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
-- [`DarwinShinyModules::ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
+- [`ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
+- [`ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
+- [`ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `CohortSurvival$new()`
 
 Initializer function
 
@@ -106,7 +106,7 @@ Initializer function
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `CohortSurvival$clone()`
 
 The objects of this class are cloneable with this method.
 

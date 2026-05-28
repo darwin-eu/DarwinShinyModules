@@ -2,10 +2,6 @@
 
 Bridge module that "birdges" multiple modules with bespoke server code.
 
-## Value
-
-`self`
-
 ## Details
 
 The Bridge module links two or more modules together with user defined
@@ -13,7 +9,7 @@ server code.
 
 ## Super class
 
-[`DarwinShinyModules::ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
 -\> `Bridge`
 
 ## Active bindings
@@ -30,20 +26,20 @@ server code.
 
 ### Public methods
 
-- [`Bridge$new()`](#method-Bridge-new)
+- [`Bridge$new()`](#method-Bridge-initialize)
 
 - [`Bridge$clone()`](#method-Bridge-clone)
 
 Inherited methods
 
-- [`DarwinShinyModules::ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
-- [`DarwinShinyModules::ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
-- [`DarwinShinyModules::ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
-- [`DarwinShinyModules::ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
+- [`ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
+- [`ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
+- [`ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `Bridge$new()`
 
 Initializer method.
 
@@ -63,9 +59,13 @@ Initializer method.
   eachother. Should be setup as a shiny server function that takes
   `input`, `output`, and `session` as parameters.
 
+#### Returns
+
+`self`
+
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `Bridge$clone()`
 
 The objects of this class are cloneable with this method.
 

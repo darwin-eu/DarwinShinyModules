@@ -4,13 +4,9 @@ LargeScaleCharacteristics module that displays tables and plots of the
 `summarised_result` object created by
 [`CohortCharacteristics::summariseLargeScaleCharacteristics()`](https://darwin-eu.github.io/CohortCharacteristics/reference/summariseLargeScaleCharacteristics.html).
 
-## Value
-
-`self`
-
 ## Super class
 
-[`DarwinShinyModules::ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
 -\> `LargeScaleCharacteristics`
 
 ## Active bindings
@@ -59,20 +55,20 @@ LargeScaleCharacteristics module that displays tables and plots of the
 
 ### Public methods
 
-- [`LargeScaleCharacteristics$new()`](#method-LargeScaleCharacteristics-new)
+- [`LargeScaleCharacteristics$new()`](#method-LargeScaleCharacteristics-initialize)
 
 - [`LargeScaleCharacteristics$clone()`](#method-LargeScaleCharacteristics-clone)
 
 Inherited methods
 
-- [`DarwinShinyModules::ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
-- [`DarwinShinyModules::ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
-- [`DarwinShinyModules::ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
-- [`DarwinShinyModules::ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
+- [`ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
+- [`ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
+- [`ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `LargeScaleCharacteristics$new()`
 
 Initializer method.
 
@@ -91,9 +87,13 @@ Initializer method.
 
   Additional parameters to set fields from the `ShinyModule` parent.
 
+#### Returns
+
+`self`
+
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `LargeScaleCharacteristics$clone()`
 
 The objects of this class are cloneable with this method.
 

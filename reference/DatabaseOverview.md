@@ -5,7 +5,7 @@ and links to the Portal and data partner website.
 
 ## Super class
 
-[`DarwinShinyModules::ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
 -\> `DatabaseOverview`
 
 ## Active bindings
@@ -18,20 +18,20 @@ and links to the Portal and data partner website.
 
 ### Public methods
 
-- [`DatabaseOverview$new()`](#method-DatabaseOverview-new)
+- [`DatabaseOverview$new()`](#method-DatabaseOverview-initialize)
 
 - [`DatabaseOverview$clone()`](#method-DatabaseOverview-clone)
 
 Inherited methods
 
-- [`DarwinShinyModules::ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
-- [`DarwinShinyModules::ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
-- [`DarwinShinyModules::ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
-- [`DarwinShinyModules::ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
+- [`ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
+- [`ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
+- [`ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `DatabaseOverview$new()`
 
 Initializer method
 
@@ -127,7 +127,7 @@ Initializer method
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `DatabaseOverview$clone()`
 
 The objects of this class are cloneable with this method.
 

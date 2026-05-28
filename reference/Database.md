@@ -19,7 +19,7 @@ field.
 
 ## Super class
 
-[`DarwinShinyModules::ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
 -\> `Database`
 
 ## Active bindings
@@ -42,15 +42,15 @@ field.
 
 Inherited methods
 
-- [`DarwinShinyModules::ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
-- [`DarwinShinyModules::ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
-- [`DarwinShinyModules::ShinyModule$initialize()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-initialize)
-- [`DarwinShinyModules::ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
-- [`DarwinShinyModules::ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
+- [`ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
+- [`ShinyModule$initialize()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-initialize)
+- [`ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
+- [`ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
 
 ------------------------------------------------------------------------
 
-### Method `uploadTable()`
+### `Database$uploadTable()`
 
 Method to upload tables to the database.
 
@@ -70,7 +70,7 @@ Method to upload tables to the database.
 
 ------------------------------------------------------------------------
 
-### Method `connect()`
+### `Database$connect()`
 
 Method to connect to the database.
 
@@ -80,7 +80,7 @@ Method to connect to the database.
 
 ------------------------------------------------------------------------
 
-### Method `disconnect()`
+### `Database$disconnect()`
 
 Method to disconnect from the database.
 
@@ -90,7 +90,7 @@ Method to disconnect from the database.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `Database$clone()`
 
 The objects of this class are cloneable with this method.
 

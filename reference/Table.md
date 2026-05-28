@@ -41,7 +41,7 @@ documentation: https://rstudio.github.io/DT/shiny.html
 
 ## Super class
 
-[`DarwinShinyModules::ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
 -\> `Table`
 
 ## Active bindings
@@ -75,7 +75,7 @@ documentation: https://rstudio.github.io/DT/shiny.html
 
 ### Public methods
 
-- [`Table$new()`](#method-Table-new)
+- [`Table$new()`](#method-Table-initialize)
 
 - [`Table$validate()`](#method-Table-validate)
 
@@ -83,13 +83,13 @@ documentation: https://rstudio.github.io/DT/shiny.html
 
 Inherited methods
 
-- [`DarwinShinyModules::ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
-- [`DarwinShinyModules::ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
-- [`DarwinShinyModules::ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
+- [`ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
+- [`ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `Table$new()`
 
 initialize
 
@@ -135,7 +135,7 @@ initialize
 
 ------------------------------------------------------------------------
 
-### Method `validate()`
+### `Table$validate()`
 
 validate
 
@@ -149,7 +149,7 @@ validate
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `Table$clone()`
 
 The objects of this class are cloneable with this method.
 

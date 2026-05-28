@@ -14,7 +14,7 @@ with i.e.
 
 ## Super class
 
-[`DarwinShinyModules::ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
 -\> `InputPanel`
 
 ## Active bindings
@@ -42,7 +42,7 @@ with i.e.
 
 ### Public methods
 
-- [`InputPanel$new()`](#method-InputPanel-new)
+- [`InputPanel$new()`](#method-InputPanel-initialize)
 
 - [`InputPanel$validate()`](#method-InputPanel-validate)
 
@@ -52,13 +52,13 @@ with i.e.
 
 Inherited methods
 
-- [`DarwinShinyModules::ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
-- [`DarwinShinyModules::ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
-- [`DarwinShinyModules::ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
+- [`ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
+- [`ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `InputPanel$new()`
 
 Initializer method
 
@@ -94,7 +94,7 @@ Initializer method
 
 ------------------------------------------------------------------------
 
-### Method `validate()`
+### `InputPanel$validate()`
 
 Validation method
 
@@ -108,7 +108,7 @@ Validation method
 
 ------------------------------------------------------------------------
 
-### Method [`update()`](https://rdrr.io/r/stats/update.html)
+### `InputPanel$update()`
 
 Updates the input variables using the provided update functions supplied
 in `updateFuns`
@@ -139,7 +139,7 @@ in `updateFuns`
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `InputPanel$clone()`
 
 The objects of this class are cloneable with this method.
 

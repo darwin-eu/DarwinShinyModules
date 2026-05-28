@@ -81,15 +81,31 @@
 
 - [`Characteristics`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Characteristics.md)
   : Characterisitcs Module Class
+- [`moduleCharacteristics()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/moduleCharacteristics.md)
+  : moduleCharacteristics
+- [`shinyCharacteristics()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyCharacteristics.md)
+  : shinyCharacteristics
 - [`LargeScaleCharacteristics`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/LargeScaleCharacteristics.md)
   : LargeScaleCharacteristics Module Class
+- [`moduleLargeScaleCharacteristics()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/moduleLargeScaleCharacteristics.md)
+  : moduleLargeScaleCharacteristics
+- [`shinyLargeScaleCharacteristics()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyLargeScaleCharacteristics.md)
+  : shinyLargeScaleCharacteristics
 - [`CohortAttrition`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/CohortAttrition.md)
   : CohortAttrition Module Class
+- [`moduleCohortAttrition()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/moduleCohortAttrition.md)
+  : moduleCohortAttrition
+- [`shinyCohortAttrition()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyCohortAttrition.md)
+  : shinyCohortAttrition
 
 ### CohortSurvival
 
 - [`CohortSurvival`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/CohortSurvival.md)
   : CohortSurvival Module Class
+- [`moduleSurvival()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/moduleSurvival.md)
+  : moduleSurvival
+- [`shinySurvival()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinySurvival.md)
+  : shinySurvival
 
 ### DrugExposureDiagnostics
 
@@ -100,24 +116,50 @@
 
 - [`DrugUtilisation`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/DrugUtilisation.md)
   : DrugUtilisation Module Class
+- [`moduleDrugUtilisation()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/moduleDrugUtilisation.md)
+  : moduleDrugUtilisation
+- [`shinyDrugUtilisation()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyDrugUtilisation.md)
+  : shinyDrugRestart
 - [`DrugRestart`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/DrugRestart.md)
   : DrugRestart Module Class
+- [`moduleDrugRestart()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/moduleDrugRestart.md)
+  : moduleDrugRestart
+- [`shinyDrugRestart()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyDrugRestart.md)
+  : shinyDrugRestart
 - [`Indication`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Indication.md)
   : Indication Module Class
+- [`moduleIndication()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/moduleIndication.md)
+  : moduleIndication
+- [`shinyIndication()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyIndication.md)
+  : shinyIndication
 - [`Treatment`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Treatment.md)
   : Treatment Module Class
+- [`moduleTreatment()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/moduleTreatment.md)
+  : moduleTreatment
+- [`shinyTreatment()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyTreatment.md)
+  : shinyTreatment
 
 ### IncidencePrevalence
 
 - [`IncidencePrevalence`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/IncidencePrevalence.md)
   : IncidencePrevalence Module Class
+- [`moduleIncidence()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/moduleIncidence.md)
+  : moduleIncidence
+- [`shinyIncidence()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyIncidence.md)
+  : shinyIncidence
+- [`modulePrevalence()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/modulePrevalence.md)
+  : modulePrevalence
+- [`shinyPrevalence()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyPrevalence.md)
+  : shinyPrevalence
 
 ### TreatmentPatterns
 
-- [`TreatmentPathways`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/TreatmentPathways.md)
-  : TreatmentPathways
-- [`EventDuration`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/EventDuration.md)
-  : EventDuration
+- [`TreatmentPatterns`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/TreatmentPatterns.md)
+  : TreatmentPatterns Module Class
+- [`moduleTreatmentPatterns()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/moduleTreatmentPatterns.md)
+  : moduleTreatmentPatterns
+- [`shinyTreatmentPatterns()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyTreatmentPatterns.md)
+  : shinyTreatmentPatterns
 
 ### Shiny App Generator Functions
 
@@ -135,3 +177,5 @@
 - [`createApp()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/createApp.md)
   : Function that creates a stand-alone shiny app from a given app
   structure.
+- [`getCDMAcronyms()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/getCDMAcronyms.md)
+  : getCDMAcronyms

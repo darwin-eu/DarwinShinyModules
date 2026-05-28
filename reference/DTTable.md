@@ -4,13 +4,9 @@ GTTable module that displays tables using `DT` that are supported by
 [`DT::renderDT()`](https://rdrr.io/pkg/DT/man/dataTableOutput.html) and
 [`DT::DTOutput()`](https://rdrr.io/pkg/DT/man/dataTableOutput.html).
 
-## Value
-
-`self`
-
 ## Super class
 
-[`DarwinShinyModules::ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
 -\> `DTTable`
 
 ## Active bindings
@@ -29,20 +25,20 @@ GTTable module that displays tables using `DT` that are supported by
 
 ### Public methods
 
-- [`DTTable$new()`](#method-DTTable-new)
+- [`DTTable$new()`](#method-DTTable-initialize)
 
 - [`DTTable$clone()`](#method-DTTable-clone)
 
 Inherited methods
 
-- [`DarwinShinyModules::ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
-- [`DarwinShinyModules::ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
-- [`DarwinShinyModules::ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
-- [`DarwinShinyModules::ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
+- [`ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
+- [`ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
+- [`ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `DTTable$new()`
 
 Initializer method.
 
@@ -66,9 +62,13 @@ Initializer method.
 
   Additional parameters to set fields from the `ShinyModule` parent.
 
+#### Returns
+
+`self`
+
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `DTTable$clone()`
 
 The objects of this class are cloneable with this method.
 

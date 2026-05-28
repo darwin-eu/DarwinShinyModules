@@ -130,7 +130,7 @@ If the public `UI()` method is overridden an error will be thrown:
 
 ### Public methods
 
-- [`ShinyModule$new()`](#method-ShinyModule-new)
+- [`ShinyModule$new()`](#method-ShinyModule-initialize)
 
 - [`ShinyModule$validate()`](#method-ShinyModule-validate)
 
@@ -144,7 +144,7 @@ If the public `UI()` method is overridden an error will be thrown:
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `ShinyModule$new()`
 
 Initializer method
 
@@ -164,7 +164,7 @@ Initializer method
 
 ------------------------------------------------------------------------
 
-### Method `validate()`
+### `ShinyModule$validate()`
 
 Validator method
 
@@ -178,7 +178,7 @@ Validator method
 
 ------------------------------------------------------------------------
 
-### Method `getReactiveValues()`
+### `ShinyModule$getReactiveValues()`
 
 Method to get reactive values for a specific session.
 
@@ -198,7 +198,7 @@ Method to get reactive values for a specific session.
 
 ------------------------------------------------------------------------
 
-### Method `UI()`
+### `ShinyModule$UI()`
 
 Method to include a
 [tagList](https://rstudio.github.io/htmltools/reference/tagList.html) to
@@ -214,7 +214,7 @@ include the body.
 
 ------------------------------------------------------------------------
 
-### Method `server()`
+### `ShinyModule$server()`
 
 Method to handle the back-end.
 
@@ -242,7 +242,7 @@ Method to handle the back-end.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `ShinyModule$clone()`
 
 The objects of this class are cloneable with this method.
 

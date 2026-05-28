@@ -5,16 +5,16 @@ This class extends the `Database` class, to query a database using
 
 ## Super classes
 
-[`DarwinShinyModules::ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
 -\>
-[`DarwinShinyModules::Database`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Database.md)
+[`Database`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Database.md)
 -\> `DatabaseDBC`
 
 ## Methods
 
 ### Public methods
 
-- [`DatabaseDBC$new()`](#method-DatabaseDBC-new)
+- [`DatabaseDBC$new()`](#method-DatabaseDBC-initialize)
 
 - [`DatabaseDBC$query()`](#method-DatabaseDBC-query)
 
@@ -30,14 +30,14 @@ This class extends the `Database` class, to query a database using
 
 Inherited methods
 
-- [`DarwinShinyModules::ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
-- [`DarwinShinyModules::ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
-- [`DarwinShinyModules::ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
-- [`DarwinShinyModules::ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
+- [`ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
+- [`ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
+- [`ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `DatabaseDBC$new()`
 
 Initializer method
 
@@ -62,7 +62,7 @@ Initializer method
 
 ------------------------------------------------------------------------
 
-### Method `query()`
+### `DatabaseDBC$query()`
 
 Query method to query the database using
 [`DatabaseConnector::renderTranslateQuerySql`](https://ohdsi.github.io/DatabaseConnector/reference/renderTranslateQuerySql.html)
@@ -88,7 +88,7 @@ Query method to query the database using
 
 ------------------------------------------------------------------------
 
-### Method `execute()`
+### `DatabaseDBC$execute()`
 
 Execute method to execute a query on the database using
 [`DatabaseConnector::renderTranslateExecuteSql`](https://ohdsi.github.io/DatabaseConnector/reference/renderTranslateExecuteSql.html)
@@ -114,7 +114,7 @@ Execute method to execute a query on the database using
 
 ------------------------------------------------------------------------
 
-### Method `uploadTable()`
+### `DatabaseDBC$uploadTable()`
 
 Method to upload data to the database
 
@@ -134,7 +134,7 @@ Method to upload data to the database
 
 ------------------------------------------------------------------------
 
-### Method `connect()`
+### `DatabaseDBC$connect()`
 
 Method to connect to the database.
 
@@ -144,7 +144,7 @@ Method to connect to the database.
 
 ------------------------------------------------------------------------
 
-### Method `disconnect()`
+### `DatabaseDBC$disconnect()`
 
 Method to disconnect from the database.
 
@@ -154,7 +154,7 @@ Method to disconnect from the database.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `DatabaseDBC$clone()`
 
 The objects of this class are cloneable with this method.
 

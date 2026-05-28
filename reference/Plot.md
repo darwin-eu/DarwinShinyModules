@@ -14,7 +14,7 @@ and to override the private `.UI()` and `.server()` methods.
 
 ## Super class
 
-[`DarwinShinyModules::ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
 -\> `Plot`
 
 ## Active bindings
@@ -43,7 +43,7 @@ and to override the private `.UI()` and `.server()` methods.
 
 ### Public methods
 
-- [`Plot$new()`](#method-Plot-new)
+- [`Plot$new()`](#method-Plot-initialize)
 
 - [`Plot$validate()`](#method-Plot-validate)
 
@@ -51,13 +51,13 @@ and to override the private `.UI()` and `.server()` methods.
 
 Inherited methods
 
-- [`DarwinShinyModules::ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
-- [`DarwinShinyModules::ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
-- [`DarwinShinyModules::ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
+- [`ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
+- [`ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `Plot$new()`
 
 initialize
 
@@ -90,7 +90,7 @@ initialize
 
 ------------------------------------------------------------------------
 
-### Method `validate()`
+### `Plot$validate()`
 
 Validator method
 
@@ -104,7 +104,7 @@ Validator method
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `Plot$clone()`
 
 The objects of this class are cloneable with this method.
 

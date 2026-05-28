@@ -1,6 +1,26 @@
 # Changelog
 
-## DarwinSHinyModules 0.5.0
+## DarwinShinyModules 0.6.0
+
+- Refreshed data from the DARWIN EU portal for database acronyms and
+  descriptions
+- added wrapper functions for creating (`moduleX()`,
+  i.e. [`moduleIncidence()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/moduleIncidence.md))
+  and launching (`shinyX()`,
+  i.e. [`shinyIncidence()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyIncidence.md))
+  modules, which follow the existing `tableX()`, `plotX()` syntax for
+  most of the analytical packages.
+- TreatmentPatterns
+  - Completely overhauled the module
+  - Made the UI compatible with bootstrap 5 (bslib)
+- CohortSurvival
+  - Added facet and colour options
+  - Made the UI compatible with bootstrap 5 (bslib)
+- IncidencePrevalence
+  - Added attrition tab for denominator cohorts
+  - Added population tab for denominator cohorts
+
+## DarwinShinyModules 0.5.0
 
 - Re-factored the UI and back-end of `Incidence` and `Prevalence`
   modules

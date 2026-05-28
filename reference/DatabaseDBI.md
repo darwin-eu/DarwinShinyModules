@@ -5,9 +5,9 @@ with ODBC.
 
 ## Super classes
 
-[`DarwinShinyModules::ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
 -\>
-[`DarwinShinyModules::Database`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Database.md)
+[`Database`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Database.md)
 -\> `DatabaseDBI`
 
 ## Active bindings
@@ -34,7 +34,7 @@ with ODBC.
 
 ### Public methods
 
-- [`DatabaseDBI$new()`](#method-DatabaseDBI-new)
+- [`DatabaseDBI$new()`](#method-DatabaseDBI-initialize)
 
 - [`DatabaseDBI$connect()`](#method-DatabaseDBI-connect)
 
@@ -44,15 +44,15 @@ with ODBC.
 
 Inherited methods
 
-- [`DarwinShinyModules::ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
-- [`DarwinShinyModules::ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
-- [`DarwinShinyModules::ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
-- [`DarwinShinyModules::ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
-- [`DarwinShinyModules::Database$uploadTable()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Database.html#method-uploadTable)
+- [`ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
+- [`ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
+- [`ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
+- [`Database$uploadTable()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/Database.html#method-uploadTable)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `DatabaseDBI$new()`
 
 Initializer method
 
@@ -77,7 +77,7 @@ Initializer method
 
 ------------------------------------------------------------------------
 
-### Method `connect()`
+### `DatabaseDBI$connect()`
 
 Method to connect to the database.
 
@@ -87,7 +87,7 @@ Method to connect to the database.
 
 ------------------------------------------------------------------------
 
-### Method `disconnect()`
+### `DatabaseDBI$disconnect()`
 
 Method to disconnect from the database.
 
@@ -97,7 +97,7 @@ Method to disconnect from the database.
 
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `DatabaseDBI$clone()`
 
 The objects of this class are cloneable with this method.
 

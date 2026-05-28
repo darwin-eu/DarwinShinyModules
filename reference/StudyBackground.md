@@ -3,13 +3,9 @@
 StudyBackground Module that contains background information and the
 EUPAS.
 
-## Value
-
-`invisible(self)`
-
 ## Super class
 
-[`DarwinShinyModules::ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
 -\> `StudyBackground`
 
 ## Active bindings
@@ -31,20 +27,20 @@ EUPAS.
 
 ### Public methods
 
-- [`StudyBackground$new()`](#method-StudyBackground-new)
+- [`StudyBackground$new()`](#method-StudyBackground-initialize)
 
 - [`StudyBackground$clone()`](#method-StudyBackground-clone)
 
 Inherited methods
 
-- [`DarwinShinyModules::ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
-- [`DarwinShinyModules::ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
-- [`DarwinShinyModules::ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
-- [`DarwinShinyModules::ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
+- [`ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
+- [`ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
+- [`ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `StudyBackground$new()`
 
 initializer method
 
@@ -67,9 +63,13 @@ initializer method
 
   Additional parameters to set fields from the `ShinyModule` parent.
 
+#### Returns
+
+`invisible(self)`
+
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `StudyBackground$clone()`
 
 The objects of this class are cloneable with this method.
 

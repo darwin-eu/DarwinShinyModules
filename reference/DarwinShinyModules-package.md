@@ -16,6 +16,9 @@ Useful links:
 
 Authors:
 
+- Maarten van Kessel <m.l.vankessel@erasmusmc.nl>
+  ([ORCID](https://orcid.org/0009-0006-8832-6030))
+
 - Ger Inberg <g.inberg@erasmusmc.nl>
   ([ORCID](https://orcid.org/0000-0001-8993-8748))
 

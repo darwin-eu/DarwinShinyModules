@@ -3,13 +3,9 @@
 Characteristics module that shows characteristics results (table and
 plot) from the CohortCharacteristics package.
 
-## Value
-
-`self`
-
 ## Super class
 
-[`DarwinShinyModules::ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
 -\> `Characteristics`
 
 ## Active bindings
@@ -23,20 +19,20 @@ plot) from the CohortCharacteristics package.
 
 ### Public methods
 
-- [`Characteristics$new()`](#method-Characteristics-new)
+- [`Characteristics$new()`](#method-Characteristics-initialize)
 
 - [`Characteristics$clone()`](#method-Characteristics-clone)
 
 Inherited methods
 
-- [`DarwinShinyModules::ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
-- [`DarwinShinyModules::ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
-- [`DarwinShinyModules::ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
-- [`DarwinShinyModules::ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
+- [`ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
+- [`ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
+- [`ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `Characteristics$new()`
 
 Initializer method
 
@@ -55,9 +51,13 @@ Initializer method
 
   Additional parameters to set fields from the `ShinyModule` parent.
 
+#### Returns
+
+`self`
+
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `Characteristics$clone()`
 
 The objects of this class are cloneable with this method.
 

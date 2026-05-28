@@ -4,13 +4,9 @@ GTTable module that displays tables using `gt` that are supported by
 [`gt::render_gt()`](https://gt.rstudio.com/reference/render_gt.html) and
 [`gt::gt_output()`](https://gt.rstudio.com/reference/gt_output.html).
 
-## Value
-
-`self`
-
 ## Super class
 
-[`DarwinShinyModules::ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
+[`ShinyModule`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.md)
 -\> `GTTable`
 
 ## Active bindings
@@ -29,20 +25,20 @@ GTTable module that displays tables using `gt` that are supported by
 
 ### Public methods
 
-- [`GTTable$new()`](#method-GTTable-new)
+- [`GTTable$new()`](#method-GTTable-initialize)
 
 - [`GTTable$clone()`](#method-GTTable-clone)
 
 Inherited methods
 
-- [`DarwinShinyModules::ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
-- [`DarwinShinyModules::ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
-- [`DarwinShinyModules::ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
-- [`DarwinShinyModules::ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
+- [`ShinyModule$UI()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-UI)
+- [`ShinyModule$getReactiveValues()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-getReactiveValues)
+- [`ShinyModule$server()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-server)
+- [`ShinyModule$validate()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ShinyModule.html#method-validate)
 
 ------------------------------------------------------------------------
 
-### Method `new()`
+### `GTTable$new()`
 
 Initializer method.
 
@@ -66,9 +62,13 @@ Initializer method.
 
   Additional parameters to set fields from the `ShinyModule` parent.
 
+#### Returns
+
+`self`
+
 ------------------------------------------------------------------------
 
-### Method `clone()`
+### `GTTable$clone()`
 
 The objects of this class are cloneable with this method.
 

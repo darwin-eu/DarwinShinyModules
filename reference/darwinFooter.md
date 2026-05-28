@@ -5,7 +5,7 @@ Creates the DARWIN EU (c) footer.
 ## Usage
 
 ``` r
-darwinFooter(type = "shinydashboard")
+darwinFooter(type = "shinydashboard", deployDate = Sys.Date())
 ```
 
 ## Arguments
@@ -13,6 +13,10 @@ darwinFooter(type = "shinydashboard")
 - type:
 
   for which app type the footer should be generated
+
+- deployDate:
+
+  Date when the app is deployed
 
 ## Value
 
