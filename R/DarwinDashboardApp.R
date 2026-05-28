@@ -45,7 +45,7 @@ DarwinDashboardApp <- R6::R6Class(
           ),
           body = shinydashboard::dashboardBody(private$modulesBody(private$.appStructure))
         ),
-        darwinFooter()
+        darwinFooter(deployDate = self$deployDate)
       )
     }
   )

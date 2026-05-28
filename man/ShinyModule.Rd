@@ -144,146 +144,156 @@ tryCatch(
 #> `private$.UI()` instead in `private = list(.UI = function() {})`
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{instanceId}}{(\code{character(1)}) Random ID of 10 capitalized letters.}
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{instanceId}}{(\code{character(1)}) Random ID of 10 capitalized letters.}
 
-\item{\code{parentNamespace}}{(\code{character(1)}) Namespace of the parent module.}
+    \item{\code{parentNamespace}}{(\code{character(1)}) Namespace of the parent module.}
 
-\item{\code{moduleName}}{(\code{character(1)}) Name of the module.}
+    \item{\code{moduleName}}{(\code{character(1)}) Name of the module.}
 
-\item{\code{moduleId}}{(\code{character(1)}) Module identifier, composed like:
+    \item{\code{moduleId}}{(\code{character(1)}) Module identifier, composed like:
 \code{moduleName-instanceId}}
 
-\item{\code{namespace}}{(\code{character(1)}) Namespace, composed like:
+    \item{\code{namespace}}{(\code{character(1)}) Namespace, composed like:
 \verb{[parentNamespace-]moduleName-instanceId} where \code{parentNamespace} is
 optional}
 
-\item{\code{reactiveValues}}{(\code{reactivevalues}) Reactive values. use
+    \item{\code{reactiveValues}}{(\code{reactivevalues}) Reactive values. use
 \code{shiny::isolate()} to get a non-reactive item from the reactive
 environment.}
 
-\item{\code{async}}{(\code{logical(1)}: \code{FALSE}) Logical parameter to switch
+    \item{\code{async}}{(\code{logical(1)}: \code{FALSE}) Logical parameter to switch
 asynchronous mode on or off.}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-ShinyModule-new}{\code{ShinyModule$new()}}
-\item \href{#method-ShinyModule-validate}{\code{ShinyModule$validate()}}
-\item \href{#method-ShinyModule-getReactiveValues}{\code{ShinyModule$getReactiveValues()}}
-\item \href{#method-ShinyModule-UI}{\code{ShinyModule$UI()}}
-\item \href{#method-ShinyModule-server}{\code{ShinyModule$server()}}
-\item \href{#method-ShinyModule-clone}{\code{ShinyModule$clone()}}
-}
+  \itemize{
+    \item \href{#method-ShinyModule-initialize}{\code{ShinyModule$new()}}
+    \item \href{#method-ShinyModule-validate}{\code{ShinyModule$validate()}}
+    \item \href{#method-ShinyModule-getReactiveValues}{\code{ShinyModule$getReactiveValues()}}
+    \item \href{#method-ShinyModule-UI}{\code{ShinyModule$UI()}}
+    \item \href{#method-ShinyModule-server}{\code{ShinyModule$server()}}
+    \item \href{#method-ShinyModule-clone}{\code{ShinyModule$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ShinyModule-new"></a>}}
-\if{latex}{\out{\hypertarget{method-ShinyModule-new}{}}}
-\subsection{Method \code{new()}}{
-Initializer method
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyModule$new(...)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-ShinyModule-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-ShinyModule-initialize}{}}}
+\subsection{\code{ShinyModule$new()}}{
+  Initializer method
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ShinyModule$new(...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{...}}{Additional parameters to set fields.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{self})
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{...}}{Additional parameters to set fields.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{self})
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ShinyModule-validate"></a>}}
 \if{latex}{\out{\hypertarget{method-ShinyModule-validate}{}}}
-\subsection{Method \code{validate()}}{
-Validator method
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyModule$validate()}\if{html}{\out{</div>}}
+\subsection{\code{ShinyModule$validate()}}{
+  Validator method
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ShinyModule$validate()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{self})
+  }
 }
 
-\subsection{Returns}{
-(\code{self})
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ShinyModule-getReactiveValues"></a>}}
 \if{latex}{\out{\hypertarget{method-ShinyModule-getReactiveValues}{}}}
-\subsection{Method \code{getReactiveValues()}}{
-Method to get reactive values for a specific session.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyModule$getReactiveValues(session = getDefaultReactiveDomain())}\if{html}{\out{</div>}}
+\subsection{\code{ShinyModule$getReactiveValues()}}{
+  Method to get reactive values for a specific session.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ShinyModule$getReactiveValues(session = getDefaultReactiveDomain())}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{session}}{(\code{session}) Session from the server function.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{reactiveValues}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{session}}{(\code{session}) Session from the server function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{reactiveValues}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ShinyModule-UI"></a>}}
 \if{latex}{\out{\hypertarget{method-ShinyModule-UI}{}}}
-\subsection{Method \code{UI()}}{
-Method to include a \link[shiny]{tagList} to include the body.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyModule$UI()}\if{html}{\out{</div>}}
+\subsection{\code{ShinyModule$UI()}}{
+  Method to include a \link[shiny]{tagList} to include the body.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ShinyModule$UI()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{tagList})
+  }
 }
 
-\subsection{Returns}{
-(\code{tagList})
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ShinyModule-server"></a>}}
 \if{latex}{\out{\hypertarget{method-ShinyModule-server}{}}}
-\subsection{Method \code{server()}}{
-Method to handle the back-end.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyModule$server(input, output, session)}\if{html}{\out{</div>}}
+\subsection{\code{ShinyModule$server()}}{
+  Method to handle the back-end.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ShinyModule$server(input, output, session)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{input}}{(\code{input}) Input from the server function.}
+      \item{\code{output}}{(\code{output}) Output from the server function.}
+      \item{\code{session}}{(\code{session}) Session from the server function.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{NULL})
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{input}}{(\code{input}) Input from the server function.}
-
-\item{\code{output}}{(\code{output}) Output from the server function.}
-
-\item{\code{session}}{(\code{session}) Session from the server function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{NULL})
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ShinyModule-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-ShinyModule-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ShinyModule$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{ShinyModule$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{ShinyModule$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

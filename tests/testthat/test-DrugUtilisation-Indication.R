@@ -38,7 +38,7 @@ test_that("DrugUtilisation: Indication", {
       )
     )
 
-  mod <- Indication$new(result)
+  mod <- suppressWarnings(moduleIndication(result, .softValidation = TRUE))
 
   shiny::testServer(app = mod$server, {
     testthat::expect_true(is.character(session$token))

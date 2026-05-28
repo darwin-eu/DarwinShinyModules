@@ -1,9 +1,12 @@
 linters: linters_with_defaults(
-    object_name_linter(styles = "camelCase"),
-    line_length_linter(120),
-    pipe_consistency_linter()
+    object_name_linter(styles = c("CamelCase", "camelCase")),
+    pipe_consistency_linter(),
+    trailing_blank_lines_linter(),
+    trailing_whitespace_linter(),
+    defaults = list()
   )
 exclusions: list(
-    "tests"
+    "tests",
+    "vignettes"
   )
 encoding: "UTF-8"

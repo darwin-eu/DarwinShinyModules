@@ -157,9 +157,16 @@ LargeScaleCharacteristics <- R6::R6Class(
     .strata = NULL,
     .windows = NULL,
 
+    .pickerOptions = list(
+      `actions-box` = TRUE,
+      size = 10,
+      `selected-text-format` = "count > 3"
+    ),
+
     ## UI ----
     .UI = function() {
-      shiny::tagList(
+      shiny::fluidPage(
+        private$.uiGeneralFilters(),
         shiny::tabsetPanel(
           shiny::tabPanel(
             title = "Large Scale Characteristics",
@@ -181,24 +188,37 @@ LargeScaleCharacteristics <- R6::R6Class(
       )
     },
 
-    .tableUI = function() {
-      shiny::fluidRow(
-        shiny::column(
-          width = 2,
+    .uiGeneralFilters = function() {
+      shiny::tagList(
+        shiny::div(
+          style = "display: inline-block;",
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "tableCDMName"),
+            inputId = shiny::NS(self$namespace, "cdmName"),
             label = "CDM Name",
             choices = private$.cdmNames,
             selected = private$.cdmNames[1],
             multiple = TRUE,
-          ),
+            options = private$.pickerOptions
+          )
+        ),
+        shiny::div(
+          style = "display: inline-block;",
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "tableCohortName"),
+            inputId = shiny::NS(self$namespace, "cohortName"),
             label = "Cohort Name",
             choices = private$.cohortNames,
             selected = private$.cohortNames[1],
-            multiple = TRUE
-          ),
+            multiple = TRUE,
+            options = private$.pickerOptions
+          )
+        )
+      )
+    },
+
+    .tableUI = function() {
+      shiny::fluidRow(
+        shiny::column(
+          width = 2,
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tableCompareBy"),
             label = "Compare By",
@@ -225,32 +245,20 @@ LargeScaleCharacteristics <- R6::R6Class(
         shiny::column(
           width = 2,
           shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "tableTopCDMName"),
-            label = "CDM Name",
-            choices = private$.cdmNames,
-            selected = private$.cdmNames[1],
-            multiple = TRUE
-          ),
-          shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "tableTopCohortName"),
-            label = "Cohort Name",
-            choices = private$.cohortNames,
-            selected = private$.cohortNames[1],
-            multiple = TRUE
-          ),
-          shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tableTopStrata"),
             label = "Strata",
             choices = private$.strata,
             selected = private$.strata[1],
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tableTopVariableLevel"),
             label = "Window",
             choices = private$.windows,
             selected = private$.windows[1],
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "tableTopN"),
@@ -270,20 +278,6 @@ LargeScaleCharacteristics <- R6::R6Class(
       shiny::fluidRow(
         shiny::column(
           width = 2,
-          shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "plotCDMName"),
-            label = "CDM Name",
-            choices = private$.cdmNames,
-            selected = private$.cdmNames[1],
-            multiple = TRUE
-          ),
-          shinyWidgets::pickerInput(
-            inputId = shiny::NS(self$namespace, "plotCohortName"),
-            label = "Cohort Name",
-            choices = private$.cohortNames,
-            selected = private$.cohortNames[1],
-            multiple = TRUE
-          ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotFacetX"),
             label = "Horizontal Facet",
@@ -324,7 +318,8 @@ LargeScaleCharacteristics <- R6::R6Class(
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotComparedReference"),
             label = "Reference",
-            choices = c(),
+            choices = private$.cdmNames,
+            selected = private$.cdmNames[1],
             multiple = FALSE
           ),
           shinyWidgets::pickerInput(
@@ -361,18 +356,18 @@ LargeScaleCharacteristics <- R6::R6Class(
     },
 
     .updateTable = function(input, output, session) {
-      shiny::observeEvent(list(input$tableCompareBy, input$tableCDMName, input$tableCohortName), {
+      shiny::observeEvent(list(input$tableCompareBy, input$cdmName, input$cohortName), {
         choices <- if (input$tableCompareBy == "cdm_name") {
           cdmNames <- private$.result |>
             dplyr::distinct(.data$cdm_name) |>
             dplyr::pull(.data$cdm_name)
-          cdmNames[cdmNames %in% input$tableCDMName]
+          cdmNames[cdmNames %in% input$cdmName]
         } else if (input$tableCompareBy == "cohort_name") {
           cohortNames <- private$.result |>
             dplyr::filter(.data$group_name == "cohort_name") |>
             dplyr::distinct(.data$group_level) |>
             dplyr::pull(.data$group_level)
-          cohortNames[cohortNames %in% input$tableCohortName]
+          cohortNames[cohortNames %in% input$cohortName]
         } else if (input$tableCompareBy == "variable_level") {
           private$.result |>
             dplyr::distinct(.data$variable_level) |>
@@ -399,7 +394,7 @@ LargeScaleCharacteristics <- R6::R6Class(
     .updatePlotCompared = function(input, output, session) {
       shiny::observeEvent(input$plotComparedColour, {
         choices <- if (input$plotComparedColour == "cdm_name") {
-          unique(private$.cdm_name)
+          unique(private$.cdm_names)
         } else if (input$plotComparedColour == "cohort_name") {
           private$.result |>
             dplyr::filter(.data$group_name == "cohort_name") |>
@@ -427,16 +422,16 @@ LargeScaleCharacteristics <- R6::R6Class(
       shiny::observeEvent(list(
         input$tableCompareBy,
         input$tableSMDReference,
-        input$tableCDMName,
-        input$tableCohortName
+        input$cdmName,
+        input$cohortName
       ), {
         private$.table$args$compareBy <- input$tableCompareBy
         private$.table$args$smdReference <- input$tableSMDReference
 
         private$.table$args$result <- private$.result |>
           dplyr::filter(
-            .data$cdm_name %in% input$tableCDMName,
-            .data$group_level %in% input$tableCohortName
+            .data$cdm_name %in% input$cdmName,
+            .data$group_level %in% input$cohortName
           )
 
         private$.table$server(input, output, session)
@@ -446,18 +441,18 @@ LargeScaleCharacteristics <- R6::R6Class(
     .serverTopTable = function(input, output, session) {
       shiny::observeEvent(list(
         input$tableTopN,
-        input$tableTopCDMName,
-        input$tableTopCohortName,
+        input$cdmName,
+        input$cohortName,
         input$tableTopStrata,
         input$tableTopVariableLevel
       ), {
         private$.tableTop$args$result <- private$.result |>
           dplyr::filter(
-            .data$cdm_name %in% input$tableTopCDMName,
+            .data$cdm_name %in% input$cdmName,
             .data$strata_name %in% input$tableTopStrata,
             .data$variable_level %in% input$tableTopVariableLevel
           ) |>
-          omopgenerics::filterGroup(.data$cohort_name %in% input$tableTopCohortName)
+          omopgenerics::filterGroup(.data$cohort_name %in% input$cohortName)
 
         private$.tableTop$args$topConcepts <- input$tableTopN
         private$.tableTop$server(input, output, session)
@@ -466,8 +461,8 @@ LargeScaleCharacteristics <- R6::R6Class(
 
     .serverPlot = function(input, output, session) {
       shiny::observeEvent(list(
-        input$plotCDMName,
-        input$plotCohortName,
+        input$cdmName,
+        input$cohortName,
         input$plotFacetX,
         input$plotFacetY,
         input$plotColour
@@ -488,8 +483,8 @@ LargeScaleCharacteristics <- R6::R6Class(
         }
 
         private$.plot$args$result <- result |>
-          dplyr::filter(.data$cdm_name %in% input$plotCDMName) |>
-          omopgenerics::filterGroup(.data$cohort_name %in% input$plotCohortName)
+          dplyr::filter(.data$cdm_name %in% input$cdmName) |>
+          omopgenerics::filterGroup(.data$cohort_name %in% input$cohortName)
 
         private$.plot$args$colour <- input$plotColour
         private$.plot$server(input, output, session)
@@ -498,6 +493,7 @@ LargeScaleCharacteristics <- R6::R6Class(
 
     .serverComparePlot = function(input, output, session) {
       shiny::observeEvent(list(
+        input$cdmName, input$cohortName,
         input$plotComparedColour,
         input$plotComparedReference,
         input$plotComparedFacetX,
@@ -513,13 +509,19 @@ LargeScaleCharacteristics <- R6::R6Class(
 
         facets <- unique(c(input$plotComparedFacetX, input$plotComparedFacetY))
 
-        private$.plotCompared$args$result <- if (is.null(facets)) {
+        result <- if (is.null(facets)) {
           private$.result |>
             dplyr::filter(.data$strata_name == "overall")
         } else {
           private$.result |>
             dplyr::filter(.data$strata_name %in% c("overall", facets))
         }
+
+        private$.plotCompared$args$result <- result |>
+          dplyr::filter(.data$cdm_name %in% input$cdmName) |>
+          omopgenerics::filterGroup(
+            .data$cohort_name %in% input$cohortName
+          )
 
         private$.plotCompared$server(input, output, session)
       })
@@ -599,3 +601,42 @@ LargeScaleCharacteristics <- R6::R6Class(
     }
   )
 )
+
+# Functions ----
+#' moduleLargeScaleCharacteristics
+#'
+#' @param result (`summarised_result`) Result from the `summariseLargeScaleCharacteristics()` function from the `CohortCharacteristics` pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `ShinyModule`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   moduleLargeScaleCharacteristics(result)
+#' }
+moduleLargeScaleCharacteristics <- function(result, .softValidation) {
+  assertType(result, type = "summarise_large_scale_characteristics")
+  checkCDMNames(result, .softValidation)
+  LargeScaleCharacteristics$new(result)
+}
+
+#' shinyLargeScaleCharacteristics
+#'
+#' @param result (`summarised_result`) Result from the `summariseLargeScaleCharacteristics()` function from the `CohortCharacteristics` pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `shiny.appobj`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   shinyLargeScaleCharacteristics(result)
+#' }
+shinyLargeScaleCharacteristics <- function(result, .softValidation) {
+  launchBslibApp(
+    list(
+      LargeScaleCharacteristics = moduleLargeScaleCharacteristics(result, .softValidation)
+    )
+  )
+}

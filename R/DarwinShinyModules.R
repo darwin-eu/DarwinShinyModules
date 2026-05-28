@@ -28,7 +28,7 @@
 #' @import flextable
 #' @import reactable
 #' @importFrom checkmate makeAssertCollection reportAssertions assertCharacter assertList assertNamed assertDataFrame assertChoice assertTRUE assertFunction assertClass
-#' @importFrom rlang is_installed abort check_installed
+#' @importFrom rlang is_installed abort check_installed := sym
 #' @importFrom purrr map
 #' @importFrom gt render_gt gt_output
 #' @importFrom DT DTOutput renderDT

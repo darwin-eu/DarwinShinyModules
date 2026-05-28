@@ -20,6 +20,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Maarten van Kessel \email{m.l.vankessel@erasmusmc.nl} (\href{https://orcid.org/0009-0006-8832-6030}{ORCID})
   \item Ger Inberg \email{g.inberg@erasmusmc.nl} (\href{https://orcid.org/0000-0001-8993-8748}{ORCID})
 }
 

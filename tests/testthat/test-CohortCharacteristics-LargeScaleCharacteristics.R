@@ -11,7 +11,7 @@ test_that("CohortCharacteristics-LargeScaleCharacteristics", {
 
   result <- makeLargescaleCharacteristics()
 
-  mod <- LargeScaleCharacteristics$new(result)
+  mod <- suppressWarnings(moduleLargeScaleCharacteristics(result, .softValidation = TRUE))
 
   testthat::expect_identical(class(mod), c("LargeScaleCharacteristics", "ShinyModule", "R6"))
 

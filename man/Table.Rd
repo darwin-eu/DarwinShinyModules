@@ -40,104 +40,104 @@ if (interactive()) {
 }
 }
 \section{Super class}{
-\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{Table}
+\code{\link[DarwinShinyModules:ShinyModule]{ShinyModule}} -> \code{Table}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{bindings}}{(\code{reactiveValues}) Reactive bindings for \code{DT::datatable}.}
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{bindings}}{(\code{reactiveValues}) Reactive bindings for \code{DT::datatable}.}
 
-\item{\code{data}}{(\code{data.frame}) Reactive data, use \code{shiny::isolate()} to get the non-reactive data.}
+    \item{\code{data}}{(\code{data.frame}) Reactive data, use \code{shiny::isolate()} to get the non-reactive data.}
 
-\item{\code{title}}{(\code{character}) Title of the table.}
+    \item{\code{title}}{(\code{character}) Title of the table.}
 
-\item{\code{options}}{(\code{list(n)}) List of options used by \code{DT::datatable}.}
+    \item{\code{options}}{(\code{list(n)}) List of options used by \code{DT::datatable}.}
 
-\item{\code{filter}}{(\code{character(1)}) Filter option used by \code{DT::datatable}.}
-}
-\if{html}{\out{</div>}}
+    \item{\code{filter}}{(\code{character(1)}) Filter option used by \code{DT::datatable}.}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-Table-new}{\code{Table$new()}}
-\item \href{#method-Table-validate}{\code{Table$validate()}}
-\item \href{#method-Table-clone}{\code{Table$clone()}}
+  \itemize{
+    \item \href{#method-Table-initialize}{\code{Table$new()}}
+    \item \href{#method-Table-validate}{\code{Table$validate()}}
+    \item \href{#method-Table-clone}{\code{Table$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>DarwinShinyModules::ShinyModule$getReactiveValues()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>ShinyModule$UI()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>ShinyModule$getReactiveValues()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>ShinyModule$server()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Table-new"></a>}}
-\if{latex}{\out{\hypertarget{method-Table-new}{}}}
-\subsection{Method \code{new()}}{
-initialize
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Table$new(
+\if{html}{\out{<a id="method-Table-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-Table-initialize}{}}}
+\subsection{\code{Table$new()}}{
+  initialize
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{Table$new(
   data,
   title = NULL,
   options = list(scrollX = TRUE),
   filter = "top",
   ...
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{data}}{(\code{data.frame}) Data to plot with, usually a \code{data.frame}-like object.}
-
-\item{\code{title}}{(\code{character(1)}: \code{NULL}) Title of the table. When set to \code{NULL}, no title is shown.}
-
-\item{\code{options}}{(\code{list}) table options, by default it shows additional items next to
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{data}}{(\code{data.frame}) Data to plot with, usually a \code{data.frame}-like object.}
+      \item{\code{title}}{(\code{character(1)}: \code{NULL}) Title of the table. When set to \code{NULL}, no title is shown.}
+      \item{\code{options}}{(\code{list}) table options, by default it shows additional items next to
 the table like search box, pagination, etc. Only display the table using
 list(dom = '')}
+      \item{\code{filter}}{(\code{character}: \code{"top"}) filter option, it can be either \code{"none"}, \code{"bottom"} or \code{"top"} (default)}
+      \item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{self}
+  }
+}
 
-\item{\code{filter}}{(\code{character}: \code{"top"}) filter option, it can be either \code{"none"}, \code{"bottom"} or \code{"top"} (default)}
-
-\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{self}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Table-validate"></a>}}
 \if{latex}{\out{\hypertarget{method-Table-validate}{}}}
-\subsection{Method \code{validate()}}{
-validate
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Table$validate()}\if{html}{\out{</div>}}
+\subsection{\code{Table$validate()}}{
+  validate
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{Table$validate()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{self}
+  }
 }
 
-\subsection{Returns}{
-\code{self}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Table-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-Table-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Table$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{Table$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{Table$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

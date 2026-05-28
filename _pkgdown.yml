@@ -61,12 +61,20 @@ reference:
 - subtitle: CohortCharacteristics
 - contents:
   - Characteristics
+  - moduleCharacteristics
+  - shinyCharacteristics
   - LargeScaleCharacteristics
+  - moduleLargeScaleCharacteristics
+  - shinyLargeScaleCharacteristics
   - CohortAttrition
+  - moduleCohortAttrition
+  - shinyCohortAttrition
 
 - subtitle: CohortSurvival
 - contents:
   - CohortSurvival
+  - moduleSurvival
+  - shinySurvival
 
 - subtitle: DrugExposureDiagnostics
 - contents:
@@ -75,18 +83,31 @@ reference:
 - subtitle: DrugUtilisation
 - contents:
   - DrugUtilisation
+  - moduleDrugUtilisation
+  - shinyDrugUtilisation
   - DrugRestart
+  - moduleDrugRestart
+  - shinyDrugRestart
   - Indication
+  - moduleIndication
+  - shinyIndication
   - Treatment
+  - moduleTreatment
+  - shinyTreatment
 
 - subtitle: IncidencePrevalence
 - contents:
   - IncidencePrevalence
+  - moduleIncidence
+  - shinyIncidence
+  - modulePrevalence
+  - shinyPrevalence
 
 - subtitle: TreatmentPatterns
 - contents:
-  - TreatmentPathways
-  - EventDuration
+  - TreatmentPatterns
+  - moduleTreatmentPatterns
+  - shinyTreatmentPatterns
 
 - subtitle: Shiny App Generator Functions
 - contents:
@@ -98,3 +119,4 @@ reference:
   - darwinHeader
   - darwinFooter
   - createApp
+  - getCDMAcronyms

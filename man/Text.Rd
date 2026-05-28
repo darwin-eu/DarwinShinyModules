@@ -61,82 +61,85 @@ if (interactive()) {
 }
 }
 \section{Super class}{
-\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{Text}
+\code{\link[DarwinShinyModules:ShinyModule]{ShinyModule}} -> \code{Text}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{markdown}}{(\code{character(n)}) Lines read from the markdown-file supplied.}
-}
-\if{html}{\out{</div>}}
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{markdown}}{(\code{character(n)}) Lines read from the markdown-file supplied.}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-Text-new}{\code{Text$new()}}
-\item \href{#method-Text-validate}{\code{Text$validate()}}
-\item \href{#method-Text-clone}{\code{Text$clone()}}
+  \itemize{
+    \item \href{#method-Text-initialize}{\code{Text$new()}}
+    \item \href{#method-Text-validate}{\code{Text$validate()}}
+    \item \href{#method-Text-clone}{\code{Text$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>DarwinShinyModules::ShinyModule$getReactiveValues()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>ShinyModule$UI()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>ShinyModule$getReactiveValues()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>ShinyModule$server()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Text-new"></a>}}
-\if{latex}{\out{\hypertarget{method-Text-new}{}}}
-\subsection{Method \code{new()}}{
-initialize
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Text$new(markdown, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-Text-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-Text-initialize}{}}}
+\subsection{\code{Text$new()}}{
+  initialize
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{Text$new(markdown, ...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{markdown}}{(\code{character(n)}) Markdown.}
+      \item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{self}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{markdown}}{(\code{character(n)}) Markdown.}
-
-\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{self}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Text-validate"></a>}}
 \if{latex}{\out{\hypertarget{method-Text-validate}{}}}
-\subsection{Method \code{validate()}}{
-Validator method
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Text$validate()}\if{html}{\out{</div>}}
+\subsection{\code{Text$validate()}}{
+  Validator method
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{Text$validate()}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    (\code{self})
+  }
 }
 
-\subsection{Returns}{
-(\code{self})
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Text-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-Text-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Text$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{Text$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{Text$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

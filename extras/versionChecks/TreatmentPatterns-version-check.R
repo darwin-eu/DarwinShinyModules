@@ -18,7 +18,7 @@ testthat::test_that("TreatmentPatterns", {
   cohorts <- cohortSet |>
     # Remove 'cohort' and 'json' columns
     dplyr::select(-"cohort", -"json") |>
-    dplyr::mutate(type = c("event", "event", "event", "event", "exit", "event", "event", "target")) %>%
+    dplyr::mutate(type = c("event", "event", "event", "event", "exit", "event", "event", "target")) |>
     dplyr::select(
       cohortId = "cohort_definition_id",
       cohortName = "cohort_name",
@@ -33,18 +33,15 @@ testthat::test_that("TreatmentPatterns", {
 
   result <- TreatmentPatterns::export(outputEnv)
 
-  pathwaysMod <- DarwinShinyModules::TreatmentPathways$new(treatmentPathways = result$treatment_pathways, cdmSourceInfo = result$cdm_source_info)
-  eventDurationMod <- DarwinShinyModules::EventDuration$new(summaryEventDuration = result$summary_event_duration, cdmSourceInfo = result$cdm_source_info)
+  tpMod <- DarwinShinyModules::TreatmentPatterns$new(result)
 
-  testthat::expect_r6_class(pathwaysMod, class = "TreatmentPathways")
-  testthat::expect_r6_class(eventDurationMod, class = "EventDuration")
+  testthat::expect_r6_class(tpMod, class = "TreatmentPatterns")
 
-  app <- list(
-    TreatmentPathways = pathwaysMod,
-    SummaryEventDuration = eventDurationMod
+  app <- DarwinShinyModules::launchDarwinDashboardApp(
+    list(
+      TreatmentPatterns = tpMod
+    )
   )
-
-  app <- DarwinShinyModules::launchDarwinDashboardApp(app)
 
   testthat::expect_identical(class(app), "shiny.appobj")
 

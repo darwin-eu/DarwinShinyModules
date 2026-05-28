@@ -4,10 +4,12 @@
 \alias{darwinFooter}
 \title{darwinFooter}
 \usage{
-darwinFooter(type = "shinydashboard")
+darwinFooter(type = "shinydashboard", deployDate = Sys.Date())
 }
 \arguments{
 \item{type}{for which app type the footer should be generated}
+
+\item{deployDate}{Date when the app is deployed}
 }
 \value{
 \code{tagList}

@@ -32,7 +32,7 @@ test_that("Incidence", {
     completeDatabaseIntervals = TRUE
   )
 
-  incMod <- IncidencePrevalence$new(result = result, defaults = list(sex = "Both"))
+  incMod <- suppressWarnings(moduleIncidence(result = result, .softValidation = TRUE))
 
   expect_identical(class(incMod), c("IncidencePrevalence", "ShinyModule", "R6"))
 
@@ -87,7 +87,7 @@ test_that("Point Prevalence", {
     interval = c("years", "months", "quarters", "weeks")
   )
 
-  prevMod <- IncidencePrevalence$new(result = result)
+  prevMod <- suppressWarnings(modulePrevalence(result = result, .softValidation = TRUE))
 
   expect_identical(class(prevMod), c("IncidencePrevalence", "ShinyModule", "R6"))
 
@@ -142,7 +142,7 @@ test_that("Period Prevalence", {
     interval = c("years", "months", "quarters", "weeks")
   )
 
-  prevMod <- IncidencePrevalence$new(result = result)
+  prevMod <- suppressWarnings(modulePrevalence(result = result, .softValidation = TRUE))
 
   expect_identical(class(prevMod), c("IncidencePrevalence", "ShinyModule", "R6"))
 

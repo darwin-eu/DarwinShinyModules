@@ -58,7 +58,7 @@ PlotStatic <- R6::R6Class(
 
     ## Methods ----
     .UI = function() {
-      shiny::tagList(
+      shiny::fluidPage(
         shiny::h3(private$.title),
         do.call(shiny::plotOutput, args = append(list(outputId = shiny::NS(private$.namespace, "plot")), private$.dots)),
         shiny::div("height:", style = "display: inline-block; font-weight: bold; margin-right: 5px;"),

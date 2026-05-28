@@ -146,7 +146,8 @@ CohortSurvival <- R6::R6Class(
         title = NULL,
         fun = CohortSurvival::plotSurvival,
         args = list(style = "darwin"),
-        parentNamespace = self$namespace
+        parentNamespace = self$namespace,
+        height = "80vh"
       )
 
       private$.tableAttrition <- Flextable$new(
@@ -164,6 +165,7 @@ CohortSurvival <- R6::R6Class(
     .result = NULL,
     .cdmNames = NULL,
     .cohortNames = NULL,
+    .outcomeNames = NULL,
     .strata = NULL,
 
     ### Modules ----
@@ -172,9 +174,15 @@ CohortSurvival <- R6::R6Class(
     .plot = NULL,
     .tableAttrition = NULL,
 
+    .pickerOptions = list(
+      `actions-box` = TRUE,
+      size = 10,
+      `selected-text-format` = "count > 3"
+    ),
+
     ## Methods ----
     .UI = function() {
-      shiny::tagList(
+      shiny::fluidPage(
         private$.uiGeneralFilters(),
         shiny::tabsetPanel(
           shiny::tabPanel(
@@ -198,7 +206,7 @@ CohortSurvival <- R6::R6Class(
     },
 
     .uiGeneralFilters = function() {
-      shiny::fluidPage(
+      shiny::tagList(
         shiny::h4("General Settings"),
         shiny::div(
           style = "display: inline-block;",
@@ -207,17 +215,30 @@ CohortSurvival <- R6::R6Class(
             label = "CDM Name",
             choices = private$.cdmNames,
             selected = private$.cdmNames[1],
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
           )
         ),
         shiny::div(
           style = "display: inline-block;",
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "cohortNames"),
-            label = "Cohort Name",
+            label = "Target Cohort Name",
             choices = private$.cohortNames,
             selected = private$.cohortNames[1],
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
+          )
+        ),
+        shiny::div(
+          style = "display: inline-block;",
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "outcomeNames"),
+            label = "Outcome Cohort Name",
+            choices = private$.outcomeNames,
+            selected = private$.outcomeNames[1],
+            multiple = TRUE,
+            options = private$.pickerOptions
           )
         ),
         shiny::div(
@@ -227,14 +248,15 @@ CohortSurvival <- R6::R6Class(
             label = "Strata",
             choices = private$.strata,
             selected = "overall",
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
           )
         )
       )
     },
 
     .uiTable = function() {
-      shiny::fluidPage(
+      shiny::fluidRow(
         shiny::column(
           width = 2,
           shiny::h4("Settings"),
@@ -261,7 +283,8 @@ CohortSurvival <- R6::R6Class(
               "q100_survival"
             ),
             selected = c("median_survival", "restricted_mean_survival"),
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
           )
         ),
         shiny::column(
@@ -280,7 +303,7 @@ CohortSurvival <- R6::R6Class(
 
       eventGap <- eventGap[!sapply(eventGap, is.na)]
 
-      shiny::fluidPage(
+      shiny::fluidRow(
         shiny::column(
           width = 2,
           shiny::h4("Settings"),
@@ -288,7 +311,8 @@ CohortSurvival <- R6::R6Class(
             inputId = shiny::NS(self$namespace, "tableTableSurvEventGap"),
             label = "eventGap",
             choices = eventGap,
-            multiple = TRUE
+            multiple = TRUE,
+            options = private$.pickerOptions
           )
         ),
         shiny::column(
@@ -299,7 +323,7 @@ CohortSurvival <- R6::R6Class(
     },
 
     .uiPlot = function() {
-      shiny::fluidPage(
+      shiny::fluidRow(
         shiny::column(
           width = 2,
           shiny::h4("Settings"),
@@ -324,20 +348,26 @@ CohortSurvival <- R6::R6Class(
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotFacetX"),
             label = "Horizontal facet",
-            choices = c("cdm_name", "target_cohort", private$.strata),
-            multiple = TRUE
+            choices = c("cdm_name", "outcome", "target_cohort", private$.strata),
+            selected = "cdm_name",
+            multiple = TRUE,
+            options = private$.pickerOptions
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotFacetY"),
             label = "Vertical facet",
-            choices = c("cdm_name", "target_cohort", private$.strata),
-            multiple = TRUE
+            choices = c("cdm_name", "outcome", "target_cohort", private$.strata),
+            selected = "target_cohort",
+            multiple = TRUE,
+            options = private$.pickerOptions
           ),
           shinyWidgets::pickerInput(
             inputId = shiny::NS(self$namespace, "plotColour"),
             label = "Colour",
-            choices = c("cdm_name", "target_cohort", private$.strata),
-            multiple = TRUE
+            choices = c("cdm_name", "outcome", "target_cohort", private$.strata),
+            selected = "outcome",
+            multiple = TRUE,
+            options = private$.pickerOptions
           )
         ),
         shiny::column(
@@ -348,7 +378,7 @@ CohortSurvival <- R6::R6Class(
     },
 
     .uiTableAttrition = function() {
-      shiny::fluidPage(
+      shiny::tagList(
         private$.tableAttrition$UI()
       )
     },
@@ -364,7 +394,7 @@ CohortSurvival <- R6::R6Class(
     .serverTable = function(input, output, session) {
       shiny::observeEvent(
         list(
-          input$cdmNames, input$cohortNames, input$strata,
+          input$cdmNames, input$cohortNames, input$outcomeNames, input$strata,
           input$tableTimeScale, input$tableTimes, input$tableEstimates
         ), {
           private$.table$args$timeScale <- input$tableTimeScale
@@ -382,7 +412,8 @@ CohortSurvival <- R6::R6Class(
               .data$cdm_name %in% input$cdmNames,
               .data$strata_name %in% strata
             ) |>
-            omopgenerics::filterGroup(target_cohort %in% input$cohortNames)
+            omopgenerics::filterGroup(target_cohort %in% input$cohortNames) |>
+            omopgenerics::filterSettings(outcome %in% input$outcomeNames)
 
           private$.table$server(input, output, session)
         }
@@ -390,7 +421,7 @@ CohortSurvival <- R6::R6Class(
     },
 
     .serverTableEvents = function(input, output, session) {
-      shiny::observeEvent(list(input$cdmNames, input$cohortNames, input$strata), {
+      shiny::observeEvent(list(input$cdmNames, input$cohortNames, input$outcomeNames, input$strata), {
         strata <- if (all(is.null(input$strata))) {
           "overall"
         } else {
@@ -402,7 +433,8 @@ CohortSurvival <- R6::R6Class(
             .data$cdm_name %in% input$cdmNames,
             .data$strata_name %in% strata
           ) |>
-          omopgenerics::filterGroup(.data$target_cohort %in% input$cohortNames)
+          omopgenerics::filterGroup(.data$target_cohort %in% input$cohortNames) |>
+          omopgenerics::filterSettings(outcome %in% input$outcomeNames)
 
         private$.tableEvents$server(input, output, session)
       })
@@ -413,6 +445,7 @@ CohortSurvival <- R6::R6Class(
         list(
           input$cdmNames,
           input$cohortNames,
+          input$outcomeNames,
           input$plotRibbon,
           input$plotCumulativeFailure,
           input$plotLogLog,
@@ -433,7 +466,8 @@ CohortSurvival <- R6::R6Class(
               .data$cdm_name %in% input$cdmNames,
               .data$strata_name %in% strata
             ) |>
-            omopgenerics::filterGroup(target_cohort %in% input$cohortNames)
+            omopgenerics::filterGroup(target_cohort %in% input$cohortNames) |>
+            omopgenerics::filterSettings(outcome %in% input$outcomeNames)
 
           private$.plot$args$ribbon <- convertLabelToLogical(input$plotRibbon)
           private$.plot$args$cumulativeFailure <- convertLabelToLogical(input$plotCumulativeFailure)
@@ -441,7 +475,7 @@ CohortSurvival <- R6::R6Class(
           private$.plot$args$facet <- makeFacetFormula(facetX = input$plotFacetX, facetY = input$plotFacetY)
           private$.plot$args$colour <- input$plotColour
           private$.plot$server(input, output, session)
-      })
+        })
     },
 
     .serverTableAttrition = function(input, output, session) {
@@ -458,6 +492,51 @@ CohortSurvival <- R6::R6Class(
         dplyr::distinct(.data$group_level) |>
         dplyr::filter(!grepl(.data$group_level, pattern = "_\\d$")) |>
         dplyr::pull(.data$group_level)
+
+      private$.outcomeNames <- private$.result |>
+        dplyr::filter(.data$variable_name == "outcome") |>
+        dplyr::distinct(.data$variable_level) |>
+        dplyr::pull(.data$variable_level)
     }
   )
 )
+
+# Functions ----
+#' moduleSurvival
+#'
+#' Wrapper function to create a CohortSurvival module instance.
+#'
+#' @param result (`summarised_result`) Result from either `estimateCompetingRiskSurvival()` or `estimateSingleEventSurvival()` functions from the CohortSurvival package.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `TreatmentPatterns` ShinyModule
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   moduleSurvival(tpr)
+#' }
+moduleSurvival <- function(result, .softValidation) {
+  assertType(result, type = c("survival_estimates", "survival_events", "survival_summary"))
+  checkCDMNames(result, .softValidation)
+  CohortSurvival$new(result)
+}
+
+#' shinySurvival
+#'
+#' @param result (`summarised_result`) Result from either `estimateCompetingRiskSurvival()` or `estimateSingleEventSurvival()` functions from the CohortSurvival package.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#' @returns `shiny.appobj`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   shinySurvival(result)
+#' }
+shinySurvival <- function(result, .softValidation) {
+  launchBslibApp(
+    list(
+      Survival = moduleSurvival(result, .softValidation)
+    )
+  )
+}

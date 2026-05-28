@@ -100,6 +100,7 @@ IncidencePrevalence <- R6::R6Class(
       private$.defaults <- defaults
 
       resType <- unique(private$.settings$result_type)
+      private$.hasInterval <- any(grepl("analysis_interval", private$.result$additional_name))
 
       if ("incidence" %in% resType) {
         private$.setIncidenceCols()
@@ -123,6 +124,26 @@ IncidencePrevalence <- R6::R6Class(
       private$.plot <- PlotStatic$new(
         fun = private$.plotIncidencePrevalence,
         args = list(),
+        height = "80vh",
+        parentNamespace = self$namespace
+      )
+
+      private$.attrition <- Flextable$new(
+        fun = private$.tableAttrition,
+        args = list(
+          type = "flextable",
+          style = "darwin"
+        ),
+        height = "80vh",
+        parentNamespace = self$namespace
+      )
+
+      private$.population <- PlotStatic$new(
+        fun = private$.plotPopulation,
+        args = list(
+          colour = "denominator_cohort_name",
+          facet = as.formula("outcome_cohort_name ~ cdm_name")
+        ),
         height = "80vh",
         parentNamespace = self$namespace
       )
@@ -155,6 +176,8 @@ IncidencePrevalence <- R6::R6Class(
 
     .table = NULL,
     .plot = NULL,
+    .attrition = NULL,
+    .population = NULL,
 
     .cdmNames = NULL,
     .denominatorCohorts = NULL,
@@ -183,6 +206,8 @@ IncidencePrevalence <- R6::R6Class(
     .dateRangeMin = NULL,
     .dateRangeMax = NULL,
 
+    .hasInterval = FALSE,
+
     ## UI ----
     .UI = function() {
       shiny::fluidPage(
@@ -195,6 +220,14 @@ IncidencePrevalence <- R6::R6Class(
           shiny::tabPanel(
             title = "Table",
             private$.uiTable()
+          ),
+          shiny::tabPanel(
+            title = "Attrition",
+            private$.uiAttrition()
+          ),
+          shiny::tabPanel(
+            title = "Population",
+            private$.uiPopulation()
           )
         )
       )
@@ -264,6 +297,18 @@ IncidencePrevalence <- R6::R6Class(
       )
     },
 
+    .uiAttrition = function() {
+      shiny::fluidRow(
+        private$.attrition$UI()
+      )
+    },
+
+    .uiPopulation = function() {
+      shiny::fluidRow(
+        private$.population$UI()
+      )
+    },
+
     ## Server ----
     .server = function(input, output, session) {
       for (module in private$.pickers) {
@@ -276,6 +321,9 @@ IncidencePrevalence <- R6::R6Class(
 
       private$.serverPlot(input, output, session, fetchData = summariseResultData)
       private$.serverTable(input, output, session, fetchData = summariseResultData)
+
+      private$.serverAttrition(input, output, session)
+      private$.serverPopulation(input, output, session)
     },
 
     .serverUpdateIntervalItems = function(input, output, session) {
@@ -288,26 +336,36 @@ IncidencePrevalence <- R6::R6Class(
         minDate <- private$.pickers[["date"]]$inputValues$timeWindow[1]
         maxDate <- private$.pickers[["date"]]$inputValues$timeWindow[2]
 
-        additionalLevels <- private$.result |>
-          omopgenerics::filterAdditional(.data[[private$.endDateCol]] != "overall") |>
-          omopgenerics::filterAdditional(as.Date(.data[[private$.startDateCol]]) >= minDate) |>
-          omopgenerics::filterAdditional(as.Date(.data[[private$.endDateCol]]) <= maxDate) |>
-          dplyr::filter(grepl(pattern = "analysis_interval", x = .data$additional_name)) |>
-          dplyr::filter(grepl(pattern = interval, x = .data$additional_level)) |>
-          dplyr::distinct(.data$additional_level) |>
-          dplyr::pull(.data$additional_level)
+        if (private$.hasInterval) {
+          additionalLevels <- private$.result |>
+            omopgenerics::filterAdditional(.data[[private$.endDateCol]] != "overall") |>
+            omopgenerics::filterAdditional(as.Date(.data[[private$.startDateCol]]) >= minDate) |>
+            omopgenerics::filterAdditional(as.Date(.data[[private$.endDateCol]]) <= maxDate) |>
+            dplyr::filter(grepl(pattern = "analysis_interval", x = .data$additional_name)) |>
+            dplyr::filter(grepl(pattern = interval, x = .data$additional_level)) |>
+            dplyr::distinct(.data$additional_level) |>
+            dplyr::pull(.data$additional_level)
 
-        additionalLevelItems <- stringr::str_split_i(string = additionalLevels, pattern = " &&& ", i = 1) |>
-          unlist() |>
-          unique()
+          additionalLevelItems <- stringr::str_split_i(string = additionalLevels, pattern = " &&& ", i = 1) |>
+            unlist() |>
+            unique()
 
-        private$.pickers[["date"]]$update(
-          fun = shinyWidgets::updatePickerInput,
-          name = "intervalItems",
-          session = session,
-          choices = additionalLevelItems,
-          selected = additionalLevelItems[1]
-        )
+          private$.pickers[["date"]]$update(
+            fun = shinyWidgets::updatePickerInput,
+            name = "intervalItems",
+            session = session,
+            choices = additionalLevelItems,
+            selected = additionalLevelItems[1]
+          )
+        } else {
+          private$.pickers[["date"]]$update(
+            fun = shinyWidgets::updatePickerInput,
+            name = "intervalItems",
+            session = session,
+            choices = "overall",
+            selected = "overall"
+          )
+        }
       })
     },
 
@@ -343,7 +401,7 @@ IncidencePrevalence <- R6::R6Class(
           result
         }
 
-        result |>
+        result <- result |>
           omopgenerics::filterSettings(
             .data$denominator_start_date %in% denominator$start_date,
             .data$denominator_end_date %in% denominator$end_date,
@@ -351,11 +409,17 @@ IncidencePrevalence <- R6::R6Class(
             .data$denominator_sex %in% denominator$denom_sex,
             .data$denominator_age_group %in% denominator$age_group,
             .data$denominator_time_at_risk %in% denominator$time_at_risk
-          ) |>
-          omopgenerics::filterAdditional(
-            analysis_interval == date$interval,
-            .data[[private$.startDateCol]] %in% date$intervalItems
-          ) |>
+          )
+
+        if (private$.hasInterval) {
+          result <- result |>
+            omopgenerics::filterAdditional(
+              analysis_interval == date$interval,
+              .data[[private$.startDateCol]] %in% date$intervalItems
+            )
+        }
+
+        result |>
           omopgenerics::filterGroup(outcome_cohort_name %in% database$outcome)
       })
     },
@@ -396,6 +460,28 @@ IncidencePrevalence <- R6::R6Class(
         private$.plot$args$line <- as.logical(private$.pickers[["plot"]]$inputValues$line)
 
         private$.plot$server(input, output, session)
+      })
+    },
+
+    .serverAttrition = function(input, output, session) {
+      dbInput <- private$.pickers$database$inputValues
+
+      shiny::observeEvent(list(dbInput$cdm, dbInput$outcome), {
+        private$.attrition$args$result <- private$.result |>
+          dplyr::filter(.data$cdm_name %in% dbInput$cdm) |>
+          omopgenerics::filterGroup(.data$outcome_cohort_name %in% dbInput$outcome)
+        private$.attrition$server(input, output, session)
+      })
+    },
+
+    .serverPopulation = function(input, output, session) {
+      dbInput <- private$.pickers$database$inputValues
+
+      shiny::observeEvent(list(dbInput$cdm, dbInput$outcome), {
+        private$.population$args$result <- private$.result |>
+          dplyr::filter(.data$cdm_name %in% dbInput$cdm) |>
+          omopgenerics::filterGroup(.data$outcome_cohort_name %in% dbInput$outcome)
+        private$.population$server(input, output, session)
       })
     },
 
@@ -613,7 +699,7 @@ IncidencePrevalence <- R6::R6Class(
         args = list(
           interval = list(
             inputId = "interval",
-            label = "Interval",
+            label = "Interval Period",
             choices = private$.timeIntervals,
             selected = private$.timeIntervals[1],
             options = private$.pickerOptions
@@ -846,16 +932,20 @@ IncidencePrevalence <- R6::R6Class(
 
     .setTimeIntervals = function() {
       # "overall", "years", "quarters", "months", "weeks"
-      additionalLevels <- private$.result |>
-        dplyr::filter(grepl(pattern = "analysis_interval", x = .data$additional_name)) |>
-        dplyr::distinct(.data$additional_level) |>
-        dplyr::pull(.data$additional_level)
+      private$.timeIntervals <- if (private$.hasInterval) {
+        additionalLevels <- private$.result |>
+          dplyr::filter(grepl(pattern = "analysis_interval", x = .data$additional_name)) |>
+          dplyr::distinct(.data$additional_level) |>
+          dplyr::pull(.data$additional_level)
 
-      additionalItems <- stringr::str_split(string = additionalLevels, pattern = " &&& ") |>
-        unlist() |>
-        unique()
+        additionalItems <- stringr::str_split(string = additionalLevels, pattern = " &&& ") |>
+          unlist() |>
+          unique()
 
-      private$.timeIntervals <- additionalItems[grepl(pattern = "^[a-z]", x = tolower(additionalItems))]
+        additionalItems[grepl(pattern = "^[a-z]", x = tolower(additionalItems))]
+      } else {
+        "overall"
+      }
     },
 
     .setCohortNames = function() {
@@ -914,6 +1004,7 @@ IncidencePrevalence <- R6::R6Class(
       }
 
       gg <- gg +
+        ggThemeDarwin() +
         ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, vjust = 1, hjust = 1))
 
       return(gg)
@@ -924,6 +1015,24 @@ IncidencePrevalence <- R6::R6Class(
         IncidencePrevalence::tableIncidence(...)
       } else {
         IncidencePrevalence::tablePrevalence(...)
+      }
+    },
+
+    .tableAttrition = function(...) {
+      if (private$.resultType == "incidence") {
+        IncidencePrevalence::tableIncidenceAttrition(...)
+      } else {
+        IncidencePrevalence::tablePrevalenceAttrition(...)
+      }
+    },
+
+    .plotPopulation = function(...) {
+      if (private$.resultType == "incidence") {
+        IncidencePrevalence::plotIncidencePopulation(...) +
+        ggThemeDarwin()
+      } else {
+        IncidencePrevalence::plotPrevalencePopulation(...) +
+          ggThemeDarwin()
       }
     },
 
@@ -938,3 +1047,80 @@ IncidencePrevalence <- R6::R6Class(
     }
   )
 )
+
+# Functions ----
+#' moduleIncidence
+#'
+#' @param result (`summarised_result`) Result from the `estimateIncidence()` function from the `IncidencePrevalence` pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `ShinyModule`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   moduleIncidence(result)
+#' }
+moduleIncidence <- function(result, .softValidation = FALSE) {
+  assertType(result, type = "incidence")
+  checkCDMNames(result, .softValidation)
+  IncidencePrevalence$new(result)
+}
+
+#' modulePrevalence
+#'
+#' @param result (`summarised_result`) Result from either `estimatePeriodPrevalence()` or `estimatePointPrevalence()` function from the `IncidencePrevalence` pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `ShinyModule`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   modulePrevalence(result)
+#' }
+modulePrevalence <- function(result, .softValidation = FALSE) {
+  assertType(result, type = "prevalence")
+  checkCDMNames(result, .softValidation)
+  IncidencePrevalence$new(result)
+}
+
+#' shinyIncidence
+#'
+#' @param result (`summarised_result`) Result from the `estimateIncidence()` function from the `IncidencePrevalence` pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `shiny.appobj`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   shinyIncidence(result)
+#' }
+shinyIncidence <- function(result, .softValidation = FALSE) {
+  launchBslibApp(
+    list(
+      Incidence = moduleIncidence(result, .softValidation)
+    )
+  )
+}
+
+#' shinyPrevalence
+#'
+#' @param result (`summarised_result`) Result from either `estimatePeriodPrevalence()` or `estimatePointPrevalence()` function from the `IncidencePrevalence` pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `shiny.appobj`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   shinyPrevalence(result)
+#' }
+shinyPrevalence <- function(result, .softValidation = FALSE) {
+  launchBslibApp(
+    list(
+      Prevalence = modulePrevalence(result, .softValidation)
+    )
+  )
+}
