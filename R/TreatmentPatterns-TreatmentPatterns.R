@@ -29,53 +29,167 @@ TreatmentPatterns <- R6::R6Class(
   # Active ----
   active = list(
     #' @field analyses Analyses table from TreatmentPatterns
-    analyses = function() {
-      return(private$.analyses)
+    analyses = function(analyses) {
+      if (missing(analyses)) {
+        return(private$.analyses)
+      } else {
+        checkmate::checkDataFrame(
+          x = analyses,
+          col.names = c(
+            "analysis_id", "description", "result_id"
+          )
+        )
+        private$.analyses <- analyses
+      }
     },
 
     #' @field treatment_pathways Analyses table from TreatmentPatterns
-    treatment_pathways = function() {
-      return(private$.treatment_pathways)
+    treatment_pathways = function(treatment_pathways) {
+      if (missing(treatment_pathways)) {
+        return(private$.treatment_pathways)
+      } else {
+        checkmate::checkDataFrame(
+          x = treatment_pathways,
+          col.names = c(
+            "pathway", "freq", "age", "sex", "index_year", "analysis_id",
+            "target_cohort_id", "target_cohort_name", "result_id"
+          )
+        )
+        private$.treatment_pathways <- treatment_pathways
+      }
     },
 
     #' @field summary_event_duration Analyses table from TreatmentPatterns
-    summary_event_duration = function() {
-      return(private$.summary_event_duration)
+    summary_event_duration = function(summary_event_duration) {
+      if (missing(summary_event_duration)) {
+        return(private$.summary_event_duration)
+      } else {
+        checkmate::checkDataFrame(
+          x = summary_event_duration,
+          col.names = c(
+            "event_name", "duration_min", "duration_q1", "duration_median",
+            "duration_q2", "duration_max", "duration_average", "duration_sd",
+            "event_count", "line", "analysis_id", "target_cohort_id",
+            "target_cohort_name", "result_id"
+          )
+        )
+        private$.summary_event_duration <- summary_event_duration
+      }
     },
 
     #' @field counts_age Analyses table from TreatmentPatterns
-    counts_age = function() {
-      return(private$.counts_age)
+    counts_age = function(counts_age) {
+      if (missing(counts_age)) {
+        return(private$.counts_age)
+      } else {
+        checkmate::assertDataFrame(
+          x = counts_age,
+          col.names = c(
+            "age", "n", "analysis_id", "target_cohort_id",
+            "target_cohort_name", "result_id"
+          )
+        )
+        private$.counts_age <- counts_age
+      }
     },
 
     #' @field counts_sex Analyses table from TreatmentPatterns
-    counts_sex = function() {
-      return(private$.counts_sex)
+    counts_sex = function(counts_sex) {
+      if (missing(counts_sex)) {
+        return(private$.counts_sex)
+      } else {
+        checkmate::assertDataFrame(
+          x = counts_sex,
+          col.names = c(
+            "sex", "n", "analysis_id", "target_cohort_id",
+            "target_cohort_name", "result_id"
+          )
+        )
+        private$.counts_sex <- counts_sex
+      }
     },
 
     #' @field counts_year Analyses table from TreatmentPatterns
-    counts_year = function() {
-      return(private$.counts_year)
+    counts_year = function(counts_year) {
+      if (missing(counts_year)) {
+        return(private$.counts_year)
+      } else {
+        checkmate::checkDataFrame(
+          x = counts_year,
+          col.names = c(
+            "index_year", "n", "analysis_id", "target_cohort_id",
+            "target_cohort_name", "result_id"
+          )
+        )
+        private$.counts_year <- counts_year
+      }
     },
 
     #' @field attrition Analyses table from TreatmentPatterns
-    attrition = function() {
-      return(private$.attrition)
+    attrition = function(attrition) {
+      if (missing(attrition)) {
+        return(private$.attrition)
+      } else {
+        checkmate::checkDataFrame(
+          x = attrition,
+          col.names = c(
+            "number_records", "number_subjects", "reason_id", "reason",
+            "time_stamp", "analysis_id", "target_cohort_id",
+            "target_cohort_name", "result_id"
+          )
+        )
+        private$.attrition <- attrition
+      }
     },
 
     #' @field metadata Analyses table from TreatmentPatterns
-    metadata = function() {
-      return(private$.metadata)
+    metadata = function(metadata) {
+      if (missing(metadata)) {
+        return(private$.metadata)
+      } else {
+        checkmate::checkDataFrame(
+          x = metadata,
+          col.names = c(
+            "execution_start", "package_version", "r_version", "platform",
+            "execution_end", "analysis_id", "result_id"
+          )
+        )
+        private$.metadata <- metadata
+      }
     },
 
     #' @field arguments Analyses table from TreatmentPatterns
-    arguments = function() {
-      return(private$.arguments)
+    arguments = function(arguments) {
+      if (missing(arguments)) {
+        return(private$.arguments)
+      } else {
+        checkmate::checkDataFrame(
+          x = arguments,
+          col.names = c(
+            "analysis_id", "arguments", "result_id"
+          )
+        )
+        private$.arguments <- arguments
+      }
     },
 
     #' @field cdm_source_info Analyses table from TreatmentPatterns
-    cdm_source_info = function() {
-      return(private$.cdm_source_info)
+    cdm_source_info = function(cdm_source_info) {
+      if (missing(cdm_source_info)) {
+        return(private$.cdm_source_info)
+      } else {
+        checkmate::assertDataFrame(
+          x = cdm_source_info,
+          col.names = c(
+            "cdm_source_name", "cdm_source_abbreviation", "cdm_holder",
+            "source_description", "source_documentation_reference",
+            "cdm_etl_reference", "source_release_date", "cdm_release_date",
+            "cdm_version", "cdm_version_concept_id", "vocabulary_version",
+            "analysis_id", "result_id"
+          )
+        )
+        private$.cdm_source_info <- cdm_source_info
+      }
     }
   ),
 
