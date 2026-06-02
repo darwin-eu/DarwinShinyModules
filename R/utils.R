@@ -42,7 +42,5 @@ ggThemeDarwin <- function(fontSize = NULL) {
 #' getCDMAcronyms()
 getCDMAcronyms <- function() {
   readRDS(system.file("datapartners.RDS", package = "DarwinShinyModules")) |>
-    dplyr::filter(.data$field == "db_acrynym") |>
-    dplyr::select("Answer") |>
-    dplyr::pull()
+    dplyr::distinct(.data$DB_name, .data$DB_name_multi_line)
 }
