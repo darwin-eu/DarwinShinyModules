@@ -72,8 +72,18 @@ Indication <- R6::R6Class(
   # Active ----
   active = list(
     #' @field result (`sumamrised_result`)
-    result = function() {
-      return(private$.result)
+    result = function(result) {
+      if (missing(result)) {
+        return(private$.result)
+      } else {
+        checkmate::assertClass(result, "summarised_result")
+        checkmate::assertSubset(
+          x = omopgenerics::settings(result)$result_type,
+          choices = "summarise_indication",
+          .var.name = "result_type"
+        )
+        private$.result <- result
+      }
     },
 
     #' @field table (`Flextable`)

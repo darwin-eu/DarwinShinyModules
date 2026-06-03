@@ -75,6 +75,14 @@ CohortSurvival <- R6::R6Class(
     result = function(result) {
       if (missing(result)) {
         return(private$.result)
+      } else {
+        checkmate::assertClass(result, "summarised_result")
+        checkmate::assertSubset(
+          x = omopgenerics::settings(result)$result_type,
+          choices = c("survival_estimates", "survival_events", "survival_summary", "survival_attrition"),
+          .var.name = "result_type"
+        )
+        private$.result <- result
       }
     },
 

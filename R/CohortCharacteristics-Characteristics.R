@@ -67,14 +67,12 @@ Characteristics <- R6::R6Class(
       if (missing(result)) {
         return(private$.result)
       } else {
-        collection <- checkmate::makeAssertCollection()
-        checkmate::assertClass(x = result, classes = c("summarised_result", "omop_result", "tbl_df", "tbl", "data.frame"), add = collection)
-        try({
-          settings <- omopgenerics::settings(result)
-          checkmate::assertTRUE(settings$result_type == "summarise_characteristics", add = collection)
-          checkmate::assertTRUE(settings$package_name == "CohortCharacteristics", add = collection)
-        }, silent = TRUE)
-        checkmate::reportAssertions(collection)
+        checkmate::assertClass(result, "summarised_result")
+        checkmate::assertSubset(
+          x = omopgenerics::settings(result)$result_type,
+          choices = c("summarise_characteristics"),
+          .var.name = "result_type"
+        )
         private$.result <- result
       }
     }
