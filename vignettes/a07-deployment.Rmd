@@ -1,0 +1,92 @@
+---
+title: "(Re)-deploying Shiny Apps"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{(Re)-deploying Shiny Apps}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+DarwinShinyModules provides functions to (re-)deploy shiny apps from a `appStructure` object. An `appStructure` object is **named** a `list()` containing `ShinyModule` objects or nested lists containing `ShinyModule` objects. The structure of the `appStructure` list resembles how to navigate your shiny app, i.e:
+```{r}
+library(DarwinShinyModules)
+
+# Make some modules to make the `appStructure` with
+base <- Text$new("**base**")
+nested_a <- Text$new("**nested A**")
+nested_b <- Text$new("**nested B**")
+sub_a <- Text$new("**sub A**")
+sub_b <- Text$new("**sub B**")
+comb_a <- Text$new("**comb A**")
+comb_b <- Text$new("**comb B**")
+comb_c <- Text$new("**comb C**")
+
+# Creating the `appstructure`
+appStructure <- list(
+ base = base,
+ nested = list(nested_a, nested_b),
+ nested_sub = list(
+   sub_a = sub_a,
+   sub_b = sub_b
+ ),
+ nested_combined = list(
+   comb_a_b = list(comb_a, comb_b),
+   comb_c = comb_c
+ )
+)
+```
+
+The main `list()` is always named, as for your navigation panel or bar, each items should have a name. Nested lists (see `appStructure$nested`) do not have to be named. The modules will be put underneath each other on the same page. If you do name the nested list (see `appStructure$nested_sub`), sub-items will be created for the main menu item.
+
+## Deploying from an `appStructure`
+We can deploy a shiny app directly from an `appStructure` object. We can do this by calling `deployAppStructure()`
+```{r, eval=FALSE}
+deployAppStructure(
+  appStructure = appStructure,
+  appDir = tempdir())
+```
+
+`deployAppStructure()` is basically a wrapper around `rsconnect::deployApp()`. `deployAppStructure()` has the dot-dot-dot parameter (`...`) that will pass any other parameters you specify to `rsconnect::deployApp()`. This allows you to pass things like an `appId` or account arguments.
+
+## Re-deployment
+Lets say we would like to restructure our shiny app based on some feedback we have gotten. We can download a tar.gz file from posit. This file is structured as followed:
+
+```
+bundle-xxxx.tar.gz
+  |- .
+    |- <...>
+    |- appStructure.qs
+```
+
+There is no need to unpack the tar.gz-file, `loadFromDisk()` will extract the `appStructure` object for us:
+```{r}
+appStructure <- loadAppStructure(
+  filePath = "./bundle-xxxx.tar.gz",
+  appStructureFileName = "appStructure.qs"
+)
+```
+
+Now we have an identical copy of the `appStructure` that we made before. We can alter the `appStructure` as we like:
+```{r}
+# Remove `base`
+appStructure$base <- NULL
+
+# Re-order alphabetically:
+appStructure <- appStructure[sort(names(appStructure))]
+```
+
+With our updates made, we can re-deploy our app, by using the `deployAppStructure()` function again, note that we pass the `appId` argument, which is found in the `info` tab on posit:
+```{r, eval=FALSE}
+deployAppStructure(
+  appStructure = appStructure,
+  appDir = tempdir(),
+  appId = 123)
+```
