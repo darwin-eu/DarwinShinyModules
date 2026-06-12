@@ -6,6 +6,20 @@ getCohortNames <- function(result) {
   UseMethod("getCohortNames")
 }
 
+#' checkCDMNames
+#'
+#' Checks the CDM names in a result. You can checkout the valid options running: `getCDMAcronyms()`.
+#'
+#' @param result (`result`) Result to check CDM names for.
+#' @param .softValidation (`logical(1)`) If the check fails, throws a warning, rather than an error.
+#'
+#' @returns When the check passes returns `invisible(TRUE)`, otherwise returns the error
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   checkCDMNames(result)
+#' }
 checkCDMNames <- function(result, .softValidation) {
   UseMethod("checkCDMNames")
 }
@@ -71,12 +85,12 @@ checkCDMNames.summarised_result <- function(result, .softValidation = FALSE) {
     dplyr::distinct() |>
     dplyr::pull()
 
-  ref <- readRDS(system.file("datapartners.RDS", package = "DarwinShinyModules")) |>
-    dplyr::filter(.data$field == "db_acrynym") |>
-    dplyr::select("Answer") |>
-    dplyr::pull()
-
-
+  dbNames <- getCDMAcronyms()
+  ref <- c(
+    dbNames$acronym,
+    dbNames$acronym_multi_line |>
+      stringr::str_replace_all("\\n", "\\\\\\\\n")
+  )
   good <- tar[tar %in% ref]
   bad <- tar[!tar %in% ref]
 
@@ -112,12 +126,12 @@ checkCDMNames.TreatmentPatternsResults <- function(result, .softValidation = FAL
   tar <- result$cdm_source_info$cdm_source_abbreviation |>
     unique()
 
-  ref <- readRDS(system.file("datapartners.RDS", package = "DarwinShinyModules")) |>
-    dplyr::filter(.data$field == "db_acrynym") |>
-    dplyr::select("Answer") |>
-    dplyr::pull()
-
-
+  dbNames <- getCDMAcronyms()
+  ref <- c(
+    dbNames$acronym,
+    dbNames$acronym_multi_line |>
+      stringr::str_replace_all("\\n", "\\\\\\\\n")
+  )
   good <- tar[tar %in% ref]
   bad <- tar[!tar %in% ref]
 
