@@ -27,7 +27,9 @@ deployAppStructure(
 ## Re-deployment
 Lets say we would like to restructure our shiny app based on some feedback we have gotten. We can download a tar.gz file from posit:
 
-settings (cogwheel) -> Source Versions -> Select Source version -> Download
+settings -> Current Bundle -> View all bundles -> Download
+
+You can select the bundle to download, but usually you want the one labeled as "active".
 
 ![](./img/a08-1.png){#id .class width=100%}
 
@@ -60,9 +62,13 @@ appStructure <- appStructure[sort(names(appStructure))]
 ```
 
 With our updates made, we can re-deploy our app, by using the `deployAppStructure()` function again, note that we pass the `appId` argument, which is found in the `info` tab on posit:
+
+![](./img/a08-3.png){#id .class width=100%}
+
 ```{r, eval=FALSE}
 deployAppStructure(
   appStructure = appStructure,
   appDir = tempdir(),
-  appId = 123)
+  appId = 123
+)
 ```
