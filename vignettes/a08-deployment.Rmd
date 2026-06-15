@@ -35,7 +35,7 @@ bundle-xxxx.tar.gz
 ```
 
 There is no need to unpack the tar.gz-file, `loadFromDisk()` will extract the `appStructure` object for us:
-```{r}
+```{r, eval=FALSE}
 appStructure <- loadAppStructure(
   filePath = "./bundle-xxxx.tar.gz",
   appStructureFileName = "appStructure.qs"
@@ -43,7 +43,7 @@ appStructure <- loadAppStructure(
 ```
 
 Now we have an identical copy of the `appStructure` that we made before. We can alter the `appStructure` as we like:
-```{r}
+```{r, eval=FALSE}
 # Remove `base`
 appStructure$base <- NULL
 
