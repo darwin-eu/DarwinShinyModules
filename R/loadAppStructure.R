@@ -21,6 +21,6 @@ loadAppStructure <- function(filePath, appStructureFileName = "appStructure.qs",
     subDir
   }
 
-  untar(filePath, files = file.path(subDir, appStructureFileName), exdir = tmpDir, )
+  utils::untar(filePath, files = file.path(subDir, appStructureFileName), exdir = tmpDir, )
   qs2::qs_read(file.path(tmpDir, appStructureFileName))
 }

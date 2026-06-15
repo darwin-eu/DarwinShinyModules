@@ -10,6 +10,8 @@
 #' @param filePath (`character`: `"./appStructure.qs"`) Path to the qs-file,
 #' containing the `appStructure`, or where to write the `appStructure` to.
 #'
+#' @param ... Extra arguments for `qs2::qs_save()`
+#'
 #' @return `NULL` invisible
 saveAppStructure <- function(appStructure, filePath = "./appStructure.qs", ...) {
   qs2::qs_save(appStructure, file = filePath, ...)

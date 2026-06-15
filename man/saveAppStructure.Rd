@@ -13,6 +13,8 @@ objects. Representing the navigation (side) bar of the shiny app.}
 
 \item{filePath}{(\code{character}: \code{"./appStructure.qs"}) Path to the qs-file,
 containing the \code{appStructure}, or where to write the \code{appStructure} to.}
+
+\item{...}{Extra arguments for \code{qs2::qs_save()}}
 }
 \value{
 \code{NULL} invisible
