@@ -52,6 +52,13 @@ reference:
   - launchBslibApp
   - launchShinydashboardApp
 
+- subtitle: Deployment functions
+- contents:
+  - deployAppStructure
+  - launchFromDisk
+  - loadAppStructure
+  - saveAppStructure
+
 - title: DARWIN EU
 - subtitle: Study Modules
 - contents:
