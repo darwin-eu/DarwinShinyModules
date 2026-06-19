@@ -80,7 +80,8 @@ PlotWidget <- R6::R6Class(
       super$.server(input, output, session)
       output$plot <- shiny::renderUI({
         do.call(private$.fun, shiny::reactiveValuesToList(self$reactiveArgs))
-      })
+      }) |>
+        shiny::bindCache(private$.fun, shiny::reactiveValuesToList(self$reactiveArgs))
       private$dlHtml(output)
       private$dlPng(output)
     },

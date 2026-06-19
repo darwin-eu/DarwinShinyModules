@@ -240,7 +240,8 @@ Table <- R6::R6Class(
         expr = self$reactiveValues$data,
         filter = private$.filter,
         options = private$.options
-      )
+      ) |>
+        shiny::bindCache(self$reactiveValues$data)
     },
     downloader = function(output) {
       output$dlButton <- shiny::downloadHandler(

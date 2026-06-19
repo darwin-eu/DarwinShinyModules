@@ -95,7 +95,8 @@ ReactableTable <- R6::R6Class(
     .server = function(input, output, session) {
       output$table <- reactable::renderReactable({
         do.call(private$.fun, private$.args)
-      })
+      }) |>
+        shiny::bindCache(private$.fun, private$.args)
       private$downloader(output)
     },
     downloader = function(output) {
