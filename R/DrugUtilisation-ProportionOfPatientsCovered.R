@@ -46,6 +46,9 @@ ProportionOfPatientsCovered <- R6::R6Class(
       private$.tableCols <- availableTableColumns(result)
       private$.plotCols <- availablePlotColumns(result)
       private$.strataCols <- DrugUtilisation::strataColumns(result)
+      private$.strataGroups <- result |>
+        dplyr::distinct(.data$strata_name) |>
+        dplyr::pull()
       private$.serialResult <- qs2::qs_serialize(result)
 
       private$.table <- Flextable$new(
@@ -73,6 +76,7 @@ ProportionOfPatientsCovered <- R6::R6Class(
     .tableCols = NULL,
     .plotCols = NULL,
     .strataCols = NULL,
+    .strataGroups = NULL,
 
     .pickerOptions = list(
       `actions-box` = TRUE,
@@ -116,6 +120,17 @@ ProportionOfPatientsCovered <- R6::R6Class(
             label = "Cohort Name",
             choices = private$.cohortNames,
             selected = private$.cohortNames[1],
+            multiple = TRUE,
+            options = private$.pickerOptions
+          )
+        ),
+        shiny::div(
+          style = "display: inline-block;",
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "strata"),
+            label = "Strata",
+            choices = private$.strataGroups,
+            selected = "overall",
             multiple = TRUE,
             options = private$.pickerOptions
           )
@@ -202,13 +217,21 @@ ProportionOfPatientsCovered <- R6::R6Class(
         mirai::mirai({
           result |>
             qs2::qs_deserialize() |>
-            dplyr::filter(.data$cdm_name %in% cdmName) |>
+            dplyr::filter(
+              .data$cdm_name %in% cdmName,
+              .data$strata_name %in% strata
+            ) |>
             omopgenerics::filterGroup(
               .data$cohort_name %in% cohortName
             )
-        }, result = private$.serialResult, cdmName = input$cdmName, cohortName = input$cohortName)
+        },
+        result = private$.serialResult,
+        cdmName = input$cdmName,
+        cohortName = input$cohortName,
+        strata = input$strata
+      )
       }) |>
-        shiny::bindCache(input$cdmName, input$cohortName)
+        shiny::bindCache(input$cdmName, input$cohortName, input$strata)
 
       shiny::observeEvent(input$submitTable, {
         private$.table$args["header"] <- list(input$header)
@@ -248,13 +271,3 @@ ProportionOfPatientsCovered <- R6::R6Class(
     }
   )
 )
-
-source("./R/utils.R")
-source("./R/utils-SummarizedResult.R")
-source("./R/Table-Flextable.R")
-
-mirai::daemons(2)
-
-mod <- ProportionOfPatientsCovered$new(res3)
-
-preview(mod)
