@@ -235,6 +235,7 @@ Table <- R6::R6Class(
         private$.bindings$state <- input$table_state
       })
     },
+
     renderTable = function(output) {
       output$table <- DT::renderDT(
         expr = self$reactiveValues$data,
@@ -242,6 +243,7 @@ Table <- R6::R6Class(
         options = private$.options
       )
     },
+
     downloader = function(output) {
       output$dlButton <- shiny::downloadHandler(
         filename = private$dlFilename,
