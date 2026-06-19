@@ -88,6 +88,7 @@ Collate:
     'DrugUtilisation-DrugRestart.R'
     'DrugUtilisation-DrugUtilisation.R'
     'DrugUtilisation-Indication.R'
+    'DrugUtilisation-ProportionOfPatientsCovered.R'
     'DrugUtilisation-Treatment.R'
     'IncidencePrevalence-IncidencePrevalence.R'
     'InputPanel.R'

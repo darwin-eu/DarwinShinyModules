@@ -14,11 +14,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#' @title ProportionOfPatientsCovered Module Class
+#'
+#' @include ShinyModule.R
+#'
+#' @description
+#' ProportionOfPatientsCovered module that shows tables and plots
+#'
+#' @export
+#'
+#' @examples{
+#' if (interacitve()) {
+#'   library(DarwinShinyModules)
+#'   library(DrugUtilisation)
+#'
+#'   cdm <- DrugUtilisation::mockDrugUtilisation(numberIndividuals = 100)
+#'
+#'   res <- cdm$cohort1 |>
+#'     DrugUtilisation::summariseProportionOfPatientsCovered(followUpDays = 365)
+#'
+#'   mod <- ProportionOfPatientsCovered$new(res)
+#'   preview(mod)
+#' }
+#' }
 ProportionOfPatientsCovered <- R6::R6Class(
   classname = "ProportionOfPatientsCovered",
   inherit = ShinyModule,
 
   active = list(
+    #' @field result (`summarised_result`) Object created by `DrugUtilisation::summariseProportionOfPatientsCovered()`.
     result = function(result) {
       if (missing(result)) {
         return(qs2::qs_deserialize(private$.serialResult))
@@ -28,16 +52,25 @@ ProportionOfPatientsCovered <- R6::R6Class(
       }
     },
 
+    #' @field table (`Flextable`) ShinyModule
     table = function(table) {
       return(private$.table)
     },
 
+    #' @field plot (`PlotStatic`) ShinyModule
     plot = function(plot) {
       return(private$.plot)
     }
   ),
 
   public = list(
+    #' @description
+    #' Initializer method.
+    #'
+    #' @param result (`summarised_result`) Object created by `DrugUtilisation::summariseProportionOfPatientsCovered()`.
+    #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
+    #'
+    #' @returns `self`
     initialize = function(result, ...) {
       private$.checkResult(result)
 
@@ -63,6 +96,7 @@ ProportionOfPatientsCovered <- R6::R6Class(
         parentNamespace = self$namespace,
         height = "80vh"
       )
+      return(self)
     }
   ),
 
@@ -271,3 +305,42 @@ ProportionOfPatientsCovered <- R6::R6Class(
     }
   )
 )
+
+# Functions ----
+#' ProportionOfPatientsCovered
+#'
+#' @param result (`summarised_result`) Result from the `summariseProportionOfPatientsCovered` function from the DrugUtilisation pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `ShinyModule`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   moduleDrugRestart(result)
+#' }
+moduleProportionOfPatientsCovered <- function(result, .softValidation = FALSE) {
+  assertType(result, "summarise_proportion_of_patients_covered")
+  checkCDMNames(result, .softValidation)
+  ProportionOfPatientsCovered$new(result)
+}
+
+#' shinyProportionOfPatientsCovered
+#'
+#' @param result (`summarised_result`) Result from the `summariseDrugRestart` function from the DrugUtilisation pacakge.
+#' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
+#'
+#' @returns `ShinyModule`
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   shinyDrugRestart(result)
+#' }
+shinyProportionOfPatientsCovered <- function(result, .softValidation = FALSE) {
+  launchBslibApp(
+    list(
+      DrugRestart = moduleProportionOfPatientsCovered$new(result, .softValidation)
+    )
+  )
+}
