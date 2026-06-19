@@ -235,14 +235,15 @@ Table <- R6::R6Class(
         private$.bindings$state <- input$table_state
       })
     },
+
     renderTable = function(output) {
       output$table <- DT::renderDT(
         expr = self$reactiveValues$data,
         filter = private$.filter,
         options = private$.options
-      ) |>
-        shiny::bindCache(self$reactiveValues$data)
+      )
     },
+
     downloader = function(output) {
       output$dlButton <- shiny::downloadHandler(
         filename = private$dlFilename,
