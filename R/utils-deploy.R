@@ -12,6 +12,8 @@
 #'
 #' @param ... Extra arguments for `qs2::qs_save()`
 #'
+#' @export
+#'
 #' @return `NULL` invisible
 saveAppStructure <- function(appStructure, filePath = "./appStructure.qs", ...) {
   qs2::qs_save(appStructure, file = filePath, ...)
@@ -29,6 +31,8 @@ saveAppStructure <- function(appStructure, filePath = "./appStructure.qs", ...) 
 #' @param subDir (`character(1)`: `NULL`) Optional deviation in the sub
 #' directory, if the tar.gz is not structured identically to how posit connect
 #' structures these files.
+#'
+#' @export
 #'
 #' @returns `list` appStructure
 loadAppStructure <- function(filePath, appStructureFileName = "appStructure.qs", subDir = NULL) {
@@ -58,12 +62,15 @@ loadAppStructure <- function(filePath, appStructureFileName = "appStructure.qs",
 #'
 #' @param ... Arguments for `rsconnect::deployApp`
 #'
+#' @export
+#'
 #' @return `NULL`
-deployAppStructure <- function(appStructure, appDir = tempdir(), ...) {
+deployAppStructure <- function(appStructure, appDir = tempfile(), ...) {
+  dir.create(appDir, recursive = TRUE)
   saveAppStructure(appStructure, filePath = file.path(appDir, "appStructure.qs"))
 
   # When actually developed, this is sourced with `System.file("./app.R", package = "DarwinShinyModules")`
-  appR <- "./app.R"
+  appR <- system.file(package = "DarwinShinyModules", "deployFiles", "app.R")
 
   file.copy(appR, to = file.path(appDir, "app.R"))
 
@@ -86,6 +93,8 @@ deployAppStructure <- function(appStructure, appDir = tempdir(), ...) {
 #'
 #' @param daemons (`numeric`: 2) Number of sub R proccess to kick off to load
 #' in results asynchronously.
+#'
+#' @export
 #'
 #' @return `shiny.appobj` when the app is found, otherwise returns `NULL` invisible
 launchFromDisk <- function(

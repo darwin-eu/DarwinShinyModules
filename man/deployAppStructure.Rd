@@ -4,7 +4,7 @@
 \alias{deployAppStructure}
 \title{deployAppStructure}
 \usage{
-deployAppStructure(appStructure, appDir = tempdir(), ...)
+deployAppStructure(appStructure, appDir = tempfile(), ...)
 }
 \arguments{
 \item{appStructure}{(\code{list}: \code{NULL}) appStructure object, i.e. a named list
