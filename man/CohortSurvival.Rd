@@ -51,84 +51,83 @@ The module consists of the following:
 }
 }
 \section{Super class}{
-\code{\link[DarwinShinyModules:ShinyModule]{ShinyModule}} -> \code{CohortSurvival}
+\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{CohortSurvival}
 }
 \section{Active bindings}{
-  \if{html}{\out{<div class="r6-active-bindings">}}
-  \describe{
-    \item{\code{result}}{(\code{SummarisedResult}) Summarised result object from \code{CohortSurvival}}
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{result}}{(\code{SummarisedResult}) Summarised result object from \code{CohortSurvival}}
 
-    \item{\code{table}}{(\code{Table}) Table module using \code{CohortSurvival::tableSurvival()}}
+\item{\code{table}}{(\code{Table}) Table module using \code{CohortSurvival::tableSurvival()}}
 
-    \item{\code{tableEvents}}{(\code{Table}) Table module using \code{CohortSurvival::tableSurvivalEvents()}}
+\item{\code{tableEvents}}{(\code{Table}) Table module using \code{CohortSurvival::tableSurvivalEvents()}}
 
-    \item{\code{plot}}{(\code{Plot}) Plot module. using \code{CohortSurvival::plotSurvival()}}
+\item{\code{plot}}{(\code{Plot}) Plot module. using \code{CohortSurvival::plotSurvival()}}
 
-    \item{\code{tableAttrition}}{(\code{Table}) Table module using \code{CohortSurvival::tableAttrition()}}
+\item{\code{tableAttrition}}{(\code{Table}) Table module using \code{CohortSurvival::tableAttrition()}}
 
-    \item{\code{cdmNames}}{(\code{character}) Available CDM names}
+\item{\code{cdmNames}}{(\code{character}) Available CDM names}
 
-    \item{\code{cohortNames}}{(\code{character}) Available cohort bames}
+\item{\code{cohortNames}}{(\code{character}) Available cohort bames}
 
-    \item{\code{strata}}{(\code{character}) Available strata names}
-  }
-  \if{html}{\out{</div>}}
+\item{\code{strata}}{(\code{character}) Available strata names}
+}
+\if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-  \itemize{
-    \item \href{#method-CohortSurvival-initialize}{\code{CohortSurvival$new()}}
-    \item \href{#method-CohortSurvival-clone}{\code{CohortSurvival$clone()}}
-  }
+\itemize{
+\item \href{#method-CohortSurvival-new}{\code{CohortSurvival$new()}}
+\item \href{#method-CohortSurvival-clone}{\code{CohortSurvival$clone()}}
 }
-\if{html}{\out{<details open><summary>Inherited methods</summary>
+}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
 <ul>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>ShinyModule$UI()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>ShinyModule$getReactiveValues()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>ShinyModule$server()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>ShinyModule$validate()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>DarwinShinyModules::ShinyModule$getReactiveValues()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
 </ul>
-</details>}}
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-CohortSurvival-initialize"></a>}}
-\if{latex}{\out{\hypertarget{method-CohortSurvival-initialize}{}}}
-\subsection{\code{CohortSurvival$new()}}{
-  Initializer function
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{CohortSurvival$new(result, ...)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{result}}{(\code{SummarisedResults}) Summarised result object from \code{CohortSurvival}}
-      \item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{invisible(self)}
-  }
+\if{html}{\out{<a id="method-CohortSurvival-new"></a>}}
+\if{latex}{\out{\hypertarget{method-CohortSurvival-new}{}}}
+\subsection{Method \code{new()}}{
+Initializer function
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{CohortSurvival$new(result, ...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{result}}{(\code{SummarisedResults}) Summarised result object from \code{CohortSurvival}}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{invisible(self)}
+}
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CohortSurvival-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-CohortSurvival-clone}{}}}
-\subsection{\code{CohortSurvival$clone()}}{
-  The objects of this class are cloneable with this method.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{CohortSurvival$clone(deep = FALSE)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{deep}}{Whether to make a deep clone.}
-    }
-    \if{html}{\out{</div>}}
-  }
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{CohortSurvival$clone(deep = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
 }

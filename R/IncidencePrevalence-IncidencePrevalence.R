@@ -70,6 +70,11 @@ IncidencePrevalence <- R6::R6Class(
       } else {
         # Checks on result
         checkmate::assertClass(result, "summarised_result")
+        checkmate::assertSubset(
+          x = omopgenerics::settings(result)$result_type,
+          choices = c("incidence", "incidence_attrition", "prevalence", "prevalence_attrition"),
+          .var.name = "result_type",
+        )
         private$.result <- result
       }
     },

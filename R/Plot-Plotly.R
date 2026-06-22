@@ -83,7 +83,8 @@ PlotPlotly <- R6::R6Class(
         plotly::event_register(p = private$.plot, event = "plotly_selected")
         private$updateBindings()
         return(plot)
-      })
+      }) |>
+        shiny::bindCache(private$.fun, self$args)
     },
 
     updateBindings = function() {

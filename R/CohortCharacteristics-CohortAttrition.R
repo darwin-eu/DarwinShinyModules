@@ -52,8 +52,18 @@ CohortAttrition <- R6::R6Class(
   # Active ----
   active = list(
     #' @field result (`summarised_result`)
-    result = function() {
-      return(private$.result)
+    result = function(result) {
+      if (missing(result)) {
+        return(private$.result)
+      } else {
+        checkmate::assertClass(result, "summarised_result")
+        checkmate::assertSubset(
+          x = omopgenerics::settings(result)$result_type,
+          choices = c("summarise_cohort_attrition"),
+          .var.name = "result_type"
+        )
+        private$.result <- result
+      }
     },
 
     #' @field cdmNames (`character(n)`)

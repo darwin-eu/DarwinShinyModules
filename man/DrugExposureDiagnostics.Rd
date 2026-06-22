@@ -29,64 +29,64 @@ warn.conflicts = FALSE)) {
 }
 }
 \section{Super class}{
-\code{\link[DarwinShinyModules:ShinyModule]{ShinyModule}} -> \code{DrugExposureDiagnostics}
+\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{DrugExposureDiagnostics}
 }
 \section{Methods}{
 \subsection{Public methods}{
-  \itemize{
-    \item \href{#method-DrugExposureDiagnostics-initialize}{\code{DrugExposureDiagnostics$new()}}
-    \item \href{#method-DrugExposureDiagnostics-clone}{\code{DrugExposureDiagnostics$clone()}}
-  }
+\itemize{
+\item \href{#method-DrugExposureDiagnostics-new}{\code{DrugExposureDiagnostics$new()}}
+\item \href{#method-DrugExposureDiagnostics-clone}{\code{DrugExposureDiagnostics$clone()}}
 }
-\if{html}{\out{<details open><summary>Inherited methods</summary>
+}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
 <ul>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>ShinyModule$UI()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>ShinyModule$getReactiveValues()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>ShinyModule$server()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>ShinyModule$validate()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>DarwinShinyModules::ShinyModule$getReactiveValues()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
 </ul>
-</details>}}
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DrugExposureDiagnostics-initialize"></a>}}
-\if{latex}{\out{\hypertarget{method-DrugExposureDiagnostics-initialize}{}}}
-\subsection{\code{DrugExposureDiagnostics$new()}}{
-  Initializer method
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{DrugExposureDiagnostics$new(resultList, database_id = NULL, ...)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{resultList}}{(\code{list}) List containing the output of the checks}
-      \item{\code{database_id}}{(\code{character}) Database identifier (optional)}
-      \item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    (\code{invisible(self)})
-  }
+\if{html}{\out{<a id="method-DrugExposureDiagnostics-new"></a>}}
+\if{latex}{\out{\hypertarget{method-DrugExposureDiagnostics-new}{}}}
+\subsection{Method \code{new()}}{
+Initializer method
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DrugExposureDiagnostics$new(resultList, database_id = NULL, ...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{resultList}}{(\code{list}) List containing the output of the checks}
+
+\item{\code{database_id}}{(\code{character}) Database identifier (optional)}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+(\code{invisible(self)})
+}
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DrugExposureDiagnostics-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-DrugExposureDiagnostics-clone}{}}}
-\subsection{\code{DrugExposureDiagnostics$clone()}}{
-  The objects of this class are cloneable with this method.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{DrugExposureDiagnostics$clone(deep = FALSE)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{deep}}{Whether to make a deep clone.}
-    }
-    \if{html}{\out{</div>}}
-  }
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DrugExposureDiagnostics$clone(deep = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
 }

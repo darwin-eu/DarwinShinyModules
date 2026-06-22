@@ -106,7 +106,8 @@ DTTable <- R6::R6Class(
     .server = function(input, output, session) {
       output$table <- DT::renderDT({
         do.call(private$.fun, private$.args)
-      })
+      }) |>
+        shiny::bindCache(private$.fun, private$.args)
       private$downloader(output)
     },
 

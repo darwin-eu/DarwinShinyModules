@@ -27,7 +27,9 @@ Imports:
     promises,
     shinyWidgets,
     stringr,
-    purrr
+    purrr,
+    mirai,
+    qs2
 Suggests:
     bslib,
     shinydashboard,
@@ -57,7 +59,8 @@ Suggests:
     usethis,
     tidyr,
     stats,
-    CirceR
+    CirceR,
+    rsconnect
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr
@@ -109,7 +112,9 @@ Collate:
     'makeModule.R'
     'preview.R'
     'utils-SummarizedResult.R'
+    'utils-deploy.R'
     'utils.R'
     'zzz.R'
 URL: https://darwin-eu-dev.github.io/DarwinShinyModules/
 Config/roxygen2/version: 8.0.0
+RoxygenNote: 7.3.3

@@ -106,7 +106,8 @@ Flextable <- R6::R6Class(
     .server = function(input, output, session) {
       output$FlexTable <- shiny::renderUI({
         flextable::htmltools_value(do.call(private$.fun, private$.args))
-      })
+      }) |>
+        shiny::bindCache(private$.fun, private$.args)
       private$downloader(output)
     },
 
