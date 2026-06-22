@@ -173,7 +173,7 @@ ProportionOfPatientsCovered <- R6::R6Class(
     },
 
     .uiTable = function() {
-      shiny::tagList(
+      shiny::fluidRow(
         shiny::column(
           width = 2,
           shinyWidgets::pickerInput(
@@ -191,24 +191,17 @@ ProportionOfPatientsCovered <- R6::R6Class(
             selected = "cdm_name",
             multiple = TRUE,
             options = private$.pickerOptions
-          ),
-          shiny::actionButton(
-            inputId = shiny::NS(self$namespace, "submitTable"),
-            label = "",
-            icon = shiny::icon("refresh")
           )
         ),
         shiny::column(
           width = 10,
-          shinyWidgets::addSpinner(
-            private$.table$UI()
-          )
+          private$.table$UI()
         )
       )
     },
 
     .uiPlot = function() {
-      shiny::tagList(
+      shiny::fluidRow(
         shiny::column(
           width = 2,
           shinyWidgets::pickerInput(
@@ -230,18 +223,11 @@ ProportionOfPatientsCovered <- R6::R6Class(
             label = "ribbon",
             choices = c("On", "Off"),
             selected = c("Yes")
-          ),
-          shiny::actionButton(
-            inputId = shiny::NS(self$namespace, "submitPlot"),
-            label = "",
-            icon = shiny::icon("refresh")
           )
         ),
         shiny::column(
           width = 10,
-          shinyWidgets::addSpinner(
-            private$.plot$UI()
-          )
+          private$.plot$UI()
         )
       )
     },
@@ -267,7 +253,7 @@ ProportionOfPatientsCovered <- R6::R6Class(
       }) |>
         shiny::bindCache(input$cdmName, input$cohortName, input$strata)
 
-      shiny::observeEvent(input$submitTable, {
+      shiny::observe({
         private$.table$args["header"] <- list(input$header)
         private$.table$args["groupColumn"] <- list(input$groupColumn)
 
@@ -280,7 +266,7 @@ ProportionOfPatientsCovered <- R6::R6Class(
         )
       })
 
-      shiny::observeEvent(input$submitPlot, {
+      shiny::observe({
         private$.plot$args["facet"] <- list(input$facet)
         private$.plot$args["colour"] <- list(input$colour)
         private$.plot$args["ribbon"] <- list(
@@ -340,7 +326,7 @@ moduleProportionOfPatientsCovered <- function(result, .softValidation = FALSE) {
 shinyProportionOfPatientsCovered <- function(result, .softValidation = FALSE) {
   launchBslibApp(
     list(
-      DrugRestart = moduleProportionOfPatientsCovered$new(result, .softValidation)
+      ProportionOfPatientsCovered = moduleProportionOfPatientsCovered(result, .softValidation)
     )
   )
 }
