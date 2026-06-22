@@ -24,7 +24,7 @@
 #' @export
 #'
 #' @examples{
-#' if (interacitve()) {
+#' if (interactive()) {
 #'   library(DarwinShinyModules)
 #'   library(DrugUtilisation)
 #'

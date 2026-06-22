@@ -8,7 +8,7 @@ ProportionOfPatientsCovered module that shows tables and plots
 }
 \examples{
 {
-if (interacitve()) {
+if (interactive()) {
   library(DarwinShinyModules)
   library(DrugUtilisation)
 
