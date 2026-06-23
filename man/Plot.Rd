@@ -15,95 +15,94 @@ To add a new plot type it is required to inherit from the \code{Plot} class, and
 to override the private \code{.UI()} and \code{.server()} methods.
 }
 \section{Super class}{
-\code{\link[DarwinShinyModules:ShinyModule]{ShinyModule}} -> \code{Plot}
+\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{Plot}
 }
 \section{Active bindings}{
-  \if{html}{\out{<div class="r6-active-bindings">}}
-  \describe{
-    \item{\code{title}}{(\code{character(1)}) Title to use for the plot.}
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{title}}{(\code{character(1)}) Title to use for the plot.}
 
-    \item{\code{fun}}{Plotting function.}
+\item{\code{fun}}{Plotting function.}
 
-    \item{\code{reactiveArgs}}{(\code{reactive}) Arguments used for plot.}
+\item{\code{reactiveArgs}}{(\code{reactive}) Arguments used for plot.}
 
-    \item{\code{args}}{(\code{list}) Arguments used for plot.}
+\item{\code{args}}{(\code{list}) Arguments used for plot.}
 
-    \item{\code{plot}}{Plot object.}
-  }
-  \if{html}{\out{</div>}}
+\item{\code{plot}}{Plot object.}
+}
+\if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-  \itemize{
-    \item \href{#method-Plot-initialize}{\code{Plot$new()}}
-    \item \href{#method-Plot-validate}{\code{Plot$validate()}}
-    \item \href{#method-Plot-clone}{\code{Plot$clone()}}
-  }
+\itemize{
+\item \href{#method-Plot-new}{\code{Plot$new()}}
+\item \href{#method-Plot-validate}{\code{Plot$validate()}}
+\item \href{#method-Plot-clone}{\code{Plot$clone()}}
 }
-\if{html}{\out{<details open><summary>Inherited methods</summary>
+}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
 <ul>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>ShinyModule$UI()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>ShinyModule$getReactiveValues()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>ShinyModule$server()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>DarwinShinyModules::ShinyModule$getReactiveValues()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
 </ul>
-</details>}}
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Plot-initialize"></a>}}
-\if{latex}{\out{\hypertarget{method-Plot-initialize}{}}}
-\subsection{\code{Plot$new()}}{
-  initialize
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{Plot$new(fun, args, title = NULL, ...)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{fun}}{(\verb{function()}) Function to plot with.}
-      \item{\code{args}}{(\code{list}) Named list of arguments to pass to \code{fun}.}
-      \item{\code{title}}{(\code{character(1)}: \code{NULL}) Title of the plot. When set to \code{NULL}, no title is shown.}
-      \item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{self}
-  }
+\if{html}{\out{<a id="method-Plot-new"></a>}}
+\if{latex}{\out{\hypertarget{method-Plot-new}{}}}
+\subsection{Method \code{new()}}{
+initialize
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Plot$new(fun, args, title = NULL, ...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{fun}}{(\verb{function()}) Function to plot with.}
+
+\item{\code{args}}{(\code{list}) Named list of arguments to pass to \code{fun}.}
+
+\item{\code{title}}{(\code{character(1)}: \code{NULL}) Title of the plot. When set to \code{NULL}, no title is shown.}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{self}
+}
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Plot-validate"></a>}}
 \if{latex}{\out{\hypertarget{method-Plot-validate}{}}}
-\subsection{\code{Plot$validate()}}{
-  Validator method
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{Plot$validate()}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    (\code{self})
-  }
+\subsection{Method \code{validate()}}{
+Validator method
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Plot$validate()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+(\code{self})
+}
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Plot-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-Plot-clone}{}}}
-\subsection{\code{Plot$clone()}}{
-  The objects of this class are cloneable with this method.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{Plot$clone(deep = FALSE)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{deep}}{Whether to make a deep clone.}
-    }
-    \if{html}{\out{</div>}}
-  }
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Plot$clone(deep = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
 }

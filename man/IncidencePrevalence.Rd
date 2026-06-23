@@ -3,6 +3,9 @@
 \name{IncidencePrevalence}
 \alias{IncidencePrevalence}
 \title{IncidencePrevalence Module Class}
+\value{
+\code{self}
+}
 \description{
 IncidencePrevalence module that shows incidence results from the IncidencePrevalence package.
 }
@@ -43,74 +46,72 @@ IncidencePrevalence module that shows incidence results from the IncidencePreval
 }
 }
 \section{Super class}{
-\code{\link[DarwinShinyModules:ShinyModule]{ShinyModule}} -> \code{IncidencePrevalence}
+\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{IncidencePrevalence}
 }
 \section{Active bindings}{
-  \if{html}{\out{<div class="r6-active-bindings">}}
-  \describe{
-    \item{\code{result}}{(\code{summarisedResult}) SummarisedResult object from IncidencePrevalence}
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{result}}{(\code{summarisedResult}) SummarisedResult object from IncidencePrevalence}
 
-    \item{\code{pickers}}{(\code{list}) List of pickers}
-  }
-  \if{html}{\out{</div>}}
+\item{\code{pickers}}{(\code{list}) List of pickers}
+}
+\if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-  \itemize{
-    \item \href{#method-IncidencePrevalence-initialize}{\code{IncidencePrevalence$new()}}
-    \item \href{#method-IncidencePrevalence-clone}{\code{IncidencePrevalence$clone()}}
-  }
+\itemize{
+\item \href{#method-IncidencePrevalence-new}{\code{IncidencePrevalence$new()}}
+\item \href{#method-IncidencePrevalence-clone}{\code{IncidencePrevalence$clone()}}
 }
-\if{html}{\out{<details open><summary>Inherited methods</summary>
+}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
 <ul>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>ShinyModule$UI()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>ShinyModule$getReactiveValues()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>ShinyModule$server()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>ShinyModule$validate()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>DarwinShinyModules::ShinyModule$getReactiveValues()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
 </ul>
-</details>}}
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-IncidencePrevalence-initialize"></a>}}
-\if{latex}{\out{\hypertarget{method-IncidencePrevalence-initialize}{}}}
-\subsection{\code{IncidencePrevalence$new()}}{
-  Initializer method
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{IncidencePrevalence$new(result, defaults = list(), ...)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{result}}{(\code{summarised_result}) Result object from the \code{IncidencePrevalence} package.}
-      \item{\code{defaults}}{list of default values for the pickers}
-      \item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
-      \item{\code{type}}{(\code{character(1)}) Either \code{"incidence"} or \code{"prevalence"}}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{self}
-  }
+\if{html}{\out{<a id="method-IncidencePrevalence-new"></a>}}
+\if{latex}{\out{\hypertarget{method-IncidencePrevalence-new}{}}}
+\subsection{Method \code{new()}}{
+Initializer method
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{IncidencePrevalence$new(result, defaults = list(), ...)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{result}}{(\code{summarised_result}) Result object from the \code{IncidencePrevalence} package.}
+
+\item{\code{defaults}}{list of default values for the pickers}
+
+\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
+
+\item{\code{type}}{(\code{character(1)}) Either \code{"incidence"} or \code{"prevalence"}}
+}
+\if{html}{\out{</div>}}
+}
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-IncidencePrevalence-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-IncidencePrevalence-clone}{}}}
-\subsection{\code{IncidencePrevalence$clone()}}{
-  The objects of this class are cloneable with this method.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{IncidencePrevalence$clone(deep = FALSE)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{deep}}{Whether to make a deep clone.}
-    }
-    \if{html}{\out{</div>}}
-  }
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{IncidencePrevalence$clone(deep = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
 }

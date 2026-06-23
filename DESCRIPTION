@@ -31,6 +31,7 @@ Imports:
     mirai,
     qs2,
     visOmopResults
+    qs2
 Suggests:
     bslib,
     shinydashboard,
@@ -117,3 +118,4 @@ Collate:
     'zzz.R'
 URL: https://darwin-eu-dev.github.io/DarwinShinyModules/
 Config/roxygen2/version: 8.0.0
+RoxygenNote: 7.3.3

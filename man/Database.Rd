@@ -20,94 +20,89 @@ methods, while \code{DatabaseDBI} extends it with the \code{attachTables()} and
 \code{detatchTables()} methods, and the public \code{tables} field.
 }
 \section{Super class}{
-\code{\link[DarwinShinyModules:ShinyModule]{ShinyModule}} -> \code{Database}
+\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{Database}
 }
 \section{Active bindings}{
-  \if{html}{\out{<div class="r6-active-bindings">}}
-  \describe{
-    \item{\code{connected}}{(\code{logical(1)}) Logical if connected to the database.}
-  }
-  \if{html}{\out{</div>}}
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{connected}}{(\code{logical(1)}) Logical if connected to the database.}
+}
+\if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-  \itemize{
-    \item \href{#method-Database-uploadTable}{\code{Database$uploadTable()}}
-    \item \href{#method-Database-connect}{\code{Database$connect()}}
-    \item \href{#method-Database-disconnect}{\code{Database$disconnect()}}
-    \item \href{#method-Database-clone}{\code{Database$clone()}}
-  }
+\itemize{
+\item \href{#method-Database-uploadTable}{\code{Database$uploadTable()}}
+\item \href{#method-Database-connect}{\code{Database$connect()}}
+\item \href{#method-Database-disconnect}{\code{Database$disconnect()}}
+\item \href{#method-Database-clone}{\code{Database$clone()}}
 }
-\if{html}{\out{<details open><summary>Inherited methods</summary>
+}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
 <ul>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>ShinyModule$UI()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>ShinyModule$getReactiveValues()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="initialize"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-initialize'><code>ShinyModule$initialize()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>ShinyModule$server()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>ShinyModule$validate()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>DarwinShinyModules::ShinyModule$getReactiveValues()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="initialize"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-initialize'><code>DarwinShinyModules::ShinyModule$initialize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
 </ul>
-</details>}}
+</details>
+}}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Database-uploadTable"></a>}}
 \if{latex}{\out{\hypertarget{method-Database-uploadTable}{}}}
-\subsection{\code{Database$uploadTable()}}{
-  Method to upload tables to the database.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{Database$uploadTable(tableName, data)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{tableName}}{(\code{character(1)}) Name of the table}
-      \item{\code{data}}{(\code{data.frame}) data.frame like table to upload}
-    }
-    \if{html}{\out{</div>}}
-  }
+\subsection{Method \code{uploadTable()}}{
+Method to upload tables to the database.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Database$uploadTable(tableName, data)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{tableName}}{(\code{character(1)}) Name of the table}
+
+\item{\code{data}}{(\code{data.frame}) data.frame like table to upload}
+}
+\if{html}{\out{</div>}}
+}
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Database-connect"></a>}}
 \if{latex}{\out{\hypertarget{method-Database-connect}{}}}
-\subsection{\code{Database$connect()}}{
-  Method to connect to the database.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{Database$connect()}
-    \if{html}{\out{</div>}}
-  }
+\subsection{Method \code{connect()}}{
+Method to connect to the database.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Database$connect()}\if{html}{\out{</div>}}
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Database-disconnect"></a>}}
 \if{latex}{\out{\hypertarget{method-Database-disconnect}{}}}
-\subsection{\code{Database$disconnect()}}{
-  Method to disconnect from the database.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{Database$disconnect()}
-    \if{html}{\out{</div>}}
-  }
+\subsection{Method \code{disconnect()}}{
+Method to disconnect from the database.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Database$disconnect()}\if{html}{\out{</div>}}
 }
 
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Database-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-Database-clone}{}}}
-\subsection{\code{Database$clone()}}{
-  The objects of this class are cloneable with this method.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{Database$clone(deep = FALSE)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{deep}}{Whether to make a deep clone.}
-    }
-    \if{html}{\out{</div>}}
-  }
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Database$clone(deep = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
 }

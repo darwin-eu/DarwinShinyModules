@@ -3,6 +3,9 @@
 \name{Bridge}
 \alias{Bridge}
 \title{Bridge Module Class}
+\value{
+\code{self}
+}
 \description{
 Bridge module that "birdges" multiple modules with bespoke server code.
 }
@@ -42,74 +45,70 @@ if (interactive()) {
 }
 }
 \section{Super class}{
-\code{\link[DarwinShinyModules:ShinyModule]{ShinyModule}} -> \code{Bridge}
+\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{Bridge}
 }
 \section{Active bindings}{
-  \if{html}{\out{<div class="r6-active-bindings">}}
-  \describe{
-    \item{\code{modules}}{(\code{list}) List of modules.}
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{modules}}{(\code{list}) List of modules.}
 
-    \item{\code{birdgeFun}}{(\code{function}) Function that bridges modules.}
-  }
-  \if{html}{\out{</div>}}
+\item{\code{birdgeFun}}{(\code{function}) Function that bridges modules.}
+}
+\if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-  \itemize{
-    \item \href{#method-Bridge-initialize}{\code{Bridge$new()}}
-    \item \href{#method-Bridge-clone}{\code{Bridge$clone()}}
-  }
+\itemize{
+\item \href{#method-Bridge-new}{\code{Bridge$new()}}
+\item \href{#method-Bridge-clone}{\code{Bridge$clone()}}
 }
-\if{html}{\out{<details open><summary>Inherited methods</summary>
+}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
 <ul>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>ShinyModule$UI()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>ShinyModule$getReactiveValues()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>ShinyModule$server()</code></a></span></li>
-  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>ShinyModule$validate()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>DarwinShinyModules::ShinyModule$getReactiveValues()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
 </ul>
-</details>}}
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Bridge-initialize"></a>}}
-\if{latex}{\out{\hypertarget{method-Bridge-initialize}{}}}
-\subsection{\code{Bridge$new()}}{
-  Initializer method.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{Bridge$new(..., bridgeFun = NULL)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{...}}{(\code{ShinyModule}) ShinyModules to bridge.}
-      \item{\code{bridgeFun}}{(\code{function}: \code{NULL}) Server function to make the
-modules interact with eachother. Should be setup as a shiny server
-function that takes \code{input}, \code{output}, and \code{session} as parameters.}
-    }
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Returns}{
-    \code{self}
-  }
+\if{html}{\out{<a id="method-Bridge-new"></a>}}
+\if{latex}{\out{\hypertarget{method-Bridge-new}{}}}
+\subsection{Method \code{new()}}{
+Initializer method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Bridge$new(..., bridgeFun = NULL)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{(\code{ShinyModule}) ShinyModules to bridge.}
+
+\item{\code{bridgeFun}}{(\code{function}: \code{NULL}) Server function to make the
+modules interact with eachother. Should be setup as a shiny server
+function that takes \code{input}, \code{output}, and \code{session} as parameters.}
+}
+\if{html}{\out{</div>}}
+}
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Bridge-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-Bridge-clone}{}}}
-\subsection{\code{Bridge$clone()}}{
-  The objects of this class are cloneable with this method.
-  \subsection{Usage}{
-    \if{html}{\out{<div class="r">}}
-    \preformatted{Bridge$clone(deep = FALSE)}
-    \if{html}{\out{</div>}}
-  }
-  \subsection{Arguments}{
-    \if{html}{\out{<div class="arguments">}}
-    \describe{
-      \item{\code{deep}}{Whether to make a deep clone.}
-    }
-    \if{html}{\out{</div>}}
-  }
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Bridge$clone(deep = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
 }
