@@ -72,6 +72,7 @@ ProportionOfPatientsCovered <- R6::R6Class(
     #'
     #' @returns `self`
     initialize = function(result, ...) {
+      super$initialize(...)
       private$.checkResult(result)
 
       private$.cdmNames <- getCDMNames(result)
