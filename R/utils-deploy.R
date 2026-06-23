@@ -56,23 +56,28 @@ loadAppStructure <- function(filePath, appStructureFileName = "appStructure.qs",
 #' of ShinyModule objects or (named) lists containing (named) ShinyModule
 #' objects. Representing the navigation (side) bar of the shiny app.
 #'
-#' @param appDir (`character`) File path to the directory where app files will
+#' @param appDir (`character(1)`: `tempfile()`) File path to the directory where app files will
 #' be written to, and the app is being deployed from. See `rsconnect::deployApp`
 #' for further details.
+#'
+#' @param pkgs (`character(n)`: `NULL`) Additional packages that should be
+#' installed and loaded when deploying.
 #'
 #' @param ... Arguments for `rsconnect::deployApp`
 #'
 #' @export
 #'
 #' @return `NULL`
-deployAppStructure <- function(appStructure, appDir = tempfile(), ...) {
+deployAppStructure <- function(appStructure, appDir = tempfile(), pkgs = NULL, ...) {
   dir.create(appDir, recursive = TRUE)
   saveAppStructure(appStructure, filePath = file.path(appDir, "appStructure.qs"))
 
-  # When actually developed, this is sourced with `System.file("./app.R", package = "DarwinShinyModules")`
   appR <- system.file(package = "DarwinShinyModules", "deployFiles", "app.R")
 
-  file.copy(appR, to = file.path(appDir, "app.R"))
+  writeLines(
+    text = c(sprintf("library(%s)", pkgs), readLines(appR)),
+    con = file.path(appDir, "app.R")
+  )
 
   rsconnect::deployApp(appDir = appDir, ...)
 }
