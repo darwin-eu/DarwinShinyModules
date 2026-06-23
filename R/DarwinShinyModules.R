@@ -27,6 +27,9 @@
 #' @import stringr
 #' @import flextable
 #' @import reactable
+#' @import qs2
+#' @import mirai
+#' @import visOmopResults
 #' @importFrom checkmate makeAssertCollection reportAssertions assertCharacter assertList assertNamed assertDataFrame assertChoice assertTRUE assertFunction assertClass
 #' @importFrom rlang is_installed abort check_installed := sym
 #' @importFrom purrr map

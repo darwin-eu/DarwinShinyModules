@@ -29,7 +29,8 @@ Imports:
     stringr,
     purrr,
     mirai,
-    qs2
+    qs2,
+    visOmopResults
 Suggests:
     bslib,
     shinydashboard,
@@ -46,7 +47,6 @@ Suggests:
     dbplyr,
     duckdb,
     RSQLite,
-    visOmopResults,
     omopgenerics,
     CDMConnector,
     TreatmentPatterns,
