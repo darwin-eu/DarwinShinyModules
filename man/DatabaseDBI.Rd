@@ -8,98 +8,103 @@ This class extends the \code{Database} class, to query a database using
 \code{DBI} with ODBC.
 }
 \section{Super classes}{
-\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{\link[DarwinShinyModules:Database]{DarwinShinyModules::Database}} -> \code{DatabaseDBI}
+\code{\link[DarwinShinyModules:ShinyModule]{ShinyModule}} -> \code{\link[DarwinShinyModules:Database]{Database}} -> \code{DatabaseDBI}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{connection}}{(\verb{DBI Connection}) A DBI connection.}
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{connection}}{(\verb{DBI Connection}) A DBI connection.}
 
-\item{\code{driver}}{(\code{driver}) Driver used to connect to the database.}
+    \item{\code{driver}}{(\code{driver}) Driver used to connect to the database.}
 
-\item{\code{connectArgs}}{(\code{list(n)}) Named list of additional arguments used in \code{DBI::dbConnect()}}
+    \item{\code{connectArgs}}{(\code{list(n)}) Named list of additional arguments used in \code{DBI::dbConnect()}}
 
-\item{\code{disconnectArgs}}{(\code{list(n)}) Named list of additional arguments used in \code{DBI::dbDisconnect()}}
-}
-\if{html}{\out{</div>}}
+    \item{\code{disconnectArgs}}{(\code{list(n)}) Named list of additional arguments used in \code{DBI::dbDisconnect()}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-DatabaseDBI-new}{\code{DatabaseDBI$new()}}
-\item \href{#method-DatabaseDBI-connect}{\code{DatabaseDBI$connect()}}
-\item \href{#method-DatabaseDBI-disconnect}{\code{DatabaseDBI$disconnect()}}
-\item \href{#method-DatabaseDBI-clone}{\code{DatabaseDBI$clone()}}
+  \itemize{
+    \item \href{#method-DatabaseDBI-initialize}{\code{DatabaseDBI$new()}}
+    \item \href{#method-DatabaseDBI-connect}{\code{DatabaseDBI$connect()}}
+    \item \href{#method-DatabaseDBI-disconnect}{\code{DatabaseDBI$disconnect()}}
+    \item \href{#method-DatabaseDBI-clone}{\code{DatabaseDBI$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>DarwinShinyModules::ShinyModule$getReactiveValues()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Database" data-id="uploadTable"><a href='../../DarwinShinyModules/html/Database.html#method-Database-uploadTable'><code>DarwinShinyModules::Database$uploadTable()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>ShinyModule$UI()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>ShinyModule$getReactiveValues()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>ShinyModule$server()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>ShinyModule$validate()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="Database" data-id="uploadTable"><a href='../../DarwinShinyModules/html/Database.html#method-Database-uploadTable'><code>Database$uploadTable()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DatabaseDBI-new"></a>}}
-\if{latex}{\out{\hypertarget{method-DatabaseDBI-new}{}}}
-\subsection{Method \code{new()}}{
-Initializer method
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatabaseDBI$new(driver, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-DatabaseDBI-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-DatabaseDBI-initialize}{}}}
+\subsection{\code{DatabaseDBI$new()}}{
+  Initializer method
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DatabaseDBI$new(driver, ...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{driver}}{Driver to use to connect to the database with \code{DBI::dbConnect()}}
+      \item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{invisible(self)}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{driver}}{Driver to use to connect to the database with \code{DBI::dbConnect()}}
-
-\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{invisible(self)}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DatabaseDBI-connect"></a>}}
 \if{latex}{\out{\hypertarget{method-DatabaseDBI-connect}{}}}
-\subsection{Method \code{connect()}}{
-Method to connect to the database.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatabaseDBI$connect()}\if{html}{\out{</div>}}
+\subsection{\code{DatabaseDBI$connect()}}{
+  Method to connect to the database.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DatabaseDBI$connect()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DatabaseDBI-disconnect"></a>}}
 \if{latex}{\out{\hypertarget{method-DatabaseDBI-disconnect}{}}}
-\subsection{Method \code{disconnect()}}{
-Method to disconnect from the database.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatabaseDBI$disconnect()}\if{html}{\out{</div>}}
+\subsection{\code{DatabaseDBI$disconnect()}}{
+  Method to disconnect from the database.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DatabaseDBI$disconnect()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DatabaseDBI-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-DatabaseDBI-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatabaseDBI$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{DatabaseDBI$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DatabaseDBI$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

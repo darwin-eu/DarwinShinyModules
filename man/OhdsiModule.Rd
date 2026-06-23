@@ -3,9 +3,6 @@
 \name{OhdsiModule}
 \alias{OhdsiModule}
 \title{OhdsiModule Class}
-\value{
-\code{self}
-}
 \description{
 The OhdsiModule wraps around a \code{viewerX()} and \code{serverX()} function from
 \code{OhdsiShinyModules}, running the module stand-alone. This setup should also
@@ -41,84 +38,85 @@ if (interactive()) {
 }
 }
 \section{Super class}{
-\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{OhdsiModule}
+\code{\link[DarwinShinyModules:ShinyModule]{ShinyModule}} -> \code{OhdsiModule}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{connectionHandler}}{(\code{ConnectionHandler}) ConnectionHandler object from \code{ResultModelManager}.}
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{connectionHandler}}{(\code{ConnectionHandler}) ConnectionHandler object from \code{ResultModelManager}.}
 
-\item{\code{viewerFun}}{(\code{function}) Viewer function to use from \code{OhdsiShinyModules}.}
+    \item{\code{viewerFun}}{(\code{function}) Viewer function to use from \code{OhdsiShinyModules}.}
 
-\item{\code{serverFun}}{(\code{function}) Server function to use from \code{OhdsiShinyModules}.}
+    \item{\code{serverFun}}{(\code{function}) Server function to use from \code{OhdsiShinyModules}.}
 
-\item{\code{resultDatabaseSettings}}{(\code{list}) Named List of table prefixes like \code{ShinyAppBuilder::createDefaultResultDatabaseSettings()} creates.}
-}
-\if{html}{\out{</div>}}
+    \item{\code{resultDatabaseSettings}}{(\code{list}) Named List of table prefixes like \code{ShinyAppBuilder::createDefaultResultDatabaseSettings()} creates.}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-OhdsiModule-new}{\code{OhdsiModule$new()}}
-\item \href{#method-OhdsiModule-clone}{\code{OhdsiModule$clone()}}
+  \itemize{
+    \item \href{#method-OhdsiModule-initialize}{\code{OhdsiModule$new()}}
+    \item \href{#method-OhdsiModule-clone}{\code{OhdsiModule$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>DarwinShinyModules::ShinyModule$getReactiveValues()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>ShinyModule$UI()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>ShinyModule$getReactiveValues()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>ShinyModule$server()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>ShinyModule$validate()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-OhdsiModule-new"></a>}}
-\if{latex}{\out{\hypertarget{method-OhdsiModule-new}{}}}
-\subsection{Method \code{new()}}{
-Initializer method
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OhdsiModule$new(
+\if{html}{\out{<a id="method-OhdsiModule-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-OhdsiModule-initialize}{}}}
+\subsection{\code{OhdsiModule$new()}}{
+  Initializer method
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OhdsiModule$new(
   connectionHandler,
   viewerFun,
   serverFun,
   resultDatabaseSettings = ShinyAppBuilder::createDefaultResultDatabaseSettings(),
   ...
-)}\if{html}{\out{</div>}}
+)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{connectionHandler}}{(\code{ConnectionHandler}) ConnectionHandler object from \code{ResultModelManager}.}
+      \item{\code{viewerFun}}{(\code{function}) Viewer function to use from \code{OhdsiShinyModules}.}
+      \item{\code{serverFun}}{(\code{function}) Server function to use from \code{OhdsiShinyModules}.}
+      \item{\code{resultDatabaseSettings}}{(\code{list}) Named List of table prefixes like \code{ShinyAppBuilder::createDefaultResultDatabaseSettings()} creates.}
+      \item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{self}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{connectionHandler}}{(\code{ConnectionHandler}) ConnectionHandler object from \code{ResultModelManager}.}
-
-\item{\code{viewerFun}}{(\code{function}) Viewer function to use from \code{OhdsiShinyModules}.}
-
-\item{\code{serverFun}}{(\code{function}) Server function to use from \code{OhdsiShinyModules}.}
-
-\item{\code{resultDatabaseSettings}}{(\code{list}) Named List of table prefixes like \code{ShinyAppBuilder::createDefaultResultDatabaseSettings()} creates.}
-
-\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-OhdsiModule-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-OhdsiModule-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{OhdsiModule$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{OhdsiModule$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{OhdsiModule$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

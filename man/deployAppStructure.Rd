@@ -4,16 +4,19 @@
 \alias{deployAppStructure}
 \title{deployAppStructure}
 \usage{
-deployAppStructure(appStructure, appDir = tempfile(), ...)
+deployAppStructure(appStructure, appDir = tempfile(), pkgs = NULL, ...)
 }
 \arguments{
 \item{appStructure}{(\code{list}: \code{NULL}) appStructure object, i.e. a named list
 of ShinyModule objects or (named) lists containing (named) ShinyModule
 objects. Representing the navigation (side) bar of the shiny app.}
 
-\item{appDir}{(\code{character}) File path to the directory where app files will
+\item{appDir}{(\code{character(1)}: \code{tempfile()}) File path to the directory where app files will
 be written to, and the app is being deployed from. See \code{rsconnect::deployApp}
 for further details.}
+
+\item{pkgs}{(\code{character(n)}: \code{NULL}) Additional packages that should be
+installed and loaded when deploying.}
 
 \item{...}{Arguments for \code{rsconnect::deployApp}}
 }

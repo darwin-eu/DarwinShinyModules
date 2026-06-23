@@ -8,150 +8,158 @@ This class extends the \code{Database} class, to query a database using
 \code{DatabaseConnector} with JDBC.
 }
 \section{Super classes}{
-\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{\link[DarwinShinyModules:Database]{DarwinShinyModules::Database}} -> \code{DatabaseDBC}
+\code{\link[DarwinShinyModules:ShinyModule]{ShinyModule}} -> \code{\link[DarwinShinyModules:Database]{Database}} -> \code{DatabaseDBC}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-DatabaseDBC-new}{\code{DatabaseDBC$new()}}
-\item \href{#method-DatabaseDBC-query}{\code{DatabaseDBC$query()}}
-\item \href{#method-DatabaseDBC-execute}{\code{DatabaseDBC$execute()}}
-\item \href{#method-DatabaseDBC-uploadTable}{\code{DatabaseDBC$uploadTable()}}
-\item \href{#method-DatabaseDBC-connect}{\code{DatabaseDBC$connect()}}
-\item \href{#method-DatabaseDBC-disconnect}{\code{DatabaseDBC$disconnect()}}
-\item \href{#method-DatabaseDBC-clone}{\code{DatabaseDBC$clone()}}
+  \itemize{
+    \item \href{#method-DatabaseDBC-initialize}{\code{DatabaseDBC$new()}}
+    \item \href{#method-DatabaseDBC-query}{\code{DatabaseDBC$query()}}
+    \item \href{#method-DatabaseDBC-execute}{\code{DatabaseDBC$execute()}}
+    \item \href{#method-DatabaseDBC-uploadTable}{\code{DatabaseDBC$uploadTable()}}
+    \item \href{#method-DatabaseDBC-connect}{\code{DatabaseDBC$connect()}}
+    \item \href{#method-DatabaseDBC-disconnect}{\code{DatabaseDBC$disconnect()}}
+    \item \href{#method-DatabaseDBC-clone}{\code{DatabaseDBC$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>DarwinShinyModules::ShinyModule$getReactiveValues()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>ShinyModule$UI()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>ShinyModule$getReactiveValues()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>ShinyModule$server()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>ShinyModule$validate()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DatabaseDBC-new"></a>}}
-\if{latex}{\out{\hypertarget{method-DatabaseDBC-new}{}}}
-\subsection{Method \code{new()}}{
-Initializer method
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatabaseDBC$new(connectionDetails, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-DatabaseDBC-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-DatabaseDBC-initialize}{}}}
+\subsection{\code{DatabaseDBC$new()}}{
+  Initializer method
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DatabaseDBC$new(connectionDetails, ...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{connectionDetails}}{(\code{ConnectionDetails}) Connection Details from \code{DatabaseConnector::createConnectionDetails}}
+      \item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{invisible(self)}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{connectionDetails}}{(\code{ConnectionDetails}) Connection Details from \code{DatabaseConnector::createConnectionDetails}}
-
-\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{invisible(self)}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DatabaseDBC-query"></a>}}
 \if{latex}{\out{\hypertarget{method-DatabaseDBC-query}{}}}
-\subsection{Method \code{query()}}{
-Query method to query the database using \code{DatabaseConnector::renderTranslateQuerySql}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatabaseDBC$query(sql, ...)}\if{html}{\out{</div>}}
+\subsection{\code{DatabaseDBC$query()}}{
+  Query method to query the database using \code{DatabaseConnector::renderTranslateQuerySql}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DatabaseDBC$query(sql, ...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{sql}}{(\code{character(1)}) SQL Query}
+      \item{\code{...}}{Additional parameters for \code{DatabaseConnector::renderTranslateQuerySql}}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{data.frame}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{sql}}{(\code{character(1)}) SQL Query}
-
-\item{\code{...}}{Additional parameters for \code{DatabaseConnector::renderTranslateQuerySql}}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{data.frame}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DatabaseDBC-execute"></a>}}
 \if{latex}{\out{\hypertarget{method-DatabaseDBC-execute}{}}}
-\subsection{Method \code{execute()}}{
-Execute method to execute a query on the database using \code{DatabaseConnector::renderTranslateExecuteSql}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatabaseDBC$execute(sql, ...)}\if{html}{\out{</div>}}
+\subsection{\code{DatabaseDBC$execute()}}{
+  Execute method to execute a query on the database using \code{DatabaseConnector::renderTranslateExecuteSql}
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DatabaseDBC$execute(sql, ...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{sql}}{(\code{character(1)}) SQL Query to execute}
+      \item{\code{...}}{Additional parameters for \code{DatabaseConnector::renderTranslateExecuteSql}}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{invisible(self)}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{sql}}{(\code{character(1)}) SQL Query to execute}
-
-\item{\code{...}}{Additional parameters for \code{DatabaseConnector::renderTranslateExecuteSql}}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{invisible(self)}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DatabaseDBC-uploadTable"></a>}}
 \if{latex}{\out{\hypertarget{method-DatabaseDBC-uploadTable}{}}}
-\subsection{Method \code{uploadTable()}}{
-Method to upload data to the database
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatabaseDBC$uploadTable(tableName, data)}\if{html}{\out{</div>}}
+\subsection{\code{DatabaseDBC$uploadTable()}}{
+  Method to upload data to the database
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DatabaseDBC$uploadTable(tableName, data)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{tableName}}{(\code{character(1)}) Name of the table}
+      \item{\code{data}}{(\code{data.frame}) data.frame like table to upload}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{tableName}}{(\code{character(1)}) Name of the table}
-
-\item{\code{data}}{(\code{data.frame}) data.frame like table to upload}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DatabaseDBC-connect"></a>}}
 \if{latex}{\out{\hypertarget{method-DatabaseDBC-connect}{}}}
-\subsection{Method \code{connect()}}{
-Method to connect to the database.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatabaseDBC$connect()}\if{html}{\out{</div>}}
+\subsection{\code{DatabaseDBC$connect()}}{
+  Method to connect to the database.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DatabaseDBC$connect()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DatabaseDBC-disconnect"></a>}}
 \if{latex}{\out{\hypertarget{method-DatabaseDBC-disconnect}{}}}
-\subsection{Method \code{disconnect()}}{
-Method to disconnect from the database.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatabaseDBC$disconnect()}\if{html}{\out{</div>}}
+\subsection{\code{DatabaseDBC$disconnect()}}{
+  Method to disconnect from the database.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DatabaseDBC$disconnect()}
+    \if{html}{\out{</div>}}
+  }
 }
 
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DatabaseDBC-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-DatabaseDBC-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatabaseDBC$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{DatabaseDBC$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{DatabaseDBC$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

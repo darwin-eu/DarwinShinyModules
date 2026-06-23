@@ -3,9 +3,6 @@
 \name{StudyBackground}
 \alias{StudyBackground}
 \title{StudyBackground}
-\value{
-\code{invisible(self)}
-}
 \description{
 StudyBackground Module that contains background information and the EUPAS.
 }
@@ -22,74 +19,77 @@ if (interactive()) {
 }
 }
 \section{Super class}{
-\code{\link[DarwinShinyModules:ShinyModule]{DarwinShinyModules::ShinyModule}} -> \code{StudyBackground}
+\code{\link[DarwinShinyModules:ShinyModule]{ShinyModule}} -> \code{StudyBackground}
 }
 \section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{background}}{(\code{character(n)}) Either the direct background, or the
+  \if{html}{\out{<div class="r6-active-bindings">}}
+  \describe{
+    \item{\code{background}}{(\code{character(n)}) Either the direct background, or the
 contents of a markdown (.md) file.}
 
-\item{\code{EUPAS}}{(\code{character(1)}) EUPAS belonging to the study.}
+    \item{\code{EUPAS}}{(\code{character(1)}) EUPAS belonging to the study.}
 
-\item{\code{text}}{(\code{Text}) A Text module.}
-}
-\if{html}{\out{</div>}}
+    \item{\code{text}}{(\code{Text}) A Text module.}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-StudyBackground-new}{\code{StudyBackground$new()}}
-\item \href{#method-StudyBackground-clone}{\code{StudyBackground$clone()}}
+  \itemize{
+    \item \href{#method-StudyBackground-initialize}{\code{StudyBackground$new()}}
+    \item \href{#method-StudyBackground-clone}{\code{StudyBackground$clone()}}
+  }
 }
-}
-\if{html}{\out{
-<details open><summary>Inherited methods</summary>
+\if{html}{\out{<details open><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>DarwinShinyModules::ShinyModule$UI()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>DarwinShinyModules::ShinyModule$getReactiveValues()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>DarwinShinyModules::ShinyModule$server()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>DarwinShinyModules::ShinyModule$validate()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="UI"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-UI'><code>ShinyModule$UI()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="getReactiveValues"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-getReactiveValues'><code>ShinyModule$getReactiveValues()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="server"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-server'><code>ShinyModule$server()</code></a></span></li>
+  <li><span class="pkg-link" data-pkg="DarwinShinyModules" data-topic="ShinyModule" data-id="validate"><a href='../../DarwinShinyModules/html/ShinyModule.html#method-ShinyModule-validate'><code>ShinyModule$validate()</code></a></span></li>
 </ul>
-</details>
-}}
+</details>}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-StudyBackground-new"></a>}}
-\if{latex}{\out{\hypertarget{method-StudyBackground-new}{}}}
-\subsection{Method \code{new()}}{
-initializer method
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{StudyBackground$new(background, EUPAS, ...)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{background}}{(\code{character(n)}) Either a direct background description
+\if{html}{\out{<a id="method-StudyBackground-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-StudyBackground-initialize}{}}}
+\subsection{\code{StudyBackground$new()}}{
+  initializer method
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{StudyBackground$new(background, EUPAS, ...)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{background}}{(\code{character(n)}) Either a direct background description
 or a file path pointing to a markdown (.md) file.}
+      \item{\code{EUPAS}}{(\code{character(1)}) EUPAS belonging to the study.}
+      \item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
+    }
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Returns}{
+    \code{invisible(self)}
+  }
+}
 
-\item{\code{EUPAS}}{(\code{character(1)}) EUPAS belonging to the study.}
-
-\item{\code{...}}{Additional parameters to set fields from the \code{ShinyModule} parent.}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-StudyBackground-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-StudyBackground-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{StudyBackground$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{StudyBackground$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{StudyBackground$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }
