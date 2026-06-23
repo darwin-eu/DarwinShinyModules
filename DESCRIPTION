@@ -30,7 +30,7 @@ Imports:
     purrr,
     mirai,
     qs2,
-    visOmopResults
+    visOmopResults,
     qs2
 Suggests:
     bslib,
