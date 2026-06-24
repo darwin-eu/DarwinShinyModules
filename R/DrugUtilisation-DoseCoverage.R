@@ -209,7 +209,7 @@ DoseCoverage <- R6::R6Class(
 )
 
 # Functions ----
-#' DoseCoverage
+#' moduleDoseCoverage
 #'
 #' @param result (`summarised_result`) Result from the `summariseDoseCoverage` function from the DrugUtilisation pacakge.
 #' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
@@ -237,9 +237,9 @@ moduleDoseCoverage <- function(result, .softValidation = FALSE) {
 #'
 #' @examples
 #' if (interactive()) {
-#'   shinyProportionOfPatientsCovered(result)
+#'   shinyDoseCoverage(result)
 #' }
-shinyProportionOfPatientsCovered <- function(result, .softValidation = FALSE) {
+shinyDoseCoverage <- function(result, .softValidation = FALSE) {
   launchBslibApp(
     list(
       DoseCoverage = moduleDoseCoverage(result, .softValidation)
