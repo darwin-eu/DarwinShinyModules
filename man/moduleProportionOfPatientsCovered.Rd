@@ -2,7 +2,7 @@
 % Please edit documentation in R/DrugUtilisation-ProportionOfPatientsCovered.R
 \name{moduleProportionOfPatientsCovered}
 \alias{moduleProportionOfPatientsCovered}
-\title{ProportionOfPatientsCovered}
+\title{moduleProportionOfPatientsCovered}
 \usage{
 moduleProportionOfPatientsCovered(result, .softValidation = FALSE)
 }
@@ -15,10 +15,10 @@ moduleProportionOfPatientsCovered(result, .softValidation = FALSE)
 \code{ShinyModule}
 }
 \description{
-ProportionOfPatientsCovered
+moduleProportionOfPatientsCovered
 }
 \examples{
 if (interactive()) {
-  moduleDrugRestart(result)
+  moduleProportionOfPatientsCovered(result)
 }
 }
