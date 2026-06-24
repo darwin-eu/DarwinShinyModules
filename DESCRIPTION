@@ -85,6 +85,7 @@ Collate:
     'DatabaseDBI.R'
     'DatabaseOverview.R'
     'DrugExposureDiagnostics.R'
+    'DrugUtilisation-DoseCoverage.R'
     'DrugUtilisation-DrugRestart.R'
     'DrugUtilisation-DrugUtilisation.R'
     'DrugUtilisation-Indication.R'

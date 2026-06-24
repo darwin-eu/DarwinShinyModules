@@ -294,7 +294,7 @@ ProportionOfPatientsCovered <- R6::R6Class(
 )
 
 # Functions ----
-#' ProportionOfPatientsCovered
+#' moduleProportionOfPatientsCovered
 #'
 #' @param result (`summarised_result`) Result from the `summariseProportionOfPatientsCovered` function from the DrugUtilisation pacakge.
 #' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
@@ -304,7 +304,7 @@ ProportionOfPatientsCovered <- R6::R6Class(
 #'
 #' @examples
 #' if (interactive()) {
-#'   moduleDrugRestart(result)
+#'   moduleProportionOfPatientsCovered(result)
 #' }
 moduleProportionOfPatientsCovered <- function(result, .softValidation = FALSE) {
   assertType(result, "summarise_proportion_of_patients_covered")
@@ -314,7 +314,7 @@ moduleProportionOfPatientsCovered <- function(result, .softValidation = FALSE) {
 
 #' shinyProportionOfPatientsCovered
 #'
-#' @param result (`summarised_result`) Result from the `summariseDrugRestart` function from the DrugUtilisation pacakge.
+#' @param result (`summarised_result`) Result from the `summariseProportionOfPatientsCovered` function from the DrugUtilisation pacakge.
 #' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
 #'
 #' @returns `ShinyModule`
@@ -322,7 +322,7 @@ moduleProportionOfPatientsCovered <- function(result, .softValidation = FALSE) {
 #'
 #' @examples
 #' if (interactive()) {
-#'   shinyDrugRestart(result)
+#'   shinyProportionOfPatientsCovered(result)
 #' }
 shinyProportionOfPatientsCovered <- function(result, .softValidation = FALSE) {
   launchBslibApp(
