@@ -115,14 +115,7 @@ DoseCoverage <- R6::R6Class(
         shiny::tabsetPanel(
           shiny::tabPanel(
             title  = "Table",
-            shiny::column(
-              width = 2,
-              private$.uiTableSettings()
-            ),
-            shiny::column(
-              width = 10,
-              private$.table$UI()
-            )
+            private$.uiTable()
           )
         )
       )
@@ -155,23 +148,30 @@ DoseCoverage <- R6::R6Class(
       )
     },
 
-    .uiTableSettings = function() {
+    .uiTable = function() {
       shiny::fluidRow(
-        shinyWidgets::pickerInput(
-          inputId = shiny::NS(self$namespace, "header"),
-          label = "Header",
-          choices = private$.tableCols,
-          selected = c("variable_name", "estimate_name"),
-          multiple = TRUE,
-          options = private$.pickerOptions
+        shiny::column(
+          width = 2,
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "header"),
+            label = "Header",
+            choices = private$.tableCols,
+            selected = c("variable_name", "estimate_name"),
+            multiple = TRUE,
+            options = private$.pickerOptions
+          ),
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "groupColumn"),
+            label = "Group Column",
+            choices = private$.tableCols,
+            selected = c("cdm_name", "ingredient_name"),
+            multiple = TRUE,
+            options = private$.pickerOptions
+          )
         ),
-        shinyWidgets::pickerInput(
-          inputId = shiny::NS(self$namespace, "groupColumn"),
-          label = "Group Column",
-          choices = private$.tableCols,
-          selected = c("cdm_name", "ingredient_name"),
-          multiple = TRUE,
-          options = private$.pickerOptions
+        shiny::column(
+          width = 10,
+          private$.table$UI()
         )
       )
     },
