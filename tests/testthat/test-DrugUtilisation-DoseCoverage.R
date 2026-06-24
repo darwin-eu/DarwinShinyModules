@@ -5,7 +5,7 @@ test_that("DrugUtilisation: DoseCoverage", {
 
   cdm <- DrugUtilisation::mockDrugUtilisation()
 
-  result <- summariseDoseCoverage(cdm = cdm, ingredientConceptId = 1125315)
+  result <- DrugUtilisation::summariseDoseCoverage(cdm = cdm, ingredientConceptId = 1125315)
 
   mod <- suppressWarnings(moduleDoseCoverage(result = result, .softValidation = TRUE))
 
