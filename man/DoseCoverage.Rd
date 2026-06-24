@@ -14,8 +14,7 @@ if (interactive()) {
 
   cdm <- DrugUtilisation::mockDrugUtilisation(numberIndividuals = 100)
 
-  res <- cdm$cohort1 |>
-    DrugUtilisation::summariseProportionOfPatientsCovered(followUpDays = 365)
+  res <- summariseDoseCoverage(cdm = cdm, ingredientConceptId = 1125315)
 
   mod <- DoseCoverage$new(res)
   preview(mod)
