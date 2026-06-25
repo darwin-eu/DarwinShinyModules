@@ -9,7 +9,23 @@ test_that("CohortCharacteristics-LargeScaleCharacteristics", {
     && utils::packageVersion("CohortCharacteristics") >= "1.1.0"
   )
 
-  result <- makeLargescaleCharacteristics()
+  con <- DBI::dbConnect(duckdb::duckdb(), CDMConnector::eunomiaDir())
+  cdm <- CDMConnector::cdmFromCon(con = con, cdmSchema = "main", writeSchema = "main")
+
+  cdm <- DrugUtilisation::generateIngredientCohortSet(cdm = cdm, name = "my_cohort", ingredient = c("warfarin", "acetaminophen"))
+
+  cdm$my_cohort <- cdm$my_cohort |>
+    PatientProfiles::addAge(ageGroup = list(
+      `0 to 17` = c(0, 17),
+      `>=18` = c(18, Inf)
+    )) |>
+    PatientProfiles::addSex()
+
+  result <- CohortCharacteristics::summariseLargeScaleCharacteristics(
+    cohort = cdm$my_cohort,
+    eventInWindow = "condition_occurrence",
+    strata = list("age_group", "sex")
+  )
 
   mod <- suppressWarnings(moduleLargeScaleCharacteristics(result, .softValidation = TRUE))
 
