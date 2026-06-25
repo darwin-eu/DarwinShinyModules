@@ -73,6 +73,7 @@ Collate:
     'BslibApp.R'
     'CohortCharacteristics-Characteristics.R'
     'CohortCharacteristics-CohortAttrition.R'
+    'CohortCharacteristics-CohortCodelist.R'
     'CohortCharacteristics-LargeScaleCharacteristics.R'
     'CohortSurvival-CohortSurvival.R'
     'CreateApp.R'

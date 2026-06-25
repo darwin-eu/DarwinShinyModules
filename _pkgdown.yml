@@ -76,6 +76,9 @@ reference:
   - CohortAttrition
   - moduleCohortAttrition
   - shinyCohortAttrition
+  - CohortCodelist
+  - moduleCohortCodelist
+  - shinyCohortCodelist
 
 - subtitle: CohortSurvival
 - contents:
