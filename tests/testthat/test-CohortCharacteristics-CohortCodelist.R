@@ -3,16 +3,9 @@ test_that("CohortCharacteristics: CohortCodelist", {
     c("CohortCharacteristics", "PatientProfiles", "CDMConnector")
   )
 
-  con <- DBI::dbConnect(duckdb::duckdb(), dbdir = CDMConnector::eunomiaDir())
-  cdm <- CDMConnector::cdmFromCon(con, cdmSchema = "main", writeSchema = "main")
+  cdm <- CohortCharacteristics::mockCohortCharacteristics()
 
-  cdm <- CDMConnector::generateConceptCohortSet(
-    cdm = cdm,
-    conceptSet = list(pharyngitis = 4112343L),
-    name = "my_cohort"
-  )
-
-  result <- CohortCharacteristics::summariseCohortCodelist(cdm$my_cohort)
+  result <- CohortCharacteristics::summariseCohortCodelist(cdm$cohort1)
 
   mod <- suppressWarnings(moduleCohortCodelist(result, .softValidation = TRUE))
 
