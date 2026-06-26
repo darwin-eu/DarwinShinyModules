@@ -79,6 +79,9 @@ reference:
   - CohortCodelist
   - moduleCohortCodelist
   - shinyCohortCodelist
+  - CohortCount
+  - moduleCohortCount
+  - shinyCohortCount
 
 - subtitle: CohortSurvival
 - contents:
