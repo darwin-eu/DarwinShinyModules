@@ -61,7 +61,8 @@ Suggests:
     tidyr,
     stats,
     CirceR,
-    rsconnect
+    rsconnect,
+    omock
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr

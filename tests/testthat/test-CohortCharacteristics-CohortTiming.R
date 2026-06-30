@@ -2,6 +2,7 @@ test_that("Creation: CohortTiming", {
   skip_if_not(
     require("CohortCharacteristics", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
     && require("DrugUtilisation", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
+    && require("omock", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
     && packageVersion("CohortCharacteristics") >= "1.1.0"
   )
 
