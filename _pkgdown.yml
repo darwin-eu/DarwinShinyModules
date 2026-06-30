@@ -82,6 +82,9 @@ reference:
   - CohortCount
   - moduleCohortCount
   - shinyCohortCount
+  - CohortOverlap
+  - moduleCohortOverlap
+  - shinyCohortOverlap
 
 - subtitle: CohortSurvival
 - contents:

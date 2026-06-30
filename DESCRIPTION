@@ -75,6 +75,7 @@ Collate:
     'CohortCharacteristics-CohortAttrition.R'
     'CohortCharacteristics-CohortCodelist.R'
     'CohortCharacteristics-CohortCount.R'
+    'CohortCharacteristics-CohortOverlap.R'
     'CohortCharacteristics-LargeScaleCharacteristics.R'
     'CohortSurvival-CohortSurvival.R'
     'CreateApp.R'
