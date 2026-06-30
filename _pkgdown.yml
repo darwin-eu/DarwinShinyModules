@@ -85,6 +85,9 @@ reference:
   - CohortOverlap
   - moduleCohortOverlap
   - shinyCohortOverlap
+  - CohortTiming
+  - moduleCohortTiming
+  - shinyCohortTiming
 
 - subtitle: CohortSurvival
 - contents:

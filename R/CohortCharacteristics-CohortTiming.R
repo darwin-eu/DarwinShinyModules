@@ -14,36 +14,43 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' @title CohortOverlap Module Class
+#' @title CohortTiming Module Class
 #'
 #' @include ShinyModule.R
 #'
 #' @description
-#' CohortOverlap module that shows cohort overlap results (table and plot) from the CohortCharacteristics package.
+#' CohortTiming module that shows cohort timing results (table and plot) from the CohortCharacteristics package.
 #'
 #' @export
 #'
 #' @examples{
 #' if (interactive()) {
 #'   library(CohortCharacteristics)
-#'   library(DarwinShinyModules)
+#'   library(omock)
+#'   library(DrugUtilisation)
 #'
-#'   cdm <- mockCohortCharacteristics()
+#'   cdm <- mockCdmFromDataset(datasetName = "GiBleed", source = "duckdb")
 #'
-#'   result <- summariseCohortOverlap(cdm$cohort2)
+#'   cdm <- generateIngredientCohortSet(
+#'     cdm = cdm,
+#'     name = "my_cohort",
+#'     ingredient = c("acetaminophen", "morphine", "warfarin")
+#'   )
 #'
-#'   mod <- CohortOverlap$new(result)
+#'   result <- summariseCohortTiming(cdm$my_cohort)
+#'
+#'   mod <- CohortTiming$new(result)
 #'
 #'   preview(mod)
 #' }
 #' }
-CohortOverlap <- R6::R6Class(
-  classname = "CohortOverlap",
+CohortTiming <- R6::R6Class(
+  classname = "CohortTiming",
   inherit = ShinyModule,
 
   # Active ----
   active = list(
-    #' @field result (`summarised_result`) Result of `CohortCharacteristics::summariseCohortOverlap()`.
+    #' @field result (`summarised_result`) Result of `CohortCharacteristics::summariseCohortTiming()`.
     result = function(result) {
       if (missing(result)) {
         return(qs2::qs_deserialize(private$.result))
@@ -59,7 +66,7 @@ CohortOverlap <- R6::R6Class(
     #' @description
     #' Initializer method
     #'
-    #' @param result (`summarised_result`) Result of `CohortCharacteristics::summariseCohortOverlap()`.
+    #' @param result (`summarised_result`) Result of `CohortCharacteristics::summariseCohortTiming()`.
     #' @param ... Additional parameters to set fields from the `ShinyModule` parent.
     #'
     #' @returns `self`
@@ -87,13 +94,13 @@ CohortOverlap <- R6::R6Class(
       private$.plotColumns <- availablePlotColumns(result)
 
       private$.table <- Flextable$new(
-        fun = CohortCharacteristics::tableCohortOverlap,
+        fun = CohortCharacteristics::tableCohortTiming,
         args = list(type = "flextable", style = "darwin"),
         parentNamespace = self$namespace
       )
 
       private$.plot <- PlotStatic$new(
-        fun = CohortCharacteristics::plotCohortOverlap,
+        fun = CohortCharacteristics::plotCohortTiming,
         args = list(style = "darwin"),
         parentNamespace = self$namespace,
         height = "80vh"
@@ -194,6 +201,15 @@ CohortOverlap <- R6::R6Class(
             choices = c("Yes", "No"),
             selected = "Yes"
           )
+        ),
+        shiny::div(
+          style = "display: inline-block;",
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "timeScale"),
+            label = "Time Scale",
+            choices = c("days", "years"),
+            selected = "days"
+          )
         )
       )
     },
@@ -206,7 +222,6 @@ CohortOverlap <- R6::R6Class(
             inputId = shiny::NS(self$namespace, "header"),
             label = "Header",
             choices = private$.tableColumns,
-            selected = "variable_name",
             multiple = TRUE,
             options = private$.pickerOptions
           ),
@@ -245,6 +260,12 @@ CohortOverlap <- R6::R6Class(
             selected = "variable_name",
             multiple = TRUE,
             options = private$.pickerOptions
+          ),
+          shinyWidgets::pickerInput(
+            inputId = shiny::NS(self$namespace, "plotType"),
+            label = "Plot Type",
+            choices = c("boxplot", "densityplot"),
+            selected = "boxplot"
           )
         ),
         shiny::column(
@@ -279,14 +300,16 @@ CohortOverlap <- R6::R6Class(
 
       shiny::observe({
         uniqueCombinations <- convertLabelToLogical(input$uniqueCombinations, trueVal = "Yes", falseVal = "No")
-        private$.table$args$uniqueCombinations <- uniqueCombinations
         private$.table$args$header <- input$header
         private$.table$args$groupColumn <- input$groupColumn
+        private$.table$args$uniqueCombinations <- uniqueCombinations
+        private$.table$args$timeScale <- input$timeScale
 
-        private$.plot$args$uniqueCombinations <- uniqueCombinations
         private$.plot$args$facet <- input$facet
         private$.plot$args$colour <- input$colour
-
+        private$.plot$args$plotType <- input$plotType
+        private$.plot$args$uniqueCombinations <- uniqueCombinations
+        private$.plot$args$timeScale <- input$timeScale
         promises::then(
           promise = fetchData(),
           onFulfilled = function(result) {
@@ -303,16 +326,16 @@ CohortOverlap <- R6::R6Class(
     .checkResult = function(result) {
       collection <- checkmate::makeAssertCollection()
       checkmate::assertClass(result, "summarised_result", add = collection)
-      checkmate::assertTRUE(attr(result, "settings")$result_type == "summarise_cohort_overlap")
+      checkmate::assertTRUE(attr(result, "settings")$result_type == "summarise_cohort_timing")
       checkmate::reportAssertions(collection)
     }
   )
 )
 
 # Functions ----
-#' moduleCohortOverlap
+#' moduleCohortTiming
 #'
-#' @param result (`summarised_result`) Result from the `summariseCohortOverlap()` function from the `CohortCharacteristics` pacakge.
+#' @param result (`summarised_result`) Result from the `summariseCohortTiming()` function from the `CohortCharacteristics` pacakge.
 #' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
 #'
 #' @returns `ShinyModule`
@@ -320,17 +343,17 @@ CohortOverlap <- R6::R6Class(
 #'
 #' @examples
 #' if (interactive()) {
-#'   moduleCohortOverlap(result)
+#'   moduleCohortTiming(result)
 #' }
-moduleCohortOverlap <- function(result, .softValidation = FALSE) {
-  assertType(result, type = "summarise_cohort_overlap")
+moduleCohortTiming <- function(result, .softValidation = FALSE) {
+  assertType(result, type = "summarise_cohort_timing")
   checkCDMNames(result, .softValidation)
-  CohortOverlap$new(result)
+  CohortTiming$new(result)
 }
 
-#' shinyCohortOverlap
+#' shinyCohortTiming
 #'
-#' @param result (`summarised_result`) Result from the `summariseCohortOverlap()` function from the `CohortCharacteristics` pacakge.
+#' @param result (`summarised_result`) Result from the `summariseCohortTiming()` function from the `CohortCharacteristics` pacakge.
 #' @param .softValidation (`logical(1)`: `FALSE`) When `TRUE` will throw the failed check as a warning.
 #'
 #' @returns `shiny.appojb`
@@ -338,12 +361,12 @@ moduleCohortOverlap <- function(result, .softValidation = FALSE) {
 #'
 #' @examples
 #' if (interactive()) {
-#'   moduleCohortOverlap(result)
+#'   moduleCohortTiming(result)
 #' }
-shinyCohortOverlap <- function(result, .softValidation = FALSE) {
+shinyCohortTiming <- function(result, .softValidation = FALSE) {
   launchBslibApp(
     list(
-      CohortOverlap = moduleCohortOverlap(result, .softValidation)
+      CohortTiming = moduleCohortTiming(result, .softValidation)
     )
   )
 }
