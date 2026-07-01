@@ -105,7 +105,7 @@ deployAppStructure <- function(appStructure, appDir = tempfile(), pkgs = NULL, .
 launchFromDisk <- function(
     filePath,
     launchFun = DarwinShinyModules::launchDarwinBslibApp,
-    daemons = future::availableCores() - 1
+    daemons = 4
 ) {
   if (file.exists(filePath)) {
     appStructure <- qs2::qs_read(filePath)
