@@ -113,6 +113,12 @@ reference:
   - Treatment
   - moduleTreatment
   - shinyTreatment
+  - ProportionOfPatientsCovered
+  - moduleProportionOfPatientsCovered
+  - shinyProportionOfPatientsCovered
+  - DoseCoverage
+  - moduleDoseCoverage
+  - shinyDoseCoverage
 
 - subtitle: IncidencePrevalence
 - contents:
