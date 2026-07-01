@@ -76,6 +76,18 @@ reference:
   - CohortAttrition
   - moduleCohortAttrition
   - shinyCohortAttrition
+  - CohortCodelist
+  - moduleCohortCodelist
+  - shinyCohortCodelist
+  - CohortCount
+  - moduleCohortCount
+  - shinyCohortCount
+  - CohortOverlap
+  - moduleCohortOverlap
+  - shinyCohortOverlap
+  - CohortTiming
+  - moduleCohortTiming
+  - shinyCohortTiming
 
 - subtitle: CohortSurvival
 - contents:
