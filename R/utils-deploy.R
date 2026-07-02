@@ -64,18 +64,25 @@ loadAppStructure <- function(filePath, appStructureFileName = "appStructure.qs",
 #' installed and loaded when deploying.
 #'
 #' @param ... Arguments for `rsconnect::deployApp`
+#' @param launchFun (`character(1)`: `"launchDarwinBslibApp"`) Launch function as character
+#' @param daemons (`numeric(1)`: `4`) Number of daemons (sub-processes) to launch with the shiny app.
 #'
 #' @export
 #'
 #' @return `NULL`
-deployAppStructure <- function(appStructure, appDir = tempfile(), pkgs = NULL, ...) {
+deployAppStructure <- function(appStructure, appDir = tempfile(), launchFun = "launchDarwinBslibApp", daemons = 4, pkgs = NULL, ...) {
   dir.create(appDir, recursive = TRUE)
   saveAppStructure(appStructure, filePath = file.path(appDir, "appStructure.qs"))
 
   appR <- system.file(package = "DarwinShinyModules", "deployFiles", "app.R")
 
+  lines <- c(
+    "library(DarwinShinyModules)",
+    sprintf("launchFromDisk(\"appStructure.qs\", launchFun = %s, daemons = %s)", launchFun, daemons)
+  )
+
   writeLines(
-    text = c(sprintf("library(%s)", pkgs), readLines(appR)),
+    text = c(sprintf("library(%s)", pkgs), lines),
     con = file.path(appDir, "app.R")
   )
 

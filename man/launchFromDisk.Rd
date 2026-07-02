@@ -7,7 +7,7 @@
 launchFromDisk(
   filePath,
   launchFun = DarwinShinyModules::launchDarwinBslibApp,
-  daemons = 2
+  daemons = 4
 )
 }
 \arguments{

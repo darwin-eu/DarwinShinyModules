@@ -4,7 +4,14 @@
 \alias{deployAppStructure}
 \title{deployAppStructure}
 \usage{
-deployAppStructure(appStructure, appDir = tempfile(), pkgs = NULL, ...)
+deployAppStructure(
+  appStructure,
+  appDir = tempfile(),
+  launchFun = "launchDarwinBslibApp",
+  daemons = 4,
+  pkgs = NULL,
+  ...
+)
 }
 \arguments{
 \item{appStructure}{(\code{list}: \code{NULL}) appStructure object, i.e. a named list
@@ -14,6 +21,10 @@ objects. Representing the navigation (side) bar of the shiny app.}
 \item{appDir}{(\code{character(1)}: \code{tempfile()}) File path to the directory where app files will
 be written to, and the app is being deployed from. See \code{rsconnect::deployApp}
 for further details.}
+
+\item{launchFun}{(\code{character(1)}: \code{"launchDarwinBslibApp"}) Launch function as character}
+
+\item{daemons}{(\code{numeric(1)}: \code{4}) Number of daemons (sub-processes) to launch with the shiny app.}
 
 \item{pkgs}{(\code{character(n)}: \code{NULL}) Additional packages that should be
 installed and loaded when deploying.}
