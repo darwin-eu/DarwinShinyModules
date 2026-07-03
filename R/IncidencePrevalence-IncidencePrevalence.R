@@ -442,12 +442,23 @@ IncidencePrevalence <- R6::R6Class(
         shiny::bindCache(
           private$.result,
           private$.resultType,
+          private$.pickers[["analysis"]]$inputValues$washout,
+          private$.pickers[["analysis"]]$inputValues$repeated_events,
+          private$.pickers[["analysis"]]$inputValues$complete_period,
+          private$.pickers[["analysis"]]$inputValues$fullContribution,
+          private$.pickers[["analysis"]]$inputValues$level,
+          private$.pickers[["denominator"]]$inputValues$start_date,
+          private$.pickers[["denominator"]]$inputValues$end_date,
+          private$.pickers[["denominator"]]$inputValues$prior_obs,
+          private$.pickers[["denominator"]]$inputValues$age_group,
+          private$.pickers[["denominator"]]$inputValues$time_at_risk,
+          private$.pickers[["denominator"]]$inputValues$denom_sex,
+          private$.pickers[["database"]]$inputValues$cdm,
+          private$.pickers[["database"]]$inputValues$outcome,
           private$.hasInterval,
           private$.startDateCol,
-          private$.pickers[["analysis"]]$inputValues,
-          private$.pickers[["denominator"]]$inputValues,
-          private$.pickers[["date"]]$inputValues,
-          private$.pickers[["database"]]$inputValues
+          private$.pickers[["date"]]$inputValues$intervalItems,
+          private$.pickers[["date"]]$inputValues$interval
         )
     },
 
