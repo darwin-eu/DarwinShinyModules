@@ -519,7 +519,11 @@ IncidencePrevalence <- R6::R6Class(
         cdm = private$.pickers$database$inputValues$cdm,
         outcome = private$.pickers$database$inputValues$outcome)
       }) |>
-        shiny::bindCache(private$.result, private$.pickers$database$inputValues)
+        shiny::bindCache(
+          private$.result,
+          private$.pickers$database$inputValues$cdm,
+          private$.pickers$database$inputValues$outcome
+        )
 
       shiny::observeEvent(list(private$.pickers$database$inputValues$cdm, private$.pickers$database$inputValues$outcome), {
         promises::then(
@@ -544,7 +548,11 @@ IncidencePrevalence <- R6::R6Class(
         cdm = private$.pickers$database$inputValues$cdm,
         outcome = private$.pickers$database$inputValues$outcome)
       }) |>
-        shiny::bindCache(private$.result, private$.pickers$database$inputValues)
+        shiny::bindCache(
+          private$.result,
+          private$.pickers$database$inputValues$cdm,
+          private$.pickers$database$inputValues$outcome
+        )
 
       shiny::observeEvent(list(private$.pickers$database$inputValues$cdm, private$.pickers$database$inputValues$outcome), {
         promises::then(
