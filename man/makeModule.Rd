@@ -11,7 +11,9 @@ makeModule(ui, server, namespace = NULL, data = NULL)
 from packages like \code{shiny}, \code{shinydashboard}, or \code{bslib}}
 
 \item{server}{(\code{function}) A server function with atleast a \code{input} and
-\code{output} argument.}
+\code{output} argument. \code{data} is always availible in the server function, even
+when you do not explicitly list it as an argument in the \code{server} function
+definition.}
 
 \item{namespace}{(\code{character}: \code{NULL}) Namespace used in the ui element.}
 
@@ -39,27 +41,46 @@ to any defined (reactive) variables in the provided server function.
 library(DarwinShinyModules)
 library(shiny)
 
-ui <- tagList(p("My UI"))
+ui <- fluidPage(
+  tableOutput(NS("myMod", "table"))
+)
+
+# Notice that we do NOT pass a `data` argument, but it is still available in
+# the `server` function
 server <- function(input, output, session) {
-  # Do stuff
+  output$table <- renderTable({
+    data
+  })
 }
 
-mod <- makeModule(ui, server)
+mod <- makeModule(ui, server, namespace = "myMod", data = iris)
 
 if (interactive()) {
   preview(mod)
 }
 
 # Multiple data structures:
-ui <- fluidPage()
+ui <- fluidPage(
+  tableOutput(NS("myMod", "tableIris")),
+  tableOutput(NS("myMod", "tableCars"))
+)
 
 server <- function(input, output, session) {
   datIris <- data$iris
   datCars <- data$mtcars
 
-  # Do stuff with `datIris`
-  # Do stuff with `datCars`
+  output$tableIris <- renderTable({
+    datIris
+  })
+
+  output$tableCars <- renderTable({
+    datCars
+  })
 }
 
-mod <- makeModule(ui, server, data = list(iris = iris, mtcars = mtcars))
+mod <- makeModule(ui, server, namespace = "myMod", data = list(iris = iris, mtcars = mtcars))
+
+if (interactive()) {
+  preview(mod)
+}
 }
