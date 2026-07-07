@@ -14,6 +14,13 @@ from packages like \code{shiny}, \code{shinydashboard}, or \code{bslib}}
 \code{output} argument.}
 
 \item{namespace}{(\code{character}: \code{NULL}) Namespace used in the ui element.}
+
+\item{data}{(\code{NULL}) Data to use. The data will be stored in the returned
+module object. May be of any type that you support in your defined \code{server}
+function. \code{data} is always available in your \code{sever} function definition
+even if you do not explicitly pass it as an argument. If you need to use
+multiple data structures in your module, you can pack them up in a \code{list}.
+See the examples.}
 }
 \value{
 \code{ShinyModule}
@@ -42,4 +49,17 @@ mod <- makeModule(ui, server)
 if (interactive()) {
   preview(mod)
 }
+
+# Multiple data structures:
+ui <- fluidPage()
+
+server <- function(input, output, session) {
+  datIris <- data$iris
+  datCars <- data$mtcars
+
+  # Do stuff with `datIris`
+  # Do stuff with `datCars`
+}
+
+mod <- makeModule(ui, server, data = list(iris = iris, mtcars = mtcars))
 }

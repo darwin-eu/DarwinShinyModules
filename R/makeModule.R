@@ -72,9 +72,12 @@ GenericModule <- R6::R6Class(
       private$.varUI
     },
     .server = function(input, output, session = shiny::getDefaultReactiveDomain()) {
-      shiny::onStop(private$.onStop)
       serverFunArgs <- list(args(private$.varServer))
-      assign(x = "data", value = private$.data, envir = .GlobalEnv)
+
+      f <- formals(private$.varServer)
+      f$data <- quote(expr = )
+      formals(private$.varServer) <- f
+
       if ("session" %in% serverFunArgs) {
         do.call(
           what = private$.varServer,
@@ -83,14 +86,9 @@ GenericModule <- R6::R6Class(
       } else {
         do.call(
           what = private$.varServer,
-          args = list(input = input, output = output)
+          args = list(input = input, output = output, data = private$.data)
         )
       }
-    },
-
-    .onStop = function() {
-      rm("data", envir = .GlobalEnv)
-      gc()
     }
   )
 )
@@ -112,6 +110,12 @@ GenericModule <- R6::R6Class(
 #' @param server (`function`) A server function with atleast a `input` and
 #' `output` argument.
 #' @param namespace (`character`: `NULL`) Namespace used in the ui element.
+#' @param data (`NULL`) Data to use. The data will be stored in the returned
+#' module object. May be of any type that you support in your defined `server`
+#' function. `data` is always available in your `sever` function definition
+#' even if you do not explicitly pass it as an argument. If you need to use
+#' multiple data structures in your module, you can pack them up in a `list`.
+#' See the examples.
 #'
 #' @returns `ShinyModule`
 #' @export
@@ -130,6 +134,19 @@ GenericModule <- R6::R6Class(
 #' if (interactive()) {
 #'   preview(mod)
 #' }
+#'
+#' # Multiple data structures:
+#' ui <- fluidPage()
+#'
+#' server <- function(input, output, session) {
+#'   datIris <- data$iris
+#'   datCars <- data$mtcars
+#'
+#'   # Do stuff with `datIris`
+#'   # Do stuff with `datCars`
+#' }
+#'
+#' mod <- makeModule(ui, server, data = list(iris = iris, mtcars = mtcars))
 makeModule <- function(ui, server, namespace = NULL, data = NULL) {
   mod <- GenericModule$new(ui = ui, server = server, data = data)
   mod$moduleId <- namespace
