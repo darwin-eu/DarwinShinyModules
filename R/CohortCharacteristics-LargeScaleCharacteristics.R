@@ -73,11 +73,6 @@ LargeScaleCharacteristics <- R6::R6Class(
       }
     },
 
-    #' @field tidyResult (`tbl_df`)
-    tidyResult = function() {
-      return(private$.tidyResult)
-    },
-
     #' @field cdmNames (`character(n)`)
     cdmNames = function() {
       return(private$.cdmNames)
@@ -133,7 +128,6 @@ LargeScaleCharacteristics <- R6::R6Class(
       super$initialize(...)
       if ("summarised_result" %in% class(result)) {
         private$.result <- result
-        private$.tidyResult <- omopgenerics::tidy(result)
       } else {
         stop("Data has to be of class: `summarised_result`")
       }
@@ -153,7 +147,6 @@ LargeScaleCharacteristics <- R6::R6Class(
   private = list(
     ## Fields ----
     .result = NULL,
-    .tidyResult = NULL,
 
     # Nested modules
     .table = NULL,
