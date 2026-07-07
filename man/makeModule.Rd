@@ -18,7 +18,8 @@ from packages like \code{shiny}, \code{shinydashboard}, or \code{bslib}}
 \item{data}{(\code{NULL}) Data to use in the \code{server} function. Will be available
 in the \code{server} function definition as \code{data}. If multiple data objects are
 needed, you can pack them up in a \code{list()} and unpack them in your sever
-definition, see the examples.}
+definition, see the examples. \code{data} is still over-writable after the fact,
+with \code{myMod$data <- updatedData}}
 }
 \value{
 \code{ShinyModule}

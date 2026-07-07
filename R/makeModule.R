@@ -48,6 +48,9 @@ GenericModule <- R6::R6Class(
     }
   ),
   public = list(
+    #' @field data Data object to use in the defined `server`.
+    data = NULL,
+
     #' @description
     #' Initializer method
     #'
@@ -58,14 +61,13 @@ GenericModule <- R6::R6Class(
     #' @return `self`
     initialize = function(server, ui, data = NULL, ...) {
       super$initialize(...)
-      private$.data <- data
+      self$data <- data
       private$.varUI <- ui
       private$.varServer <- server
       return(invisible(self))
     }
   ),
   private = list(
-    .data = NULL,
     .varUI = NULL,
     .varServer = NULL,
     .UI = function() {
@@ -81,12 +83,12 @@ GenericModule <- R6::R6Class(
       if ("session" %in% serverFunArgs) {
         do.call(
           what = private$.varServer,
-          args = list(input = input, output = output, session = session)
+          args = list(input = input, output = output, session = session, data = self$data)
         )
       } else {
         do.call(
           what = private$.varServer,
-          args = list(input = input, output = output, data = private$.data)
+          args = list(input = input, output = output, data = self$data)
         )
       }
     }
@@ -114,7 +116,8 @@ GenericModule <- R6::R6Class(
 #' @param data (`NULL`) Data to use in the `server` function. Will be available
 #' in the `server` function definition as `data`. If multiple data objects are
 #' needed, you can pack them up in a `list()` and unpack them in your sever
-#' definition, see the examples.
+#' definition, see the examples. `data` is still over-writable after the fact,
+#' with `myMod$data <- updatedData`
 #'
 #' @returns `ShinyModule`
 #' @export
