@@ -45,13 +45,15 @@ ui <- page_sidebar(
 
 server <- function(input, output, session) {
   output$p <- renderPlot({
-    ggplot(penguins) +
+    # Note that in the example of bslib `data` is replaced with `penguins`
+    ggplot(data) +
       geom_histogram(aes(!!input$var), bins = input$bins) +
       theme_bw(base_size = 20)
   })
 }
 
-mod <- makeModule(ui = ui, server = server)
+# When making a module we can pass data to the `data` parameter
+mod <- makeModule(ui = ui, server = server, data = penguins)
 
 # Previewing our new module
 preview(mod)
@@ -92,7 +94,7 @@ ui <- page_sidebar(
   )
 )
 
-mod <- makeModule(ui = ui, server = server, namespace = "custom_module")
+mod <- makeModule(ui = ui, server = server, data = penguins, namespace = "custom_module")
 
 preview(mod)
 ```
