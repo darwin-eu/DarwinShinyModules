@@ -74,9 +74,9 @@ GenericModule <- R6::R6Class(
     .server = function(input, output, session = shiny::getDefaultReactiveDomain()) {
       serverFunArgs <- list(args(private$.varServer))
 
-      f <- formals(private$.varServer)
-      f$data <- quote(expr = )
-      formals(private$.varServer) <- f
+      formalArgs <- formals(private$.varServer)
+      formalArgs$data <- bquote()
+      formals(private$.varServer) <- formalArgs
 
       if ("session" %in% serverFunArgs) {
         do.call(
@@ -96,28 +96,25 @@ GenericModule <- R6::R6Class(
 
 #' makeModule
 #'
-#' Function to make a `ShinyModule` from an UI element and server function.
+#' `makeModule` allows for easy migration between bespoke shiny code and the
+#' modular framework in `DarwinShinyModules`, without having to implement an
+#' `R6` class.
 #'
 #' @details
-#' The function allows for easy migration between bespoke shiny code and the
-#' modular framework in `DarwinShinyModules`, without having to implement an
-#' `R6` class. One caveat is, is the generated module is completely isolated.
-#' Meaning that the module does not allow other modules to read from or write
-#' to any defined (reactive) variables in the provided server function.
+#' The `data` argument will be available in the defined `server` function at
+#' run time, regardless if you pass it to the `server` function or not. `data`
+#' is stored on the returned `ShinyModule` object which makes it entirely self
+#' sufficient.
 #'
 #' @param ui Shiny UI elements i.e. a `shiny.tag.list`, or similar ui objects
 #' from packages like `shiny`, `shinydashboard`, or `bslib`
-#' @param server (`function`) A server function with atleast a `input` and
-#' `output` argument. `data` is always availible in the server function, even
-#' when you do not explicitly list it as an argument in the `server` function
-#' definition.
+#' @param server (`function`) A server function with at least a `input` and
+#' `output` argument.
 #' @param namespace (`character`: `NULL`) Namespace used in the ui element.
-#' @param data (`NULL`) Data to use. The data will be stored in the returned
-#' module object. May be of any type that you support in your defined `server`
-#' function. `data` is always available in your `sever` function definition
-#' even if you do not explicitly pass it as an argument. If you need to use
-#' multiple data structures in your module, you can pack them up in a `list`.
-#' See the examples.
+#' @param data (`NULL`) Data to use in the `server` function. Will be available
+#' in the `server` function definition as `data`. If multiple data objects are
+#' needed, you can pack them up in a `list()` and unpack them in your sever
+#' definition, see the examples.
 #'
 #' @returns `ShinyModule`
 #' @export

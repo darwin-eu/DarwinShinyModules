@@ -10,32 +10,29 @@ makeModule(ui, server, namespace = NULL, data = NULL)
 \item{ui}{Shiny UI elements i.e. a \code{shiny.tag.list}, or similar ui objects
 from packages like \code{shiny}, \code{shinydashboard}, or \code{bslib}}
 
-\item{server}{(\code{function}) A server function with atleast a \code{input} and
-\code{output} argument. \code{data} is always availible in the server function, even
-when you do not explicitly list it as an argument in the \code{server} function
-definition.}
+\item{server}{(\code{function}) A server function with at least a \code{input} and
+\code{output} argument.}
 
 \item{namespace}{(\code{character}: \code{NULL}) Namespace used in the ui element.}
 
-\item{data}{(\code{NULL}) Data to use. The data will be stored in the returned
-module object. May be of any type that you support in your defined \code{server}
-function. \code{data} is always available in your \code{sever} function definition
-even if you do not explicitly pass it as an argument. If you need to use
-multiple data structures in your module, you can pack them up in a \code{list}.
-See the examples.}
+\item{data}{(\code{NULL}) Data to use in the \code{server} function. Will be available
+in the \code{server} function definition as \code{data}. If multiple data objects are
+needed, you can pack them up in a \code{list()} and unpack them in your sever
+definition, see the examples.}
 }
 \value{
 \code{ShinyModule}
 }
 \description{
-Function to make a \code{ShinyModule} from an UI element and server function.
+\code{makeModule} allows for easy migration between bespoke shiny code and the
+modular framework in \code{DarwinShinyModules}, without having to implement an
+\code{R6} class.
 }
 \details{
-The function allows for easy migration between bespoke shiny code and the
-modular framework in \code{DarwinShinyModules}, without having to implement an
-\code{R6} class. One caveat is, is the generated module is completely isolated.
-Meaning that the module does not allow other modules to read from or write
-to any defined (reactive) variables in the provided server function.
+The \code{data} argument will be available in the defined \code{server} function at
+run time, regardless if you pass it to the \code{server} function or not. \code{data}
+is stored on the returned \code{ShinyModule} object which makes it entirely self
+sufficient.
 }
 \examples{
 library(DarwinShinyModules)
