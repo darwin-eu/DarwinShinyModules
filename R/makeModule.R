@@ -53,23 +53,28 @@ GenericModule <- R6::R6Class(
     #'
     #' @param ui UI element passed to the `makeModule()` function.
     #' @param server (`function`) Server function passed to the `makeModule()` function
+    #' @param data Data to use
     #'
     #' @return `self`
-    initialize = function(server, ui, ...) {
+    initialize = function(server, ui, data = NULL, ...) {
       super$initialize(...)
+      private$.data <- data
       private$.varUI <- ui
       private$.varServer <- server
       return(invisible(self))
     }
   ),
   private = list(
+    .data = NULL,
     .varUI = NULL,
     .varServer = NULL,
     .UI = function() {
       private$.varUI
     },
     .server = function(input, output, session = shiny::getDefaultReactiveDomain()) {
+      shiny::onStop(private$.onStop)
       serverFunArgs <- list(args(private$.varServer))
+      assign(x = "data", value = private$.data, envir = .GlobalEnv)
       if ("session" %in% serverFunArgs) {
         do.call(
           what = private$.varServer,
@@ -81,6 +86,11 @@ GenericModule <- R6::R6Class(
           args = list(input = input, output = output)
         )
       }
+    },
+
+    .onStop = function() {
+      rm("data", envir = .GlobalEnv)
+      gc()
     }
   )
 )
@@ -120,8 +130,8 @@ GenericModule <- R6::R6Class(
 #' if (interactive()) {
 #'   preview(mod)
 #' }
-makeModule <- function(ui, server, namespace = NULL) {
-  mod <- GenericModule$new(ui = ui, server = server)
+makeModule <- function(ui, server, namespace = NULL, data = NULL) {
+  mod <- GenericModule$new(ui = ui, server = server, data = data)
   mod$moduleId <- namespace
   return(mod)
 }

@@ -4,7 +4,7 @@
 \alias{makeModule}
 \title{makeModule}
 \usage{
-makeModule(ui, server, namespace = NULL)
+makeModule(ui, server, namespace = NULL, data = NULL)
 }
 \arguments{
 \item{ui}{Shiny UI elements i.e. a \code{shiny.tag.list}, or similar ui objects
