@@ -41,6 +41,7 @@ ProportionOfPatientsCovered <- R6::R6Class(
   classname = "ProportionOfPatientsCovered",
   inherit = ShinyModule,
 
+  ## Active ----
   active = list(
     #' @field result (`summarised_result`) Object created by `DrugUtilisation::summariseProportionOfPatientsCovered()`.
     result = function(result) {
@@ -63,6 +64,7 @@ ProportionOfPatientsCovered <- R6::R6Class(
     }
   ),
 
+  ## Public ----
   public = list(
     #' @description
     #' Initializer method.
@@ -101,6 +103,7 @@ ProportionOfPatientsCovered <- R6::R6Class(
     }
   ),
 
+  ## Private ----
   private = list(
     .serialResult = NULL,
     .table = NULL,
