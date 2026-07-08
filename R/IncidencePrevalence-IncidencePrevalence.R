@@ -66,16 +66,11 @@ IncidencePrevalence <- R6::R6Class(
     #' @field result (`summarisedResult`) SummarisedResult object from IncidencePrevalence
     result = function(result) {
       if (missing(result)) {
-        return(private$.result)
+        return(qs2::qs_deserialize(private$.result))
       } else {
-        # Checks on result
-        checkmate::assertClass(result, "summarised_result")
-        checkmate::assertSubset(
-          x = omopgenerics::settings(result)$result_type,
-          choices = c("incidence", "incidence_attrition", "prevalence", "prevalence_attrition"),
-          .var.name = "result_type",
-        )
-        private$.result <- result
+        private$.assertResult(result)
+        private$.result <- qs2::qs_serialize(result)
+        private$.settings <- omopgenerics::settings(result)
       }
     },
 
@@ -99,13 +94,11 @@ IncidencePrevalence <- R6::R6Class(
     #' @returns `self`
     initialize = function(result, defaults = list(), ...) {
       super$initialize(...)
-      private$.assertResult(result)
-      private$.result <- result
-      private$.settings <- omopgenerics::settings(result)
+      self$result <- result
       private$.defaults <- defaults
 
       resType <- unique(private$.settings$result_type)
-      private$.hasInterval <- any(grepl("analysis_interval", private$.result$additional_name))
+      private$.hasInterval <- any(grepl("analysis_interval", result$additional_name))
 
       if ("incidence" %in% resType) {
         private$.setIncidenceCols()
@@ -113,7 +106,7 @@ IncidencePrevalence <- R6::R6Class(
         private$.setPrevalenceCols()
       }
 
-      private$.setFilterValues()
+      private$.setFilterValues(result)
       private$.initPickers()
 
       private$.table <- Flextable$new(
@@ -343,6 +336,7 @@ IncidencePrevalence <- R6::R6Class(
 
         if (private$.hasInterval) {
           additionalLevels <- private$.result |>
+            qs2::qs_deserialize() |>
             omopgenerics::filterAdditional(.data[[private$.endDateCol]] != "overall") |>
             omopgenerics::filterAdditional(as.Date(.data[[private$.startDateCol]]) >= minDate) |>
             omopgenerics::filterAdditional(as.Date(.data[[private$.endDateCol]]) <= maxDate) |>
@@ -351,7 +345,7 @@ IncidencePrevalence <- R6::R6Class(
             dplyr::distinct(.data$additional_level) |>
             dplyr::pull(.data$additional_level)
 
-          additionalLevelItems <- stringr::str_split_i(string = additionalLevels, pattern = " &&& ", i = 1) |>
+          additionalLevelItems <- stringr::str_split_i(string = private$.additionalLevels, pattern = " &&& ", i = 1) |>
             unlist() |>
             unique()
 
@@ -375,79 +369,119 @@ IncidencePrevalence <- R6::R6Class(
     },
 
     .serverGetSummariseResultData = function(input, output, session) {
-      reactive({
-        analysis <- private$.pickers$analysis$inputValues
-        denominator <- private$.pickers$denominator$inputValues
-        date <- private$.pickers$date$inputValues
-        database <- private$.pickers[["database"]]$inputValues
-
-        result <- private$.result |>
-          dplyr::filter(
-            cdm_name %in% private$.pickers[["database"]]$inputValues$cdm
-          )
-
-        result <- if (private$.resultType == "incidence") {
-          result |>
-            omopgenerics::filterSettings(
-              .data$analysis_outcome_washout %in% analysis$washout,
-              .data$analysis_repeated_events %in% analysis$repeated_events,
-              .data$analysis_complete_database_intervals %in% analysis$complete_period
+      shiny::reactive({
+        mirai::mirai({
+          result <- res |>
+            qs2::qs_deserialize() |>
+            dplyr::filter(
+              .data$cdm_name %in% cdmName
             )
-        } else if (private$.resultType == "point_prev") {
-          result
-        } else if (private$.resultType == "period_prev") {
-          result |>
-            omopgenerics::filterSettings(
-              .data$analysis_full_contribution %in% analysis$fullContribution,
-              .data$analysis_level %in% analysis$level,
-              .data$analysis_complete_database_intervals %in% analysis$complete_period
-            )
-        } else {
-          result
-        }
 
-        result <- result |>
-          omopgenerics::filterSettings(
-            .data$denominator_start_date %in% denominator$start_date,
-            .data$denominator_end_date %in% denominator$end_date,
-            .data$denominator_days_prior_observation %in% denominator$prior_obs,
-            .data$denominator_sex %in% denominator$denom_sex,
-            .data$denominator_age_group %in% denominator$age_group,
-            .data$denominator_time_at_risk %in% denominator$time_at_risk
-          )
+          result <- if (resultType == "incidence") {
+            result |>
+              omopgenerics::filterSettings(
+                .data$analysis_outcome_washout %in% washout,
+                .data$analysis_repeated_events %in% repeated_events,
+                .data$analysis_complete_database_intervals %in% complete_period
+              )
+          } else if (resultType == "point_prev") {
+            result
+          } else if (resultType == "period_prev") {
+            result |>
+              omopgenerics::filterSettings(
+                .data$analysis_full_contribution %in% fullContribution,
+                .data$analysis_level %in% level,
+                .data$analysis_complete_database_intervals %in% complete_period
+              )
+          } else {
+            result
+          }
 
-        if (private$.hasInterval) {
           result <- result |>
-            omopgenerics::filterAdditional(
-              analysis_interval == date$interval,
-              .data[[private$.startDateCol]] %in% date$intervalItems
+            omopgenerics::filterSettings(
+              .data$denominator_start_date %in% start_date,
+              .data$denominator_end_date %in% end_date,
+              .data$denominator_days_prior_observation %in% prior_obs,
+              .data$denominator_sex %in% denom_sex,
+              .data$denominator_age_group %in% age_group,
+              .data$denominator_time_at_risk %in% time_at_risk
             )
-        }
 
-        result |>
-          omopgenerics::filterGroup(outcome_cohort_name %in% database$outcome)
-      })
+          if (any(grepl("analysis_interval", result)) & !is.null(intervalItems) & !is.null(interval)) {
+            result <- result |>
+              omopgenerics::filterAdditional(
+                analysis_interval == interval,
+                .data[[startDateCol]] %in% intervalItems
+              )
+          }
+
+          result |>
+            omopgenerics::filterGroup(outcome_cohort_name %in% outcome)
+        },
+        res = private$.result,
+        resultType = private$.resultType,
+        washout = private$.pickers[["analysis"]]$inputValues$washout,
+        repeated_events = private$.pickers[["analysis"]]$inputValues$repeated_events,
+        complete_period = private$.pickers[["analysis"]]$inputValues$complete_period,
+        fullContribution = private$.pickers[["analysis"]]$inputValues$fullContribution,
+        level = private$.pickers[["analysis"]]$inputValues$level,
+        start_date = private$.pickers[["denominator"]]$inputValues$start_date,
+        end_date = private$.pickers[["denominator"]]$inputValues$end_date,
+        prior_obs = private$.pickers[["denominator"]]$inputValues$prior_obs,
+        age_group = private$.pickers[["denominator"]]$inputValues$age_group,
+        time_at_risk = private$.pickers[["denominator"]]$inputValues$time_at_risk,
+        denom_sex = private$.pickers[["denominator"]]$inputValues$denom_sex,
+        cdmName = private$.pickers[["database"]]$inputValues$cdm,
+        outcome = private$.pickers[["database"]]$inputValues$outcome,
+        hasInterval = private$.hasInterval,
+        startDateCol = private$.startDateCol,
+        intervalItems = private$.pickers[["date"]]$inputValues$intervalItems,
+        interval = private$.pickers[["date"]]$inputValues$interval
+        )
+        }) |>
+        shiny::bindCache(
+          private$.result,
+          private$.resultType,
+          private$.pickers[["analysis"]]$inputValues$washout,
+          private$.pickers[["analysis"]]$inputValues$repeated_events,
+          private$.pickers[["analysis"]]$inputValues$complete_period,
+          private$.pickers[["analysis"]]$inputValues$fullContribution,
+          private$.pickers[["analysis"]]$inputValues$level,
+          private$.pickers[["denominator"]]$inputValues$start_date,
+          private$.pickers[["denominator"]]$inputValues$end_date,
+          private$.pickers[["denominator"]]$inputValues$prior_obs,
+          private$.pickers[["denominator"]]$inputValues$age_group,
+          private$.pickers[["denominator"]]$inputValues$time_at_risk,
+          private$.pickers[["denominator"]]$inputValues$denom_sex,
+          private$.pickers[["database"]]$inputValues$cdm,
+          private$.pickers[["database"]]$inputValues$outcome,
+          private$.hasInterval,
+          private$.startDateCol,
+          private$.pickers[["date"]]$inputValues$intervalItems,
+          private$.pickers[["date"]]$inputValues$interval
+        )
     },
 
     .serverTable = function(input, output, session, fetchData) {
       inputValues <- private$.pickers[["table"]]$inputValues
 
       shiny::observe({
-        shiny::req(fetchData())
-        private$.table$args$result <- fetchData()
         private$.table$args$header <- inputValues$headerColumn
         private$.table$args$groupColumn <- inputValues$groupColumn
         private$.table$args$settingsColumn <- inputValues$settingsColumn
         private$.table$args$hide <- inputValues$hideColumn
-
-        private$.table$server(input, output, session)
+        promises::then(
+          promise = fetchData(),
+          onFulfilled = function(result) {
+            private$.table$args$result <- result
+            private$.table$server(input, output, session)
+          }
+        )
       })
     },
 
     .serverPlot = function(input, output, session, fetchData) {
       shiny::observe({
-        shiny::req(fetchData())
-        private$.plot$args$result <- fetchData()
         private$.plot$args$x <- private$.pickers[["plot"]]$inputValues$xAxis
         private$.plot$args$y <- private$.estimate
         private$.plot$args$line <- FALSE
@@ -463,30 +497,71 @@ IncidencePrevalence <- R6::R6Class(
 
         private$.plot$args$confInterval <- as.logical(private$.pickers[["plot"]]$inputValues$confInterval)
         private$.plot$args$line <- as.logical(private$.pickers[["plot"]]$inputValues$line)
-
-        private$.plot$server(input, output, session)
+        promises::then(
+          promise = fetchData(),
+          onFulfilled = function(result) {
+            private$.plot$args$result <- result
+            private$.plot$server(input, output, session)
+          }
+        )
       })
     },
 
     .serverAttrition = function(input, output, session) {
-      dbInput <- private$.pickers$database$inputValues
+      fetchAttrition <- shiny::reactive({
+        mirai::mirai({
+          result |>
+            qs2::qs_deserialize() |>
+            dplyr::filter(.data$cdm_name %in% cdm) |>
+            omopgenerics::filterGroup(.data$outcome_cohort_name %in% outcome)
+        },
+        result = private$.result,
+        cdm = private$.pickers$database$inputValues$cdm,
+        outcome = private$.pickers$database$inputValues$outcome)
+      }) |>
+        shiny::bindCache(
+          private$.result,
+          private$.pickers$database$inputValues$cdm,
+          private$.pickers$database$inputValues$outcome
+        )
 
-      shiny::observeEvent(list(dbInput$cdm, dbInput$outcome), {
-        private$.attrition$args$result <- private$.result |>
-          dplyr::filter(.data$cdm_name %in% dbInput$cdm) |>
-          omopgenerics::filterGroup(.data$outcome_cohort_name %in% dbInput$outcome)
-        private$.attrition$server(input, output, session)
+      shiny::observeEvent(list(private$.pickers$database$inputValues$cdm, private$.pickers$database$inputValues$outcome), {
+        promises::then(
+          promise = fetchAttrition(),
+          onFulfilled = function(result) {
+            private$.attrition$args$result <- result
+            private$.attrition$server(input, output, session)
+          }
+        )
       })
     },
 
     .serverPopulation = function(input, output, session) {
-      dbInput <- private$.pickers$database$inputValues
+      fetchPopulation <- shiny::reactive({
+        mirai::mirai({
+          result |>
+            qs2::qs_deserialize() |>
+            dplyr::filter(.data$cdm_name %in% cdm) |>
+            omopgenerics::filterGroup(.data$outcome_cohort_name %in% outcome)
+        },
+        result = private$.result,
+        cdm = private$.pickers$database$inputValues$cdm,
+        outcome = private$.pickers$database$inputValues$outcome)
+      }) |>
+        shiny::bindCache(
+          private$.result,
+          private$.pickers$database$inputValues$cdm,
+          private$.pickers$database$inputValues$outcome
+        )
 
-      shiny::observeEvent(list(dbInput$cdm, dbInput$outcome), {
-        private$.population$args$result <- private$.result |>
-          dplyr::filter(.data$cdm_name %in% dbInput$cdm) |>
-          omopgenerics::filterGroup(.data$outcome_cohort_name %in% dbInput$outcome)
-        private$.population$server(input, output, session)
+      shiny::observeEvent(list(private$.pickers$database$inputValues$cdm, private$.pickers$database$inputValues$outcome), {
+        promises::then(
+          promise = fetchPopulation(),
+          onFulfilled = function(result) {
+            private$.population$args$result <- result
+              private$.population$server(input, output, session)
+          }
+        )
       })
     },
 
@@ -887,10 +962,10 @@ IncidencePrevalence <- R6::R6Class(
       }
     },
 
-    .setFilterValues = function() {
-      private$.cdmNames <- getCDMNames(private$.result)
-      private$.strata <- c("overall", getStrata(private$.result))
-      private$.setCohortNames()
+    .setFilterValues = function(result) {
+      private$.cdmNames <- getCDMNames(result)
+      private$.strata <- c("overall", getStrata(result))
+      private$.setCohortNames(result)
 
       private$.ageGroups <- private$.getColValues("denominator_age_group")
       private$.sex <- private$.getColValues("denominator_sex")
@@ -899,8 +974,8 @@ IncidencePrevalence <- R6::R6Class(
       private$.endDate <- private$.getColValues("denominator_end_date")
       private$.timeAtRisk <- private$.getColValues("denominator_time_at_risk")
 
-      private$.setDateRange()
-      private$.setTimeIntervals()
+      private$.setDateRange(result)
+      private$.setTimeIntervals(result)
 
       private$.databaseIntervals <- private$.getColValues("analysis_complete_database_intervals")
 
@@ -916,8 +991,8 @@ IncidencePrevalence <- R6::R6Class(
       private$.level <- private$.getColValues("analysis_level")
     },
 
-    .setDateRange = function() {
-      private$.dateRangeMin <- private$.result |>
+    .setDateRange = function(result) {
+      private$.dateRangeMin <- result |>
         omopgenerics::filterAdditional(
           .data[[private$.startDateCol]] == min(.data[[private$.startDateCol]])
         ) |>
@@ -926,7 +1001,7 @@ IncidencePrevalence <- R6::R6Class(
         dplyr::pull() |>
         as.Date()
 
-      private$.dateRangeMax <- private$.result |>
+      private$.dateRangeMax <- result |>
         omopgenerics::filterAdditional(.data[[private$.endDateCol]] != "overall") |>
         omopgenerics::filterAdditional(.data[[private$.endDateCol]] == max(.data[[private$.endDateCol]])) |>
         omopgenerics::tidy() |>
@@ -935,10 +1010,10 @@ IncidencePrevalence <- R6::R6Class(
         as.Date()
     },
 
-    .setTimeIntervals = function() {
+    .setTimeIntervals = function(result) {
       # "overall", "years", "quarters", "months", "weeks"
       private$.timeIntervals <- if (private$.hasInterval) {
-        additionalLevels <- private$.result |>
+        additionalLevels <- result |>
           dplyr::filter(grepl(pattern = "analysis_interval", x = .data$additional_name)) |>
           dplyr::distinct(.data$additional_level) |>
           dplyr::pull(.data$additional_level)
@@ -953,8 +1028,8 @@ IncidencePrevalence <- R6::R6Class(
       }
     },
 
-    .setCohortNames = function() {
-      groupLevels <- private$.result |>
+    .setCohortNames = function(result) {
+      groupLevels <- result |>
         dplyr::filter(grepl(pattern = "outcome_cohort_name", x = .data$group_name)) |>
         dplyr::distinct(.data$group_level) |>
         dplyr::pull(.data$group_level)
@@ -1041,10 +1116,16 @@ IncidencePrevalence <- R6::R6Class(
       }
     },
 
-    .assertResult = function(data) {
-      resSettings <- attr(data, "settings")
+    .assertResult = function(result) {
+      checkmate::assertClass(result, "summarised_result")
+      checkmate::assertSubset(
+        x = omopgenerics::settings(result)$result_type,
+        choices = c("incidence", "incidence_attrition", "prevalence", "prevalence_attrition"),
+        .var.name = "result_type",
+      )
+      resSettings <- attr(result, "settings")
       if (is.null(resSettings)) {
-        stop("Data does not appear to be a result object of `IncidencePrevalence`")
+        stop("Result does not appear to be a result object of `IncidencePrevalence`")
       }
       if (!any(resSettings$result_type %in% c("incidence", "prevalence", "incidence_attrition", "prevalence_attrition"))) {
         stop("Cannot assert `Incidence` or `Prevalence` result")
