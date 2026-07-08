@@ -1,3 +1,32 @@
+# DarwinShinyModules 0.7.0
+## Modules
+* Made result/data fields writeable for composed modules
+* Added `data` argument to `makeModule()`
+
+### DrugUtilisation:
+* Added `DoseCoverage`
+* Added `ProportionOfPatientsCovered `
+
+### CohortCharacteristics:
+* Added `CohortCount`
+* Added `CohortTiming`
+* Added `CohortOverlap`
+
+## Shiny App Utils
+* Updated footer
+* Updated Data Partner acronyms
+* Added utility functions to save, load, and deploy a shiny app directly from or to an `appStructure`.
+
+## Dependencies
+* Added `visOmopResults` to Imports
+* Added `omock` to Suggests
+
+## Documentation
+* Added a separate vignette describing the `appStructure`
+* Added vignette for deployment of shiny apps directly from `appStructure`
+* Updated vignette for creating a new module using `makeModule()`
+* Updated ReadMe to refer to the public repository
+
 # DarwinShinyModules 0.6.0
 * Refreshed data from the DARWIN EU portal for database acronyms and descriptions
 * added wrapper functions for creating (`moduleX()`, i.e. `moduleIncidence()`) and launching (`shinyX()`, i.e. `shinyIncidence()`) modules, which follow the existing `tableX()`, `plotX()` syntax for most of the analytical packages.
