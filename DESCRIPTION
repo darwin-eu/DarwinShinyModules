@@ -1,6 +1,6 @@
 Package: DarwinShinyModules
 Title: Repository of Shiny Modules for Darwin Result Viewers
-Version: 0.6.0
+Version: 0.7.0
 Authors@R: c(
     person("Ger", "Inberg", email = "g.inberg@erasmusmc.nl", role = c("aut"), comment = c(ORCID = "0000-0001-8993-8748")),
     person("Maarten", "van Kessel", email = "m.l.vankessel@erasmusmc.nl", role = c("aut", "cre"), comment = c(ORCID = "0009-0006-8832-6030")),
@@ -27,7 +27,10 @@ Imports:
     promises,
     shinyWidgets,
     stringr,
-    purrr
+    purrr,
+    mirai,
+    qs2,
+    visOmopResults
 Suggests:
     bslib,
     shinydashboard,
@@ -44,7 +47,6 @@ Suggests:
     dbplyr,
     duckdb,
     RSQLite,
-    visOmopResults,
     omopgenerics,
     CDMConnector,
     TreatmentPatterns,
@@ -57,7 +59,9 @@ Suggests:
     usethis,
     tidyr,
     stats,
-    CirceR
+    CirceR,
+    rsconnect,
+    omock
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr
@@ -69,6 +73,10 @@ Collate:
     'BslibApp.R'
     'CohortCharacteristics-Characteristics.R'
     'CohortCharacteristics-CohortAttrition.R'
+    'CohortCharacteristics-CohortCodelist.R'
+    'CohortCharacteristics-CohortCount.R'
+    'CohortCharacteristics-CohortOverlap.R'
+    'CohortCharacteristics-CohortTiming.R'
     'CohortCharacteristics-LargeScaleCharacteristics.R'
     'CohortSurvival-CohortSurvival.R'
     'CreateApp.R'
@@ -81,9 +89,11 @@ Collate:
     'DatabaseDBI.R'
     'DatabaseOverview.R'
     'DrugExposureDiagnostics.R'
+    'DrugUtilisation-DoseCoverage.R'
     'DrugUtilisation-DrugRestart.R'
     'DrugUtilisation-DrugUtilisation.R'
     'DrugUtilisation-Indication.R'
+    'DrugUtilisation-ProportionOfPatientsCovered.R'
     'DrugUtilisation-Treatment.R'
     'IncidencePrevalence-IncidencePrevalence.R'
     'InputPanel.R'
@@ -109,7 +119,9 @@ Collate:
     'makeModule.R'
     'preview.R'
     'utils-SummarizedResult.R'
+    'utils-deploy.R'
     'utils.R'
     'zzz.R'
 URL: https://darwin-eu-dev.github.io/DarwinShinyModules/
 Config/roxygen2/version: 8.0.0
+RoxygenNote: 7.3.3

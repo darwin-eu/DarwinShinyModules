@@ -1,0 +1,47 @@
+---
+title: "An AppStructure object"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{An AppStructure object}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+In examples, documentation, and code you might have seen a reference to an `appStructure`. An `appStructure` object is **named** a `list()` containing `ShinyModule` objects or nested lists containing `ShinyModule` objects. The structure of the `appStructure` list resembles how to navigate your shiny app, i.e:
+```{r}
+library(DarwinShinyModules)
+
+# Make some modules to make the `appStructure` with
+base <- Text$new("**base**")
+nested_a <- Text$new("**nested A**")
+nested_b <- Text$new("**nested B**")
+sub_a <- Text$new("**sub A**")
+sub_b <- Text$new("**sub B**")
+comb_a <- Text$new("**comb A**")
+comb_b <- Text$new("**comb B**")
+comb_c <- Text$new("**comb C**")
+
+# Creating the `appstructure`
+appStructure <- list(
+ base = base,
+ nested = list(nested_a, nested_b),
+ nested_sub = list(
+   sub_a = sub_a,
+   sub_b = sub_b
+ ),
+ nested_combined = list(
+   comb_a_b = list(comb_a, comb_b),
+   comb_c = comb_c
+ )
+)
+```
+
+The main `list()` is always named, as for your navigation panel or bar, each items should have a name. Nested lists (see `appStructure$nested`) do not have to be named. The modules will be put underneath each other on the same page. If you do name the nested list (see `appStructure$nested_sub`), sub-items will be created for the main menu item.

@@ -45,8 +45,6 @@ if (interactive()) {
   \describe{
     \item{\code{result}}{(\code{summarised_result})}
 
-    \item{\code{tidyResult}}{(\code{tbl_df})}
-
     \item{\code{cdmNames}}{(\code{character(n)})}
 
     \item{\code{cohortNames}}{(\code{character(n)})}

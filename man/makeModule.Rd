@@ -4,40 +4,79 @@
 \alias{makeModule}
 \title{makeModule}
 \usage{
-makeModule(ui, server, namespace = NULL)
+makeModule(ui, server, namespace = NULL, data = NULL)
 }
 \arguments{
 \item{ui}{Shiny UI elements i.e. a \code{shiny.tag.list}, or similar ui objects
 from packages like \code{shiny}, \code{shinydashboard}, or \code{bslib}}
 
-\item{server}{(\code{function}) A server function with atleast a \code{input} and
+\item{server}{(\code{function}) A server function with at least a \code{input} and
 \code{output} argument.}
 
 \item{namespace}{(\code{character}: \code{NULL}) Namespace used in the ui element.}
+
+\item{data}{(\code{NULL}) Data to use in the \code{server} function. Will be available
+in the \code{server} function definition as \code{data}. If multiple data objects are
+needed, you can pack them up in a \code{list()} and unpack them in your sever
+definition, see the examples. \code{data} is still over-writable after the fact,
+with \code{myMod$data <- updatedData}}
 }
 \value{
 \code{ShinyModule}
 }
 \description{
-Function to make a \code{ShinyModule} from an UI element and server function.
+\code{makeModule} allows for easy migration between bespoke shiny code and the
+modular framework in \code{DarwinShinyModules}, without having to implement an
+\code{R6} class.
 }
 \details{
-The function allows for easy migration between bespoke shiny code and the
-modular framework in \code{DarwinShinyModules}, without having to implement an
-\code{R6} class. One caveat is, is the generated module is completely isolated.
-Meaning that the module does not allow other modules to read from or write
-to any defined (reactive) variables in the provided server function.
+The \code{data} argument will be available in the defined \code{server} function at
+run time, regardless if you pass it to the \code{server} function or not. \code{data}
+is stored on the returned \code{ShinyModule} object which makes it entirely self
+sufficient.
 }
 \examples{
 library(DarwinShinyModules)
 library(shiny)
 
-ui <- tagList(p("My UI"))
+ui <- fluidPage(
+  tableOutput(NS("myMod", "table"))
+)
+
+# Notice that we do NOT pass a `data` argument, but it is still available in
+# the `server` function
 server <- function(input, output, session) {
-  # Do stuff
+  output$table <- renderTable({
+    data
+  })
 }
 
-mod <- makeModule(ui, server)
+mod <- makeModule(ui, server, namespace = "myMod", data = iris)
+
+if (interactive()) {
+  preview(mod)
+}
+
+# Multiple data structures:
+ui <- fluidPage(
+  tableOutput(NS("myMod", "tableIris")),
+  tableOutput(NS("myMod", "tableCars"))
+)
+
+server <- function(input, output, session) {
+  datIris <- data$iris
+  datCars <- data$mtcars
+
+  output$tableIris <- renderTable({
+    datIris
+  })
+
+  output$tableCars <- renderTable({
+    datCars
+  })
+}
+
+mod <- makeModule(ui, server, namespace = "myMod", data = list(iris = iris, mtcars = mtcars))
 
 if (interactive()) {
   preview(mod)

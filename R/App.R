@@ -29,7 +29,7 @@ App <- R6::R6Class(
     ## Methods ----
     initialize = function(appStructure) {
       private$.appStructure <- appStructure
-      private$.deployDate <- Sys.Date()
+      private$.deployDate <- format(Sys.Date(), "%Y")
     },
 
     launch = function() {

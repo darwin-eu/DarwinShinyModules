@@ -1,4 +1,4 @@
-test_that("Creation: Incidence", {
+test_that("Creation: Characteristics", {
   skip_if_not(
     require("CohortCharacteristics", character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
     && packageVersion("CohortCharacteristics") >= "1.1.0"

@@ -97,7 +97,8 @@ PlotStatic <- R6::R6Class(
       shiny::observe({
         output$plot <- shiny::renderPlot({
           do.call(private$.fun, self$args)
-        }, res = max(c(plotHeight(), plotWidth() / 1.5)) / 8)
+        }, res = max(c(plotHeight(), plotWidth() / 1.5)) / 6) |>
+          shiny::bindCache(private$.fun, self$args, plotHeight(), plotWidth())
       })
     },
 

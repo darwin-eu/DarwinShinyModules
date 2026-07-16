@@ -88,7 +88,7 @@ darwinFooter <- function(type = "shinydashboard", deployDate = Sys.Date()) {
     style = darwinStyle,
     shiny::h6(
       sprintf(
-        "Generated with DarwinShinyModules %s | Deployed on: %s | Copyright %s European Medicines Agency",
+        "Generated with DarwinShinyModules %s | Deployed in: %s | Copyright %s European Medicines Agency",
         utils::packageVersion("DarwinShinyModules"),
         deployDate,
         substr(Sys.Date(), start = 1, stop = 4)

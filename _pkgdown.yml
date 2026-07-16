@@ -52,6 +52,13 @@ reference:
   - launchBslibApp
   - launchShinydashboardApp
 
+- subtitle: Deployment functions
+- contents:
+  - deployAppStructure
+  - launchFromDisk
+  - loadAppStructure
+  - saveAppStructure
+
 - title: DARWIN EU
 - subtitle: Study Modules
 - contents:
@@ -69,6 +76,18 @@ reference:
   - CohortAttrition
   - moduleCohortAttrition
   - shinyCohortAttrition
+  - CohortCodelist
+  - moduleCohortCodelist
+  - shinyCohortCodelist
+  - CohortCount
+  - moduleCohortCount
+  - shinyCohortCount
+  - CohortOverlap
+  - moduleCohortOverlap
+  - shinyCohortOverlap
+  - CohortTiming
+  - moduleCohortTiming
+  - shinyCohortTiming
 
 - subtitle: CohortSurvival
 - contents:
@@ -94,6 +113,12 @@ reference:
   - Treatment
   - moduleTreatment
   - shinyTreatment
+  - ProportionOfPatientsCovered
+  - moduleProportionOfPatientsCovered
+  - shinyProportionOfPatientsCovered
+  - DoseCoverage
+  - moduleDoseCoverage
+  - shinyDoseCoverage
 
 - subtitle: IncidencePrevalence
 - contents:
@@ -120,3 +145,4 @@ reference:
   - darwinFooter
   - createApp
   - getCDMAcronyms
+  - checkCDMNames
