@@ -156,7 +156,7 @@ The objects of this class are cloneable with this method.
 # }
 }
 #> duckdb is keeping downloaded extensions in a temporary directory:
-#> ℹ /tmp/RtmpKbnjNg/duckdb/extensions
+#> ℹ /tmp/Rtmp6JE4Cm/duckdb/extensions
 #> This is removed when the R session ends, so extensions are re-downloaded each session.
 #> ℹ To keep them, point `options(duckdb.extension_directory =)` or the `DUCKDB_EXTENSION_DIRECTORY` environment variable at a permanent path.
 #> Creating a new cdm
