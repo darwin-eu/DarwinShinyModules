@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DarwinShinyModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,6 +24,8 @@
     <li><a class="dropdown-item" href="../articles/a04-compatibility.html">Compatibility</a></li>
     <li><a class="dropdown-item" href="../articles/a05-creating-a-new-module.html">Creating a new Module</a></li>
     <li><a class="dropdown-item" href="../articles/a06-loading-data.html">Loading Data From Different Sources</a></li>
+    <li><a class="dropdown-item" href="../articles/a07-app-structure.html">An AppStructure object</a></li>
+    <li><a class="dropdown-item" href="../articles/a08-deployment.html">(Re)-deploying Shiny Apps</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -58,23 +60,20 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">getCDMAcronyms</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "SUCD"               "CRN"                "IQVIA DA Germany"  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "H12O"               "InGef RDB"          "EBB"               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "IMASIS"             "FinOMOP-ACI Varha"  "IQVIA US - PMTX+"  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "HARMONY-CML"        "ULSM-RT"            "UMD"               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "NLHR"               "EMDB-ULSGE"         "BCR"               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "VID"                "NLHR@UiO:PERINATAL" "CDW Bordeaux"      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "NCR"                "CPRD Aurum Linked"  "PGH"               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [22] "POLIMI"             "HARMONY-ALL"        "APHM"              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] "UZA"                "FinOMOP-HUS"        "SIDIAP"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [28] "LDH"                "CPRD GOLD"          "FinOMOP-TaUH Pirha"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31] "HARMONY-AML"        "Pedianet"           "EMDB-ULSRA"        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [34] "HARMONY Platform "  "IPCI"               "HUVM"              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [37] "BIFAP"              "IQVIA LPD Belgium"  "SNDS"              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [40] "IQVIA US - AmbEMR"  "HI-SPEED"           "CPRD Aurum"        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [43] "FinOMOP-THL"        "DK-DHR"             "PRISIB"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [46] "NAJS"               "UKBB"               "HARMONY-MM"        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [49] "EMDB-ULSEDV"       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 49 × 2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    acronym           acronym_multi_line   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> SUCD              <span style="color: #949494;">"</span>SUCD<span style="color: #949494;">"</span>               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> CRN               <span style="color: #949494;">"</span>CRN<span style="color: #949494;">"</span>                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> IQVIA DA Germany  <span style="color: #949494;">"</span>IQVIA\nDA Germany<span style="color: #949494;">"</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> H12O              <span style="color: #949494;">"</span>H12O<span style="color: #949494;">"</span>               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> InGef RDB         <span style="color: #949494;">"</span>InGef RDB<span style="color: #949494;">"</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> EBB               <span style="color: #949494;">"</span>EBB<span style="color: #949494;">"</span>                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> IMASIS            <span style="color: #949494;">"</span>IMASIS<span style="color: #949494;">"</span>             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> FinOMOP-ACI Varha <span style="color: #949494;">"</span>FinOMOP-\nACI Varha<span style="color: #949494;">"</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> IQVIA US - PMTX+  <span style="color: #949494;">"</span>IQVIA\nUS - PMTX+<span style="color: #949494;">"</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> HARMONY-CML       <span style="color: #949494;">"</span>HARMONY-\nCML<span style="color: #949494;">"</span>      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 39 more rows</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -86,7 +85,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

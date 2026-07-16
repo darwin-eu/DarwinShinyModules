@@ -12,7 +12,8 @@ shinyCharacteristics(result, .softValidation = FALSE)
 
 - result:
 
-  (`summarised_result`) Result from the `summariseCharacteristics()`
+  (`summarised_result`) Result from the
+  [`summariseCharacteristics()`](https://darwin-eu.github.io/CohortCharacteristics/reference/summariseCharacteristics.html)
   function from the `CohortCharacteristics` pacakge.
 
 - .softValidation:

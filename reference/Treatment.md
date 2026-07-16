@@ -1,7 +1,8 @@
 # Treatment Module Class
 
 Restart module that shows a that supports results from the
-`summariseTreatment()` function from the DrugUtilisation package.
+[`summariseTreatment()`](https://darwin-eu.github.io/DrugUtilisation/reference/summariseTreatment.html)
+function from the DrugUtilisation package.
 
 ## Super class
 

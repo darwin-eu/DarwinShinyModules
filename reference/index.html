@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DarwinShinyModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,6 +24,8 @@
     <li><a class="dropdown-item" href="../articles/a04-compatibility.html">Compatibility</a></li>
     <li><a class="dropdown-item" href="../articles/a05-creating-a-new-module.html">Creating a new Module</a></li>
     <li><a class="dropdown-item" href="../articles/a06-loading-data.html">Loading Data From Different Sources</a></li>
+    <li><a class="dropdown-item" href="../articles/a07-app-structure.html">An AppStructure object</a></li>
+    <li><a class="dropdown-item" href="../articles/a08-deployment.html">(Re)-deploying Shiny Apps</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -264,6 +266,43 @@
         </dt>
         <dd>launchShinydashboardApp</dd>
       </dl></div><div class="section level2">
+
+      <h3 id="deployment-functions">Deployment functions<a class="anchor" aria-label="anchor" href="#deployment-functions"></a></h3>
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="deployAppStructure.html">deployAppStructure()</a></code>
+
+        </dt>
+        <dd>deployAppStructure</dd>
+
+        <dt>
+
+          <code><a href="launchFromDisk.html">launchFromDisk()</a></code>
+
+        </dt>
+        <dd>launchFromDisk</dd>
+
+        <dt>
+
+          <code><a href="loadAppStructure.html">loadAppStructure()</a></code>
+
+        </dt>
+        <dd>loadAppStructure</dd>
+
+        <dt>
+
+          <code><a href="saveAppStructure.html">saveAppStructure()</a></code>
+
+        </dt>
+        <dd>saveAppStructure</dd>
+      </dl></div><div class="section level2">
       <h2 id="darwin-eu">DARWIN EU<a class="anchor" aria-label="anchor" href="#darwin-eu"></a></h2>
 
 
@@ -363,6 +402,90 @@
 
         </dt>
         <dd>shinyCohortAttrition</dd>
+
+        <dt>
+
+          <code><a href="CohortCodelist.html">CohortCodelist</a></code>
+
+        </dt>
+        <dd>CohortCodelist Module Class</dd>
+
+        <dt>
+
+          <code><a href="moduleCohortCodelist.html">moduleCohortCodelist()</a></code>
+
+        </dt>
+        <dd>moduleCohortCodelist</dd>
+
+        <dt>
+
+          <code><a href="shinyCohortCodelist.html">shinyCohortCodelist()</a></code>
+
+        </dt>
+        <dd>shinyCohortCodelist</dd>
+
+        <dt>
+
+          <code><a href="CohortCount.html">CohortCount</a></code>
+
+        </dt>
+        <dd>CohortCount Module Class</dd>
+
+        <dt>
+
+          <code><a href="moduleCohortCount.html">moduleCohortCount()</a></code>
+
+        </dt>
+        <dd>moduleCohortCount</dd>
+
+        <dt>
+
+          <code><a href="shinyCohortCount.html">shinyCohortCount()</a></code>
+
+        </dt>
+        <dd>shinyCohortCount</dd>
+
+        <dt>
+
+          <code><a href="CohortOverlap.html">CohortOverlap</a></code>
+
+        </dt>
+        <dd>CohortOverlap Module Class</dd>
+
+        <dt>
+
+          <code><a href="moduleCohortOverlap.html">moduleCohortOverlap()</a></code>
+
+        </dt>
+        <dd>moduleCohortOverlap</dd>
+
+        <dt>
+
+          <code><a href="shinyCohortOverlap.html">shinyCohortOverlap()</a></code>
+
+        </dt>
+        <dd>shinyCohortOverlap</dd>
+
+        <dt>
+
+          <code><a href="CohortTiming.html">CohortTiming</a></code>
+
+        </dt>
+        <dd>CohortTiming Module Class</dd>
+
+        <dt>
+
+          <code><a href="moduleCohortTiming.html">moduleCohortTiming()</a></code>
+
+        </dt>
+        <dd>moduleCohortTiming</dd>
+
+        <dt>
+
+          <code><a href="shinyCohortTiming.html">shinyCohortTiming()</a></code>
+
+        </dt>
+        <dd>shinyCohortTiming</dd>
       </dl></div><div class="section level2">
 
       <h3 id="cohortsurvival">CohortSurvival<a class="anchor" aria-label="anchor" href="#cohortsurvival"></a></h3>
@@ -502,6 +625,48 @@
 
         </dt>
         <dd>shinyTreatment</dd>
+
+        <dt>
+
+          <code><a href="ProportionOfPatientsCovered.html">ProportionOfPatientsCovered</a></code>
+
+        </dt>
+        <dd>ProportionOfPatientsCovered Module Class</dd>
+
+        <dt>
+
+          <code><a href="moduleProportionOfPatientsCovered.html">moduleProportionOfPatientsCovered()</a></code>
+
+        </dt>
+        <dd>moduleProportionOfPatientsCovered</dd>
+
+        <dt>
+
+          <code><a href="shinyProportionOfPatientsCovered.html">shinyProportionOfPatientsCovered()</a></code>
+
+        </dt>
+        <dd>shinyProportionOfPatientsCovered</dd>
+
+        <dt>
+
+          <code><a href="DoseCoverage.html">DoseCoverage</a></code>
+
+        </dt>
+        <dd>DoseCoverage Module Class</dd>
+
+        <dt>
+
+          <code><a href="moduleDoseCoverage.html">moduleDoseCoverage()</a></code>
+
+        </dt>
+        <dd>moduleDoseCoverage</dd>
+
+        <dt>
+
+          <code><a href="shinyDoseCoverage.html">shinyDoseCoverage()</a></code>
+
+        </dt>
+        <dd>shinyDoseCoverage</dd>
       </dl></div><div class="section level2">
 
       <h3 id="incidenceprevalence">IncidencePrevalence<a class="anchor" aria-label="anchor" href="#incidenceprevalence"></a></h3>
@@ -636,6 +801,13 @@
 
         </dt>
         <dd>getCDMAcronyms</dd>
+
+        <dt>
+
+          <code><a href="checkCDMNames.html">checkCDMNames()</a></code>
+
+        </dt>
+        <dd>checkCDMNames</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
@@ -646,7 +818,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

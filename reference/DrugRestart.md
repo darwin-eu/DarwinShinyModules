@@ -1,7 +1,8 @@
 # DrugRestart Module Class
 
 DrugRestart module that shows a that supports results from the
-`summariseDrugRestart()` function from the DrugUtilisation package.
+[`summariseDrugRestart()`](https://darwin-eu.github.io/DrugUtilisation/reference/summariseDrugRestart.html)
+function from the DrugUtilisation package.
 
 ## Super class
 

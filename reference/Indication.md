@@ -1,7 +1,8 @@
 # Indication Module Class
 
 Indication module that shows a that supports results from the
-`summariseIndication()` function from the DrugUtilisation package.
+[`summariseIndication()`](https://darwin-eu.github.io/DrugUtilisation/reference/summariseIndication.html)
+function from the DrugUtilisation package.
 
 ## Super class
 

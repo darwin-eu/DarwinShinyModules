@@ -119,8 +119,6 @@ The objects of this class are cloneable with this method.
   }
 # }
 }
-#> Reading file:
-#> /home/runner/work/_temp/Library/DarwinShinyModules/dummyData/IncidencePrevalence/1.2.0/incidence.csv.
-#> Converting to summarised_result:
-#> /home/runner/work/_temp/Library/DarwinShinyModules/dummyData/IncidencePrevalence/1.2.0/incidence.csv.
+#> Reading file: incidence.csv.
+#> Converting to summarised_result: incidence.
 ```

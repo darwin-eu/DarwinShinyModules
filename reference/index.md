@@ -68,6 +68,17 @@
 - [`launchShinydashboardApp()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/launchShinydashboardApp.md)
   : launchShinydashboardApp
 
+### Deployment functions
+
+- [`deployAppStructure()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/deployAppStructure.md)
+  : deployAppStructure
+- [`launchFromDisk()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/launchFromDisk.md)
+  : launchFromDisk
+- [`loadAppStructure()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/loadAppStructure.md)
+  : loadAppStructure
+- [`saveAppStructure()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/saveAppStructure.md)
+  : saveAppStructure
+
 ## DARWIN EU
 
 ### Study Modules
@@ -97,6 +108,30 @@
   : moduleCohortAttrition
 - [`shinyCohortAttrition()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyCohortAttrition.md)
   : shinyCohortAttrition
+- [`CohortCodelist`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/CohortCodelist.md)
+  : CohortCodelist Module Class
+- [`moduleCohortCodelist()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/moduleCohortCodelist.md)
+  : moduleCohortCodelist
+- [`shinyCohortCodelist()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyCohortCodelist.md)
+  : shinyCohortCodelist
+- [`CohortCount`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/CohortCount.md)
+  : CohortCount Module Class
+- [`moduleCohortCount()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/moduleCohortCount.md)
+  : moduleCohortCount
+- [`shinyCohortCount()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyCohortCount.md)
+  : shinyCohortCount
+- [`CohortOverlap`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/CohortOverlap.md)
+  : CohortOverlap Module Class
+- [`moduleCohortOverlap()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/moduleCohortOverlap.md)
+  : moduleCohortOverlap
+- [`shinyCohortOverlap()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyCohortOverlap.md)
+  : shinyCohortOverlap
+- [`CohortTiming`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/CohortTiming.md)
+  : CohortTiming Module Class
+- [`moduleCohortTiming()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/moduleCohortTiming.md)
+  : moduleCohortTiming
+- [`shinyCohortTiming()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyCohortTiming.md)
+  : shinyCohortTiming
 
 ### CohortSurvival
 
@@ -138,6 +173,18 @@
   : moduleTreatment
 - [`shinyTreatment()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyTreatment.md)
   : shinyTreatment
+- [`ProportionOfPatientsCovered`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/ProportionOfPatientsCovered.md)
+  : ProportionOfPatientsCovered Module Class
+- [`moduleProportionOfPatientsCovered()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/moduleProportionOfPatientsCovered.md)
+  : moduleProportionOfPatientsCovered
+- [`shinyProportionOfPatientsCovered()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyProportionOfPatientsCovered.md)
+  : shinyProportionOfPatientsCovered
+- [`DoseCoverage`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/DoseCoverage.md)
+  : DoseCoverage Module Class
+- [`moduleDoseCoverage()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/moduleDoseCoverage.md)
+  : moduleDoseCoverage
+- [`shinyDoseCoverage()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/shinyDoseCoverage.md)
+  : shinyDoseCoverage
 
 ### IncidencePrevalence
 
@@ -179,3 +226,5 @@
   structure.
 - [`getCDMAcronyms()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/getCDMAcronyms.md)
   : getCDMAcronyms
+- [`checkCDMNames()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/checkCDMNames.md)
+  : checkCDMNames

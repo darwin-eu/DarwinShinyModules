@@ -107,8 +107,6 @@ The objects of this class are cloneable with this method.
   }
 # }
 }
-#> Reading file:
-#> /home/runner/work/_temp/Library/DarwinShinyModules/dummyData/CohortCharacteristics/1.1.1/characteristics.csv.
-#> Converting to summarised_result:
-#> /home/runner/work/_temp/Library/DarwinShinyModules/dummyData/CohortCharacteristics/1.1.1/characteristics.csv.
+#> Reading file: characteristics.csv.
+#> Converting to summarised_result: characteristics.
 ```

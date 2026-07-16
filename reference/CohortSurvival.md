@@ -155,6 +155,10 @@ The objects of this class are cloneable with this method.
   }
 # }
 }
+#> duckdb is keeping downloaded extensions in a temporary directory:
+#> ℹ /tmp/RtmpKbnjNg/duckdb/extensions
+#> This is removed when the R session ends, so extensions are re-downloaded each session.
+#> ℹ To keep them, point `options(duckdb.extension_directory =)` or the `DUCKDB_EXTENSION_DIRECTORY` environment variable at a permanent path.
 #> Creating a new cdm
 #> Uploading table person (1384 rows) - [1/7]
 #> Uploading table observation_period (1384 rows) - [2/7]
@@ -163,9 +167,9 @@ The objects of this class are cloneable with this method.
 #> Uploading table mgus_diagnosis (1384 rows) - [5/7]
 #> Uploading table progression (115 rows) - [6/7]
 #> Uploading table progression_type (230 rows) - [7/7]
-#> - Getting survival for target cohort 'mgus_diagnosis' and outcome cohort
-#> 'death_cohort'
+#> ℹ Getting survival for target cohort 'mgus_diagnosis' and outcome cohort
+#>   'death_cohort'
 #> Getting overall estimates
 #> `eventgap`, `outcome_washout`, `censor_on_cohort_exit`, `follow_up_days`, and
-#> `minimum_survival_days` casted to character.
+#> `minimum_survival_days` cast to character.
 ```

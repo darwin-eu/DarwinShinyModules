@@ -15,10 +15,6 @@ LargeScaleCharacteristics module that displays tables and plots of the
 
   (`summarised_result`)
 
-- `tidyResult`:
-
-  (`tbl_df`)
-
 - `cdmNames`:
 
   (`character(n)`)

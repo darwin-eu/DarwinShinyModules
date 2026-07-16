@@ -13,8 +13,8 @@ shinyLargeScaleCharacteristics(result, .softValidation)
 - result:
 
   (`summarised_result`) Result from the
-  `summariseLargeScaleCharacteristics()` function from the
-  `CohortCharacteristics` pacakge.
+  [`summariseLargeScaleCharacteristics()`](https://darwin-eu.github.io/CohortCharacteristics/reference/summariseLargeScaleCharacteristics.html)
+  function from the `CohortCharacteristics` pacakge.
 
 - .softValidation:
 

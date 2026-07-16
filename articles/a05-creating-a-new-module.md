@@ -1,5 +1,115 @@
 # Creating a new Module
 
+## Using `makeModule()`
+
+By far the easiest way to create a new `ShinyModule` object is to use
+the
+[`makeModule()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/makeModule.md)
+function. Using the function has some limitations, but for most cases
+this should be completely fine.
+
+As an example we can use an example given in the `bslib` package
+([link](https://rstudio.github.io/bslib/articles/dashboards/index.html#hello-dashboards))
+
+``` r
+
+library(shiny)
+library(DarwinShinyModules)
+library(bslib)
+library(ggplot2)
+library(palmerpenguins)
+
+data(penguins, package = "palmerpenguins")
+
+ui <- page_sidebar(
+  title = "Penguins dashboard",
+  sidebar = sidebar(
+    title = "Histogram controls",
+    varSelectInput(
+      "var", "Select variable",
+      dplyr::select_if(penguins, is.numeric)
+    ),
+    numericInput("bins", "Number of bins", 30)
+  ),
+  card(
+    card_header("Histogram"),
+    plotOutput("p")
+  )
+)
+
+server <- function(input, output, session) {
+  output$p <- renderPlot({
+    # Note that in the example of bslib `data` is replaced with `penguins`
+    ggplot(data) +
+      geom_histogram(aes(!!input$var), bins = input$bins) +
+      theme_bw(base_size = 20)
+  })
+}
+
+# When making a module we can pass data to the `data` parameter
+mod <- makeModule(ui = ui, server = server, data = penguins)
+
+# Previewing our new module
+preview(mod)
+
+# Adding an analysis
+inc <- omopgenerics::importSummarisedResult(system.file(package = "DarwinShinyModules", "./dummyData/IncidencePrevalence/1.2.0/incidence.csv"))
+prev <- omopgenerics::importSummarisedResult(system.file(package = "DarwinShinyModules", "./dummyData/IncidencePrevalence/1.2.0/prevalence.csv"))
+
+incMod <- DarwinShinyModules::IncidencePrevalence$new(inc)
+prevMod <- DarwinShinyModules::IncidencePrevalence$new(prev)
+
+appStructure <- list(
+  Example = mod,
+  Incidence = incMod,
+  Prevalence = prevMod
+)
+
+launchDarwinBslibApp(appStructure)
+```
+
+One thing to keep in mind, is that now our module puts all the variables
+in the global namespace of the shiny app. This is usually not an issue
+for small shiny apps, but when you do create a lot of modules using
+[`makeModule()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/makeModule.md),
+and you do run into conflicting input/output ID’s, you can wrap them in
+[`shiny::NS()`](https://rdrr.io/pkg/shiny/man/NS.html)
+
+Our updated UI would be:
+
+``` r
+
+ui <- page_sidebar(
+  title = "Penguins dashboard",
+  sidebar = sidebar(
+    title = "Histogram controls",
+    varSelectInput(
+      shiny::NS("custom_module", "var"), "Select variable",
+      dplyr::select_if(penguins, is.numeric)
+    ),
+    numericInput(shiny::NS("custom_module", "bins"), "Number of bins", 30)
+  ),
+  card(
+    card_header("Histogram"),
+    plotOutput(shiny::NS("custom_module", "p"))
+  )
+)
+
+mod <- makeModule(ui = ui, server = server, data = penguins, namespace = "custom_module")
+
+preview(mod)
+```
+
+Note that we now wrapped all our inputId (`var` and `bins`) and outputId
+(`p`) like so: `shiny::NS("custom_module", "var")`,
+`shiny::NS("custom_module", "bins")`, and
+`shiny::NS("custom_module", "p")`; and added
+`namespace = "custom_module"` in the
+[`makeModule()`](https://darwin-eu-dev.github.io/DarwinShinyModules/reference/makeModule.md)
+call. This will nest the input and output ID’s in the `custom_module`
+namespace, and will not interfere with other input or output values that
+are named the same outside the namespace.
+
 ## The `ShinyModule` Class
 
 The `ShinyModule` class is an interface to be inherited to create
@@ -323,7 +433,7 @@ plotFun <- function(data) {
 plotFun(data)
 ```
 
-![](a05-creating-a-new-module_files/figure-html/unnamed-chunk-12-1.png)
+![](a05-creating-a-new-module_files/figure-html/unnamed-chunk-14-1.png)
 
 What we will do is create two modules, a `Table` and `plotStatic`
 module, in a parent module, `ExampleModule`.

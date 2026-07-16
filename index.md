@@ -36,7 +36,7 @@ elements, and back-end code.
 ``` r
 
 install.packages(remotes)
-remotes::install_github('darwin-eu-dev/DarwinShinyModules')
+remotes::install_github("darwin-eu/DarwinShinyModules")
 ```
 
 ## Usage

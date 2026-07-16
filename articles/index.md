@@ -12,3 +12,7 @@
   Module](https://darwin-eu-dev.github.io/DarwinShinyModules/articles/a05-creating-a-new-module.md):
 - [Loading Data From Different
   Sources](https://darwin-eu-dev.github.io/DarwinShinyModules/articles/a06-loading-data.md):
+- [An AppStructure
+  object](https://darwin-eu-dev.github.io/DarwinShinyModules/articles/a07-app-structure.md):
+- [(Re)-deploying Shiny
+  Apps](https://darwin-eu-dev.github.io/DarwinShinyModules/articles/a08-deployment.md):

@@ -12,13 +12,13 @@
 ## Citation
 
 Inberg G, van Kessel M (2026). *DarwinShinyModules: Repository of Shiny
-Modules for Darwin Result Viewers*. R package version 0.6.0,
+Modules for Darwin Result Viewers*. R package version 0.7.0,
 <https://darwin-eu-dev.github.io/DarwinShinyModules/>.
 
     @Manual{,
       title = {DarwinShinyModules: Repository of Shiny Modules for Darwin Result Viewers},
       author = {Ger Inberg and Maarten {van Kessel}},
       year = {2026},
-      note = {R package version 0.6.0},
+      note = {R package version 0.7.0},
       url = {https://darwin-eu-dev.github.io/DarwinShinyModules/},
     }
